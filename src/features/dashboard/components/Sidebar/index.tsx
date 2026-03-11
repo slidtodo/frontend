@@ -38,8 +38,8 @@ function SidebarDesktopTablet() {
   const menus = getMenus();
   return (
     <div
-      className={`flex flex-col gap-[80px] lg:gap-[140px] bg-white rounded-tr-[32px] rounded-br-[32px] transition-all duration-300  
-      ${isOpen ? 'min-w-[250px] lg:min-w-[362px] p-4 lg:p-8' : 'min-w-[96px] py-8 px-6'} `}
+      className={`flex flex-col   bg-white rounded-tr-[32px] rounded-br-[32px] transition-all duration-300  
+      ${isOpen ? 'min-w-[250px] lg:min-w-[362px] p-4 lg:p-8 lg:gap-[140px] gap-[80px]' : 'min-w-[80px] py-8 px-6 gap-8'} `}
     >
       <div
         className={`flex gap-4 lg:gap-8 flex-col justify-center 
@@ -53,7 +53,15 @@ function SidebarDesktopTablet() {
           className={`flex items-center 
           ${isOpen ? 'gap-4 w-full pl-2 pr-[22px]' : 'gap-0 w-fit p-0'} `}
         >
-          <Image priority src={'/image/main-logo.svg'} alt="Logo" width={48} height={48} />
+          <div className={`relative ${isOpen ? 'w-12 h-12' : 'w-8 h-8'}`}>
+            <Image
+              priority
+              src={'/image/main-logo.svg'}
+              alt="Logo"
+              fill
+              className={`object-contain ${isOpen ? 'w-12 h-12' : 'w-8 h-8'}`}
+            />
+          </div>
           <h2
             className={`text-2xl lg:text-3xl font-semibold text-gray-800 w-fit transition-all duration-300  
             ${isOpen ? 'block' : 'hidden'}`}
@@ -93,9 +101,9 @@ function SidebarDesktopTablet() {
       </div>
       <div
         className={`flex flex-col gap-8 items-center transition-all duration-300  
-        ${isOpen ? 'block' : 'hidden'}`}
+        `}
       >
-        <div className="flex gap-4 w-full">
+        <div className={`flex gap-4 w-full ${isOpen ? 'block' : 'hidden'}`}>
           {/* TODO: 버튼 컴포넌트로 교체 필요 */}
           <button className="group w-full flex gap-2 flex-col items-center justify-center py-4 lg:py-8 px-2 lg:px-[22.5px] bg-[#FF8442] rounded-[32px] hover:bg-[#F07533] hover:shadow-lg transition-all duration-200">
             <FlagIcon
@@ -117,7 +125,10 @@ function SidebarDesktopTablet() {
           </button>
         </div>
         <div className="flex gap-2 w-full justify-between">
-          <button className="w-full flex gap-[8px] items-center justify-start py-[12px] px-[20px] lg:pr-[42px] lg:pl-[12px] border border-[#DDDDDD] rounded-[999px]">
+          <button
+            className={`w-full flex gap-[8px] items-center justify-start py-[12px] px-[20px] lg:pr-[42px] lg:pl-[12px] border border-[#DDDDDD] rounded-[999px] 
+              ${isOpen ? 'block' : 'hidden'}`}
+          >
             <Image src={'/image/temp-character.svg'} alt="Character" width={38} height={38} />
             <div className="flex flex-col items-start ">
               <span className=" text-sm font-medium w-fit lg:w-full">닉네임</span>
@@ -126,10 +137,16 @@ function SidebarDesktopTablet() {
           </button>
 
           {/* TODO: 알람 표시 기능구현 */}
-          <button className="group relative p-[20px] border border-[#DDDDDD] rounded-[999px] text-[#737373] hover:bg-gray-100 hover:text-[#FF8442] transition-all duration-200">
-            <BellIcon size={24} className="group-hover:scale-110 transition-transform" />
+          <button
+            className={`group relative text-[#737373] hover:bg-gray-100 hover:text-[#FF8442] transition-all duration-200 
+            ${isOpen ? 'p-[20px] border border-[#DDDDDD] rounded-[999px]' : 'p-0'} `}
+          >
+            <BellIcon size={24} className="group-hover:scale-110 transition-transform " />
             {/* 주황색 알람 점 */}
-            <div className="absolute top-0.5 right-0.5 w-3 h-3 bg-[#FF8442] rounded-full"></div>
+            <div
+              className={`absolute top-0.5 right-0.5 bg-[#FF8442] rounded-full 
+              ${isOpen ? 'w-3 h-3' : 'w-2 h-2'}`}
+            ></div>
           </button>
         </div>
       </div>

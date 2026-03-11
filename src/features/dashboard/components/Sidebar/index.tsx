@@ -1,24 +1,54 @@
 'use client';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ChevronsRightIcon, SettingsIcon, LogOutIcon, FlagIcon, CopyCheckIcon, BellIcon } from 'lucide-react';
 
 import { useSidebarContext } from '@/contexts/SidebarContext';
 
 import Logo from '../../../../../public/image/main-logo.svg';
 import TempCharacter from '../../../../../public/image/temp-character.svg';
+
 export default function Sidebar() {
-  const { isOpen, close } = useSidebarContext();
+  const { isOpen, getMenus, toggle } = useSidebarContext();
+  const menus = getMenus();
 
   return (
-    <div className="m-8 flex flex-col gap-[140px] min-w-[298px]">
-      <div className=" flex gap-8 flex-col items-end justify-center">
-        <ChevronsRightIcon size={32} className="text-gray-400" />
-        <div className="w-full flex gap-4 items-center pl-2  pr-[22px]">
-          <Image src={Logo} alt="Logo" width={48} height={48} />
-          <h2 className="text-4xl font-semibold text-gray-800 w-fit">Slid to do</h2>
-        </div>
-        <div className="flex gap-6 flex-col w-full">
-          <div className="flex flex-col gap-3">메뉴들</div>
+    <div
+      className={`flex flex-col gap-[140px] bg-white rounded-tr-[32px] rounded-br-[32px] transition-all duration-300 ${isOpen ? 'min-w-[362px] p-8' : 'min-w-auto py-8 px-6'} `}
+    >
+      <div className={`flex gap-8 flex-col justify-center  ${isOpen ? 'items-end' : 'items-center w-fit'}`}>
+        <button onClick={toggle} className="cursor-pointer hover:text-gray-600 transition-colors">
+          <ChevronsRightIcon size={32} className={`text-gray-400 transition-transform `} />
+        </button>
+        <Link
+          href="/dashboard"
+          className={`flex items-center ${isOpen ? 'gap-4 w-full pl-2 pr-[22px]' : 'gap-0 w-fit p-0'} `}
+        >
+          <Image priority src={Logo} alt="Logo" width={48} height={48} />
+          <h2
+            className={`text-3xl font-semibold text-gray-800 w-fit transition-all duration-300 ${isOpen ? 'block' : 'hidden'}`}
+          >
+            Slid to do
+          </h2>
+        </Link>
+        <div className={`flex gap-6 flex-col w-full  transition-all duration-300 ${isOpen ? 'block' : 'hidden'}`}>
+          <div className="flex flex-col gap-3">
+            {menus.map((menu) => {
+              if ('href' in menu && menu.href) {
+                return (
+                  <Link key={menu.name} href={menu.href}>
+                    <button className="group w-full flex items-center justify-start gap-[8px] py-[14px] px-[16px] hover:bg-[#FEF2E3] rounded-[20px] transition-all duration-200">
+                      <span className="text-[#CCCCCC] group-hover:text-[#EF6C00]">{menu.icon}</span>
+                      <span className="text-[#333333] text-lg font-semibold group-hover:text-[#DC5203]">
+                        {menu.name}
+                      </span>
+                    </button>
+                  </Link>
+                );
+              }
+              return null;
+            })}
+          </div>
           <div className="flex flex-col w-full">
             <button className="flex items-center justify-start gap-[10px] py-[10px] px-[14px] hover:bg-gray-100 rounded-md transition-all duration-100">
               <SettingsIcon className="text-[#BBBBBB]" size={24} />
@@ -31,15 +61,16 @@ export default function Sidebar() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-8 items-center">
+      <div className={`flex flex-col gap-8 items-center transition-all duration-300 ${isOpen ? 'block' : 'hidden'}`}>
         <div className="flex gap-4 w-full">
-          <button className="w-full flex gap-2 flex-col items-center justify-center py-8 px-[22.5px] bg-[#FF8442] rounded-[32px]">
-            <FlagIcon className="text-[#ffffff]" size={40} />
-            <span className="text-[#ffffff] text-lg font-semibold">새 목표</span>
+          {/* TODO: 버튼 컴포넌트로 교체 필요 */}
+          <button className="group w-full flex gap-2 flex-col items-center justify-center py-8 px-[22.5px] bg-[#FF8442] rounded-[32px] hover:bg-[#F07533] hover:shadow-lg transition-all duration-200">
+            <FlagIcon className="text-[#ffffff] group-hover:scale-110 transition-transform" size={40} />
+            <span className="text-[#ffffff] text-lg font-semibold group-hover:font-bold transition-all">새 목표</span>
           </button>
-          <button className="w-full flex gap-2 flex-col items-center justify-center py-8 px-[22.5px] bg-[#ffffff] border border-[#FF8442] rounded-[32px]">
-            <CopyCheckIcon className="text-[#FF8442]" size={40} />
-            <span className="text-[#FF8442] text-lg font-semibold">새 할일</span>
+          <button className="group w-full flex gap-2 flex-col items-center justify-center py-8 px-[22.5px] bg-[#ffffff] border border-[#FF8442] rounded-[32px] hover:bg-[#FEF2E3] hover:shadow-lg transition-all duration-200">
+            <CopyCheckIcon className="text-[#FF8442] group-hover:scale-110 transition-transform" size={40} />
+            <span className="text-[#FF8442] text-lg font-semibold group-hover:font-bold transition-all">새 할일</span>
           </button>
         </div>
         <div className="flex gap-2 w-full">
@@ -51,10 +82,12 @@ export default function Sidebar() {
             </div>
           </button>
 
-          <BellIcon
-            size={64}
-            className="p-[20px] border border-[#DDDDDD] rounded-[999px] text-[#737373] hover:bg-gray-100 transition-all duration-100"
-          />
+          {/* TODO: 알람 표시 기능구현 */}
+          <button className="group relative p-[20px] border border-[#DDDDDD] rounded-[999px] text-[#737373] hover:bg-gray-100 hover:text-[#FF8442] transition-all duration-200">
+            <BellIcon size={24} className="group-hover:scale-110 transition-transform" />
+            {/* 주황색 알람 점 */}
+            <div className="absolute top-0.5 right-0.5 w-3 h-3 bg-[#FF8442] rounded-full"></div>
+          </button>
         </div>
       </div>
     </div>

@@ -6,9 +6,6 @@ import { ChevronsRightIcon, SettingsIcon, LogOutIcon, FlagIcon, CopyCheckIcon, B
 import { useSidebarContext } from '@/contexts/SidebarContext';
 import { useMobile } from '@/shared/hooks/useBreakPoint';
 
-import Logo from '../../../../../public/image/main-logo.svg';
-import TempCharacter from '../../../../../public/image/temp-character.svg';
-
 export default function Sidebar() {
   const isMobile = useMobile();
 
@@ -52,7 +49,7 @@ function SidebarDesktopTablet() {
           href="/dashboard"
           className={`flex items-center  ${isOpen ? 'gap-4 w-full pl-2 pr-[22px]' : 'gap-0 w-fit p-0'} `}
         >
-          <Image priority src={Logo} alt="Logo" width={48} height={48} />
+          <Image priority src={'/image/main-logo.svg'} alt="Logo" width={48} height={48} />
           <h2
             className={`text-3xl font-semibold text-gray-800 w-fit transition-all duration-300  ${isOpen ? 'block' : 'hidden'}`}
           >
@@ -103,7 +100,7 @@ function SidebarDesktopTablet() {
         </div>
         <div className="flex gap-2 w-full">
           <button className="flex gap-[8px] items-center justify-center py-[12px] pr-[42px] pl-[12px] border border-[#DDDDDD] rounded-[999px]">
-            <Image src={TempCharacter} alt="Character" width={38} height={38} />
+            <Image src={'/image/temp-character.svg'} alt="Character" width={38} height={38} />
             <div className="flex flex-col items-start w-[126px]">
               <span className="text-sm font-medium">닉네임</span>
               <span className="text-sm font-medium text-[#A0A0A0]">이메일</span>

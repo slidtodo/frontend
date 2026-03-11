@@ -3,13 +3,15 @@
 import { Suspense } from 'react';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 
+const IS_DEV = process.env.NODE_ENV === 'development';
+
 function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-md">
         <h2 className="mb-2 text-xl font-bold text-red-600">오류 발생</h2>
         <p className="mb-4 text-sm text-gray-600">
-          {error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.'}
+          {IS_DEV && error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.'}
         </p>
         <button
           onClick={resetErrorBoundary}
@@ -36,22 +38,22 @@ function SuspenseFallback() {
 interface ErrorSuspenseBoundaryProps {
   children: React.ReactNode;
   /**
-   * @param
+   * @description
    * errorFallback: 오류가 발생했을 때 보여줄 컴포넌트 (기본값: ErrorFallback)
    */
   errorFallback?: React.ComponentType<FallbackProps>;
   /**
-   * @param
+   * @description
    * suspenseFallback: Suspense가 로딩 중일 때 보여줄 컴포넌트 (기본값: SuspenseFallback)
    */
   suspenseFallback?: React.ReactNode;
   /**
-   *  @param
+   *  @description
    *  onReset: 오류가 발생한 후 "다시 시도" 버튼이 클릭되었을 때 호출되는 콜백 함수
    */
   onReset?: () => void;
   /**
-   * @param
+   * @description
    * resetKeys: 오류 상태를 재설정할 때 사용하는 키 배열. 이 배열의 값이 변경되면 오류 상태가 초기화됩니다.
    */
   resetKeys?: unknown[];
@@ -64,8 +66,8 @@ export default function ErrorSuspenseBoundary({
   resetKeys,
 }: ErrorSuspenseBoundaryProps) {
   return (
-    <ErrorBoundary FallbackComponent={errorFallback || ErrorFallback} onReset={onReset} resetKeys={resetKeys}>
-      <Suspense fallback={suspenseFallback || <SuspenseFallback />}>{children}</Suspense>
+    <ErrorBoundary FallbackComponent={errorFallback ?? ErrorFallback} onReset={onReset} resetKeys={resetKeys}>
+      <Suspense fallback={suspenseFallback ?? <SuspenseFallback />}>{children}</Suspense>
     </ErrorBoundary>
   );
 }

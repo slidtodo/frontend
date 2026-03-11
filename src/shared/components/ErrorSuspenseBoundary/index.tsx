@@ -14,6 +14,7 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
           {IS_DEV && error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.'}
         </p>
         <button
+          type="button"
           onClick={resetErrorBoundary}
           className="w-full rounded bg-blue-500 py-2 font-semibold text-white hover:bg-blue-600"
         >

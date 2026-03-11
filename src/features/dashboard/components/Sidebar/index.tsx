@@ -1,23 +1,16 @@
 'use client';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ChevronsRightIcon, SettingsIcon, LogOutIcon, FlagIcon, CopyCheckIcon, BellIcon, MenuIcon } from 'lucide-react';
 
 import { useSidebarContext } from '@/contexts/SidebarContext';
+import { useMobile } from '@/shared/hooks/useBreakPoint';
 
 import Logo from '../../../../../public/image/main-logo.svg';
 import TempCharacter from '../../../../../public/image/temp-character.svg';
 
 export default function Sidebar() {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  const isMobile = useMobile();
 
   if (isMobile) return <SidebarMobile />;
 

@@ -19,7 +19,7 @@ function SidebarMobile() {
   return (
     <div className="flex items-center justify-between py-4 px-5 bg-white border-b-2 border-[#DDDDDD]">
       <div className="flex gap-[12px]">
-        <MenuIcon size={24} className="text-[#737373]" />
+        <MenuIcon size={24} className="text-[#737373] hover:cursor-pointer" />
         {/* TODO: 체다치즈님의 목표 삭제하고 서버 데이터 가져와야 함 */}
         <span className="text-[#333333] text-base font-semibold">체다치즈님의 목표</span>
       </div>

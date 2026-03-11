@@ -10,10 +10,10 @@ interface MenuBase {
 }
 interface LeafMenu extends MenuBase {
   href: string;
-  subMenus?: undefined;
+  subMenus?: string[];
 }
 interface ParentMenu extends MenuBase {
-  href?: undefined;
+  href: string;
   subMenus: MenuItem[];
 }
 type MenuItem = LeafMenu | ParentMenu;

@@ -1,47 +1,30 @@
-// shared/components/Tag/index.tsx
-
-type TagVariant = 'default' | 'green' | 'yellow' | 'pink'
+'use client'
+import { X } from 'lucide-react'
 
 interface TagProps {
-    children: React.ReactNode
-    variant?: TagVariant
+    string: string
     onClose?: () => void
-    className?: string
+    variant?: 'green' | 'orange' | 'purple'
 }
 
-const variantStyles: Record<TagVariant, string> = {
-    default: 'bg-white text-gray-400 border border-gray-300',
-    green: 'bg-green-100 text-green-600 border border-green-300',
-    yellow: 'bg-yellow-100 text-yellow-600 border border-yellow-300',
-    pink: 'bg-pink-100 text-pink-600 border border-pink-300',
+const variantStyles = {
+    green: 'bg-green-100 text-green-600',
+    orange: 'bg-orange-100 text-orange-500',
+    purple: 'bg-purple-100 text-purple-500',
 }
 
-export default function Tag({
-    children,
-    variant = 'default',
-    onClose,
-    className = '',
-}: TagProps) {
+export default function Tag({ string, onClose, variant = 'green' }: TagProps) {
     return (
-        <span
-            className={`
-        inline-flex items-center gap-1
-        rounded-full px-4 py-1.5 text-sm font-medium
-        ${variantStyles[variant]}
-        ${className}
-      `}
-        >
-            {variant === 'default' && <span className="text-gray-400">#</span>}
-            {children}
+        <div className={`flex items-center justify-center gap-1 w-fit h-[24px] px-2 rounded-full text-xs font-medium ${variantStyles[variant]}`}>            <span>{string}</span>
             {onClose && (
                 <button
                     type="button"
                     onClick={onClose}
-                    className="ml-1 hover:opacity-70"
+                    className="hover:opacity-70 transition-opacity"
                 >
-                    ×
+                    <X size={10} />
                 </button>
             )}
-        </span>
+        </div>
     )
 }

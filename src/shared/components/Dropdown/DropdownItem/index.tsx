@@ -4,15 +4,14 @@ import { twMerge } from 'tailwind-merge';
 
 interface DropdownItemProps {
   item: DropdownItemType;
-  isSelected: boolean;
   onSelectItem: (item: DropdownItemType) => void;
 }
 
-const DropdownItem = ({ item, isSelected, onSelectItem }: DropdownItemProps) => {
+const DropdownItem = ({ item, onSelectItem }: DropdownItemProps) => {
   return (
     <div className="flex w-full bg-white p-1.5">
       <button
-        onClick={() => onSelectItem?.(item)}
+        onClick={() => onSelectItem(item)}
         disabled={item.disabled}
         className={twMerge(clsx('flex w-full', item.disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'))}
       >

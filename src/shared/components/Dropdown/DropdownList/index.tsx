@@ -6,11 +6,10 @@ import { DropdownItemType } from '@/shared/types/types';
 
 interface DropdownListProps extends React.HTMLAttributes<HTMLDivElement> {
   items: DropdownItemType[];
-  selectedId: string;
   onSelectItem: (item: DropdownItemType) => void;
 }
 
-const DropdownList = ({ items, selectedId, onSelectItem, className }: DropdownListProps) => {
+const DropdownList = ({ items, onSelectItem, className }: DropdownListProps) => {
   return (
     <div
       className={twMerge(
@@ -18,7 +17,7 @@ const DropdownList = ({ items, selectedId, onSelectItem, className }: DropdownLi
       )}
     >
       {items.map((item) => (
-        <DropdownItem key={item.id} item={item} isSelected={item.id === selectedId} onSelectItem={onSelectItem} />
+        <DropdownItem key={item.id} item={item} onSelectItem={onSelectItem} />
       ))}
     </div>
   );

@@ -1,3 +1,6 @@
+import clsx from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
 type HeadingLevel = 'h1' | 'h2' | 'h3' | 'h4';
 
 interface PageHeaderProps {
@@ -26,13 +29,13 @@ interface PageHeaderProps {
  * ## 사용 예시
  * ```tsx
  * // node 13460:51819 — 대시보드 타이틀
- * <SectionHeading as="h1" title="체다치즈님의 대시보드" />
+ * <PageHeader as="h1" title="체다치즈님의 대시보드" />
  *
  * // node 13460:53740 — 페이지 헤더 + 카운트
- * <SectionHeading as="h2" title="모든 할 일" count={10} />
+ * <PageHeader as="h2" title="모든 할 일" count={10} />
  *
  * // node 13460:61446 — 페이지 헤더 + 카운트
- * <SectionHeading as="h2" title="찜한 할 일" count={6} />
+ * <PageHeader as="h2" title="찜한 할 일" count={6} />
  * ```
  */
 export function PageHeader({ id, title, count, as: Tag = 'h2', className = '' }: PageHeaderProps) {
@@ -41,17 +44,16 @@ export function PageHeader({ id, title, count, as: Tag = 'h2', className = '' }:
   return (
     <Tag
       id={id}
-      className={[
-        'flex items-center gap-2',
-        'font-semibold tracking-[-0.03em]',
-        // 반응형 폰트 크기: 375px → 16px / 744px → 20px / 1920px → 24px
-        'text-base leading-6',
-        'md:text-xl md:leading-7.5',
-        'lg:text-2xl lg:leading-8',
+      className={twMerge(
+        clsx(
+          'flex items-center gap-2',
+          'font-semibold tracking-[-0.03em]',
+          'text-base leading-6',
+          'md:text-xl md:leading-7.5',
+          'lg:text-2xl lg:leading-8',
+        ),
         className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
+      )}
       // count가 있을 때 스크린 리더가 "모든 할 일, 10개"로 읽도록 aria-label 구성
       aria-label={hasCount ? `${title}, ${count}개` : undefined}
     >

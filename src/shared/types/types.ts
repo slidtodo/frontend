@@ -1,7 +1,6 @@
 export type DropdownItemType = {
-  id: string;
+  value: string;
   label: string;
-  disabled?: boolean;
 };
 
 export interface TaskCardProps {
@@ -16,4 +15,3 @@ export interface TaskCardProps {
   onMenuOpen?: (id: string) => void;
   onStarToggle?: (id: string) => void;
 }
-

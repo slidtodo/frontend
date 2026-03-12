@@ -23,6 +23,7 @@ export function TaskCard({
   /* //TODO 부모에서 starred로 todo/done 분기 처리 */
   starred: initialStarred = false,
   hasGithubLink = true,
+  // hasSetting 드롭다운
   hasSetting = true,
   onToggle,
   onEdit,

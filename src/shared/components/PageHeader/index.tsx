@@ -44,10 +44,10 @@ export function PageHeader({ id, title, count, as: Tag = 'h2', className = '' }:
       className={[
         'flex items-center gap-2',
         'font-semibold tracking-[-0.03em]',
-        // 반응형 폰트 크기: 375px → 16px / 744px → 20px / 1920px → 24px
+        // 반응형 폰트 크기: 375px → 16px / 744px → 20px / 1920px → 24px lg -> 10xxpx
         'text-base leading-6',
         'md:text-xl md:leading-7.5',
-        'lg:text-2xl lg:leading-8',
+        '2xl:text-2xl 2xl:leading-8',
         className,
       ]
         .filter(Boolean)

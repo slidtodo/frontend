@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, RefObject } from 'react';
 
 const useOnClickOutside = (ref: RefObject<HTMLElement | null>, handler: () => void) => {

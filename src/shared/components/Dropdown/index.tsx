@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { cva } from 'class-variance-authority';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { DropdownItemType } from '@/shared/types/types';
 import DropdownList from './DropdownList';
 import { ChevronDown } from 'lucide-react';

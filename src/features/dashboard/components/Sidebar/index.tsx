@@ -45,8 +45,13 @@ function SidebarDesktopTablet() {
         className={`flex gap-4 lg:gap-8 flex-col justify-center 
         ${isOpen ? 'items-end' : 'items-center w-fit'}`}
       >
-        <button onClick={toggle} className="cursor-pointer hover:text-gray-600 transition-colors">
-          <ChevronsRightIcon size={32} className={`text-gray-400 transition-transform `} />
+        <button
+          onClick={toggle}
+          className="cursor-pointer hover:text-gray-600 transition-colors"
+          aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+          aria-expanded={isOpen}
+        >
+          <ChevronsRightIcon size={32} />
         </button>
         <Link
           href="/dashboard"
@@ -103,7 +108,7 @@ function SidebarDesktopTablet() {
         className={`flex flex-col gap-8 items-center transition-all duration-300  
         `}
       >
-        <div className={`flex gap-4 w-full ${isOpen ? 'block' : 'hidden'}`}>
+        <div className={`gap-4 w-full ${isOpen ? 'flex' : 'hidden'}`}>
           {/* TODO: 버튼 컴포넌트로 교체 필요 */}
           <button className="group w-full flex gap-2 flex-col items-center justify-center py-4 lg:py-8 px-2 lg:px-[22.5px] bg-[#FF8442] rounded-[32px] hover:bg-[#F07533] hover:shadow-lg transition-all duration-200">
             <FlagIcon
@@ -126,8 +131,8 @@ function SidebarDesktopTablet() {
         </div>
         <div className="flex gap-2 w-full justify-between">
           <button
-            className={`w-full flex gap-[8px] items-center justify-start py-[12px] px-[20px] lg:pr-[42px] lg:pl-[12px] border border-[#DDDDDD] rounded-[999px] 
-              ${isOpen ? 'block' : 'hidden'}`}
+            className={`w-full gap-[8px] items-center justify-start py-[12px] px-[20px] lg:pr-[42px] lg:pl-[12px] border border-[#DDDDDD] rounded-[999px] 
+              ${isOpen ? 'flex' : 'hidden'}`}
           >
             <Image src={'/image/temp-character.svg'} alt="Character" width={38} height={38} />
             <div className="flex flex-col items-start ">

@@ -69,10 +69,9 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
   const sidebar = useMemo<SidebarContextType>(() => {
     const toggle = () => setIsOpen((prev) => !prev);
     const open = () => setIsOpen(true);
-    const close = () => setIsOpen(false);
     const getMenus = () => allMenus;
     const getAccessibleMenus = () => allMenus;
-    return { isOpen, toggle, open, close, getMenus, getAccessibleMenus };
+    return { isOpen, toggle, open, getMenus, getAccessibleMenus };
   }, [allMenus, isOpen]);
 
   const currentMenu = useMemo(() => {
@@ -100,6 +99,6 @@ export function useSidebarContext() {
 }
 export function useSidebarMenu() {
   const context = useContext(SidebarMenuContext);
-  if (context === undefined) throw new Error('useSidebarMenu must be used within SidebarProvider');
+  if (!context) throw new Error('useSidebarMenu must be used within SidebarProvider');
   return context;
 }

@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge';
 import { cva } from 'class-variance-authority';
 import { useState } from 'react';
 import { DropdownItemType } from '@/shared/types/types';
-import DropdownList from '../DropdownList';
+import DropdownList from './DropdownList';
 
 const dropdownTriggerVariants = cva(
   'rounded-xl border border-slate-300 bg-mono-white flex p-4 items-center gap-2 self-stretch text-base font-medium justify-between',

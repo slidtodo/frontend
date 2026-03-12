@@ -36,7 +36,6 @@ interface DropdownProps extends React.HTMLAttributes<HTMLButtonElement> {
 
 function Dropdown({ items, selectedValue, onSelectItem, isDisabled, className }: DropdownProps) {
   const [isToggleOpen, setIsToggleOpen] = useState(false);
-  const dropdownClasses = twMerge(clsx(dropdownVariants({ disabled: isDisabled }), className));
   const selectedItem = items.find((item) => item.value === selectedValue);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -52,9 +51,10 @@ function Dropdown({ items, selectedValue, onSelectItem, isDisabled, className }:
       <button
         onClick={() => setIsToggleOpen(!isToggleOpen)}
         className={twMerge(
-          dropdownClasses,
+          dropdownVariants({ disabled: isDisabled }),
           'flex w-full items-center gap-2',
           isToggleOpen && 'rounded-2xl border border-orange-500',
+          className,
         )}
         disabled={isDisabled}
       >
@@ -63,7 +63,7 @@ function Dropdown({ items, selectedValue, onSelectItem, isDisabled, className }:
         <ChevronDown size={16} className="text-slate-400 dark:text-white" />
       </button>
       <div className="absolute top-full right-0 left-0 z-50 mt-1">
-        {isToggleOpen && <DropdownList className="absolute" items={items} onSelectItem={handleSelectItem} />}
+        {isToggleOpen && <DropdownList className="w-full" items={items} onSelectItem={handleSelectItem} />}
       </div>
     </div>
   );

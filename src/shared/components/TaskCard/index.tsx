@@ -4,6 +4,7 @@ import { TaskCardProps } from '@/shared/types/types';
 import clsx from 'clsx';
 import { CheckIcon, EllipsisVertical, GithubIcon, Star } from 'lucide-react';
 import { useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 // ---------------------------------------------------------------------------
 // TaskCard
@@ -64,12 +65,12 @@ export function TaskCard({
         aria-checked={checked}
         aria-label={`${todo.title} ${checked ? '완료 취소' : '완료 처리'}`}
         onClick={handleToggle}
-        className={[
+        className={twMerge(clsx(
           'relative flex cursor-pointer items-center justify-center',
           'size-4.5 shrink-0 rounded-md',
           'transition-colors duration-150',
           checked ? 'border-transparent bg-[#FF8442]' : 'border border-[#CCCCCC] bg-white',
-        ].join(' ')}
+        ))}
       >
         {checked && <CheckIcon className="text-white" />}
       </button>

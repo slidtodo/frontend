@@ -1,6 +1,7 @@
 'use client';
 
 import { TaskCardProps } from '@/shared/types/types';
+import clsx from 'clsx';
 import { CheckIcon, EllipsisVertical, GithubIcon, Star } from 'lucide-react';
 import { useState } from 'react';
 
@@ -47,14 +48,14 @@ export function TaskCard({
      * `group` -> group-hover: 처럼 사용 가능
      */
     <li
-      className={[
+      className={clsx(
         'group',
         'cursor-pointer',
         'relative flex items-center gap-2',
         'rounded-2xl px-2 py-2.5',
         'transition-colors duration-150',
         'hover:bg-[rgba(255,158,89,0.2)]',
-      ].join(' ')}
+      )}
     >
       {/* ── Checkbox ─────────────────────────────────────────── */}
       <button

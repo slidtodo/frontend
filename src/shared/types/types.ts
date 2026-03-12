@@ -16,3 +16,4 @@ export interface TaskCardProps {
   onMenuOpen?: (id: string) => void;
   onStarToggle?: (id: string) => void;
 }
+

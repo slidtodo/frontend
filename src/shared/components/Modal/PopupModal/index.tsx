@@ -115,11 +115,19 @@ export function PopupModal({ onConfirm, variant }: PopupModalProps) {
       role="dialog"
       aria-modal="true"
       aria-labelledby={labelledBy}
+<<<<<<< HEAD
       className="w-85.75 rounded-3xl bg-white p-4 pt-12 shadow-[0px_0px_60px_0px_rgba(0,0,0,0.05)] md:w-114 md:rounded-[40px] md:p-8 md:pt-16"
     >
       {/* 타이틀 + 경고 */}
       <div className="mb-8 flex flex-col text-center md:mb-10">
         <p id={labelledBy} className="text-sm font-semibold text-slate-800 md:text-xl">
+=======
+      className="w-85.75 rounded-[40px] bg-white px-8 pt-16 pb-8 shadow-[0px_0px_60px_0px_rgba(0,0,0,0.05)] md:w-114"
+    >
+      {/* 타이틀 + 경고 */}
+      <div className="flex flex-col gap-1 text-center">
+        <p id={labelledBy} className="text-xl leading-7.5 font-semibold tracking-[-0.03em] text-slate-800">
+>>>>>>> ea0eaae (feat: Modal 컴포넌트 구현)
           {titleLines.map((line, i) => (
             <span key={i} className="block">
               {line}
@@ -129,13 +137,21 @@ export function PopupModal({ onConfirm, variant }: PopupModalProps) {
         {warning && (
           <div className="flex items-center justify-center gap-1">
             <OctagonAlert className="text-orange-600" size={15} />
+<<<<<<< HEAD
             <span className="text-xs leading-6 font-medium text-orange-600 md:text-base">{warning}</span>
+=======
+            <span className="text-base leading-6 font-medium tracking-[-0.03em] text-orange-600">{warning}</span>
+>>>>>>> ea0eaae (feat: Modal 컴포넌트 구현)
           </div>
         )}
       </div>
 
       {/* @TODO Button -> 공통 컴포넌트로 교체 */}
+<<<<<<< HEAD
       <div className="flex gap-3">
+=======
+      <div className="mt-10 flex gap-3">
+>>>>>>> ea0eaae (feat: Modal 컴포넌트 구현)
         <button
           type="button"
           onClick={closeModal}

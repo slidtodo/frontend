@@ -1,10 +1,13 @@
 'use client';
+import { forwardRef } from 'react';
 import { X } from 'lucide-react';
+import { twMerge } from 'tailwind-merge';
 
 interface TagProps {
   string: string;
   onClose?: () => void;
   variant?: 'green' | 'orange' | 'purple';
+  className?: string;
 }
 
 const variantStyles = {
@@ -13,18 +16,25 @@ const variantStyles = {
   purple: 'bg-purple-100 text-purple-500',
 };
 
-export default function Tag({ string, onClose, variant = 'green' }: TagProps) {
+const Tag = forwardRef<HTMLDivElement, TagProps>(({ string, onClose, variant = 'green', className }, ref) => {
   return (
     <div
-      className={`flex items-center justify-center gap-1 w-fit h-[24px] px-2 rounded-full text-xs font-medium ${variantStyles[variant]}`}
+      ref={ref}
+      className={twMerge(
+        'inline-flex items-center gap-1 rounded-full px-4 py-1.5 text-sm font-medium',
+        variantStyles[variant],
+        className,
+      )}
     >
-      {' '}
       <span>{string}</span>
       {onClose && (
-        <button type="button" onClick={onClose} className="hover:opacity-70 transition-opacity">
-          <X size={10} />
+        <button type="button" onClick={onClose} className="ml-1 hover:opacity-70" aria-label="태그 삭제">
+          <X size={14} />
         </button>
       )}
     </div>
   );
-}
+});
+Tag.displayName = 'Tag';
+
+export default Tag;

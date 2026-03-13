@@ -1,12 +1,13 @@
 'use client';
 
+import { LinkUploadModal } from '@/shared/components/Modal/LinkUploadModal';
 import { PopupModal } from '@/shared/components/Modal/PopupModal';
 import { useModalStore } from '@/shared/stores/useModalStore';
 
 export default function Home() {
   const { openModal } = useModalStore();
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex max-w-300 flex-col gap-2">
       <button
         onClick={() =>
           openModal(
@@ -30,7 +31,10 @@ export default function Home() {
           openModal(
             <PopupModal
               onConfirm={() => console.log('noteLoad 팝업 제출')}
-              variant={{ type: 'noteLoad', noteTitle: '자바스크립트' }}
+              variant={{
+                type: 'noteLoad',
+                noteTitle: '자바스크립트자바스크립트',
+              }}
             />,
           )
         }
@@ -45,6 +49,9 @@ export default function Home() {
         }
       >
         네번째
+      </button>
+      <button onClick={() => openModal(<LinkUploadModal onConfirm={() => console.log('링크 업로드')} />)}>
+        링크 업로드
       </button>
     </div>
   );

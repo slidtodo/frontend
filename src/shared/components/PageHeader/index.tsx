@@ -1,14 +1,10 @@
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-type HeadingLevel = 'h1' | 'h2' | 'h3' | 'h4';
-
 interface PageHeaderProps {
   id?: string;
   title: string;
   count?: number;
-  /** Semantic HTML element — 페이지에 따라 h1, h2, h3, h4 중 결정 */
-  as?: HeadingLevel;
   className?: string;
 }
 
@@ -16,11 +12,6 @@ interface PageHeaderProps {
  * Dashboard / 페이지 헤더 + 카운트 넘버(ex. 찜한 할 일 개수)
  *
  * ## 반응형 폰트 크기
- * | 뷰포트       | 폰트 크기 | Tailwind 클래스  |
- * |-------------|---------|-----------------|
- * | 375px ~     | 16px    | `text-base`     |
- * | 744px ~     | 20px    | `md:text-xl`  |
- * | 1920px ~    | 24px    | `lg:text-2xl` |
  *
  * ## 색상
  * - 제목: `text-slate-700`
@@ -29,20 +20,20 @@ interface PageHeaderProps {
  * ## 사용 예시
  * ```tsx
  * // node 13460:51819 — 대시보드 타이틀
- * <PageHeader as="h1" title="체다치즈님의 대시보드" />
+ * <PageHeader title="체다치즈님의 대시보드" />
  *
  * // node 13460:53740 — 페이지 헤더 + 카운트
- * <PageHeader as="h2" title="모든 할 일" count={10} />
+ * <PageHeader title="모든 할 일" count={10} />
  *
  * // node 13460:61446 — 페이지 헤더 + 카운트
- * <PageHeader as="h2" title="찜한 할 일" count={6} />
+ * <PageHeader title="찜한 할 일" count={6} />
  * ```
  */
-export function PageHeader({ id, title, count, as: Tag = 'h2', className = '' }: PageHeaderProps) {
+export function PageHeader({ id, title, count, className = '' }: PageHeaderProps) {
   const hasCount = count !== undefined;
 
   return (
-    <Tag
+    <h1
       id={id}
       className={twMerge(
         clsx(
@@ -66,7 +57,7 @@ export function PageHeader({ id, title, count, as: Tag = 'h2', className = '' }:
           {count}
         </span>
       )}
-    </Tag>
+    </h1>
   );
 }
 

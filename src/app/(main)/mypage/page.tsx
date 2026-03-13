@@ -6,7 +6,7 @@ import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
 
 export default function MyPage() {
-  const [email] = useState('codeit@email.com');
+  const email = 'codeit@email.com';
   const [name, setName] = useState('체다치즈');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -15,16 +15,16 @@ export default function MyPage() {
   const isSocialLogin = false;
 
   return (
-    <div className="flex flex-col gap-6 p-6 items-center">
-      <h1 className="text-xl font-bold text-gray-900 w-[400px]">내 정보 관리</h1>
+    <div className="flex flex-col items-center gap-6 p-6">
+      <h1 className="w-[400px] text-xl font-bold text-gray-900">내 정보 관리</h1>
 
-      <div className="bg-white rounded-2xl p-8 flex flex-col gap-6 w-[400px]">
+      <div className="flex w-[400px] flex-col gap-6 rounded-2xl bg-white p-8">
         {/* 프로필 이미지 */}
         <div className="flex justify-center">
           <div className="relative">
             <Image src="/icons/image.png" alt="프로필" width={80} height={80} className="rounded-full" />
-            <button className="absolute bottom-0 right-0 w-6 h-6 bg-[#FF8442] rounded-full flex items-center justify-center">
-              <span className="text-white text-xs">✎</span>
+            <button className="absolute right-0 bottom-0 flex h-6 w-6 items-center justify-center rounded-full bg-[#FF8442]">
+              <span className="text-xs text-white">✎</span>
             </button>
           </div>
         </div>
@@ -66,7 +66,7 @@ export default function MyPage() {
         )}
 
         {/* 저장하기 버튼 */}
-        <Button variant="primary" type="submit" className="w-full h-[56px]">
+        <Button variant="primary" type="submit" className="h-[56px] w-full">
           저장하기
         </Button>
       </div>

@@ -116,6 +116,7 @@ export function PopupModal({ onConfirm, variant }: PopupModalProps) {
       aria-modal="true"
       aria-labelledby={labelledBy}
 <<<<<<< HEAD
+<<<<<<< HEAD
       className="w-85.75 rounded-3xl bg-white p-4 pt-12 shadow-[0px_0px_60px_0px_rgba(0,0,0,0.05)] md:w-114 md:rounded-[40px] md:p-8 md:pt-16"
     >
       {/* 타이틀 + 경고 */}
@@ -128,6 +129,13 @@ export function PopupModal({ onConfirm, variant }: PopupModalProps) {
       <div className="flex flex-col gap-1 text-center">
         <p id={labelledBy} className="text-xl leading-7.5 font-semibold tracking-[-0.03em] text-slate-800">
 >>>>>>> ea0eaae (feat: Modal 컴포넌트 구현)
+=======
+      className="w-85.75 rounded-3xl bg-white p-4 pt-12 shadow-[0px_0px_60px_0px_rgba(0,0,0,0.05)] md:w-114 md:rounded-[40px] md:p-8 md:pt-16"
+    >
+      {/* 타이틀 + 경고 */}
+      <div className="mb-8 flex flex-col text-center md:mb-10">
+        <p id={labelledBy} className="text-sm font-semibold text-slate-800 md:text-xl">
+>>>>>>> 566c80d (feat: 팝업 모달, 링크 모달 추가)
           {titleLines.map((line, i) => (
             <span key={i} className="block">
               {line}
@@ -138,20 +146,28 @@ export function PopupModal({ onConfirm, variant }: PopupModalProps) {
           <div className="flex items-center justify-center gap-1">
             <OctagonAlert className="text-orange-600" size={15} />
 <<<<<<< HEAD
+<<<<<<< HEAD
             <span className="text-xs leading-6 font-medium text-orange-600 md:text-base">{warning}</span>
 =======
             <span className="text-base leading-6 font-medium tracking-[-0.03em] text-orange-600">{warning}</span>
 >>>>>>> ea0eaae (feat: Modal 컴포넌트 구현)
+=======
+            <span className="text-xs leading-6 font-medium text-orange-600 md:text-base">{warning}</span>
+>>>>>>> 566c80d (feat: 팝업 모달, 링크 모달 추가)
           </div>
         )}
       </div>
 
       {/* @TODO Button -> 공통 컴포넌트로 교체 */}
 <<<<<<< HEAD
+<<<<<<< HEAD
       <div className="flex gap-3">
 =======
       <div className="mt-10 flex gap-3">
 >>>>>>> ea0eaae (feat: Modal 컴포넌트 구현)
+=======
+      <div className="flex gap-3">
+>>>>>>> 566c80d (feat: 팝업 모달, 링크 모달 추가)
         <button
           type="button"
           onClick={closeModal}

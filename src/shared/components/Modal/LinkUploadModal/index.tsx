@@ -38,4 +38,8 @@ export function LinkUploadModal({ onConfirm }: LinkUploadModalProps) {
       </div>
     </div>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 566c80d (feat: 팝업 모달, 링크 모달 추가)

@@ -1,5 +1,5 @@
 import PageHeader from '@/shared/components/PageHeader';
-import NoteEditor from '../../../../../features/goal/components/NoteEditor';
+import NoteEditor from '../../../../../features/goal/note/components/NoteEditor';
 
 export default function Page() {
   return (

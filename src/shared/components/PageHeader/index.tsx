@@ -20,13 +20,13 @@ interface PageHeaderProps {
  * ## 사용 예시
  * ```tsx
  * // node 13460:51819 — 대시보드 타이틀
- * <PageHeader as="h1" title="체다치즈님의 대시보드" />
+ * <PageHeader title="체다치즈님의 대시보드" />
  *
  * // node 13460:53740 — 페이지 헤더 + 카운트
- * <PageHeader as="h2" title="모든 할 일" count={10} />
+ * <PageHeader title="모든 할 일" count={10} />
  *
  * // node 13460:61446 — 페이지 헤더 + 카운트
- * <PageHeader as="h2" title="찜한 할 일" count={6} />
+ * <PageHeader title="찜한 할 일" count={6} />
  * ```
  */
 export function PageHeader({ id, title, count, className = '' }: PageHeaderProps) {

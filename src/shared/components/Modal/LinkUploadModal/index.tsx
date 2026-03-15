@@ -31,7 +31,10 @@ export function LinkUploadModal({ onConfirm }: LinkUploadModalProps) {
         />
         <button
           className="flex flex-1 items-center justify-center rounded-full bg-[#ff8442] px-[18px] py-[10px] text-sm font-semibold text-white md:py-[14px] md:text-lg md:text-[18px]"
-          onClick={() => onConfirm}
+          onClick={() => {
+            onConfirm(url);
+            closeModal();
+          }}
         >
           확인
         </button>

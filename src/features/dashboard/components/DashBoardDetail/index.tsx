@@ -1,5 +1,7 @@
-import Image from 'next/image';
+'use client';
 
+import Image from 'next/image';
+import { ListFilterIcon } from 'lucide-react';
 import PageSubTitle from '@/shared/components/PageSubTitle';
 import GoalBox from '../GoalBox';
 
@@ -27,6 +29,14 @@ const goalMockData = [
     todoList: [
       { id: 1, title: '할 일 1', isCompleted: false, star: false },
       { id: 2, title: '할 일 2', isCompleted: false, star: false },
+      { id: 3, title: '할 일 3', isCompleted: false, star: false },
+      { id: 4, title: '할 일 4', isCompleted: false, star: false },
+      { id: 5, title: '할 일 5', isCompleted: false, star: false },
+      { id: 6, title: '할 일 1', isCompleted: false, star: false },
+      { id: 7, title: '할 일 2', isCompleted: false, star: false },
+      { id: 8, title: '할 일 3', isCompleted: false, star: false },
+      { id: 9, title: '할 일 4', isCompleted: false, star: false },
+      { id: 10, title: '할 일 5', isCompleted: false, star: false },
     ],
     doneList: [{ id: 1, title: '완료된 일 1', star: true }],
   },
@@ -35,9 +45,14 @@ export default function DashboardDetail() {
   return (
     <section>
       <PageSubTitle
-        subTitle="최근 등록한 할 일"
+        subTitle="목표 별 할일"
         icons={<Image src={'/image/goal-icon.png'} alt="Goal Icon" width={40} height={40} />}
-        actions={<span>최신순 필터</span>}
+        actions={
+          <button onClick={() => {}} className="flex items-center gap-1">
+            <span className="font-base text-[#737373]">최신순 필터</span>
+            <ListFilterIcon size={20} className="text-[#737373]" />
+          </button>
+        }
       />
       <div className="flex flex-col gap-[32px] pt-[10px]">
         {goalMockData.map((goal) => (

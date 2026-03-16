@@ -3,23 +3,24 @@ import { ChevronRightIcon } from 'lucide-react';
 
 import PageSubTitle from '@/shared/components/PageSubTitle';
 import ProgressCircle from '@/shared/components/ProgressCircle';
+import TaskCard from '@/shared/components/TaskCard';
 
 export default function DashBoardSummary() {
   return (
     <section className="flex w-full flex-col gap-[40px] pb-[40px] md:flex-row md:gap-[12px] lg:gap-[32px] lg:pb-[34px]">
-      <div className="flex w-full flex-col gap-[10px]">
+      <div className="flex w-full flex-col justify-between gap-[10px]">
         <PageSubTitle
           subTitle="최근 등록한 할 일"
           icons={<Image src={'/image/task-icon.png'} alt="Task Icon" width={40} height={40} />}
           actions={
-            <span className="cursor-pointer text-base font-semibold text-[#ef6c08]">
+            <span className="w-full cursor-pointer text-base font-semibold text-[#ef6c08]">
               모두 보기 <ChevronRightIcon className="inline-block cursor-pointer" />
             </span>
           }
         />
         <RecentPostCard />
       </div>
-      <div className="flex w-full flex-col gap-[10px]">
+      <div className="flex w-full flex-col justify-between gap-[10px]">
         <PageSubTitle
           subTitle="내 진행 상황"
           icons={<Image src={'/image/progress-icon.png'} alt="Progress Icon" width={40} height={40} />}
@@ -32,8 +33,23 @@ export default function DashBoardSummary() {
 
 // TODO: PageHeader 컴포넌트에 TaskCard 컴포넌트가 있으므로 머지되면 그 후 구현
 function RecentPostCard() {
+  const mockData = [
+    { id: 1, title: '할 일 1', isCompleted: true, star: true },
+    { id: 2, title: '할 일 2', isCompleted: false, star: false },
+    { id: 3, title: '할 일 3', isCompleted: false, star: false },
+  ];
   return (
-    <article className="h-[256px] rounded-[40px] bg-[#FF8442] shadow-[0_10px_40px_0_rgba(255,158,89,0.40)]"></article>
+    <article className="h-[256px] rounded-[40px] bg-[#FF8442] p-8 shadow-[0_10px_40px_0_rgba(255,158,89,0.40)]">
+      {mockData.map((task) => (
+        <TaskCard
+          key={task.id}
+          id={`task-${task.id}`}
+          text={task.title}
+          checked={task.isCompleted}
+          hasGithubLink={task.star}
+        />
+      ))}
+    </article>
   );
 }
 
@@ -41,13 +57,7 @@ function CurrentProgressCard() {
   return (
     <article className="relative h-[256px] rounded-[40px] bg-[#02CAB5] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)]">
       <div className="absolute right-0 bottom-0">
-        <Image
-          src={'/image/progress-card-section-charactor-pc.png'}
-          alt="Progress card"
-          width={222}
-          height={140}
-          className=""
-        />
+        <Image src={'/image/progress-card-section-charactor-pc.png'} alt="Progress card" width={222} height={140} />
       </div>
       <div className="absolute flex h-full w-full items-center justify-start gap-8 p-12">
         <div className="w-[120px]">

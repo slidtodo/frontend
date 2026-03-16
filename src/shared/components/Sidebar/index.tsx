@@ -49,7 +49,7 @@ function SidebarDesktopTablet() {
           aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
           aria-expanded={isOpen}
         >
-          <ChevronsRightIcon size={32} />
+          <ChevronsRightIcon size={32} color="#CCC" className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
         </button>
         <Link
           href="/dashboard"

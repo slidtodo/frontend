@@ -11,7 +11,7 @@ export default function DashboardPage() {
   return (
     <div className="flex w-full flex-col">
       {/* TODO: 페이지 헤더 컴포넌트로 변경 필요 */}
-      <span className="hidden pb-[31px] md:block lg:pb-[34px]">체다치즈님의 대시보드</span>
+      <span className="hidden px-2 pb-[31px] text-2xl font-semibold md:block lg:pb-[34px]">체다치즈님의 대시보드</span>
       <DashBoardSummary />
       <DashboardDetail />
     </div>

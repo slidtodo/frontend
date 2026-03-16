@@ -45,7 +45,7 @@ function RecentPostCard() {
             done: task.done,
             star: task.star,
           }}
-          starred={task.id === 1}
+          starred={task.star}
         />
       ))}
     </article>
@@ -73,7 +73,7 @@ function CurrentProgressCard() {
       </div>
       <div className="absolute flex h-full w-full items-center justify-start gap-8 p-6 lg:p-12">
         <div className="w-[120px]">
-          <ProgressCircle percent={74} className="h-auto w-full" />
+          <ProgressCircle percent={10} className="h-auto w-full" />
         </div>
         <div className="flex flex-col items-start gap-2">
           <span className="text-[clamp(12px,2vw,20px)] font-semibold text-white">체다치즈님의 진행도는</span>

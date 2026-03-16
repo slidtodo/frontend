@@ -9,7 +9,6 @@ interface GoalBoxProps {
   data: {
     id: number;
     title: string;
-    description: string;
     progress: number;
     todoList: { id: number; title: string; isCompleted: boolean; star: boolean }[];
     doneList: { id: number; title: string; star: boolean }[];
@@ -18,7 +17,7 @@ interface GoalBoxProps {
 
 export default function GoalBox({ data }: GoalBoxProps) {
   return (
-    <article className="] flex flex-col gap-4 rounded-[40px] bg-white p-6 lg:px-8 lg:py-6">
+    <article className="flex flex-col gap-4 rounded-[40px] bg-white p-6 lg:px-8 lg:py-6">
       <div className="flex flex-col items-center gap-2 px-2 md:flex-row md:gap-12 lg:gap-8">
         <div className="flex w-full flex-1 flex-col gap-1 lg:flex-row lg:gap-4">
           <div className="font-base w-full max-w-[229px] overflow-hidden font-semibold text-ellipsis whitespace-nowrap text-[#333]">

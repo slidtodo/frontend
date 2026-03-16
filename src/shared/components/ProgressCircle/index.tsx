@@ -36,7 +36,7 @@ export default function ProgressCircle({ className, color = '#009D97', percent }
         strokeLinecap="round"
         strokeDasharray={circumference}
         strokeDashoffset={offset}
-        transform={`rotate( ${size / 2} ${size / 2})`}
+        transform={`rotate( -90 ${size / 2} ${size / 2})`}
       />
     </svg>
   );

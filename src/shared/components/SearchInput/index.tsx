@@ -15,8 +15,8 @@ export default function SearchInput({ placeholder, classNames, onIconClick, ...p
     >
       <input
         type="text"
-        placeholder={placeholder || '할 일을 검색해주세요'}
-        className="w-full border-none bg-transparent text-sm text-[#737373] focus:ring-0"
+        placeholder={placeholder}
+        className="w-full border-none bg-transparent text-sm font-medium text-[#737373] focus:ring-0"
         ref={inputRef}
         {...props}
       />

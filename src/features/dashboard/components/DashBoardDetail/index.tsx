@@ -48,8 +48,8 @@ export default function DashboardDetail() {
         subTitle="목표 별 할일"
         icons={<Image src={'/image/goal-icon.png'} alt="Goal Icon" width={40} height={40} />}
         actions={
-          <button onClick={() => {}} className="flex items-center gap-1">
-            <span className="font-base text-[#737373]">최신순 필터</span>
+          <button onClick={() => {}} className="flex cursor-pointer items-center gap-1">
+            <span className="text-base font-medium text-[#737373]">최신순</span>
             <ListFilterIcon size={20} className="text-[#737373]" />
           </button>
         }

@@ -39,7 +39,7 @@ function RecentPostCard() {
     { id: 3, title: '할 일 3', isCompleted: false, star: false },
   ];
   return (
-    <article className="h-[256px] rounded-[40px] bg-[#FF8442] p-8 shadow-[0_10px_40px_0_rgba(255,158,89,0.40)]">
+    <article className="h-[256px] rounded-[40px] bg-[#FF8442] p-4 shadow-[0_10px_40px_0_rgba(255,158,89,0.40)] lg:p-8">
       {mockData.map((task) => (
         <TaskCard
           key={task.id}
@@ -57,9 +57,22 @@ function CurrentProgressCard() {
   return (
     <article className="relative h-[256px] rounded-[40px] bg-[#02CAB5] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)]">
       <div className="absolute right-0 bottom-0">
-        <Image src={'/image/progress-card-section-charactor-pc.png'} alt="Progress card" width={222} height={140} />
+        <Image
+          src={'/image/progress-card-section-charactor-tablet.png'}
+          alt="Progress card Tablet"
+          width={140}
+          height={88}
+          className="block lg:hidden"
+        />
+        <Image
+          src={'/image/progress-card-section-charactor-pc.png'}
+          alt="Progress card PC"
+          width={222}
+          height={140}
+          className="hidden lg:block"
+        />
       </div>
-      <div className="absolute flex h-full w-full items-center justify-start gap-8 p-12">
+      <div className="absolute flex h-full w-full items-center justify-start gap-8 p-6 lg:p-12">
         <div className="w-[120px]">
           <ProgressCircle percent={74} className="h-auto w-full" />
         </div>

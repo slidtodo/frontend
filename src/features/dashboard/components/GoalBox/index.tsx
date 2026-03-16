@@ -26,7 +26,7 @@ export default function GoalBox({ data }: GoalBoxProps) {
           </div>
           <Progressbar progress={data.progress} />
         </div>
-        <div className="flex w-full flex-1 justify-between gap-1 md:justify-end md:gap-2 lg:gap-[14px]">
+        <div className="flex w-full flex-1 justify-between gap-0 md:justify-end md:gap-2 lg:gap-[14px]">
           <SearchInput placeholder="할 일을 검색해주세요" />
           <Button
             variant="secondary"
@@ -68,11 +68,14 @@ function ListBox({ title, variant, items }: ListBoxProps) {
       <div className="flex max-h-[236px] flex-col gap-1 overflow-y-auto">
         {items.map((item) => (
           <TaskCard
-            id={`task-${item.id}`}
             key={item.id}
-            text={item.title}
-            checked={item.isCompleted}
-            hasGithubLink={false}
+            todo={{
+              id: String(item.id),
+              title: item.title,
+              done: item.isCompleted ?? variant === 'done',
+              star: item.star,
+            }}
+            starred={item.star}
           />
         ))}
       </div>

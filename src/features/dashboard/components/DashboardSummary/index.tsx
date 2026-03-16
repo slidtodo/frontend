@@ -31,7 +31,6 @@ export default function DashBoardSummary() {
   );
 }
 
-// TODO: PageHeader 컴포넌트에 TaskCard 컴포넌트가 있으므로 머지되면 그 후 구현
 function RecentPostCard() {
   const mockData = [
     { id: 1, title: '할 일 1', done: true, star: true },
@@ -49,7 +48,7 @@ function RecentPostCard() {
             done: task.done,
             star: task.star,
           }}
-          starred={task.id === 1} // 예시: 첫 번째만 별 표시
+          starred={task.id === 1}
         />
       ))}
     </article>

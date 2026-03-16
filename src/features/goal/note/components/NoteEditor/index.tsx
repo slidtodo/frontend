@@ -5,9 +5,11 @@ import EditorToolbar from './EditorToolbar';
 import EditorTitle from './EditorTitle';
 import { useState } from 'react';
 import EditorMeta from './EditorMeta';
+import EditorContent from './EditorContent';
 
 export default function NoteEditor() {
   const [titleInput, setTitleInput] = useState('');
+  const [contentInput, setContentInput] = useState('');
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -15,6 +17,10 @@ export default function NoteEditor() {
       // @TODO 토스트 할지 말지 결정
       setTitleInput(value);
     }
+  };
+
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContentInput(e.target.value);
   };
 
   return (
@@ -28,7 +34,7 @@ export default function NoteEditor() {
       {/** 에디터 툴바 */}
       <EditorToolbar />
 
-      <section className="border-b border-b-[#DDD] pt-[29px] pb-4 md:pb-5 lg:pb-8">
+      <section className="border-b border-b-[#DDD] pb-4 md:pt-6 md:pb-5 lg:pb-8">
         <EditorTitle title={titleInput} onChange={handleTitleChange} />
         <EditorMeta
           goal={{
@@ -52,6 +58,7 @@ export default function NoteEditor() {
           ]}
         />
       </section>
+      <EditorContent content={contentInput} onChange={handleContentChange} />
     </div>
   );
 }

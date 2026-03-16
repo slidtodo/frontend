@@ -17,16 +17,16 @@ export default function Sidebar() {
 // 모바일일 때 렌더링 되는 사이드바 컴포넌트
 function SidebarMobile() {
   return (
-    <div className="flex items-center justify-between py-4 px-5 bg-white border-b-2 border-[#DDDDDD]">
+    <div className="flex items-center justify-between border-b-2 border-[#DDDDDD] bg-white px-5 py-4">
       <div className="flex gap-[12px]">
         <MenuIcon size={24} className="text-[#737373] hover:cursor-pointer" />
         {/* TODO: 체다치즈님의 목표 삭제하고 서버 데이터 가져와야 함 */}
-        <span className="text-[#333333] text-base font-semibold">체다치즈님의 목표</span>
+        <span className="text-base font-semibold text-[#333333]">체다치즈님의 목표</span>
       </div>
-      <button className="group relative  text-[#737373] hover:bg-gray-100 hover:text-[#FF8442] transition-all duration-200">
-        <BellIcon size={24} className="group-hover:scale-110 transition-transform" />
+      <button className="group relative text-[#737373] transition-all duration-200 hover:bg-gray-100 hover:text-[#FF8442]">
+        <BellIcon size={24} className="transition-transform group-hover:scale-110" />
         {/* 주황색 알람 점 */}
-        <div className="absolute top-0.5 right-0.5 w-2 h-2 bg-[#FF8442] rounded-full"></div>
+        <div className="absolute top-0.5 right-0.5 h-2 w-2 rounded-full bg-[#FF8442]"></div>
       </button>
     </div>
   );
@@ -38,16 +38,12 @@ function SidebarDesktopTablet() {
   const menus = getMenus();
   return (
     <div
-      className={`flex flex-col   bg-white rounded-tr-[32px] rounded-br-[32px] transition-all duration-300  
-      ${isOpen ? 'min-w-[250px] lg:min-w-[362px] p-4 lg:p-8 lg:gap-[140px] gap-[80px]' : 'min-w-[80px] py-8 px-6 gap-8'} `}
+      className={`flex flex-col rounded-tr-[32px] rounded-br-[32px] bg-white transition-all duration-300 ${isOpen ? 'min-w-[250px] gap-[80px] p-4 lg:min-w-[362px] lg:gap-[140px] lg:p-8' : 'min-w-[80px] gap-8 px-6 py-8'} `}
     >
-      <div
-        className={`flex gap-4 lg:gap-8 flex-col justify-center 
-        ${isOpen ? 'items-end' : 'items-center w-fit'}`}
-      >
+      <div className={`flex flex-col justify-center gap-4 lg:gap-8 ${isOpen ? 'items-end' : 'w-fit items-center'}`}>
         <button
           onClick={toggle}
-          className="cursor-pointer hover:text-gray-600 transition-colors"
+          className="cursor-pointer transition-colors hover:text-gray-600"
           aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
           aria-expanded={isOpen}
         >
@@ -55,102 +51,91 @@ function SidebarDesktopTablet() {
         </button>
         <Link
           href="/dashboard"
-          className={`flex items-center 
-          ${isOpen ? 'gap-4 w-full pl-2 pr-[22px]' : 'gap-0 w-fit p-0'} `}
+          className={`flex items-center ${isOpen ? 'w-full gap-4 pr-[22px] pl-2' : 'w-fit gap-0 p-0'} `}
         >
-          <div className={`relative ${isOpen ? 'w-12 h-12' : 'w-8 h-8'}`}>
+          <div className={`relative ${isOpen ? 'h-12 w-12' : 'h-8 w-8'}`}>
             <Image
               priority
               src={'/image/main-logo.svg'}
               alt="Logo"
               fill
-              className={`object-contain ${isOpen ? 'w-12 h-12' : 'w-8 h-8'}`}
+              className={`object-contain ${isOpen ? 'h-12 w-12' : 'h-8 w-8'}`}
             />
           </div>
           <h2
-            className={`text-2xl lg:text-3xl font-semibold text-gray-800 w-fit transition-all duration-300  
-            ${isOpen ? 'block' : 'hidden'}`}
+            className={`w-fit text-2xl font-semibold text-gray-800 transition-all duration-300 lg:text-3xl ${isOpen ? 'block' : 'hidden'}`}
           >
             Slid to do
           </h2>
         </Link>
-        <div
-          className={`flex gap-6 flex-col w-full transition-all duration-300  
-          ${isOpen ? 'block' : 'hidden'}`}
-        >
+        <div className={`flex w-full flex-col gap-6 transition-all duration-300 ${isOpen ? 'block' : 'hidden'}`}>
           <div className="flex flex-col gap-3">
             {menus.map((menu) => (
               <Link
                 key={menu.name}
                 href={menu.href}
-                className="group w-full flex items-center justify-start gap-[8px] py-[10px] lg:py-[14px] px-[12px] lg:px-[16px] hover:bg-[#FEF2E3] rounded-[20px] transition-all duration-200"
+                className="group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 hover:bg-[#FEF2E3] lg:px-[16px] lg:py-[14px]"
               >
                 <span className="text-[#CCCCCC] group-hover:text-[#EF6C00]">{menu.icon}</span>
-                <span className="text-[#333333] text-lg font-semibold group-hover:text-[#DC5203] group-hover:font-bold">
+                <span className="text-lg font-semibold text-[#333333] group-hover:font-bold group-hover:text-[#DC5203]">
                   {menu.name}
                 </span>
               </Link>
             ))}
           </div>
-          <div className="flex flex-col w-full">
-            <button className="flex items-center justify-start gap-[10px] py-[10px] px-[14px] hover:bg-gray-100 rounded-[20px] transition-all duration-100">
+          <div className="flex w-full flex-col">
+            <button className="flex items-center justify-start gap-[10px] rounded-[20px] px-[14px] py-[10px] transition-all duration-100 hover:bg-gray-100">
               <SettingsIcon className="text-[#BBBBBB]" size={24} />
-              <span className="text-[#737373] text-lg font-semibold">설정</span>
+              <span className="text-lg font-semibold text-[#737373]">설정</span>
             </button>
-            <button className="flex items-center justify-start gap-[10px] py-[10px] px-[14px] hover:bg-gray-100 rounded-[20px] transition-all duration-100">
-              <LogOutIcon className="text-[#BBBBBB] " size={24} />
-              <span className="text-[#737373] text-lg font-semibold">로그아웃</span>
+            <button className="flex items-center justify-start gap-[10px] rounded-[20px] px-[14px] py-[10px] transition-all duration-100 hover:bg-gray-100">
+              <LogOutIcon className="text-[#BBBBBB]" size={24} />
+              <span className="text-lg font-semibold text-[#737373]">로그아웃</span>
             </button>
           </div>
         </div>
       </div>
-      <div
-        className={`flex flex-col gap-8 items-center transition-all duration-300  
-        `}
-      >
-        <div className={`gap-4 w-full ${isOpen ? 'flex' : 'hidden'}`}>
+      <div className={`flex flex-col items-center gap-8 transition-all duration-300`}>
+        <div className={`w-full gap-4 ${isOpen ? 'flex' : 'hidden'}`}>
           {/* TODO: 버튼 컴포넌트로 교체 필요 */}
-          <button className="group w-full flex gap-2 flex-col items-center justify-center py-4 lg:py-8 px-2 lg:px-[22.5px] bg-[#FF8442] rounded-[32px] hover:bg-[#F07533] hover:shadow-lg transition-all duration-200">
+          <button className="group flex w-full flex-col items-center justify-center gap-2 rounded-[32px] bg-[#FF8442] px-2 py-4 transition-all duration-200 hover:bg-[#F07533] hover:shadow-lg lg:px-[22.5px] lg:py-8">
             <FlagIcon
-              className="text-[#ffffff] group-hover:scale-110 transition-transform w-8 lg:w-10 h-8 lg:h-10"
+              className="h-8 w-8 text-[#ffffff] transition-transform group-hover:scale-110 lg:h-10 lg:w-10"
               size={40}
             />
-            <span className="text-[#ffffff] text-md lg:text-lg font-semibold group-hover:font-bold transition-all">
+            <span className="text-md font-semibold text-[#ffffff] transition-all group-hover:font-bold lg:text-lg">
               새 목표
             </span>
           </button>
-          <button className="group w-full flex gap-2 flex-col items-center justify-center py-4 lg:py-8 px-2 lg:px-[22.5px] bg-[#ffffff] border border-[#FF8442] rounded-[32px] hover:bg-[#FEF2E3] hover:shadow-lg transition-all duration-200">
+          <button className="group flex w-full flex-col items-center justify-center gap-2 rounded-[32px] border border-[#FF8442] bg-[#ffffff] px-2 py-4 transition-all duration-200 hover:bg-[#FEF2E3] hover:shadow-lg lg:px-[22.5px] lg:py-8">
             <CopyCheckIcon
-              className="text-[#FF8442] group-hover:scale-110 transition-transform w-8 lg:w-10 h-8 lg:h-10"
+              className="h-8 w-8 text-[#FF8442] transition-transform group-hover:scale-110 lg:h-10 lg:w-10"
               size={40}
             />
-            <span className="text-[#FF8442] text-md lg:text-lg font-semibold group-hover:font-bold transition-all">
+            <span className="text-md font-semibold text-[#FF8442] transition-all group-hover:font-bold lg:text-lg">
               새 할일
             </span>
           </button>
         </div>
-        <div className="flex gap-2 w-full justify-between">
+        <div className="flex w-full justify-between gap-2">
           <button
-            className={`w-full gap-[8px] items-center justify-start py-[12px] px-[20px] lg:pr-[42px] lg:pl-[12px] border border-[#DDDDDD] rounded-[999px] 
-              ${isOpen ? 'flex' : 'hidden'}`}
+            className={`w-full items-center justify-start gap-[8px] rounded-[999px] border border-[#DDDDDD] px-[20px] py-[12px] lg:pr-[42px] lg:pl-[12px] ${isOpen ? 'flex' : 'hidden'}`}
           >
             <Image src={'/image/temp-character.svg'} alt="Character" width={38} height={38} />
-            <div className="flex flex-col items-start ">
-              <span className=" text-sm font-medium w-fit lg:w-full">닉네임</span>
-              <span className="text-sm font-medium text-[#A0A0A0] hidden lg:block">이메일</span>
+            <div className="flex flex-col items-start">
+              <span className="w-fit text-sm font-medium lg:w-full">닉네임</span>
+              <span className="hidden text-sm font-medium text-[#A0A0A0] lg:block">이메일</span>
             </div>
           </button>
 
           {/* TODO: 알람 표시 기능구현 */}
           <button
-            className={`group relative text-[#737373] hover:bg-gray-100 hover:text-[#FF8442] transition-all duration-200 
-            ${isOpen ? 'p-[20px] border border-[#DDDDDD] rounded-[999px]' : 'p-0'} `}
+            className={`group relative text-[#737373] transition-all duration-200 hover:bg-gray-100 hover:text-[#FF8442] ${isOpen ? 'rounded-[999px] border border-[#DDDDDD] p-[20px]' : 'p-0'} `}
           >
-            <BellIcon size={24} className="group-hover:scale-110 transition-transform " />
+            <BellIcon size={24} className="transition-transform group-hover:scale-110" />
             {/* 주황색 알람 점 */}
             <div
-              className={`absolute top-0.5 right-0.5 bg-[#FF8442] rounded-full 
-              ${isOpen ? 'w-3 h-3' : 'w-2 h-2'}`}
+              className={`absolute top-0.5 right-0.5 rounded-full bg-[#FF8442] ${isOpen ? 'h-3 w-3' : 'h-2 w-2'}`}
             ></div>
           </button>
         </div>

@@ -1,18 +1,20 @@
 export type DropdownItemType = {
-  id: string;
+  value: string;
   label: string;
-  disabled?: boolean;
+};
+
+export type Todo = {
+  id: string;
+  title: string;
+  done: boolean;
 };
 
 export interface TaskCardProps {
-  id: string;
-  text: string;
-  checked?: boolean;
+  todo: Todo;
   starred?: boolean;
   hasGithubLink?: boolean;
   hasSetting?: boolean;
   onToggle?: (id: string) => void;
-  onEdit?: (id: string) => void;
   onMenuOpen?: (id: string) => void;
   onStarToggle?: (id: string) => void;
 }

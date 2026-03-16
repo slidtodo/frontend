@@ -4,6 +4,7 @@ import { TaskCardProps } from '@/shared/types/types';
 import clsx from 'clsx';
 import { CheckIcon, EllipsisVertical, GithubIcon, Star } from 'lucide-react';
 import { useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 // ---------------------------------------------------------------------------
 // TaskCard
@@ -17,30 +18,30 @@ import { useState } from 'react';
  * <TaskCard id="2" text="완료된 항목" checked />
  */
 export function TaskCard({
-  id,
-  text,
-  checked: initialChecked = false,
-  /* //TODO 부모에서 starred로 todo/done 분기 처리 */
+  /**
+   * [todo]
+   * todo: id, title, done
+   * issues/PR: number, state, title
+   */
+  todo,
   starred: initialStarred = false,
-  hasGithubLink = true,
-  hasSetting = true,
-  onToggle,
-  onEdit,
-  onMenuOpen,
-  onStarToggle,
+
+  // 이벤트 핸들러
+  onToggle, // 체크박스
+  onStarToggle, // 별
 }: TaskCardProps) {
-  const [checked, setChecked] = useState(initialChecked);
+  const [checked, setChecked] = useState(todo.done);
   const [starred, setStarred] = useState(initialStarred);
 
   function handleToggle() {
     setChecked((prev) => !prev);
-    onToggle?.(id);
+    onToggle?.(todo.id);
     // TODO API 연결
   }
 
   function handleStarToggle() {
     setStarred((prev) => !prev);
-    onStarToggle?.(id);
+    onStarToggle?.(todo.id);
   }
 
   return (
@@ -62,20 +63,21 @@ export function TaskCard({
         type="button"
         role="checkbox"
         aria-checked={checked}
-        aria-label={`${text} ${checked ? '완료 취소' : '완료 처리'}`}
+        aria-label={`${todo.title} ${checked ? '완료 취소' : '완료 처리'}`}
         onClick={handleToggle}
-        className={[
+        className={twMerge(clsx(
           'relative flex cursor-pointer items-center justify-center',
           'size-4.5 shrink-0 rounded-md',
           'transition-colors duration-150',
           checked ? 'border-transparent bg-[#FF8442]' : 'border border-[#CCCCCC] bg-white',
-        ].join(' ')}
+        ))}
       >
         {checked && <CheckIcon className="text-white" />}
       </button>
 
       {/* ── Text ─────────────────────────────────────────────── */}
-      <span
+      {/** @TODO onClick에 모달 연결 */}
+      <div
         className={[
           'min-w-0 flex-1 truncate',
           'text-base leading-6 tracking-[-0.03em]',
@@ -86,32 +88,28 @@ export function TaskCard({
           .filter(Boolean)
           .join(' ')}
       >
-        {text}
-      </span>
+        {todo.title}
+      </div>
 
       {/* ── Action buttons ───────────────────────────────────── */}
-      <div className="flex shrink-0 items-center gap-2" role="toolbar" aria-label={`${text} 작업 도구`}>
+      <div className="flex shrink-0 items-center gap-2" role="toolbar" aria-label={`${todo.title} 작업 도구`}>
         {/* //TODO 깃허브 아이콘 */}
-        {hasGithubLink && (
-          <button
-            type="button"
-            aria-label="메모 보기"
-            className="relative h-6 w-6 cursor-pointer rounded-full bg-[#FF9E59]/20 p-1 group-hover:bg-white"
-          >
-            <GithubIcon className="absolute inset-0 p-1 text-orange-600" />
-          </button>
-        )}
+        <button
+          type="button"
+          aria-label="메모 보기"
+          className="relative h-6 w-6 cursor-pointer rounded-full bg-[#FF9E59]/20 p-1 group-hover:bg-white"
+        >
+          <GithubIcon className="absolute inset-0 p-1 text-orange-600" />
+        </button>
 
         {/* //TODO 설정 아이콘 */}
-        {hasSetting && (
-          <button
-            type="button"
-            aria-label="링크 보기"
-            className="relative h-6 w-6 cursor-pointer rounded-full bg-[#FF9E59]/20 p-1 group-hover:bg-white"
-          >
-            <EllipsisVertical className="absolute inset-0 p-1 text-orange-600" />
-          </button>
-        )}
+        <button
+          type="button"
+          aria-label="링크 보기"
+          className="relative h-6 w-6 cursor-pointer rounded-full bg-[#FF9E59]/20 p-1 group-hover:bg-white"
+        >
+          <EllipsisVertical className="absolute inset-0 p-1 text-orange-600" />
+        </button>
 
         <button
           type="button"

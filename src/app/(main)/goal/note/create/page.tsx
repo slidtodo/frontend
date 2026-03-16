@@ -1,5 +1,6 @@
 import PageHeader from '@/shared/components/PageHeader';
 import NoteEditor from '../../../../../features/goal/note/components/NoteEditor';
+import Button from '@/shared/components/Button';
 
 export default function Page() {
   return (
@@ -7,8 +8,12 @@ export default function Page() {
       <section className="mb-3 flex shrink-0 items-center justify-between md:mt-[48px] lg:mt-[72px] lg:mb-[22px]">
         <PageHeader title={'노트 작성하기'} />
         <div className="flex gap-2">
-          <button className="border">임시저장</button>
-          <button className="border">등록하기</button>
+          <Button variant="secondary" className="cursor-pointer md:px-[27px] md:py-[10px]">
+            임시저장
+          </Button>
+          <Button variant="primary" className="cursor-pointer md:px-[27px] md:py-[10px]">
+            등록하기
+          </Button>
         </div>
       </section>
       <section className="flex-1 md:mb-[30px] lg:mb-[62px]">

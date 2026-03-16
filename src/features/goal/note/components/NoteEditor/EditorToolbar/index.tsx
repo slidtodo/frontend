@@ -12,7 +12,13 @@ export default function EditorToolbar() {
   };
 
   return (
-    <div className={clsx('flex h-11 w-full items-center rounded-[18px] bg-[#FAFAFA]', 'text-slate-500', 'px-4 py-1.5')}>
+    <div
+      className={clsx(
+        'flex h-11 w-full items-center rounded-[18px] bg-[#FAFAFA]',
+        'text-slate-500',
+        'px-4 py-1.5',
+      )}
+    >
       <button
         onClick={() => toggle('bold')}
         className={clsx(

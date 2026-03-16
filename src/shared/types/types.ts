@@ -18,3 +18,10 @@ export interface TaskCardProps {
   onMenuOpen?: (id: string) => void;
   onStarToggle?: (id: string) => void;
 }
+
+export interface TagProps {
+  string: string;
+  onClose?: () => void;
+  variant?: 'green' | 'orange' | 'purple';
+  className?: string;
+}

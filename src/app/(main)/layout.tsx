@@ -9,7 +9,7 @@ interface MainLayoutProps {
 export default function MainLayout({ children }: MainLayoutProps) {
   return (
     <SidebarProvider>
-      <div className="flex flex-col bg-[#F2F2F2] md:flex-row">
+      <div className="flex h-full flex-col bg-[#F2F2F2] md:flex-row">
         <Sidebar />
         <Main>{children}</Main>
       </div>

@@ -5,6 +5,8 @@ import PageSubTitle from '@/shared/components/PageSubTitle';
 import ProgressCircle from '@/shared/components/ProgressCircle';
 import TaskCard from '@/shared/components/TaskCard';
 
+import { mockData } from './mock';
+
 export default function DashBoardSummary() {
   return (
     <section className="flex w-full flex-col gap-[40px] pb-[40px] md:flex-row md:gap-[12px] lg:gap-[32px] lg:pb-[34px]">
@@ -13,7 +15,7 @@ export default function DashBoardSummary() {
           subTitle="최근 등록한 할 일"
           icons={<Image src={'/image/task-icon.png'} alt="Task Icon" width={40} height={40} />}
           actions={
-            <span className="w-full cursor-pointer text-base font-semibold text-[#ef6c08]">
+            <span className="w-full cursor-pointer text-sm font-semibold text-[#ef6c08] md:text-base">
               모두 보기 <ChevronRightIcon className="inline-block cursor-pointer" />
             </span>
           }
@@ -32,11 +34,6 @@ export default function DashBoardSummary() {
 }
 
 function RecentPostCard() {
-  const mockData = [
-    { id: 1, title: '할 일 1', done: true, star: true },
-    { id: 2, title: '할 일 2', done: false, star: false },
-    { id: 3, title: '할 일 3', done: false, star: false },
-  ];
   return (
     <article className="h-[256px] rounded-[40px] bg-[#FF8442] p-4 shadow-[0_10px_40px_0_rgba(255,158,89,0.40)] lg:p-8">
       {mockData.map((task) => (

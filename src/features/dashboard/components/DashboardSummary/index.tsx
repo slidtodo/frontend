@@ -6,6 +6,7 @@ import ProgressCircle from '@/shared/components/ProgressCircle';
 import TaskCard from '@/shared/components/TaskCard';
 
 import { mockData } from './mock';
+import Link from 'next/link';
 
 export default function DashBoardSummary() {
   return (
@@ -15,9 +16,12 @@ export default function DashBoardSummary() {
           subTitle="최근 등록한 할 일"
           icons={<Image src={'/image/task-icon.png'} alt="Task Icon" width={40} height={40} />}
           actions={
-            <span className="w-full cursor-pointer text-sm font-semibold text-[#ef6c08] md:text-base">
+            <Link
+              href="/dashboard/all-todo"
+              className="w-full cursor-pointer text-sm font-semibold text-[#ef6c08] md:text-base"
+            >
               모두 보기 <ChevronRightIcon className="inline-block cursor-pointer" />
-            </span>
+            </Link>
           }
         />
         <RecentPostCard />

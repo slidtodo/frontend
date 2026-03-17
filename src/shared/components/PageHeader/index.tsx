@@ -37,7 +37,7 @@ export function PageHeader({ id, title, count, className = '' }: PageHeaderProps
       id={id}
       className={twMerge(
         clsx(
-          'flex items-center gap-2',
+          'flex items-center gap-2 text-slate-700',
           'font-semibold tracking-[-0.03em]',
           'text-base leading-6',
           'md:text-xl md:leading-7.5',
@@ -49,7 +49,7 @@ export function PageHeader({ id, title, count, className = '' }: PageHeaderProps
       aria-label={hasCount ? `${title}, ${count}개` : undefined}
     >
       {/* 제목 — slate-700 */}
-      <span className="text-slate-700">{title}</span>
+      {title}
 
       {/* 카운트 — orange-600, aria-label로 이미 읽히므로 aria-hidden 처리 */}
       {hasCount && (

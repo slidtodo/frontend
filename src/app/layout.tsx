@@ -1,4 +1,6 @@
+import { Modal } from '@/shared/components/Modal';
 import './globals.css';
+import Providers from './providers';
 
 export default function RootLayout({
   children,
@@ -13,7 +15,12 @@ export default function RootLayout({
           <script src="https://unpkg.com/react-scan/dist/auto.global.js" />
         </head>
       ) : null}
-      <body>{children}</body>
+      <body>
+        <Providers>
+          {children}
+          <Modal />
+        </Providers>
+      </body>
     </html>
   );
 }

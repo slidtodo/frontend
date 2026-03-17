@@ -10,17 +10,23 @@ export const Modal = () => {
   // 모달의 backdrop을 가리키는 ref
   const modalRef = useRef<HTMLDivElement>(null);
 
-  // 모달이 열리면 스크롤 비활성화
+  // 모달이 열리면 스크롤 비활성화 + esc 눌렀을 때 모달 나가기
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    if (!isOpen) return;
+
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeModal();
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
     return () => {
       document.body.style.overflow = 'unset';
+      document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen]);
+  }, [isOpen, closeModal]);
 
   // 모달 backdrop을 클릭한 경우 모달을 닫음
   const handleClickOutside = (e: MouseEvent<HTMLDivElement>) => {

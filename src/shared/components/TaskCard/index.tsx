@@ -29,9 +29,12 @@ export function TaskCard({
   // 이벤트 핸들러
   onToggle, // 체크박스
   onStarToggle, // 별
+  variant="default"
 }: TaskCardProps) {
   const [checked, setChecked] = useState(todo.done);
   const [starred, setStarred] = useState(initialStarred);
+
+  const isGreen = variant === "green";
 
   function handleToggle() {
     setChecked((prev) => !prev);
@@ -65,12 +68,14 @@ export function TaskCard({
         aria-checked={checked}
         aria-label={`${todo.title} ${checked ? '완료 취소' : '완료 처리'}`}
         onClick={handleToggle}
-        className={twMerge(clsx(
-          'relative flex cursor-pointer items-center justify-center',
-          'size-4.5 shrink-0 rounded-md',
-          'transition-colors duration-150',
-          checked ? 'border-transparent bg-[#FF8442]' : 'border border-[#CCCCCC] bg-white',
-        ))}
+        className={twMerge(
+          clsx(
+            'relative flex cursor-pointer items-center justify-center',
+            'size-4.5 shrink-0 rounded-md',
+            'transition-colors duration-150',
+            checked ? 'border-transparent bg-[#FF8442]' : 'border border-[#CCCCCC] bg-white',
+          ),
+        )}
       >
         {checked && <CheckIcon className="text-white" />}
       </button>

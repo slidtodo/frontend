@@ -1,24 +1,26 @@
 'use client';
 
+import { LinkUploadModal } from '@/shared/components/Modal/LinkUploadModal';
+import { useModalStore } from '@/shared/stores/useModalStore';
 import clsx from 'clsx';
 import { AlignCenter, AlignLeft, AlignRight, Bold, Italic, Link2, List, Underline } from 'lucide-react';
 import { useState } from 'react';
 
 export default function EditorToolbar() {
   const [activeTools, setActiveTools] = useState<string[]>([]);
+  const { openModal, closeModal } = useModalStore();
 
   const toggle = (tool: string) => {
     setActiveTools((prev) => (prev.includes(tool) ? prev.filter((t) => t !== tool) : [...prev, tool]));
   };
 
+  const handleLinkUploadClick = () => {
+    toggle('link');
+    openModal(<LinkUploadModal onConfirm={closeModal} />);
+  };
+
   return (
-    <div
-      className={clsx(
-        'flex h-11 w-full items-center rounded-[18px] bg-[#FAFAFA]',
-        'text-slate-500',
-        'px-4 py-1.5',
-      )}
-    >
+    <div className={clsx('flex h-11 w-full items-center rounded-[18px] bg-[#FAFAFA]', 'text-slate-500', 'px-4 py-1.5')}>
       <button
         onClick={() => toggle('bold')}
         className={clsx(
@@ -90,7 +92,7 @@ export default function EditorToolbar() {
       </button>
 
       <button
-        onClick={() => toggle('link')}
+        onClick={handleLinkUploadClick}
         className={clsx(
           'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',
           activeTools.includes('link') && 'bg-[#DDD] text-slate-700',

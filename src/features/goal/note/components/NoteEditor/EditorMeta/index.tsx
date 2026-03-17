@@ -1,4 +1,5 @@
 import Tag from '@/shared/components/Tag';
+import { formatDate } from '@/shared/utils/utils';
 import { CalendarIcon, FlagIcon, Hash, SquareCheck } from 'lucide-react';
 
 /**
@@ -37,6 +38,7 @@ interface EditorMetaProps {
 
 export default function EditorMeta({ goal, todos, tags }: EditorMetaProps) {
   const todosTagLabel = todos.done ? 'DONE' : 'TODO';
+  const today = formatDate(new Date());
 
   return (
     <div className="flex w-full flex-col gap-3 md:flex-row">
@@ -59,11 +61,11 @@ export default function EditorMeta({ goal, todos, tags }: EditorMetaProps) {
           icon={<CalendarIcon size={12} className="line-clamp-1 text-base font-semibold text-[#A4A4A4]" />}
           label="작성일"
         >
-          <span className="line-clamp-1 text-sm font-normal text-[#333333]">{'날짜'}</span>
+          <span className="line-clamp-1 text-sm font-normal text-[#333333]">{today}</span>
         </MetaRow>
 
         <MetaRow icon={<Hash size={12} className="text-base font-semibold text-[#A4A4A4]" />} label="태그">
-          <div className="flex gap-1 overflow-x-auto">
+          <div className="no-scrollbar flex gap-1 overflow-x-auto">
             {tags.map((tag) => (
               <Tag
                 key={tag.id}

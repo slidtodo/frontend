@@ -35,6 +35,9 @@ export function TaskCard({
   // 이벤트 핸들러
   onToggle, // 체크박스
   onStarToggle, // 별
+  /**
+   * varaint: 'default' | 'orange'
+   */
   variant = 'default',
 }: TaskCardProps) {
   const [checked, setChecked] = useState(todo.done);

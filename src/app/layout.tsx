@@ -16,8 +16,10 @@ export default function RootLayout({
         </head>
       ) : null}
       <body>
-        <Providers>{children}</Providers>
-        <Modal/>
+        <Providers>
+          {children}
+          <Modal />
+        </Providers>
       </body>
     </html>
   );

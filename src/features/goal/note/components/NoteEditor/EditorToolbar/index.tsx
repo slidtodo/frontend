@@ -6,12 +6,20 @@ import clsx from 'clsx';
 import { AlignCenter, AlignLeft, AlignRight, Bold, Italic, Link2, List, Underline } from 'lucide-react';
 import { useState } from 'react';
 
+const ALIGN_TOOLS = ['align-left', 'align-center', 'align-right'];
+
 export default function EditorToolbar() {
   const [activeTools, setActiveTools] = useState<string[]>([]);
   const { openModal } = useModalStore();
 
   const toggle = (tool: string) => {
     setActiveTools((prev) => (prev.includes(tool) ? prev.filter((t) => t !== tool) : [...prev, tool]));
+  };
+
+  const toggleAlign = (tool: string) => {
+    setActiveTools((prev) =>
+      prev.includes(tool) ? prev.filter((t) => t !== tool) : [...prev.filter((t) => !ALIGN_TOOLS.includes(t)), tool],
+    );
   };
 
   /**
@@ -58,7 +66,7 @@ export default function EditorToolbar() {
       </button>
 
       <button
-        onClick={() => toggle('align-left')}
+        onClick={() => toggleAlign('align-left')}
         className={clsx(
           'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',
           activeTools.includes('align-left') && 'bg-[#DDD] text-slate-700',
@@ -68,7 +76,7 @@ export default function EditorToolbar() {
       </button>
 
       <button
-        onClick={() => toggle('align-center')}
+        onClick={() => toggleAlign('align-center')}
         className={clsx(
           'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',
           activeTools.includes('align-center') && 'bg-[#DDD] text-slate-700',
@@ -78,7 +86,7 @@ export default function EditorToolbar() {
       </button>
 
       <button
-        onClick={() => toggle('align-right')}
+        onClick={() => toggleAlign('align-right')}
         className={clsx(
           'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',
           activeTools.includes('align-right') && 'bg-[#DDD] text-slate-700',

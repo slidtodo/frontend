@@ -12,10 +12,7 @@ export type Todo = {
 export interface TaskCardProps {
   todo: Todo;
   starred?: boolean;
-  hasGithubLink?: boolean;
-  hasSetting?: boolean;
   onToggle?: (id: string) => void;
-  onMenuOpen?: (id: string) => void;
   onStarToggle?: (id: string) => void;
   variant?: 'default' | 'orange';
 }

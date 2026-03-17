@@ -8,15 +8,21 @@ import { useState } from 'react';
 
 export default function EditorToolbar() {
   const [activeTools, setActiveTools] = useState<string[]>([]);
-  const { openModal, closeModal } = useModalStore();
+  const { openModal } = useModalStore();
 
   const toggle = (tool: string) => {
     setActiveTools((prev) => (prev.includes(tool) ? prev.filter((t) => t !== tool) : [...prev, tool]));
   };
 
+  /**
+   * @TODO
+   * onConfirm에 넘겨주는 함수 링크 업로드 API로 바꾸기
+   */
   const handleLinkUploadClick = () => {
     toggle('link');
-    openModal(<LinkUploadModal onConfirm={closeModal} />);
+    openModal(<LinkUploadModal onConfirm={(url) => console.log(url)} />, () =>
+      setActiveTools((prev) => prev.filter((t) => t !== 'link')),
+    );
   };
 
   return (

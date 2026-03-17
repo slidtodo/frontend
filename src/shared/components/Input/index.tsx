@@ -3,7 +3,7 @@ import { useState, forwardRef, InputHTMLAttributes } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
-type InputType = 'text' | 'email' | 'password';
+type InputType = 'text' | 'email' | 'password' | 'url';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   type?: InputType;

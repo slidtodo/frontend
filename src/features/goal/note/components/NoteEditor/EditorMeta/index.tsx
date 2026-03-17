@@ -50,7 +50,7 @@ export default function EditorMeta({ goal, todos, tags }: EditorMetaProps) {
         <MetaRow icon={<SquareCheck size={12} className="text-base font-semibold text-[#A4A4A4]" />} label="할 일">
           <div className="flex items-center gap-2">
             <span className="line-clamp-1 text-sm font-normal text-[#333333]">{todos.title}</span>
-            <Tag string={todosTagLabel} className="font-xs rounded-md px-[5.5px] py-[3px] font-semibold" />
+            <Tag string={todosTagLabel} className="rounded-md px-[5.5px] py-[3px] text-xs font-semibold" />
           </div>
         </MetaRow>
       </div>
@@ -71,7 +71,7 @@ export default function EditorMeta({ goal, todos, tags }: EditorMetaProps) {
                 key={tag.id}
                 string={tag.string}
                 variant={tag.variant}
-                className="overflow-w-auto rounded-full border px-2 py-1 text-xs font-medium whitespace-nowrap"
+                className="rounded-full border px-2 py-1 text-xs font-medium whitespace-nowrap"
               />
             ))}
           </div>

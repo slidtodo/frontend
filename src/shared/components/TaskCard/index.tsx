@@ -14,8 +14,14 @@ import { twMerge } from 'tailwind-merge';
  * A single to-do list row.
  *
  * @example
- * <TaskCard id="1" text="항목명" />
- * <TaskCard id="2" text="완료된 항목" checked />
+ * <TaskCard
+ *  todo={{
+ *  id: '1',
+ *  title: '항목명',
+ *  done: true,
+ *  }}
+ *  variant='orange'
+ * />
  */
 export function TaskCard({
   /**
@@ -29,12 +35,12 @@ export function TaskCard({
   // 이벤트 핸들러
   onToggle, // 체크박스
   onStarToggle, // 별
-  variant="default"
+  variant = 'default',
 }: TaskCardProps) {
   const [checked, setChecked] = useState(todo.done);
   const [starred, setStarred] = useState(initialStarred);
 
-  const isGreen = variant === "green";
+  const isOrange = variant === 'orange';
 
   function handleToggle() {
     setChecked((prev) => !prev);
@@ -74,24 +80,25 @@ export function TaskCard({
             'size-4.5 shrink-0 rounded-md',
             'transition-colors duration-150',
             checked ? 'border-transparent bg-[#FF8442]' : 'border border-[#CCCCCC] bg-white',
+            isOrange && 'border-none bg-orange-200',
           ),
         )}
       >
-        {checked && <CheckIcon className="text-white" />}
+        {checked && <CheckIcon className={clsx(isOrange ? 'text-orange-500' : 'text-white')} />}
       </button>
 
       {/* ── Text ─────────────────────────────────────────────── */}
       {/** @TODO onClick에 모달 연결 */}
       <div
-        className={[
+        className={clsx(
           'min-w-0 flex-1 truncate',
           'text-base leading-6 tracking-[-0.03em]',
           'transition-colors duration-150',
-          checked ? 'font-medium text-[#737373]' : 'font-medium text-[#262626]',
-          checked ? 'group-hover:font-semibold group-hover:text-[#EF6C00]' : '',
-        ]
-          .filter(Boolean)
-          .join(' ')}
+          checked
+            ? 'font-medium text-[#737373] group-hover:font-semibold group-hover:text-[#EF6C00]'
+            : 'font-medium text-[#262626]',
+          isOrange ? 'group-hover:text-white' : '',
+        )}
       >
         {todo.title}
       </div>
@@ -102,7 +109,10 @@ export function TaskCard({
         <button
           type="button"
           aria-label="메모 보기"
-          className="relative h-6 w-6 cursor-pointer rounded-full bg-[#FF9E59]/20 p-1 group-hover:bg-white"
+          className={clsx(
+            'relative h-6 w-6 cursor-pointer rounded-full p-1 group-hover:bg-white',
+            isOrange ? 'bg-[#FFFFFF]/40' : 'bg-[#FF9E59]/20',
+          )}
         >
           <GithubIcon className="absolute inset-0 p-1 text-orange-600" />
         </button>
@@ -111,7 +121,10 @@ export function TaskCard({
         <button
           type="button"
           aria-label="링크 보기"
-          className="relative h-6 w-6 cursor-pointer rounded-full bg-[#FF9E59]/20 p-1 group-hover:bg-white"
+          className={clsx(
+            'relative h-6 w-6 cursor-pointer rounded-full p-1 group-hover:bg-white',
+            isOrange ? 'bg-[#FFFFFF]/40' : 'bg-[#FF9E59]/20',
+          )}
         >
           <EllipsisVertical className="absolute inset-0 p-1 text-orange-600" />
         </button>
@@ -123,7 +136,10 @@ export function TaskCard({
           onClick={handleStarToggle}
           className="h-6 w-6 cursor-pointer rounded-full"
         >
-          <Star className="h-6 w-6 stroke-orange-400" fill={starred ? '#FF8442' : 'none'} />
+          <Star
+            className={clsx('h-6 w-6', isOrange ? 'stroke-[#FFD19B]' : 'stroke-orange-400')}
+            fill={starred ? (isOrange ? '#FFD19B' : '#FF8442') : 'none'}
+          />
         </button>
       </div>
     </li>

@@ -14,7 +14,7 @@ export const useModalStore = create<ModalStore>((set, get) => ({
   content: null,
   onClose: undefined,
 
-  openModal: (content, onClose) => set({ isOpen: true, content, onClose }), 
+  openModal: (content, onClose) => set({ isOpen: true, content, onClose }),
   closeModal: () => {
     get().onClose?.();
     set({ isOpen: false, content: null, onClose: undefined });

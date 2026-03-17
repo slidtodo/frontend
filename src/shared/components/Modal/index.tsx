@@ -1,4 +1,3 @@
-// Modal/index.tsx
 'use client';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { useRef, useEffect, MouseEvent } from 'react';

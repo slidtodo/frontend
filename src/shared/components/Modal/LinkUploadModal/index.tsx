@@ -28,6 +28,7 @@ export function LinkUploadModal({ onConfirm }: LinkUploadModalProps) {
           className="mb-6 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700 placeholder:text-sm placeholder:text-slate-500 focus:outline-none md:text-base md:placeholder:text-base"
           aria-label="링크 입력"
         />
+
         <Button
           className="flex flex-1 items-center justify-center rounded-full bg-[#ff8442] px-[18px] py-[10px] text-sm font-semibold text-white md:py-[14px] md:text-lg md:text-[18px]"
           onClick={() => {

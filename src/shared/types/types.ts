@@ -7,6 +7,7 @@ export type Todo = {
   id: string;
   title: string;
   done: boolean;
+  star: boolean;
 };
 
 export interface TaskCardProps {

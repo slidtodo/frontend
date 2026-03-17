@@ -12,12 +12,12 @@ interface ProgressbarProps {
 }
 export default function Progressbar({ progress, number = true }: ProgressbarProps) {
   return (
-    <div className="w-full flex gap-[8px] md:gap-[10px] items-center transition-all duration-300">
-      <div className="w-full h-2 bg-[#E9E9E9] rounded">
-        <div className="h-full bg-[#FF8442] rounded" style={{ width: `${progress}%` }}></div>
+    <div className="flex w-full items-center gap-[8px] transition-all duration-300 md:gap-[10px]">
+      <div className="h-2 w-full rounded bg-[#E9E9E9]">
+        <div className="h-full rounded bg-[#FF8442]" style={{ width: `${progress}%` }}></div>
       </div>
       {number && (
-        <span className="text-sm md:text-base  md:font-bold text-[#EF6C00] mt-1 transition-all duration-300">
+        <span className="text-sm text-[#EF6C00] transition-all duration-300 md:text-base md:font-bold">
           {progress}%
         </span>
       )}

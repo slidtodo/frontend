@@ -40,7 +40,7 @@ function SidebarDesktopTablet() {
   const menus = getMenus();
   return (
     <div
-      className={`flex h-full flex-col justify-between rounded-tr-[32px] rounded-br-[32px] bg-white transition-all duration-300 ${isOpen ? 'min-w-[250px] p-4 lg:min-w-[362px] lg:p-8' : 'min-w-[80px] px-6 py-8'} `}
+      className={`flex flex-col justify-between rounded-tr-[32px] rounded-br-[32px] bg-white transition-all duration-300 ${isOpen ? 'min-w-[250px] p-4 lg:min-w-[362px] lg:p-8' : 'min-w-[80px] px-6 py-8'} `}
     >
       <div className={`flex flex-col justify-center gap-4 lg:gap-8 ${isOpen ? 'items-end' : 'w-fit items-center'}`}>
         <button

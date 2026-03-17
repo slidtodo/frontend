@@ -1,6 +1,6 @@
 import { SidebarProvider } from '@/contexts/SidebarContext';
-import Sidebar from '@/features/dashboard/components/Sidebar';
-import Main from '@/features/dashboard/components/Main';
+import Sidebar from '@/shared/components/Sidebar';
+import Main from '@/shared/components/Main';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -9,7 +9,7 @@ interface MainLayoutProps {
 export default function MainLayout({ children }: MainLayoutProps) {
   return (
     <SidebarProvider>
-      <div className="h-screen flex flex-col md:flex-row bg-gray-50 ">
+      <div className="flex flex-col bg-[#F2F2F2] md:flex-row">
         <Sidebar />
         <Main>{children}</Main>
       </div>

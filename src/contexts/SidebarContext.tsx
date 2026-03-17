@@ -19,9 +19,7 @@ interface ParentMenu extends MenuBase {
 type MenuItem = LeafMenu | ParentMenu;
 
 interface SidebarContextType {
-  isOpen: boolean;
   toggle: () => void;
-  open: () => void;
   getMenus: () => MenuItem[];
   // TODO: 혹시 권한이 필요없다면 해당 아래 코드는 삭제
   getAccessibleMenus: () => MenuItem[];
@@ -68,11 +66,10 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
 
   const sidebar = useMemo<SidebarContextType>(() => {
     const toggle = () => setIsOpen((prev) => !prev);
-    const open = () => setIsOpen(true);
     const getMenus = () => allMenus;
     const getAccessibleMenus = () => allMenus;
-    return { isOpen, toggle, open, getMenus, getAccessibleMenus };
-  }, [allMenus, isOpen]);
+    return { toggle, getMenus, getAccessibleMenus };
+  }, [allMenus]);
 
   const currentMenu = useMemo(() => {
     return allMenus.find((menu) => 'href' in menu && menu.href === pathname) || null;

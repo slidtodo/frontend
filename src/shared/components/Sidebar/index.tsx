@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ChevronsRightIcon, SettingsIcon, LogOutIcon, FlagIcon, CopyCheckIcon, BellIcon, MenuIcon } from 'lucide-react';
 
 import { useSidebarContext } from '@/contexts/SidebarContext';
+import { useSidebarOpen } from '@/contexts/SidebarContext';
 import { useMobile } from '@/shared/hooks/useBreakPoint';
 
 export default function Sidebar() {
@@ -34,7 +35,9 @@ function SidebarMobile() {
 
 // 데스크탑과 태블릿에서 렌더링 되는 사이드바 컴포넌트
 function SidebarDesktopTablet() {
-  const { isOpen, toggle, getMenus } = useSidebarContext();
+  const { toggle, getMenus } = useSidebarContext();
+  const isOpen = useSidebarOpen();
+
   const menus = getMenus();
   return (
     <div

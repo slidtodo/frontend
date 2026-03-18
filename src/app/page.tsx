@@ -31,8 +31,8 @@ export default function LandingPage() {
       <section className="w-full bg-gradient-to-r from-[#C7EDE6] to-[#FBE7C6] pt-16 pb-0 md:pt-20">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center px-6 text-center">
           {' '}
-          <p className="text-sm font-semibold text-[#EF6C00] md:text-lg">슬리드투두 하나로 정리부터 실행까지</p>
-          <h1 className="mt-2 text-2xl font-bold text-gray-900 md:text-4xl">오늘의 할 일, 슬리드투두로 계획해요</h1>
+          <p className="text-sm font-semibold text-[#EF6C00] md:text-lg">bearlog 하나로 일상부터 개발까지</p>
+          <h1 className="mt-2 text-2xl font-bold text-gray-900 md:text-4xl">개발자 할 일, bearlog로 계획해요</h1>
           <Link href="/login">
             <Button
               variant="primary"
@@ -60,7 +60,7 @@ export default function LandingPage() {
       {/* ── Section 02 · 특별한 이유 ── */}
       <section className="relative z-10 w-full bg-[#FF8442] py-14 md:py-20">
         {' '}
-        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 md:flex-row md:items-center md:justify-between xl:gap-[216px] xl:justify-normal">
+        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 md:flex-row md:items-center md:justify-between xl:justify-normal xl:gap-[216px]">
           <div className="flex flex-col text-white md:shrink-0">
             <p className="text-sm font-semibold text-[#FFD19B] md:text-lg">자동화로 더 똑똑한 노트 관리</p>
             <h2 className="mt-3 text-2xl leading-tight font-bold md:text-4xl">bearlog가 특별한 이유</h2>

@@ -1,11 +1,11 @@
 'use client';
-import { useState, forwardRef } from 'react';
+import { useState, forwardRef, InputHTMLAttributes } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
-type InputType = 'text' | 'email' | 'password';
+type InputType = 'text' | 'email' | 'password' | 'url';
 
-interface InputProps {
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   type?: InputType;
   placeholder?: string;
   value?: string;
@@ -20,7 +20,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     const inputType = type === 'password' ? (showPassword ? 'text' : 'password') : type;
 
     return (
-      <div className="relative w-[400px]">
+      <div className="relative w-full">
         <input
           ref={ref}
           type={inputType}

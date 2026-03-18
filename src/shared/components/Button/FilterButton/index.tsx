@@ -22,7 +22,7 @@ const FilterButton = ({ items, value, onValueChange }: FilterButtonProps) => {
 
   return (
     <div ref={ref} className="relative flex">
-      <button type="button" className="flex w-20 cursor-pointer items-center gap-1" onClick={() => setIsOpen(!isOpen)}>
+      <button className="flex w-20 cursor-pointer items-center gap-1" onClick={() => setIsOpen(!isOpen)}>
         <span className="text-sm font-medium text-[#737373]">{selectedLabel}</span>
         <ListFilterIcon size={20} className="text-[#737373]" />
       </button>

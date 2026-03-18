@@ -8,6 +8,7 @@ import noteIcon from '@/features/goal/note/assets/icons/icon-note.png';
 import Image from 'next/image';
 import { EllipsisVertical } from 'lucide-react';
 import Tag from '@/shared/components/Tag';
+import EllipsisButton from '@/features/goal/note/components/EllipsisButton';
 
 // ---------------------------------------------------------------------------
 // Mock 데이터
@@ -89,9 +90,12 @@ async function NoteItem({ note }: { note: Note }) {
           <Image src={noteIcon} sizes="32" alt="노트 아이콘" className="md:40px" />
           <h1 className="text-sm font-semibold text-[#1E293B] md:text-xl">{note.title}</h1>
         </div>
-        <div>
-          <EllipsisVertical size={16} className="stroke-[#A4A4A4] md:h-6 md:w-6" />
-        </div>
+        <EllipsisButton
+          items={[
+            { label: '수정하기', value: 'edit' },
+            { label: '삭제하기', value: 'delete' },
+          ]}
+        />
       </div>
 
       <div className="flex items-center justify-between">

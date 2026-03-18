@@ -6,12 +6,12 @@ import { formatDate } from '@/shared/utils/utils';
 import clsx from 'clsx';
 import noteIcon from '@/features/goal/note/assets/icons/icon-note.png';
 import Image from 'next/image';
-import { EllipsisVertical } from 'lucide-react';
 import Tag from '@/shared/components/Tag';
 import EllipsisButton from '@/features/goal/note/components/EllipsisButton';
+import Empty from '@/shared/components/Empty';
 
 // ---------------------------------------------------------------------------
-// Mock 데이터
+// Mock 데이터(추후 삭제 예정)
 // ---------------------------------------------------------------------------
 export const MOCK_GOAL = {
   id: 1,
@@ -67,6 +67,8 @@ async function NoteList() {
    * const res = await fetch(`{BASE_URL}/goals/{goalId}/notes`);
    * const data = await res.json();
    */
+
+  if (!MOCK_NOTES || MOCK_NOTES.length === 0) return <Empty>아직 등록된 노트가 없어요</Empty>;
 
   return (
     <div className={clsx('flex flex-col gap-3', 'md:gap-4', 'lg:grid lg:grid-cols-2 lg:gap-[20px]')}>

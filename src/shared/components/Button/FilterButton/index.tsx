@@ -1,40 +1,41 @@
 'use client';
 
-import { cn } from '@/lib/utils';
 import { DropdownList } from '@/shared/components/Dropdown';
 import { DropdownItemType } from '@/shared/types/types';
+import useOnClickOutside from '@/shared/hooks/useOnClickOutside';
 import { ListFilterIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
-const items: DropdownItemType[] = [
-  { label: '최신순', value: '1' },
-  { label: '오래된 순', value: '2' },
-];
+interface FilterButtonProps {
+  items: DropdownItemType[];
+  value: string;
+  onValueChange: (value: string) => void;
+}
 
-const FilterButton = () => {
-  const [selectedValue, setSelectedValue] = useState('1');
+const FilterButton = ({ items, value, onValueChange }: FilterButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
-  const selectedLabel = items.find((item) => item.value === selectedValue)?.label;
+  useOnClickOutside(ref, () => setIsOpen(false));
+
+  const selectedLabel = items.find((item) => item.value === value)?.label;
 
   return (
-    <div className="relative flex w-20">
-      {/* 토글 버튼 */}
-      <button className="flex cursor-pointer items-center gap-1" onClick={() => setIsOpen(!isOpen)}>
+    <div ref={ref} className="relative flex">
+      <button type="button" className="flex w-20 cursor-pointer items-center gap-1" onClick={() => setIsOpen(!isOpen)}>
         <span className="text-sm font-medium text-[#737373]">{selectedLabel}</span>
         <ListFilterIcon size={20} className="text-[#737373]" />
       </button>
 
-      {/* 목록 */}
       {isOpen && (
-        <div className="absolute top-full right-0 text-nowrap">
+        <div className="absolute top-full right-0 z-10 text-nowrap">
           <DropdownList
             items={items}
             onSelectItem={(item) => {
-              setSelectedValue(item.value);
+              onValueChange(item.value);
               setIsOpen(false);
             }}
-            className='w-[102px]'
+            className="w-[102px]"
           />
         </div>
       )}

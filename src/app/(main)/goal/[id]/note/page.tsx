@@ -1,7 +1,6 @@
 import GoalItem from '@/features/goal/note/components/GoalItem';
-import FilterButton from '@/shared/components/Button/FilterButton';
+import NoteListHeader from '@/features/goal/note/components/NoteListHeader';
 import PageHeader from '@/shared/components/PageHeader';
-import SearchInput from '@/shared/components/SearchInput';
 import clsx from 'clsx';
 
 /**
@@ -35,15 +34,12 @@ export default function Page() {
 
   return (
     <div className="mx-auto flex h-full w-full max-w-[1312px] flex-col">
-      {/** 1. PageHeader */}
+      {/** 1. PageHeader + NoteListHeader(검색바, 필터) */}
       <section
-        className={clsx('itmes-center mb-12 flex justify-between', 'md:mt-4 md:mb-8 md:gap-4', 'lg:mt-10 lg:mb-12')}
+        className={clsx('mb-12 flex items-center justify-between', 'md:mt-4 md:mb-8 md:gap-4', 'lg:mt-10 lg:mb-12')}
       >
         <PageHeader title="노트 모아보기" />
-        <div className="flex w-full flex-1 justify-center gap-0 md:justify-end md:gap-2 lg:gap-[14px]">
-          <SearchInput placeholder="노트를 검색해주세요" className="w-[248px] md:w-[280px] lg:w-[320px] h-12" />
-          <FilterButton />
-        </div>
+        <NoteListHeader />
       </section>
 
       {/** 2. GoalItem */}

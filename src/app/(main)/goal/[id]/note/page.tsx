@@ -1,10 +1,13 @@
 import GoalItem from '@/features/goal/note/components/GoalItem';
 import NoteListHeader from '@/features/goal/note/components/NoteListHeader';
-import ErrorSuspenseBoundary from '@/shared/components/ErrorSuspenseBoundary';
 import PageHeader from '@/shared/components/PageHeader';
 import { Note } from '@/shared/types/types';
 import { formatDate } from '@/shared/utils/utils';
 import clsx from 'clsx';
+import noteIcon from '@/features/goal/note/assets/icons/icon-note.png';
+import Image from 'next/image';
+import { EllipsisVertical } from 'lucide-react';
+import Tag from '@/shared/components/Tag';
 
 // ---------------------------------------------------------------------------
 // Mock 데이터
@@ -30,7 +33,7 @@ export const MOCK_NOTES = [
  */
 export default function Page() {
   return (
-    <div className="mx-auto flex h-full w-full max-w-[1312px] flex-col">
+    <div className="mx-auto flex h-full min-h-screen w-full max-w-[1312px] flex-col">
       {/* 1. PageHeader + NoteListHeader */}
       <section
         className={clsx('mb-12 flex items-center justify-between', 'md:mt-4 md:mb-8 md:gap-4', 'lg:mt-10 lg:mb-12')}
@@ -41,7 +44,9 @@ export default function Page() {
 
       {/* 2. GoalItem */}
       {/* @TODO MOCK_GOAL → API 데이터로 대체 */}
-      <GoalItem title={MOCK_GOAL.title} />
+      <section className="mb-3 md:mb-4 lg:mb-5">
+        <GoalItem title={MOCK_GOAL.title} />
+      </section>
 
       {/* 3. NoteList */}
       <NoteList />
@@ -63,7 +68,7 @@ async function NoteList() {
    */
 
   return (
-    <div>
+    <div className={clsx('flex flex-col gap-3', 'md:gap-4', 'lg:grid lg:grid-cols-2 lg:gap-[20px]')}>
       {MOCK_NOTES.map((note: Note) => (
         <NoteItem key={note.id} note={note} />
       ))}
@@ -78,13 +83,27 @@ async function NoteList() {
 async function NoteItem({ note }: { note: Note }) {
   const createDate = formatDate(new Date(note.createdAt));
   return (
-    <div>
-      <h1>{note.title}</h1>
-      <div>{createDate}</div>
-      {/* <ErrorSuspenseBoundary> */}
-      {/* <TodoTitle todoId={note.todoId} /> */}
-      <TodoTitle todoId={10} />
-      {/* </ErrorSuspenseBoundary> */}
+    <div className="flex flex-col gap-3 rounded-[20px] bg-[#FFF] p-4 md:gap-4 md:rounded-3xl md:px-[38px] md:pt-7 md:pb-8">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 md:gap-4">
+          <Image src={noteIcon} sizes="32" alt="노트 아이콘" className="md:40px" />
+          <h1 className="text-sm font-semibold text-[#1E293B] md:text-xl">{note.title}</h1>
+        </div>
+        <div>
+          <EllipsisVertical size={16} className="stroke-[#A4A4A4] md:h-6 md:w-6" />
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between">
+        {/* <ErrorSuspenseBoundary> */}
+        {/* <TodoTitle todoId={note.todoId} /> */}
+        {/* </ErrorSuspenseBoundary> */}
+
+        <TodoTitle todoId={10} />
+        <div>
+          <p className="text-xs font-normal text-[#A4A4A4]">{createDate}</p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -101,5 +120,10 @@ async function TodoTitle({ todoId }: { todoId: number }) {
   // const data = await res.json();
 
   // return <div>{data.title}</div>;
-  return <div>할 일 제목</div>;
+  return (
+    <div className="flex gap-2">
+      <Tag string="TODO" variant="orange" className="semibold rounded-lg px-[5.5px] py-[3px] text-xs" />
+      <p className="text-sm font-normal text-[#333]">{todoId} 할 일 제목</p>
+    </div>
+  );
 }

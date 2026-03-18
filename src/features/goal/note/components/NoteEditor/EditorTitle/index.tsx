@@ -11,7 +11,7 @@ type EditorTitleProps = {
 export default function EditorTitle({ title, onChange }: EditorTitleProps) {
   return (
     <section className="flex w-full items-center justify-between gap-3 pb-[30px]">
-      <Image src={noteIcon} width={40} height={40} alt="노트 아이콘" />
+      <Image src={noteIcon} width={40} height={40} alt="노트 아이콘" className="shrink-0" />
 
       <Input
         value={title}
@@ -26,7 +26,7 @@ export default function EditorTitle({ title, onChange }: EditorTitleProps) {
       />
 
       <p className="shrink-0 text-right text-xs font-medium text-slate-500">
-        {title.length}/<span className="text-orange-600">30</span>
+        {title.length}/<span className="text-[#EF6C00]">30</span>
       </p>
     </section>
   );

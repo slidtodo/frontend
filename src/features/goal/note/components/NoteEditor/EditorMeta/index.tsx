@@ -44,10 +44,10 @@ export default function EditorMeta({ goal, todos, tags }: EditorMetaProps) {
     <div className="flex w-full flex-col gap-3 md:flex-row">
       {/* 왼쪽 — 목표 / 할 일 */}
       <div className="flex flex-1 flex-col gap-3 md:w-1/2">
-        <MetaRow icon={<FlagIcon size={12} className="text-[#A4A4A4]" />} label="목표">
+        <MetaRow icon={<FlagIcon size={18} className="text-[#A4A4A4]" />} label="목표">
           <span className="line-clamp-1 text-sm font-normal text-[#333333]">{goal.title}</span>
         </MetaRow>
-        <MetaRow icon={<SquareCheck size={12} className="text-[#A4A4A4]" />} label="할 일">
+        <MetaRow icon={<SquareCheck size={18} className="text-[#A4A4A4]" />} label="할 일">
           <div className="flex items-center gap-2">
             <span className="line-clamp-1 text-sm font-normal text-[#333333]">{todos.title}</span>
 
@@ -58,11 +58,11 @@ export default function EditorMeta({ goal, todos, tags }: EditorMetaProps) {
 
       {/* 오른쪽 — 작성일 / 태그 */}
       <div className="flex flex-1 flex-col gap-3 md:w-1/2">
-        <MetaRow icon={<CalendarIcon size={12} className="line-clamp-1 text-[#A4A4A4]" />} label="작성일">
+        <MetaRow icon={<CalendarIcon size={17} className="line-clamp-1 text-[#A4A4A4]" />} label="작성일">
           <span className="line-clamp-1 text-sm font-normal text-[#333333]">{today}</span>
         </MetaRow>
 
-        <MetaRow icon={<Hash size={12} className="text-[#A4A4A4]" />} label="태그">
+        <MetaRow icon={<Hash size={17} className="text-[#A4A4A4]" />} label="태그">
           <div className="no-scrollbar flex gap-1 overflow-x-auto">
             {tags.map((tag) => (
               <Tag

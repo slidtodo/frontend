@@ -9,7 +9,7 @@ import { useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 const dropdownVariants = cva(
-  'rounded-xl border border-slate-300 bg-mono-white flex p-4 items-center gap-2 self-stretch text-base font-medium justify-between',
+  'rounded-xl border border-[#CCC] bg-[#FFF] flex p-4 items-center gap-2 self-stretch text-base font-medium justify-between',
   {
     variants: {
       disabled: {
@@ -53,14 +53,14 @@ function Dropdown({ items, selectedValue, onSelectItem, isDisabled, className }:
         className={twMerge(
           dropdownVariants({ disabled: isDisabled }),
           'flex w-full items-center gap-2',
-          isToggleOpen && 'rounded-2xl border border-orange-500',
+          isToggleOpen && 'rounded-2xl border border-[#FF8442]',
           className,
         )}
         disabled={isDisabled}
       >
         <span className="line-clamp-1 text-base font-normal">{selectedItem?.label} </span>
         {/* //TODO 선택된 아이템 표시 */}
-        <ChevronDown size={16} className="text-slate-400 dark:text-white" />
+        <ChevronDown size={16} className="text-[#A4A4A4] dark:text-white" />
       </button>
       <div className="absolute top-full right-0 left-0 z-50 mt-1">
         {isToggleOpen && <DropdownList className="w-full" items={items} onSelectItem={handleSelectItem} />}

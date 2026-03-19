@@ -12,6 +12,7 @@ import { useRef, useState } from 'react';
 export default function TodoCreateModal() {
   const { closeModal } = useModalStore();
   const linkRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [selectedGoal, setSelectedGoal] = useState('1');
   const [urlInput, setUrlInput] = useState('');
@@ -94,11 +95,14 @@ export default function TodoCreateModal() {
       </FormField>
 
       <FormField label="이미지">
-        <label className="flex h-[101px] w-full cursor-pointer flex-col items-center justify-center gap-[2px] rounded-2xl border border-dashed border-[#CCC] bg-[#FAFAFA]">
-          <input type="file" hidden />
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          className="flex h-[101px] w-full cursor-pointer flex-col items-center justify-center gap-[2px] rounded-2xl border border-dashed border-[#CCC] bg-[#FAFAFA]"
+        >
+          <input type="file" accept="image/*" className="hidden" />
           <ImageUpIcon size={24} className="stroke-[#A4A4A4]" />
           <p className="text-base font-medium text-[#A4A4A4]">이미지 첨부</p>
-        </label>
+        </button>
         <p className="px-1 text-sm font-medium text-[#A4A4A4]">이미지는 최대 1개만 첨부할 수 있습니다.</p>
       </FormField>
 

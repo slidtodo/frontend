@@ -4,6 +4,7 @@ import { PlusIcon } from 'lucide-react';
 
 import Button from '@/shared/components/Button';
 import TaskCard from '@/shared/components/TaskCard';
+import Empty from '@/shared/components/Empty';
 
 import { mockTodo } from './mock';
 
@@ -49,7 +50,7 @@ function AllTodoFetcher() {
         {mockTodo.length > 0 ? (
           mockTodo.map((todo) => <TaskCard key={todo.id} todo={todo} />)
         ) : (
-          <p className="text-center text-gray-500">할 일이 없습니다.</p>
+          <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>
         )}
       </div>
     </section>

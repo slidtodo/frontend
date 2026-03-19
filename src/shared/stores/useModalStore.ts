@@ -5,7 +5,8 @@ interface ModalStore {
   isOpen: boolean;
   content: ReactNode | null;
   onClose?: () => void;
-  openModal: (content: ReactNode, onClose?: () => void) => void;
+  variant: 'center' | 'bottom'; // ← 추가
+  openModal: (content: ReactNode, onClose?: () => void, variant?: 'center' | 'bottom') => void;
   closeModal: () => void;
 }
 
@@ -13,10 +14,11 @@ export const useModalStore = create<ModalStore>((set, get) => ({
   isOpen: false,
   content: null,
   onClose: undefined,
+  variant: 'center',
 
-  openModal: (content, onClose) => set({ isOpen: true, content, onClose }),
+  openModal: (content, onClose, variant = 'center') => set({ isOpen: true, content, onClose, variant }),
   closeModal: () => {
     get().onClose?.();
-    set({ isOpen: false, content: null, onClose: undefined });
+    set({ isOpen: false, content: null, onClose: undefined, variant: 'center' });
   },
 }));

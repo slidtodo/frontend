@@ -1,10 +1,11 @@
 'use client';
 import { useModalStore } from '@/shared/stores/useModalStore';
+import clsx from 'clsx';
 import { useRef, useEffect, MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
 
 export const Modal = () => {
-  const { content, isOpen, closeModal } = useModalStore();
+  const { content, isOpen, closeModal, variant } = useModalStore();
 
   // 모달의 backdrop을 가리키는 ref
   const modalRef = useRef<HTMLDivElement>(null);
@@ -42,9 +43,16 @@ export const Modal = () => {
     <div
       ref={modalRef}
       onClick={handleClickOutside}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      className={clsx(
+        'fixed inset-0 z-50 bg-black/50',
+        variant === 'bottom'
+          ? 'flex items-end md:flex md:items-center md:justify-center'
+          : 'flex items-center justify-center',
+      )}
     >
-      <div onClick={(e) => e.stopPropagation()}>{content}</div>
+      <div onClick={(e) => e.stopPropagation()} className={clsx(variant === 'bottom' && 'w-full md:w-auto')}>
+        {content}
+      </div>
     </div>,
     document.body,
   );

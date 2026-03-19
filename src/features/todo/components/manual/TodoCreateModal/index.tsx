@@ -7,12 +7,14 @@ import Input from '@/shared/components/Input';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import clsx from 'clsx';
 import { ImageUpIcon, Link2, XIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 export default function TodoCreateModal() {
   const { closeModal } = useModalStore();
+  const linkRef = useRef<HTMLInputElement>(null);
 
   const [selectedGoal, setSelectedGoal] = useState('1');
+  const [urlInput, setUrlInput] = useState('');
 
   return (
     <form
@@ -45,7 +47,7 @@ export default function TodoCreateModal() {
             { label: '자바스크립트로 웹 서비스 만들기', value: '1' },
             { label: '디자인 시스템 정복하기', value: '2' },
           ]}
-          selectedValue={selectedGoal ? selectedGoal : "1"}
+          selectedValue={selectedGoal ? selectedGoal : '1'}
           onSelectItem={(item) => setSelectedGoal(item.value)}
           className="h-11 rounded-xl p-3 text-sm font-normal text-[#333] placeholder:text-[#737373] md:h-14 md:rounded-2xl md:p-4 md:text-base"
         />
@@ -70,12 +72,22 @@ export default function TodoCreateModal() {
           <div className="flex items-center gap-2">
             <Link2 size={20} className="shrink-0 -rotate-45 stroke-[#737373] md:h-6 md:w-6" />
             <input
+              ref={linkRef}
+              value={urlInput}
+              onChange={(e) => setUrlInput(e.target.value)}
               placeholder="링크를 업로드해주세요"
               className="w-full flex-1 border-none bg-transparent p-0 text-base text-[#333] placeholder:text-[#737373] focus:outline-none"
             />
           </div>
           {/* 링크 입력 후 삭제 버튼 */}
-          <button type="button" className="cursor-pointer" onClick={() => {}}>
+          <button
+            type="button"
+            className="cursor-pointer"
+            onClick={() => {
+              setUrlInput('');
+              linkRef.current?.focus();
+            }}
+          >
             <XIcon size={20} className="shrink-0 stroke-[#737373] md:h-6 md:w-6" />
           </button>
         </div>

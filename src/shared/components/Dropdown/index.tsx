@@ -8,6 +8,32 @@ import { ChevronDown } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
+/**
+ * Dropdown
+ *
+ * 선택 가능한 드롭다운 컴포넌트
+ *
+ * @example 기본 사용법
+ * const [selectedValue, setSelectedValue] = useState('');
+ *
+ * <Dropdown
+ *   items={[
+ *     { label: '자바스크립트로 웹 서비스 만들기', value: '1' },
+ *     { label: '디자인 시스템 정복하기', value: '2' },
+ *   ]}
+ *   selectedValue={selectedValue}
+ *   onSelectItem={(item) => setSelectedValue(item.value)}
+ * />
+ *
+ * @important 반드시 value 기준으로 초기값 설정
+ * const [selectedValue, setSelectedValue] = useState('1');
+ *
+ * @param items - 드롭다운 목록 ({ label: 표시될 텍스트, value: 실제 값 })
+ * @param selectedValue - 현재 선택된 항목의 value
+ * @param onSelectItem - 항목 선택 시 실행할 콜백 (item 전체를 인자로 받음)
+ * @param isDisabled - 비활성화 여부 (기본값: false)
+ * @param className - 추가 스타일 클래스
+ */
 const dropdownVariants = cva(
   'rounded-xl border border-[#CCC] bg-[#FFF] flex p-4 items-center gap-2 self-stretch text-base font-medium justify-between',
   {
@@ -23,9 +49,6 @@ const dropdownVariants = cva(
   },
 );
 
-/**
- * Dropdown
- */
 interface DropdownProps extends React.HTMLAttributes<HTMLButtonElement> {
   items: DropdownItemType[];
   selectedValue: string;

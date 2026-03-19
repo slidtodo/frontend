@@ -1,6 +1,5 @@
 import GoalItem from '@/features/goal/note/components/GoalItem';
 import NoteListHeader from '@/features/goal/note/components/NoteListHeader';
-import PageHeader from '@/shared/components/PageHeader';
 import clsx from 'clsx';
 import { Note } from '@/shared/types/types';
 import Empty from '@/shared/components/Empty';

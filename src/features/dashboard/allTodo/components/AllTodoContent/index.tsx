@@ -46,9 +46,11 @@ function AllTodoFetcher() {
   return (
     <section className="rounded-4xl bg-white p-4 md:p-8">
       <div className="flex max-h-[680px] flex-col gap-4 overflow-y-auto">
-        {mockTodo.map((todo) => (
-          <TaskCard key={todo.id} todo={todo} />
-        ))}
+        {mockTodo.length > 0 ? (
+          mockTodo.map((todo) => <TaskCard key={todo.id} todo={todo} />)
+        ) : (
+          <p className="text-center text-gray-500">할 일이 없습니다.</p>
+        )}
       </div>
     </section>
   );

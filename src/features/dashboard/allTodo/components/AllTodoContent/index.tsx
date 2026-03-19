@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import { PlusIcon } from 'lucide-react';
 
 import Button from '@/shared/components/Button';

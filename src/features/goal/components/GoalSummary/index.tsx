@@ -56,12 +56,11 @@ function LinkNote() {
   const goalId = 1;
   return (
     <div className="relative min-h-[160px] w-full rounded-[32px] bg-[#02CAB5] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)]">
-      <div className="absolute bottom-1/5 left-1/7 flex items-center gap-['2px']">
-        <Link className="text-lg font-bold text-white" href={`/goal/${goalId}/note`}>
-          노트 모아보기
-        </Link>
+      <Link className="absolute bottom-1/5 left-1/7 flex items-center gap-['2px']" href={`/goal/${goalId}/note`}>
+        <span className="text-lg font-bold text-white">노트 모아보기</span>
         <ChevronRightIcon size={24} color="#ffffff" className="cursor-pointer" />
-      </div>
+      </Link>
+
       <Image
         src={'/image/note-group.svg'}
         alt="Note Group"

@@ -90,7 +90,7 @@ async function NoteItem({ note }: { note: Note }) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 md:gap-4">
           <Image src={noteIcon} sizes="32" alt="노트 아이콘" className="md:w-10 md:h-10" />
-          <h1 className="text-sm font-semibold text-[#1E293B] md:text-xl">{note.title}</h1>
+          <h2 className="text-sm font-semibold text-[#1E293B] md:text-xl">{note.title}</h2>
         </div>
         <EllipsisButton
           items={[

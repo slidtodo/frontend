@@ -1,6 +1,6 @@
-import Tag from "@/shared/components/Tag";
+import Tag from '@/shared/components/Tag';
 
-export async function TodoTitle({ todoId }: { todoId: number }) {
+export default async function TodoTitle({ todoId }: { todoId: number }) {
   /**
    * @TODO 실제 API URL로 대체
    * const res = await fetch(`{BASE_URL}/todos/${todoId}`);

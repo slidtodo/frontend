@@ -3,7 +3,7 @@ import EllipsisButton from '../EllipsisButton';
 import Image from 'next/image';
 import { Note } from '@/shared/types/types';
 import noteIcon from '@/features/goal/note/assets/icons/icon-note.png';
-import { TodoTitle } from '@/features/goal/note/components/TodoTitle';
+import TodoTitle from '@/features/goal/note/components/TodoTitle';
 
 export default async function NoteItem({ note }: { note: Note }) {
   const createDate = formatDate(new Date(note.createdAt));
@@ -12,6 +12,7 @@ export default async function NoteItem({ note }: { note: Note }) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 md:gap-4">
           <Image src={noteIcon} sizes="32" alt="노트 아이콘" className="md:h-10 md:w-10" />
+
           <h1 className="text-sm font-semibold text-[#1E293B] md:text-xl">{note.title}</h1>
         </div>
         <EllipsisButton

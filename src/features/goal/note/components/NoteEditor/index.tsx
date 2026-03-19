@@ -34,7 +34,7 @@ export default function NoteEditor() {
       {/** 에디터 툴바 */}
       <EditorToolbar />
 
-      <section className="border-b border-b-[#DDD] pb-4 md:pt-6 md:pb-5 lg:pb-8">
+      <section className="border-b border-b-[#DDD] pb-4 md:pt-[19px] md:pb-5 lg:pb-7">
         <EditorTitle title={titleInput} onChange={handleTitleChange} />
         <EditorMeta
           goal={{

@@ -15,9 +15,7 @@ export default function TodoCreateModal() {
     <form
       className={clsx(
         'flex w-full flex-col bg-white shadow-[0px_0px_60px_0px_rgba(0,0,0,0.05)]',
-        // md 미만: 하단 시트 — 상단만 radius, 작은 padding/gap
         'gap-3 rounded-t-[32px] p-6',
-        // md 이상: 가운데 모달 — 전체 radius, 큰 padding/gap
         'md:w-[488px] md:gap-4 md:rounded-[40px] md:p-8',
         'no-scrollbar max-h-[90vh] overflow-y-auto',
       )}

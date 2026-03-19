@@ -11,7 +11,7 @@ export default function EditorContent({ content, onChange, className }: EditorCo
   const withoutSpace = content.replace(/\s/g, '').length;
 
   return (
-    <section className={clsx('flex min-h-144 flex-1 flex-col gap-2 pt-6', className)}>
+    <section className={clsx('flex min-h-144 flex-1 flex-col gap-2 pt-[14px] lg:pt-[10px]', className)}>
       <textarea
         value={content}
         onChange={onChange}

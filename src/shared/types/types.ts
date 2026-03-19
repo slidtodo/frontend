@@ -24,3 +24,10 @@ export interface TagProps {
   variant?: 'green' | 'orange' | 'purple';
   className?: string;
 }
+
+export interface Note {
+  id: number;
+  title: string;
+  todoId: number;
+  createdAt: string;
+}

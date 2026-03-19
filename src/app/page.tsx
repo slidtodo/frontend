@@ -33,10 +33,10 @@ export default function LandingPage() {
           {' '}
           <p className="text-sm font-semibold text-[#EF6C00] md:text-lg">bearlog 하나로 일상부터 개발까지</p>
           <h1 className="mt-2 text-2xl font-bold text-gray-900 md:text-4xl">개발자 할 일, bearlog로 계획해요</h1>
-          <Link href="/login">
+          <Link href="/login" className="mt-8 md:mt-[56px] w-fit h-fit">
             <Button
               variant="primary"
-              className="mt-8 h-[48px] w-[160px] text-sm font-semibold md:mt-[56px] md:h-[56px] md:w-[223px] md:text-base"
+              className="h-[48px] w-[160px] text-sm font-semibold md:h-[56px] md:w-[223px] md:text-base"
             >
               시작하기
             </Button>
@@ -50,7 +50,7 @@ export default function LandingPage() {
               alt="dashboard"
               width={1317}
               height={1059}
-              className="-mb-[10px] h-auto w-full rounded-2xl shadow-xl" // ✅ relative z-0 제거
+              className="-mb-[10px] h-auto w-full rounded-2xl shadow-xl"
               priority
             />
           </div>

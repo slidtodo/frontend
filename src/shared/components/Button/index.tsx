@@ -25,7 +25,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={twMerge(
-          'flex items-center justify-center gap-1',
+          'flex items-center justify-center gap-1 cursor-pointer',
           'transition-colors duration-200',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           variantStyles[variant],

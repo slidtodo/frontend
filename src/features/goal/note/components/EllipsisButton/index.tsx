@@ -3,7 +3,7 @@
 import useOnClickOutside from '@/shared/hooks/useOnClickOutside';
 import { EllipsisVertical } from 'lucide-react';
 import { useRef, useState } from 'react';
-import { DropdownList } from '../../../../../shared/components/Dropdown';
+import { DropdownList } from '@/shared/components/Dropdown';
 import { DropdownItemType } from '@/shared/types/types';
 
 interface EllipsisButtonProps {

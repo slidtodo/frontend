@@ -50,7 +50,7 @@ export default function LandingPage() {
               alt="dashboard"
               width={1317}
               height={1059}
-              className="relative z-0 -mb-[10px] h-auto w-full rounded-2xl shadow-xl"
+              className="-mb-[10px] h-auto w-full rounded-2xl shadow-xl" // ✅ relative z-0 제거
               priority
             />
           </div>
@@ -59,7 +59,6 @@ export default function LandingPage() {
 
       {/* ── Section 02 · 특별한 이유 ── */}
       <section className="relative z-10 w-full bg-[#FF8442] py-14 md:py-20">
-        {' '}
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 md:flex-row md:items-center md:justify-between xl:justify-normal xl:gap-[216px]">
           <div className="flex flex-col text-white md:shrink-0">
             <p className="text-sm font-semibold text-[#FFD19B] md:text-lg">자동화로 더 똑똑한 노트 관리</p>
@@ -141,19 +140,43 @@ export default function LandingPage() {
       </section>
 
       {/* ── Section 05 · CTA ── */}
+      {/* ── Section 05 · CTA ── */}
       <section className="w-full bg-white py-10">
         <div className="mx-auto max-w-[1840px] px-4">
           <div className="relative flex min-h-[280px] w-full flex-col items-center justify-center overflow-hidden rounded-3xl bg-[#FFF8E4] px-6 py-16 text-center md:min-h-[518px]">
+            {/* ⭐ 별 */}
             <Image
               src="/image/star.png"
-              alt="decoration"
-              fill
-              className="pointer-events-none object-contain px-4 md:px-60"
+              alt="star"
+              width={80}
+              height={80}
+              className="absolute top-[18%] left-[14%] z-0 h-[28px] w-[28px] md:top-[60px] md:left-[120px] md:h-[80px] md:w-[80px] lg:top-[82px] lg:left-[326px]"
             />
+
+            {/* 동그라미 */}
+            <Image
+              src="/image/dot.png"
+              alt="dot"
+              width={28}
+              height={28}
+              className="absolute top-[34%] left-[7%] z-0 h-[12px] w-[12px] md:top-56 md:left-52 md:h-[28px] md:w-[28px]"
+            />
+
+            {/* 체크 */}
+            <Image
+              src="/image/check.png"
+              alt="check"
+              width={60}
+              height={60}
+              className="absolute right-[10%] bottom-[18%] z-0 h-[28px] w-[28px] md:top-[100px] md:right-[120px] md:bottom-auto md:h-[60px] md:w-[60px] lg:top-[223px] lg:right-[264px]"
+            />
+
             <p className="z-10 text-sm font-semibold text-[#FF8442]">bearlog 하나로 일상부터 개발까지</p>
+
             <h2 className="z-10 mt-3 text-xl font-bold text-gray-900 md:text-2xl">
               개발자 할 일, bearlog으로 계획해요
             </h2>
+
             <Link href="/login" className="z-10">
               <Button className="mt-6 h-[48px] w-[140px] text-sm font-semibold">시작하기</Button>
             </Link>

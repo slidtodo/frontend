@@ -3,7 +3,7 @@ import EllipsisButton from '../EllipsisButton';
 import Image from 'next/image';
 import { Note } from '@/shared/types/types';
 import noteIcon from '@/features/goal/note/assets/icons/icon-note.png';
-import { TodoTitle } from '@/app/(main)/goal/[id]/note/page';
+import TodoTitle from '@/features/goal/note/components/TodoTitle';
 
 export default async function NoteItem({ note }: { note: Note }) {
   const createDate = formatDate(new Date(note.createdAt));

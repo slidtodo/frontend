@@ -49,6 +49,7 @@ function Dropdown({ items, selectedValue, onSelectItem, isDisabled, className }:
   return (
     <div ref={ref} className="relative w-full">
       <button
+        type="button"
         onClick={() => setIsToggleOpen(!isToggleOpen)}
         className={twMerge(
           dropdownVariants({ disabled: isDisabled }),

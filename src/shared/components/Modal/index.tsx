@@ -30,7 +30,7 @@ export const Modal = () => {
 
   // 모달 backdrop을 클릭한 경우 모달을 닫음
   const handleClickOutside = (e: MouseEvent<HTMLDivElement>) => {
-    if (modalRef.current === e.target) {
+    if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
       closeModal();
     }
   };

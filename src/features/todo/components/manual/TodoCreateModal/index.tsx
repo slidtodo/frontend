@@ -7,9 +7,12 @@ import Input from '@/shared/components/Input';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import clsx from 'clsx';
 import { ImageUpIcon, Link2, XIcon } from 'lucide-react';
+import { useState } from 'react';
 
 export default function TodoCreateModal() {
   const { closeModal } = useModalStore();
+
+  const [selectedGoal, setSelectedGoal] = useState('1');
 
   return (
     <form
@@ -40,10 +43,10 @@ export default function TodoCreateModal() {
         <Dropdown
           items={[
             { label: '자바스크립트로 웹 서비스 만들기', value: '1' },
-            { label: '자바스크립트로 웹 서비스 만들기', value: '' },
+            { label: '디자인 시스템 정복하기', value: '2' },
           ]}
-          selectedValue="자바스크립트로 웹 서비스 만들기"
-          onSelectItem={() => console.log('자바스크립트')}
+          selectedValue={selectedGoal ? selectedGoal : "1"}
+          onSelectItem={(item) => setSelectedGoal(item.value)}
           className="h-11 rounded-xl p-3 text-sm font-normal text-[#333] placeholder:text-[#737373] md:h-14 md:rounded-2xl md:p-4 md:text-base"
         />
       </FormField>

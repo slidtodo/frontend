@@ -1,3 +1,7 @@
+/**
+ * @example
+ * <button onClick={openTodoCreateModal}>모달 버튼</button>
+ */
 import { useModalStore } from '@/shared/stores/useModalStore';
 import TodoCreateModal from '@/features/todo/components/manual/TodoCreateModal';
 

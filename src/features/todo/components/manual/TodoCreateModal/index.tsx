@@ -7,15 +7,35 @@ import Input from '@/shared/components/Input';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import clsx from 'clsx';
 import { ImageUpIcon, Link2, XIcon } from 'lucide-react';
+import Image from 'next/image';
 import { useRef, useState } from 'react';
+
+type Image = {
+  file: File;
+  previewUrl: string;
+};
 
 export default function TodoCreateModal() {
   const { closeModal } = useModalStore();
-  const linkRef = useRef<HTMLInputElement>(null);
+  const urlInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [selectedGoal, setSelectedGoal] = useState('1');
   const [urlInput, setUrlInput] = useState('');
+  const [image, setImage] = useState<Image | null>(null);
+
+  const handleSelectImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const file = e.target.files[0];
+
+      setImage({
+        file,
+        previewUrl: URL.createObjectURL(file),
+      });
+
+      e.target.value = '';
+    }
+  };
 
   return (
     <form
@@ -73,7 +93,7 @@ export default function TodoCreateModal() {
           <div className="flex items-center gap-2">
             <Link2 size={20} className="shrink-0 -rotate-45 stroke-[#737373] md:h-6 md:w-6" />
             <input
-              ref={linkRef}
+              ref={urlInputRef}
               value={urlInput}
               onChange={(e) => setUrlInput(e.target.value)}
               placeholder="링크를 업로드해주세요"
@@ -81,28 +101,50 @@ export default function TodoCreateModal() {
             />
           </div>
           {/* 링크 입력 후 삭제 버튼 */}
-          <button
-            type="button"
-            className="cursor-pointer"
-            onClick={() => {
-              setUrlInput('');
-              linkRef.current?.focus();
-            }}
-          >
-            <XIcon size={20} className="shrink-0 stroke-[#737373] md:h-6 md:w-6" />
-          </button>
+          {urlInput && (
+            <button
+              type="button"
+              className="cursor-pointer"
+              onClick={() => {
+                setUrlInput('');
+                urlInputRef.current?.focus();
+              }}
+            >
+              <XIcon size={20} className="shrink-0 stroke-[#737373] md:h-6 md:w-6" />
+            </button>
+          )}
         </div>
       </FormField>
 
       <FormField label="이미지">
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          className="flex h-[101px] w-full cursor-pointer flex-col items-center justify-center gap-[2px] rounded-2xl border border-dashed border-[#CCC] bg-[#FAFAFA]"
-        >
-          <input type="file" accept="image/*" className="hidden" />
-          <ImageUpIcon size={24} className="stroke-[#A4A4A4]" />
-          <p className="text-base font-medium text-[#A4A4A4]">이미지 첨부</p>
-        </button>
+        {image ? (
+          <div className="relative h-[101px] w-[160px] overflow-hidden rounded-2xl">
+            {/* 이미지 */}
+            <Image src={image.previewUrl} alt="이미지 미리보기" fill className="object-cover" />
+            {/* 삭제 버튼 */}
+            <button
+              type="button"
+              onClick={() => {
+                setImage(null);
+                if (fileInputRef.current) fileInputRef.current.value = '';
+              }}
+              className="absolute top-[10px] right-[10px] flex size-[18px] cursor-pointer items-center justify-center rounded-full border border-[#CCC] bg-white"
+            >
+              <XIcon size={10} className="stroke-[#A4A4A4]" />
+            </button>
+          </div>
+        ) : (
+          /* 이미지 없을 때 업로드 버튼 */
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="flex h-[101px] w-full cursor-pointer flex-col items-center justify-center gap-[2px] rounded-2xl border border-dashed border-[#CCC] bg-[#FAFAFA]"
+          >
+            <ImageUpIcon size={24} className="stroke-[#A4A4A4]" />
+            <p className="text-base font-medium text-[#A4A4A4]">이미지 첨부</p>
+          </button>
+        )}
+        <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleSelectImage} />
         <p className="px-1 text-sm font-medium text-[#A4A4A4]">이미지는 최대 1개만 첨부할 수 있습니다.</p>
       </FormField>
 

@@ -28,6 +28,7 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
             'flex w-full cursor-pointer items-center gap-2 rounded-xl border border-[#CCC] p-3',
             'text-sm font-normal',
             'md:h-14 md:rounded-2xl md:p-4 md:text-base',
+            open && 'border border-[#FF8442]',
           )}
           data-empty={!date}
         >
@@ -70,23 +71,23 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
           components={{
             Nav: ({ onPreviousClick, onNextClick }) => (
               <div className="absolute top-4 right-0 left-0 flex items-center justify-between px-4">
-                <button
+                <Button
                   type="button"
                   onClick={onPreviousClick}
                   className="flex size-8 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent hover:bg-[#FAFAFA]"
                 >
                   <ChevronLeftIcon size={20} className="stroke-[#A4A4A4] hover:stroke-[#333]" />
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
                   onClick={onNextClick}
                   className="flex size-8 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent hover:bg-[#FAFAFA]"
                 >
-                  <ChevronRightIcon size={20} className="stroke-[#A4A4A4] hover:stroke-[#333]" />
-                </button>
+                  <ChevronRightIcon size={20} className="hover:stroke -[#333] stroke-[#A4A4A4]" />
+                </Button>
               </div>
             ),
-            DayButton: ({ day, modifiers, className, ...props }) => (
+            DayButton: ({ modifiers, ...props }) => (
               <button
                 {...props}
                 className={cn(
@@ -94,7 +95,7 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
                   modifiers.outside ? 'text-[#A4A4A4]' : 'text-[#333]',
                   modifiers.disabled && 'cursor-not-allowed text-[#A4A4A4]',
                   modifiers.today && !modifiers.selected && 'bg-[#FAFAFA] font-medium',
-                  modifiers.selected && 'bg-[#FF8442] font-medium !text-white hover:bg-[#FF8442]',
+                  modifiers.selected && 'bg-[#FF8442] font-medium text-white! hover:bg-[#FF8442]',
                 )}
               />
             ),

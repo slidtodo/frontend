@@ -1,3 +1,4 @@
+import { format } from 'date-fns/format';
 import { TAG_COLORS } from '../constants/constants';
 
 /**
@@ -13,6 +14,15 @@ export function formatDate(date: Date) {
       day: '2-digit',
     })
     .replace(/\.$/, '');
+}
+
+/**
+ * API에 넘기는 날짜 포맷팅 (ISO 8601)
+ * @param date
+ * @returns 2026-03-19
+ */
+export function formatDateForAPI(date: Date): string {
+  return format(date, 'yyyy-MM-dd');
 }
 
 /**

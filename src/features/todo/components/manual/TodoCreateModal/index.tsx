@@ -13,12 +13,16 @@ import { TagInput } from './TagInput';
 import LinkInput from './LinkInput';
 import ImageInput from './ImageInput';
 
+import DateInput from './DateInput';
+
 export default function TodoCreateModal() {
   const { closeModal } = useModalStore();
 
   const [selectedGoal, setSelectedGoal] = useState('1');
   const [urlInput, setUrlInput] = useState('');
   const [image, setImage] = useState<ImageType | null>(null);
+  const [date, setDate] = useState<Date | undefined>();
+  const [tempDate, setTempDate] = useState<Date | undefined>();
 
   const [tags, setTags] = useState<string[]>([]);
 
@@ -28,10 +32,10 @@ export default function TodoCreateModal() {
   return (
     <form
       className={clsx(
-        'flex w-full flex-col bg-white shadow-[0px_0px_60px_0px_rgba(0,0,0,0.05)]',
+        'no-scrollbar flex w-full flex-col bg-white shadow-[0px_0px_60px_0px_rgba(0,0,0,0.05)]',
         'gap-3 rounded-t-[32px] p-6',
         'md:w-[488px] md:gap-4 md:rounded-[40px] md:p-8',
-        'no-scrollbar max-h-[90vh] overflow-y-auto',
+        'max-h-[90vh] overflow-y-auto',
       )}
     >
       {/** 할 일 생성 */}
@@ -63,9 +67,11 @@ export default function TodoCreateModal() {
       </FormField>
 
       <FormField label="마감기한" required>
-        <Input
-          placeholder="날짜를 선택해주세요"
-          className="h-11 rounded-xl border-[#CCC] p-3 text-sm font-normal text-[#333] placeholder:text-[#737373] md:h-14 md:rounded-2xl md:p-4 md:text-base"
+        <DateInput
+          date={tempDate}
+          onSelect={setTempDate}
+          onConfirm={(d) => setDate(d)}
+          onCancel={() => setTempDate(date)}
         />
       </FormField>
 

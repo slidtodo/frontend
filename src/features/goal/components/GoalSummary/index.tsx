@@ -34,16 +34,17 @@ function GoalInfo() {
 }
 
 function GoalProgress() {
+  const percent = 64; // TODO: 실제 진행률로 대체
   return (
     <div className="relative flex min-h-[160px] w-full gap-[31px] rounded-[32px] bg-[#FF8442] shadow-[0_10px_40px_0_rgba(255,158,89,0.40)]">
       <div className="absolute flex h-full w-full items-center justify-between gap-1 p-[34px]">
         <div className="w-[92px]">
-          <ProgressCircle percent={74} className="h-auto w-full" color="#FFA96C" />
+          <ProgressCircle percent={percent} className="h-auto w-full" color="#FFA96C" />
         </div>
         <div className="flex flex-col items-start gap-2">
           <span className="text-[clamp(12px,2vw,20px)] font-semibold text-white">목표진행률</span>
           <div className="flex items-baseline gap-1">
-            <span className="text-[clamp(20px,5vw,60px)] leading-[1] font-bold text-white">74</span>
+            <span className="text-[clamp(20px,5vw,60px)] leading-[1] font-bold text-white">{percent}</span>
             <span className="text-[clamp(14px,2vw,30px)] text-white">%</span>
           </div>
         </div>

@@ -41,7 +41,6 @@ export const Modal = () => {
   // Portal을 생성하고 내부에서 모달 content를 렌더링
   return createPortal(
     <div
-      ref={modalRef}
       onClick={handleClickOutside}
       className={clsx(
         'fixed inset-0 z-50 bg-black/50',
@@ -50,7 +49,11 @@ export const Modal = () => {
           : 'flex items-center justify-center',
       )}
     >
-      <div onClick={(e) => e.stopPropagation()} className={clsx(variant === 'bottom' && 'w-full md:w-auto')}>
+      <div
+        ref={modalRef}
+        onClick={(e) => e.stopPropagation()}
+        className={clsx(variant === 'bottom' && 'w-full md:w-auto')}
+      >
         {content}
       </div>
     </div>,

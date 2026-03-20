@@ -20,7 +20,13 @@ interface DateInputProps {
 export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateInputProps) {
   const [open, setOpen] = useState(false);
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) onCancel();
+        setOpen(isOpen);
+      }}
+    >
       <PopoverTrigger asChild>
         <button
           type="button"
@@ -101,8 +107,8 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
             ),
           }}
         />
-        {/* 하단 취소/확인 버튼 */}
 
+        {/* 하단 취소/확인 버튼 */}
         <div className="flex gap-3 px-4 pb-4">
           <Button
             type="button"

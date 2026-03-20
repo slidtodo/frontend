@@ -4,7 +4,6 @@ import Progressbar from '@/shared/components/Progressbar';
 import TaskCard from '@/shared/components/TaskCard';
 import SearchInput from '@/shared/components/SearchInput';
 import Button from '@/shared/components/Button';
-
 interface GoalBoxProps {
   data: {
     id: number;
@@ -69,10 +68,22 @@ function ListBox({ title, variant, items }: ListBoxProps) {
           <TaskCard
             key={item.id}
             todo={{
-              id: String(item.id),
+              id: item.id,
               title: item.title,
-              done: item.isCompleted ?? variant === 'done',
-              star: item.star,
+              done: item.isCompleted ?? false,
+              fileUrl: null,
+              linkUrl: null,
+              userId: 0,
+              goalId: 0,
+              createdAt: new Date().toISOString(),
+              source: 'manual',
+              sourceItemId: null,
+              updatedAt: new Date().toISOString(),
+              noteIds: [],
+              goal: {
+                id: 0,
+                title: '',
+              },
             }}
             starred={item.star}
           />

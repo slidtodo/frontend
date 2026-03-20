@@ -1,3 +1,5 @@
+import { TodoItem } from '@/shared/types/api';
+
 export type DropdownItemType = {
   value: string;
   label: string;
@@ -11,10 +13,11 @@ export type Todo = {
 };
 
 export interface TaskCardProps {
-  todo: Todo;
+  todo: TodoItem;
   starred?: boolean;
-  onToggle?: (id: string) => void;
-  onStarToggle?: (id: string) => void;
+  onClick?: () => void;
+  onToggle?: (id: number) => void;
+  onStarToggle?: (id: number) => void;
   variant?: 'default' | 'orange';
 }
 

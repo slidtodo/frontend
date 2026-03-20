@@ -4,6 +4,7 @@ export interface TodoItem {
   goalId: number;
   title: string;
   done: boolean;
+  fileUrl: string | null;
   linkUrl: string | null;
   source: 'manual' | 'github_issue' | 'github_pr';
   sourceItemId: number | null;

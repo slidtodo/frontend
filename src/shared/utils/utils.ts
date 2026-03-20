@@ -1,3 +1,5 @@
+import { TAG_COLORS } from '../constants/constants';
+
 /**
  *
  * @param date
@@ -12,3 +14,11 @@ export function formatDate(date: Date) {
     })
     .replace(/\.$/, '');
 }
+
+/**
+ * 해시 기반 색상 매핑
+ * @param label
+ * @returns
+ */
+export const getColorIndex = (label: string): number =>
+  label.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % TAG_COLORS.length;

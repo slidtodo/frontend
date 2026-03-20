@@ -13,7 +13,7 @@ export const mockTodoItems: TodoItem[] = Array.from({ length: 30 }, (_, i) => {
     done: id % 3 === 0, // 일부 완료 처리
     fileUrl: null,
     linkUrl: `https://example.com/todo/${id}`,
-    source: 'manual',
+    source: 'github_pr',
     sourceItemId: null,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),

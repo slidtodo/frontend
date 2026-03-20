@@ -18,8 +18,11 @@ export default function DetailTodoModal({ todo }: DetailTodoModalProps) {
   return (
     <div className="flex w-85.75 flex-col gap-6 rounded-3xl bg-white p-4 shadow-[0px_0px_60px_0px_rgba(0,0,0,0.05)] md:w-114 md:rounded-[40px] md:p-8">
       <div className="flex items-center justify-between">
-        <div>
+        <div className="flex gap-2">
           <span className="text-xl font-semibold text-[#262626]">{todo.title}</span>
+          <div className="rounded-lg bg-[#FEEFDC] px-[5.5px] py-[3px] text-sm font-semibold text-[#EF6C00]">
+            {todo.done ? 'DONE' : 'TO DO'}
+          </div>
         </div>
         <XIcon className="cursor-pointer text-slate-400" size={24} onClick={closeModal} />
       </div>
@@ -33,18 +36,17 @@ export default function DetailTodoModal({ todo }: DetailTodoModalProps) {
           <div className="flex flex-col gap-2">
             <span className="text-base font-semibold text-[#333333]">첨부파일</span>
             <div className="flex flex-col gap-3">
-              <div>
+              <div className="flex gap-1">
                 <LinkIcon size={17} className="inline-block text-[#A4A4A4]" />
-                <span className="ml-1 text-sm font-medium text-[#333333]">{todo.fileUrl ? '파일' : '링크'}</span>
+                <a
+                  href={todo.fileUrl ?? todo.linkUrl ?? '#'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-[#1E90FF]"
+                >
+                  {todo.fileUrl ?? todo.linkUrl}
+                </a>
               </div>
-              <a
-                href={todo.fileUrl ?? todo.linkUrl ?? '#'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-[#1E90FF]"
-              >
-                {todo.fileUrl ?? todo.linkUrl}
-              </a>
             </div>
           </div>
         ))}

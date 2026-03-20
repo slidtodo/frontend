@@ -6,13 +6,15 @@ interface ProgressCircleProps {
   percent: number;
 }
 
-export default function ProgressCircle({ className, color = '#009D97', percent }: ProgressCircleProps) {
+export default function ProgressCircle({ className, color = '#FDB07A', percent }: ProgressCircleProps) {
   const clampedPercent = Math.max(0, Math.min(100, percent));
+
   const size = 160;
   const strokeWidth = 28;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const offset = circumference * (1 - clampedPercent / 100);
+
+  const progressLength = circumference * (clampedPercent / 100);
 
   return (
     <svg
@@ -25,18 +27,30 @@ export default function ProgressCircle({ className, color = '#009D97', percent }
       role="img"
       aria-label={`진행률 ${clampedPercent}%`}
     >
-      <circle cx={size / 2} cy={size / 2} r={radius} stroke={color} strokeWidth={strokeWidth} fill="none" />
+      {/* 배경 트랙 */}
       <circle
         cx={size / 2}
         cy={size / 2}
         r={radius}
-        stroke="#ffffff"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill="none"
+        opacity={0.45}
+      />
+
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        stroke="#FFFFFF"
         strokeWidth={strokeWidth}
         fill="none"
         strokeLinecap="round"
-        strokeDasharray={circumference}
-        strokeDashoffset={offset}
-        transform={`rotate( -90 ${size / 2} ${size / 2})`}
+        strokeDasharray={`${progressLength} ${circumference}`}
+        style={{
+          transform: 'rotate(90deg) scaleX(-1)',
+          transformOrigin: '50% 50%',
+        }}
       />
     </svg>
   );

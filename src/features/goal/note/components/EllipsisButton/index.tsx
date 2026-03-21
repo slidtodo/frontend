@@ -27,7 +27,12 @@ export default function EllipsisButton({ items }: EllipsisButtonProps) {
 
   return (
     <div ref={ref} className="relative flex">
-      <button onClick={() => setIsOpen(!isOpen)} className="cursor-pointer">
+      <button
+        onClick={() => {
+          setIsOpen(!isOpen);
+        }}
+        className="cursor-pointer"
+      >
         <EllipsisVertical size={16} className="stroke-[#A4A4A4] md:h-6 md:w-6" />
       </button>
 

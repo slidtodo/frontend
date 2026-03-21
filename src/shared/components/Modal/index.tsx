@@ -44,9 +44,8 @@ export const Modal = () => {
       onClick={handleClickOutside}
       className={clsx(
         'fixed inset-0 z-50 bg-black/50',
-        variant === 'bottom'
-          ? 'flex items-end md:flex md:items-center md:justify-center'
-          : 'flex items-center justify-center',
+        variant === 'bottom' && 'flex items-end md:flex md:items-center md:justify-center',
+        variant === 'center' && 'flex items-center justify-center',
       )}
     >
       <div

@@ -19,11 +19,7 @@ export const MOCK_NOTES = [
   { id: 3, title: '노트 제목3', todoId: 10, createdAt: '2026-03-17T00:00:00Z' },
 ];
 
-/**
- * @TODO params로 goalId 가져오기
- * export default async function Page({ params }: { params: { goalId: string } })
- */
-export default function Page() {
+export default function Page({ params }: { params: { goalId: string } }) {
   return (
     <div className="mx-auto flex h-full min-h-screen w-full max-w-[1312px] flex-col">
       {/* 1. Header */}
@@ -35,12 +31,12 @@ export default function Page() {
       </section>
 
       {/* 3. NoteList */}
-      <NoteList />
+      <NoteList goalId={params.goalId} />
     </div>
   );
 }
 
-export async function NoteList() {
+export async function NoteList({ goalId }: { goalId: string }) {
   /**
    * @TODO 실제 API로 대체
    * const res = await fetch(`{BASE_URL}/goals/{goalId}/notes`);
@@ -52,7 +48,7 @@ export async function NoteList() {
   return (
     <section className={clsx('flex flex-col gap-3', 'md:gap-4', 'lg:grid lg:grid-cols-2 lg:gap-[20px]')}>
       {MOCK_NOTES.map((note: Note) => (
-        <NoteItem key={note.id} note={note} />
+        <NoteItem key={note.id} note={note} goalId={goalId} />
       ))}
     </section>
   );

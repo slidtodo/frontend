@@ -37,6 +37,7 @@ export default async function NoteDetailPage({ params }: NoteDetailPageProps) {
     <div className="p-5 md:p-10">
       <EditorTitle title={note.title} readOnly />
       <EditorMeta goal={note.goal} todos={note.todos} tags={note.tags} />
+      <hr className="mt-4 mb-5 border-[#DDD] md:mt-6" />
       <EditorContent content={note.content} readOnly />
     </div>
   );

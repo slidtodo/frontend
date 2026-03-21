@@ -1,24 +1,11 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { XIcon } from 'lucide-react';
-import { useState } from 'react';
 
-export default function NoteCloseButton() {
-  const router = useRouter();
-  const [closing, setClosing] = useState(false);
-
-  const handleClose = () => {
-    setClosing(true);
-    setTimeout(() => router.back(), 300);
-  };
-
+export default function NoteCloseButton({ onClose }: { onClose: () => void }) {
   return (
-    <>
-      {closing && <div className="animate-slide-out-right fixed inset-0 z-[200] bg-white" />}
-      <button type="button" onClick={handleClose} className="cursor-pointer">
-        <XIcon size={24} className="stroke-[#A4A4A4]" />
-      </button>
-    </>
+    <button type="button" onClick={onClose} className="absolute top-5 right-5 cursor-pointer md:top-10 md:right-10">
+      <XIcon size={24} className="stroke-[#A4A4A4]" />
+    </button>
   );
 }

@@ -19,7 +19,9 @@ export const MOCK_NOTES = [
   { id: 3, title: '노트 제목3', todoId: 10, createdAt: '2026-03-17T00:00:00Z' },
 ];
 
-export default function Page({ params }: { params: { goalId: string } }) {
+export default async function Page({ params }: { params: Promise<{ goalId: string }> }) {
+  const { goalId } = await params;
+
   return (
     <div className="mx-auto flex h-full min-h-screen w-full max-w-[1312px] flex-col">
       {/* 1. Header */}
@@ -31,7 +33,7 @@ export default function Page({ params }: { params: { goalId: string } }) {
       </section>
 
       {/* 3. NoteList */}
-      <NoteList goalId={params.goalId} />
+      <NoteList goalId={goalId} />
     </div>
   );
 }

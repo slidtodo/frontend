@@ -8,22 +8,14 @@ import { useModalStore } from '@/shared/stores/useModalStore';
 import clsx from 'clsx';
 import { XIcon } from 'lucide-react';
 import { ImageType } from '@/features/todo/components/types/types';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { TagInput } from '../shared/TagInput';
 import LinkInput from '../shared/LinkInput';
 import ImageInput from '../shared/ImageInput';
 import DateInput from '../shared/DateInput';
 import { formatDateForAPI } from '@/shared/utils/utils';
-
-interface TodoCreateForm {
-  title: string;
-  goalId: number;
-  dueDate: string | null;
-  linkUrl: string | null;
-  imageUrl: string | null;
-  tags: string[];
-}
+import { TodoCreateForm } from '@/shared/types/types';
 
 export default function TodoCreateModal() {
   const { closeModal } = useModalStore();

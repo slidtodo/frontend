@@ -8,13 +8,13 @@ import { useModalStore } from '@/shared/stores/useModalStore';
 import clsx from 'clsx';
 import { XIcon } from 'lucide-react';
 import { ImageType } from '@/features/todo/components/types/types';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { TagInput } from './TagInput';
 import LinkInput from './LinkInput';
 import ImageInput from './ImageInput';
 import DateInput from './DateInput';
-import { formatDate, formatDateForAPI } from '@/shared/utils/utils';
+import { formatDateForAPI } from '@/shared/utils/utils';
 
 interface TodoCreateForm {
   title: string;
@@ -86,6 +86,7 @@ export default function TodoCreateModal() {
       {/* 제목 */}
       <FormField label="제목" required>
         <Input
+          autoFocus
           {...register('title', { required: '제목은 필수입니다.' })}
           placeholder="할 일의 제목을 적어주세요"
           className="h-11 rounded-xl border-[#CCC] p-3 text-sm font-normal text-[#333] placeholder:text-[#737373] md:h-14 md:rounded-2xl md:p-4 md:text-base"

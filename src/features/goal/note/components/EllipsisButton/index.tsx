@@ -28,7 +28,9 @@ export default function EllipsisButton({ items }: EllipsisButtonProps) {
   return (
     <div ref={ref} className="relative flex">
       <button
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation(); 
+          e.preventDefault();
           setIsOpen(!isOpen);
         }}
         className="cursor-pointer"

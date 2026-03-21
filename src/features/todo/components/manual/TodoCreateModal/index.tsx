@@ -10,10 +10,10 @@ import { XIcon } from 'lucide-react';
 import { ImageType } from '@/features/todo/components/types/types';
 import { useEffect, useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
-import { TagInput } from './TagInput';
-import LinkInput from './LinkInput';
-import ImageInput from './ImageInput';
-import DateInput from './DateInput';
+import { TagInput } from '../shared/TagInput';
+import LinkInput from '../shared/LinkInput';
+import ImageInput from '../shared/ImageInput';
+import DateInput from '../shared/DateInput';
 import { formatDateForAPI } from '@/shared/utils/utils';
 
 interface TodoCreateForm {

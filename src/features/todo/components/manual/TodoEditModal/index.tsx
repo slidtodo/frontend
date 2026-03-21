@@ -13,10 +13,10 @@ import { useForm, useWatch } from 'react-hook-form';
 import { TagInput } from '../shared/TagInput';
 import LinkInput from '../shared/LinkInput';
 import ImageInput from '../shared/ImageInput';
-import DateInput from '../shared/DateInput';
 import { formatDateForAPI } from '@/shared/utils/utils';
 import { TodoEditForm } from '@/shared/types/types';
 import StatusField from '../shared/StatusField';
+import DateInput from '../shared/DateInput';
 
 export default function TodoEditModal({ todo }: { todo: TodoEditForm }) {
   const { closeModal } = useModalStore();

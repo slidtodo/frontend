@@ -43,40 +43,57 @@ export default function LoginPage() {
     <main className="flex min-h-screen items-center justify-center bg-[#F5F5F5]">
       <div className="flex w-full max-w-[360px] flex-col items-start">
         {/* 로고 */}
-        <div className="mb-8 flex items-center gap-2">
-          <Image src="/image/symbol.png" alt="logo" width={48} height={48} />
-          <span className="text-lg font-semibold">Slid to-do</span>
+        <div className="mb-8 flex h-12 w-100 items-center gap-4">
+          <Image src="/icons/todo.png" alt="logo" width={48} height={48} />
+          <span className="text-2xl font-bold">Slid to-do</span>
         </div>
-        {/* 이메일 */}
-        <FormField label="" required>
-          <Input
-            type="email"
-            placeholder="이메일을 입력해주세요"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </FormField>
-        {/* 비밀번호 */}
-        <FormField label="" required>
-          <Input
-            type="password"
-            placeholder="비밀번호를 입력해주세요"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </FormField>
+        <div className="flex flex-col gap-4">
+          {/* 이메일 */}
+          <FormField label="">
+            <Input
+              type="email"
+              placeholder="이메일을 입력해주세요"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </FormField>
+          {/* 비밀번호 */}
+          <FormField label="">
+            <Input
+              type="password"
+              placeholder="비밀번호를 입력해주세요"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </FormField>
+        </div>
         {/* 로그인 버튼 */}
-        <div className="mt-4 w-full">
-          <Button onClick={handleLogin} className="w-full">
+        <div className="mt-8 w-full">
+          <Button onClick={handleLogin} className="h-14 w-100">
             로그인하기
           </Button>
         </div>
-        {/* 구분선 */}
-        <div className="my-6 w-full border-t border-gray-200" />
-        {/* 소셜 로그인 */}
-        <div className="flex items-center gap-4">
-          <Image src="/icons/google.png" alt="google" width={56} height={56} />
-          <Image src="/icons/GitHub.png" alt="github" width={56} height={56} />
+        {/* 회원가입 링크 */}
+        <div className="mt-6 flex h-6 w-100 items-center justify-center gap-1 text-sm">
+          <span className="text-base font-medium leading-6 text-[#333333]">슬리드투두가 처음이신가요?</span>
+          <a href="/signup" className="text-base font-semibold leading-6 text-[#EF6C00]">
+            회원가입
+          </a>
+        </div>
+        {/* SNS 구분선 */}
+        <div className="mb-4 mt-10 flex w-100 items-center gap-3">
+          <div className="h-px flex-1 bg-gray-200" />
+          <span className="text-sm text-gray-400">SNS 계정으로 로그인</span>
+          <div className="h-px flex-1 bg-gray-200" />
+        </div>
+        {/* SNS 버튼 */}
+        <div className="flex w-100 justify-center gap-4">
+          <button className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 hover:bg-gray-50">
+            <Image src="/icons/google.png" alt="구글 로그인" width={24} height={24} />
+          </button>
+          <button className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 hover:bg-gray-50">
+            <Image src="/icons/GitHub.png" alt="깃허브 로그인" width={24} height={24} />
+          </button>
         </div>
       </div>
     </main>

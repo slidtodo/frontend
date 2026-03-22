@@ -13,10 +13,10 @@ export default function SignupPage() {
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <div className="flex w-[400px] flex-col gap-6">
+    <div className="flex min-h-screen justify-center bg-gray-50 pt-[158px]">
+      <div className="flex w-[400px] flex-col">
         {/* 로고 */}
-        <div className="flex items-center gap-3">
+        <div className="mb-12 flex items-center gap-3">
           <Image src="/icons/todo.png" alt="Slid to-do" width={40} height={40} />
           <span className="text-2xl font-bold text-gray-900">Slid to-do</span>
         </div>
@@ -60,35 +60,35 @@ export default function SignupPage() {
           </FormField>
 
           {/* 회원가입 버튼 */}
-          <Button variant="primary" type="submit" className="h-[56px] w-full">
+          <Button variant="primary" type="submit" className="mt-4 h-[56px] w-full">
             회원가입 하기
           </Button>
         </form>
 
         {/* 로그인 링크 */}
-        <p className="text-center text-sm text-gray-500">
-          이미 회원이신가요?{' '}
-          <Link href="/login" className="font-medium text-[#FF8442] underline">
+        <div className="mt-6 flex h-6 items-center justify-center gap-1">
+          <span className="text-base font-medium leading-6 text-[#333333]">이미 회원이신가요?</span>
+          <Link href="/login" className="text-base font-semibold leading-6 text-[#EF6C00]">
             로그인
           </Link>
-        </p>
+        </div>
 
         {/* SNS 구분선 */}
-        <div className="flex items-center gap-3">
+        <div className="mt-[40px] flex items-center gap-3">
           <div className="h-px flex-1 bg-gray-200" />
           <span className="text-sm text-gray-400">SNS 계정으로 회원가입</span>
           <div className="h-px flex-1 bg-gray-200" />
         </div>
 
         {/* SNS 버튼 */}
-        <div className="flex justify-center gap-4">
+        <div className="mt-4 flex justify-center gap-4">
           {/* 구글 */}
-          <button className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 hover:bg-gray-50">
-            <Image src="/icons/google.png" alt="구글 로그인" width={24} height={24} />
+          <button>
+            <Image src="/icons/google.png" alt="구글 로그인" width={56} height={56} />
           </button>
           {/* 깃허브 */}
-          <button className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 hover:bg-gray-50">
-            <Image src="/icons/GitHub.png" alt="깃허브 로그인" width={24} height={24} />
+          <button>
+            <Image src="/icons/GitHub.png" alt="깃허브 로그인" width={56} height={56} />
           </button>
         </div>
       </div>

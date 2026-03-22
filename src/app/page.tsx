@@ -8,7 +8,7 @@ const features = [
     icon: 'goal1.png',
     title: '목표 설정부터 기록까지',
     description:
-      '달성하고 싶은 목표를 만들고 이름을 정하세요\n(개발자 모드: 목표를 설정하고 Github repository를 연결하세요.)',
+      '달성하고 싶은 목표를 만들고 이름을 정하세요\n(개발자 모드: 목표를 설정하고 Github repository를 \n연결하세요.)',
   },
   {
     index: 2,
@@ -30,8 +30,8 @@ export default function LandingPage() {
       {/* ── Section 01 · Hero ── */}
       <section className="w-full bg-gradient-to-r from-[#C7EDE6] to-[#FBE7C6] pt-16 pb-0 md:pt-20">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center px-6 text-center">
-          <p className="text-sm font-semibold text-[#EF6C00] md:text-lg">bearlog 하나로 일상부터 개발까지</p>
-          <h1 className="mt-2 text-2xl font-bold text-gray-900 md:text-4xl">개발자 할 일, bearlog로 계획해요</h1>
+          <p className="text-sm font-semibold text-[#EF6C00] md:text-lg">베어로그 하나로 일상부터 개발까지</p>
+          <h1 className="mt-2 text-2xl font-bold text-gray-900 md:text-4xl">개발자 할 일, 베어로그로 계획해요</h1>
           <Link href="/login" className="mt-8 h-fit w-fit md:mt-[56px]">
             <Button
               variant="primary"
@@ -43,7 +43,7 @@ export default function LandingPage() {
         </div>
 
         <div className="mt-10 flex justify-center md:mt-16">
-          <div className="w-full px-[50px] lg:px-[300px]">
+          <div className="w-full max-w-[900px] px-6 md:px-[50px]">
             <Image
               src="/image/dashboard.png"
               alt="dashboard"
@@ -61,7 +61,7 @@ export default function LandingPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 md:flex-row md:items-center md:justify-between xl:justify-normal xl:gap-[216px]">
           <div className="flex flex-col text-white md:shrink-0">
             <p className="text-sm font-semibold text-[#FFD19B] md:text-lg">자동화로 더 똑똑한 노트 관리</p>
-            <h2 className="mt-3 text-2xl leading-tight font-bold md:text-4xl">bearlog가 특별한 이유</h2>
+            <h2 className="mt-3 text-2xl leading-tight font-bold md:text-4xl">베어로그가 특별한 이유</h2>
             <ul className="mt-8 flex flex-col gap-5 md:mt-[59px] md:gap-6">
               {[
                 { icon: 'task.png', label: '편리한 모드 전환(일반/개발자)' },
@@ -163,16 +163,14 @@ export default function LandingPage() {
             <Image
               src="/image/check.png"
               alt="check"
-              width={60}
-              height={60}
-              className="absolute right-[10%] bottom-[18%] z-0 h-[28px] w-[28px] md:top-[100px] md:right-[120px] md:bottom-auto md:h-[60px] md:w-[60px] lg:top-[223px] lg:right-[264px]"
+              width={53}
+              height={58}
+              className="absolute right-[10%] bottom-[18%] z-0 h-[28px] w-[28px] md:top-[100px] md:right-[120px] md:bottom-auto md:h-[58px] md:w-[53px] lg:top-[223px] lg:right-[264px]"
             />
 
-            <p className="z-10 text-sm font-semibold text-[#FF8442]">bearlog 하나로 일상부터 개발까지</p>
+            <p className="z-10 text-sm font-semibold text-[#FF8442]">베어로그 하나로 일상부터 개발까지</p>
 
-            <h2 className="z-10 mt-3 text-xl font-bold text-gray-900 md:text-2xl">
-              개발자 할 일, bearlog으로 계획해요
-            </h2>
+            <h2 className="z-10 mt-3 text-xl font-bold text-gray-900 md:text-2xl">개발자 할 일, 베어로그로 계획해요</h2>
 
             <Link href="/login" className="z-10">
               <Button className="mt-6 h-[48px] w-[140px] text-sm font-semibold">시작하기</Button>

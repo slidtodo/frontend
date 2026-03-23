@@ -6,8 +6,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckIcon, EllipsisVertical, GithubIcon, Star } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
-
-import { TaskCardProps } from '@/shared/types/types';
+import { TodoItem } from '@/shared/types/api';
 
 /**
  * A single to-do list row.
@@ -22,6 +21,16 @@ import { TaskCardProps } from '@/shared/types/types';
  *  variant='orange'
  * />
  */
+
+interface TaskCardProps {
+  todo: TodoItem;
+  starred?: boolean;
+  onClick?: () => void;
+  onToggle?: (id: number) => void;
+  onStarToggle?: (id: number) => void;
+  variant?: 'default' | 'orange';
+}
+
 export function TaskCard({
   /**
    * [todo]

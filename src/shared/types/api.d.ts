@@ -8,6 +8,7 @@ export interface TodoItem {
   linkUrl: string | null;
   source: 'manual' | 'github_issue' | 'github_pr';
   sourceItemId: number | null;
+  dueDate: string;
   createdAt: string;
   updatedAt: string;
   goal: {
@@ -15,7 +16,14 @@ export interface TodoItem {
     title: string;
   };
   noteIds: number[];
+  tags: [
+    {
+      id: number;
+      name: string;
+    },
+  ];
 }
+
 export interface TodoListRes {
   todos: TodoItem[];
   nextCursor: number;

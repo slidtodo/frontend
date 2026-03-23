@@ -1,3 +1,6 @@
+import { format } from 'date-fns/format';
+import { TAG_COLORS } from '../constants/constants';
+
 /**
  *
  * @param date
@@ -12,3 +15,20 @@ export function formatDate(date: Date) {
     })
     .replace(/\.$/, '');
 }
+
+/**
+ * API에 넘기는 날짜 포맷팅 (ISO 8601)
+ * @param date
+ * @returns 2026-03-19
+ */
+export function formatDateForAPI(date: Date): string {
+  return format(date, 'yyyy-MM-dd');
+}
+
+/**
+ * 해시 기반 색상 매핑
+ * @param label
+ * @returns
+ */
+export const getColorIndex = (label: string): number =>
+  label.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % TAG_COLORS.length;

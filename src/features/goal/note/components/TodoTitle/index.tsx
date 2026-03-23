@@ -1,4 +1,4 @@
-import Tag from "@/shared/components/Tag";
+import Tag from '@/shared/components/Tag';
 
 export default async function TodoTitle({ todoId }: { todoId: number }) {
   /**

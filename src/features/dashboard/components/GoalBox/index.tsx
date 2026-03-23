@@ -29,7 +29,7 @@ export default function GoalBox({ data }: GoalBoxProps) {
           <SearchInput placeholder="할 일을 검색해주세요" />
           <Button
             variant="secondary"
-            className="rounded-[999px] rounded-full p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
+            className="rounded-full p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
           >
             <PlusIcon size={20} />
             <span className="hidden w-full w-max text-sm font-semibold md:block">할 일 추가</span>

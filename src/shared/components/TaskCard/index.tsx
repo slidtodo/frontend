@@ -1,14 +1,13 @@
 'use client';
 
-import { TaskCardProps } from '@/shared/types/types';
 import clsx from 'clsx';
-import { CheckIcon, EllipsisVertical, GithubIcon, Star } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { CheckIcon, EllipsisVertical, GithubIcon, Star, TextAlignJustifyIcon } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
-// ---------------------------------------------------------------------------
-// TaskCard
-// ---------------------------------------------------------------------------
+import { TaskCardProps } from '@/shared/types/types';
 
 /**
  * A single to-do list row.
@@ -43,6 +42,7 @@ export function TaskCard({
   const [checked, setChecked] = useState(todo.done);
   const [starred, setStarred] = useState(initialStarred);
 
+  const router = useRouter();
   const isOrange = variant === 'orange';
 
   function handleToggle() {
@@ -108,6 +108,15 @@ export function TaskCard({
 
       {/* ── Action buttons ───────────────────────────────────── */}
       <div className="flex shrink-0 items-center gap-2" role="toolbar" aria-label={`${todo.title} 작업 도구`}>
+        <button
+          className={clsx(
+            'relative flex h-6 w-6 cursor-pointer items-center justify-center rounded-full p-1 group-hover:bg-white',
+            isOrange ? 'bg-[#FFFFFF]/40' : 'bg-[#FF9E59]/20',
+          )}
+          onClick={() => router.push(`goal/${todo.id}/note/create`)}
+        >
+          <Image src={'/image/todo-list.svg'} alt="todo-list menu" width={9} height={10} className="cursor-pointer" />
+        </button>
         {/* //TODO 깃허브 아이콘 */}
         <button
           type="button"

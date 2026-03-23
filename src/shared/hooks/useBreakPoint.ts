@@ -1,40 +1,23 @@
 import { useEffect, useState } from 'react';
 
-export function useMobile() {
-  const [isMobile, setIsMobile] = useState(false);
+type Breakpoint = 'mobile' | 'tablet' | 'desktop';
+
+export function useBreakpoint() {
+  const [breakpoint, setBreakpoint] = useState<Breakpoint | null>(null);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    const check = () => {
+      const width = window.innerWidth;
+
+      if (width < 768) setBreakpoint('mobile');
+      else if (width < 1024) setBreakpoint('tablet');
+      else setBreakpoint('desktop');
+    };
+
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
   }, []);
 
-  return isMobile;
-}
-
-export function useTablet() {
-  const [isTablet, setIsTablet] = useState(false);
-
-  useEffect(() => {
-    const checkTablet = () => setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
-    checkTablet();
-    window.addEventListener('resize', checkTablet);
-    return () => window.removeEventListener('resize', checkTablet);
-  }, []);
-
-  return isTablet;
-}
-
-export function useDesktop() {
-  const [isDesktop, setIsDesktop] = useState(false);
-
-  useEffect(() => {
-    const checkDesktop = () => setIsDesktop(window.innerWidth >= 1024);
-    checkDesktop();
-    window.addEventListener('resize', checkDesktop);
-    return () => window.removeEventListener('resize', checkDesktop);
-  }, []);
-
-  return isDesktop;
+  return breakpoint;
 }

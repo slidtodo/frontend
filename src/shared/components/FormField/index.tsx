@@ -1,14 +1,18 @@
+import clsx from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
 interface FormFieldProps {
   label: string;
   required?: boolean;
   error?: string;
   children: React.ReactNode;
+  className?: string;
 }
 
-export default function FormField({ label, required, error, children }: FormFieldProps) {
+export default function FormField({ label, required, error, children, className }: FormFieldProps) {
   return (
-    <div className="flex w-full flex-col gap-1">
-      <label className="text-base font-medium text-[#333333]">
+    <div className={twMerge(clsx('flex w-full flex-col gap-2', className))}>
+      <label className="text-sm font-medium text-gray-700">
         {label}
         {required && <span className="ml-0.5 text-[#FF8442]">*</span>}
       </label>

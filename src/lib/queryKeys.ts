@@ -1,45 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
-
-// ────────────────────────────────────────────────────────────
-// 유틸
-// ────────────────────────────────────────────────────────────
-
-/** 객체를 쿼리스트링으로 변환 (undefined, null 값 제외) */
-const toQueryString = (params?: Record<string, unknown>): string => {
-  if (!params) return '';
-  const entries = Object.entries(params)
-    .filter(([, v]) => v !== undefined && v !== null)
-    .map(([k, v]) => [k, String(v)]);
-  return new URLSearchParams(entries).toString();
-};
-
-/**
- * fetch 공통 유틸
- * 400, 500 등 에러 응답을 throw로 변환 (fetch는 기본적으로 에러를 throw하지 않음)
- */
-const fetchJSON = async (url: string): Promise<unknown> => {
-  const r = await fetch(url);
-  if (!r.ok) throw new Error(`${r.status}`);
-  return r.json();
-};
-
-// ────────────────────────────────────────────────────────────
-// API fetch 함수
-// ────────────────────────────────────────────────────────────
-
-const fetchGoals = () => fetchJSON('/api/v1/goals');
-
-const fetchGoal = (goalId: number) => fetchJSON(`/api/v1/goals/${goalId}`);
-
-const fetchTodos = (params?: { goalId?: number; done?: boolean }) =>
-  fetchJSON(`/api/v1/todos?${toQueryString(params)}`);
-
-const fetchTodo = (todoId: number) => fetchJSON(`/api/v1/todos/${todoId}`);
-
-const fetchNotes = (params?: { sort?: 'latest' | 'oldest'; search?: string }) =>
-  fetchJSON(`/api/v1/notes?${toQueryString(params)}`);
-
-const fetchNote = (noteId: number) => fetchJSON(`/api/v1/notes/${noteId}`);
+import { fetchGoal, fetchGoals } from './api/goals';
+import { fetchTodo, fetchTodos } from './api/todos';
+import { fetchNote, fetchNotes } from './api/notes';
 
 // ────────────────────────────────────────────────────────────
 // Goal 쿼리

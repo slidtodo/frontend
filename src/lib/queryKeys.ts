@@ -13,23 +13,33 @@ const toQueryString = (params?: Record<string, unknown>): string => {
   return new URLSearchParams(entries).toString();
 };
 
+/**
+ * fetch 공통 유틸
+ * 400, 500 등 에러 응답을 throw로 변환 (fetch는 기본적으로 에러를 throw하지 않음)
+ */
+const fetchJSON = async (url: string): Promise<unknown> => {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`${r.status}`);
+  return r.json();
+};
+
 // ────────────────────────────────────────────────────────────
 // API fetch 함수
 // ────────────────────────────────────────────────────────────
 
-const fetchGoals = () => fetch('/api/v1/goals').then((r) => r.json());
+const fetchGoals = () => fetchJSON('/api/v1/goals');
 
-const fetchGoal = (goalId: number) => fetch(`/api/v1/goals/${goalId}`).then((r) => r.json());
+const fetchGoal = (goalId: number) => fetchJSON(`/api/v1/goals/${goalId}`);
 
 const fetchTodos = (params?: { goalId?: number; done?: boolean }) =>
-  fetch(`/api/v1/todos?${toQueryString(params)}`).then((r) => r.json());
+  fetchJSON(`/api/v1/todos?${toQueryString(params)}`);
 
-const fetchTodo = (todoId: number) => fetch(`/api/v1/todos/${todoId}`).then((r) => r.json());
+const fetchTodo = (todoId: number) => fetchJSON(`/api/v1/todos/${todoId}`);
 
 const fetchNotes = (params?: { sort?: 'latest' | 'oldest'; search?: string }) =>
-  fetch(`/api/v1/notes?${toQueryString(params)}`).then((r) => r.json());
+  fetchJSON(`/api/v1/notes?${toQueryString(params)}`);
 
-const fetchNote = (noteId: number) => fetch(`/api/v1/notes/${noteId}`).then((r) => r.json());
+const fetchNote = (noteId: number) => fetchJSON(`/api/v1/notes/${noteId}`);
 
 // ────────────────────────────────────────────────────────────
 // Goal 쿼리
@@ -72,7 +82,7 @@ export const todoQueries = {
    */
   list: (params?: { goalId?: number; done?: boolean }) =>
     queryOptions({
-      queryKey: ['todos', 'list', params],
+      queryKey: ['todos', 'list', params ?? {}],
       queryFn: () => fetchTodos(params),
     }),
 
@@ -99,7 +109,7 @@ export const noteQueries = {
    */
   list: (params?: { sort?: 'latest' | 'oldest'; search?: string }) =>
     queryOptions({
-      queryKey: ['notes', 'list', params],
+      queryKey: ['notes', 'list', params ?? {}],
       queryFn: () => fetchNotes(params),
     }),
 

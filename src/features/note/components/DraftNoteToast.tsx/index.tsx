@@ -9,7 +9,7 @@ interface DraftNoteToastProps {
 
 export default function DraftNoteToast({ onLoad, onClose }: DraftNoteToastProps) {
   return (
-    <div className="fixed top-18 right-6 z-50">
+    <div className="md:absolute md:top-13 md:-translate-x-[80%] z-50 fixed bottom-10 left-1/2 -translate-x-1/2  ">
       <div className="relative">
         {/* 말풍선 꼬리 (우측 상단) */}
         <div

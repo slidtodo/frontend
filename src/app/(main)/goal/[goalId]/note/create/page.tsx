@@ -30,13 +30,16 @@ export default function Page() {
       <section className="mb-0 flex shrink-0 items-center justify-between md:mt-4 md:mb-3 md:gap-4 lg:mt-10 lg:mb-[22px]">
         <PageHeader title={'노트 작성하기'} />
         <div className="flex gap-2">
-          <Button
-            onClick={() => saveDraft({ title, content, linkUrl: linkUrl ?? undefined })} // ← () => 로 감싸야 함
-            variant="secondary"
-            className="cursor-pointer text-sm md:h-10 md:px-[27px]"
-          >
-            임시저장
-          </Button>
+          <div className="relative">
+            <Button
+              onClick={() => saveDraft({ title, content, linkUrl: linkUrl ?? undefined })}
+              variant="secondary"
+              className="cursor-pointer text-sm md:h-10 md:px-[27px]"
+            >
+              임시저장
+            </Button>
+            {showToast && <DraftNoteToast onLoad={handleToastLoad} onClose={handleCloseToast} />}
+          </div>
           <Button variant="primary" className="cursor-pointer text-sm md:h-10 md:px-[27px]">
             등록하기
           </Button>
@@ -54,8 +57,6 @@ export default function Page() {
           onLinkUrlChange={setLinkUrl}
         />
       </section>
-
-      {showToast && <DraftNoteToast onLoad={handleToastLoad} onClose={handleCloseToast} />}
     </div>
   );
 }

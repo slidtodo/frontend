@@ -1,15 +1,27 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-export default function MSWProvider({ children }: { children: React.ReactNode }) {
+export function MSWProvider({ children }: { children: React.ReactNode }) {
+  const [isReady, setIsReady] = useState(false);
+
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
       import('./browser').then(({ worker }) => {
-        worker.start();
+        worker
+          .start({
+            onUnhandledRequest: 'bypass',
+          })
+          .then(() => {
+            setIsReady(true);
+          });
       });
+    } else {
+      setIsReady(true);
     }
   }, []);
+
+  if (!isReady) return null;
 
   return <>{children}</>;
 }

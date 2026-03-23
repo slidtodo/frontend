@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import FormField from '@/shared/components/FormField';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
@@ -20,6 +21,7 @@ export default function LoginPage() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
 
@@ -29,11 +31,7 @@ export default function LoginPage() {
         return;
       }
 
-      const data = await res.json();
-
-      localStorage.setItem('accessToken', data.accessToken);
-
-      router.push('/'); // 로그인 후 이동
+      router.push('/');
     } catch (error) {
       console.error(error);
     }
@@ -41,9 +39,9 @@ export default function LoginPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#F5F5F5]">
-      <div className="flex w-full max-w-[360px] flex-col items-start">
+      <div className="flex w-full max-w-[400px] flex-col items-start">
         {/* 로고 */}
-        <div className="mb-8 flex h-12 w-100 items-center gap-4">
+        <div className="mb-8 flex h-12 w-full items-center gap-4">
           <Image src="/icons/todo.png" alt="logo" width={48} height={48} />
           <span className="text-2xl font-bold">Slid to-do</span>
         </div>
@@ -69,25 +67,25 @@ export default function LoginPage() {
         </div>
         {/* 로그인 버튼 */}
         <div className="mt-8 w-full">
-          <Button onClick={handleLogin} className="h-14 w-100">
+          <Button onClick={handleLogin} className="h-14 w-full">
             로그인하기
           </Button>
         </div>
         {/* 회원가입 링크 */}
-        <div className="mt-6 flex h-6 w-100 items-center justify-center gap-1 text-sm">
-          <span className="text-base font-medium leading-6 text-[#333333]">슬리드투두가 처음이신가요?</span>
-          <a href="/signup" className="text-base font-semibold leading-6 text-[#EF6C00]">
+        <div className="mt-6 flex h-6 w-full items-center justify-center gap-1 text-sm">
+          <span className="text-base leading-6 font-medium text-[#333333]">슬리드투두가 처음이신가요?</span>
+          <Link href="/signup" className="text-base leading-6 font-semibold text-[#EF6C00]">
             회원가입
-          </a>
+          </Link>
         </div>
         {/* SNS 구분선 */}
-        <div className="mb-4 mt-10 flex w-100 items-center gap-3">
+        <div className="mt-10 mb-4 flex w-full items-center gap-3">
           <div className="h-px flex-1 bg-gray-200" />
           <span className="text-sm text-gray-400">SNS 계정으로 로그인</span>
           <div className="h-px flex-1 bg-gray-200" />
         </div>
         {/* SNS 버튼 */}
-        <div className="flex w-100 justify-center gap-4">
+        <div className="flex w-full justify-center gap-4">
           <button className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 hover:bg-gray-50">
             <Image src="/icons/google.png" alt="구글 로그인" width={24} height={24} />
           </button>

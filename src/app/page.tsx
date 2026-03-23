@@ -30,7 +30,6 @@ export default function LandingPage() {
       {/* ── Section 01 · Hero ── */}
       <section className="w-full bg-gradient-to-r from-[#C7EDE6] to-[#FBE7C6] pt-16 pb-0 md:pt-20">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center px-6 text-center">
-          {' '}
           <p className="text-sm font-semibold text-[#EF6C00] md:text-lg">bearlog 하나로 일상부터 개발까지</p>
           <h1 className="mt-2 text-2xl font-bold text-gray-900 md:text-4xl">개발자 할 일, bearlog로 계획해요</h1>
           <Link href="/login">
@@ -117,7 +116,6 @@ export default function LandingPage() {
         <div className="mx-auto flex max-w-[1300px] flex-col items-center px-6 lg:flex-row-reverse lg:justify-center lg:gap-16">
           {/* 텍스트 */}
           <div className="flex h-[96px] w-[316px] flex-col items-end text-right lg:ml-auto lg:h-auto lg:w-auto lg:max-w-[422px] lg:items-end lg:text-right">
-            {' '}
             <span className="text-sm text-[#EF6C00] lg:text-base">활발한 소통 게시판</span>
             <h2 className="mt-3 text-2xl font-bold text-gray-900 lg:text-4xl">
               다양한 사람들과
@@ -139,7 +137,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Section 05 · CTA ── */}
       {/* ── Section 05 · CTA ── */}
       <section className="w-full bg-white py-10">
         <div className="mx-auto max-w-[1840px] px-4">

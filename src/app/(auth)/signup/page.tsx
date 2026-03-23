@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import Input from '@/shared/components/Input';
@@ -7,10 +8,38 @@ import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
 
 export default function SignupPage() {
+  const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (password !== passwordConfirm) {
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    try {
+      const res = await fetch('/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      if (res.ok) {
+        alert('회원가입 성공!');
+        router.push('/login');
+      } else {
+        const data = await res.json();
+        alert(data.message);
+      }
+    } catch (error) {
+      alert('오류가 발생했습니다.');
+    }
+  };
 
   return (
     <div className="flex min-h-screen justify-center bg-gray-50 pt-[158px]">
@@ -22,7 +51,7 @@ export default function SignupPage() {
         </div>
 
         {/* 폼 */}
-        <form className="flex flex-col gap-4" onSubmit={() => {}}>
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <FormField label="이름">
             <Input
               type="text"
@@ -67,8 +96,8 @@ export default function SignupPage() {
 
         {/* 로그인 링크 */}
         <div className="mt-6 flex h-6 items-center justify-center gap-1">
-          <span className="text-base font-medium leading-6 text-[#333333]">이미 회원이신가요?</span>
-          <Link href="/login" className="text-base font-semibold leading-6 text-[#EF6C00]">
+          <span className="text-base leading-6 font-medium text-[#333333]">이미 회원이신가요?</span>
+          <Link href="/login" className="text-base leading-6 font-semibold text-[#EF6C00]">
             로그인
           </Link>
         </div>

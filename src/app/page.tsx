@@ -1,26 +1,24 @@
 'use client';
-import { useTodoEditModal } from '@/features/todo/hooks/useTodoEditModal';
+import LinkEmbed from '@/features/goal/note/components/NoteEditor/LinkEmbed';
+import LinkEmbedPreview from '@/features/goal/note/components/NoteEditor/LinkEmbed/LinkEmbedPreview';
+import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
+import { useState } from 'react';
 
 export default function Home() {
-  const { openTodoEditModal } = useTodoEditModal();
+  const [linkUrl, setLinkUrl] = useState<string | null>('https://www.codeit.kr');
+  const {openTodoCreateModal} = useTodoCreateModal();
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1 className="text-4xl font-bold">Hello, Worldzdz!</h1>
-      <button
-        onClick={() =>
-          openTodoEditModal({
-            done: true,
-            title: '모달 실험',
-            goalId: 1,
-            dueDate: null,
-            linkUrl: null,
-            imageUrl: null,
-            tags: ['태그1', '태그2'],
-          })
-        }
-      >
-        수정 모달 열기
-      </button>
-    </main>
+    <div>
+      {linkUrl && (
+        <LinkEmbed
+          url={linkUrl}
+          onRemove={() => setLinkUrl(null)}
+        />
+      )}
+      {/* LinkEmbedPreview는 따로 렌더링 */}
+      {linkUrl && <LinkEmbedPreview url={linkUrl} />}
+      <button onClick={openTodoCreateModal}>모달 열기</button>
+    </div>
   );
 }

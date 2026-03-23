@@ -8,7 +8,7 @@ import { useModalStore } from '@/shared/stores/useModalStore';
 import clsx from 'clsx';
 import { XIcon } from 'lucide-react';
 import { ImageType } from '@/features/todo/components/types/types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { TagInput } from '../shared/TagInput';
 import LinkInput from '../shared/LinkInput';
@@ -24,6 +24,16 @@ export default function TodoCreateModal() {
   const [image, setImage] = useState<ImageType | null>(null);
   const [date, setDate] = useState<Date | undefined>();
   const [tempDate, setTempDate] = useState<Date | undefined>();
+
+  useEffect(() => {
+    const url = image?.previewUrl;
+
+    return () => {
+      if (url) {
+        URL.revokeObjectURL(url);
+      }
+    };
+  }, [image]);
 
   const {
     register,

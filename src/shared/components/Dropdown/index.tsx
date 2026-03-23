@@ -8,8 +8,34 @@ import { ChevronDown } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
+/**
+ * Dropdown
+ *
+ * 선택 가능한 드롭다운 컴포넌트
+ *
+ * @example 기본 사용법
+ * const [selectedValue, setSelectedValue] = useState('');
+ *
+ * <Dropdown
+ *   items={[
+ *     { label: '자바스크립트로 웹 서비스 만들기', value: '1' },
+ *     { label: '디자인 시스템 정복하기', value: '2' },
+ *   ]}
+ *   selectedValue={selectedValue}
+ *   onSelectItem={(item) => setSelectedValue(item.value)}
+ * />
+ *
+ * @important 반드시 value 기준으로 초기값 설정
+ * const [selectedValue, setSelectedValue] = useState('1');
+ *
+ * @param items - 드롭다운 목록 ({ label: 표시될 텍스트, value: 실제 값 })
+ * @param selectedValue - 현재 선택된 항목의 value
+ * @param onSelectItem - 항목 선택 시 실행할 콜백 (item 전체를 인자로 받음)
+ * @param isDisabled - 비활성화 여부 (기본값: false)
+ * @param className - 추가 스타일 클래스
+ */
 const dropdownVariants = cva(
-  'rounded-xl border border-slate-300 bg-mono-white flex p-4 items-center gap-2 self-stretch text-base font-medium justify-between',
+  'rounded-xl border border-[#CCC] bg-[#FFF] flex p-4 items-center gap-2 self-stretch text-base font-medium justify-between',
   {
     variants: {
       disabled: {
@@ -23,9 +49,6 @@ const dropdownVariants = cva(
   },
 );
 
-/**
- * Dropdown
- */
 interface DropdownProps extends React.HTMLAttributes<HTMLButtonElement> {
   items: DropdownItemType[];
   selectedValue: string;
@@ -49,18 +72,19 @@ function Dropdown({ items, selectedValue, onSelectItem, isDisabled, className }:
   return (
     <div ref={ref} className="relative w-full">
       <button
+        type="button"
         onClick={() => setIsToggleOpen(!isToggleOpen)}
         className={twMerge(
           dropdownVariants({ disabled: isDisabled }),
           'flex w-full items-center gap-2',
-          isToggleOpen && 'rounded-2xl border border-orange-500',
+          isToggleOpen && 'rounded-2xl border border-[#FF8442]',
           className,
         )}
         disabled={isDisabled}
       >
-        <span className="line-clamp-1 text-base font-normal">{selectedItem?.label} </span>
+        <span className="line-clamp-1 text-sm font-normal md:text-base">{selectedItem?.label} </span>
         {/* //TODO 선택된 아이템 표시 */}
-        <ChevronDown size={16} className="text-slate-400 dark:text-white" />
+        <ChevronDown size={16} className="text-[#A4A4A4] dark:text-white" />
       </button>
       <div className="absolute top-full right-0 left-0 z-50 mt-1">
         {isToggleOpen && <DropdownList className="w-full" items={items} onSelectItem={handleSelectItem} />}
@@ -77,7 +101,7 @@ interface DropdownListProps extends React.HTMLAttributes<HTMLDivElement> {
   onSelectItem: (item: DropdownItemType) => void;
 }
 
-function DropdownList({ items, onSelectItem, className }: DropdownListProps) {
+export function DropdownList({ items, onSelectItem, className }: DropdownListProps) {
   return (
     <div
       className={twMerge(
@@ -99,12 +123,14 @@ interface DropdownItemProps {
   onSelectItem: (item: DropdownItemType) => void;
 }
 
-function DropdownItem({ item, onSelectItem }: DropdownItemProps) {
+export function DropdownItem({ item, onSelectItem }: DropdownItemProps) {
   return (
     <div className="flex w-full bg-white p-1.5">
-      <button onClick={() => onSelectItem(item)} className={twMerge(clsx('flex w-full'))}>
+      <button onClick={() => onSelectItem(item)} className={twMerge(clsx('flex w-full cursor-pointer'))}>
         <div className={twMerge(clsx('w-full rounded-xl p-2 text-left hover:bg-[#FEEFDC]'))}>
-          <span className="text-base leading-6 font-medium tracking-[-0.48px] text-slate-700">{item.label}</span>
+          <span className="text-sm leading-6 font-medium tracking-[-0.48px] text-[#333] md:text-base">
+            {item.label}
+          </span>
         </div>
       </button>
     </div>

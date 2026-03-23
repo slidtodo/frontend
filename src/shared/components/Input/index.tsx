@@ -1,11 +1,11 @@
 'use client';
-import { useState, forwardRef } from 'react';
+import { useState, forwardRef, InputHTMLAttributes } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
-type InputType = 'text' | 'email' | 'password';
+type InputType = 'text' | 'email' | 'password' | 'url';
 
-interface InputProps {
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   type?: InputType;
   placeholder?: string;
   value?: string;
@@ -15,12 +15,12 @@ interface InputProps {
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ type = 'text', placeholder, value, onChange, disabled, className }, ref) => {
+  ({ type = 'text', placeholder, value, onChange, disabled, className, ...rest }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
     const inputType = type === 'password' ? (showPassword ? 'text' : 'password') : type;
 
     return (
-      <div className="relative w-[400px]">
+      <div className="relative w-full">
         <input
           ref={ref}
           type={inputType}
@@ -29,18 +29,19 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           onChange={onChange}
           disabled={disabled}
           className={twMerge(
-            'w-full h-[56px] rounded-2xl border border-gray-200',
+            'h-[56px] w-full rounded-2xl border border-gray-200',
             'px-6 text-base text-[#737373]',
-            'outline-none bg-white',
-            disabled ? 'opacity-50 cursor-not-allowed' : '',
+            'bg-white outline-none',
+            disabled ? 'cursor-not-allowed opacity-50' : '',
             className,
           )}
+          {...rest}
         />
         {type === 'password' && (
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-5 top-1/2 -translate-y-1/2 text-[#737373]"
+            className="absolute top-1/2 right-5 -translate-y-1/2 text-[#737373]"
             aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
           >
             {showPassword ? <Eye size={22} /> : <EyeOff size={22} />}

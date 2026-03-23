@@ -7,6 +7,7 @@ import PageSubTitle from '@/shared/components/PageSubTitle';
 import GoalBox from '../GoalBox';
 
 import { goalMockData } from './mock';
+
 export default function DashboardDetail() {
   return (
     <section>

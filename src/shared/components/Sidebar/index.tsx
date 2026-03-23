@@ -5,28 +5,23 @@ import { ChevronsRightIcon, SettingsIcon, LogOutIcon, FlagIcon, CopyCheckIcon, B
 
 import { useSidebarContext } from '@/contexts/SidebarContext';
 import { useSidebarOpen } from '@/contexts/SidebarContext';
-import { useMobile } from '@/shared/hooks/useBreakPoint';
+import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
+import SidebarMobileCase from './SidebarMobileCase';
 
 export default function Sidebar() {
-  const isMobile = useMobile();
+  const breakpoint = useBreakpoint();
 
-  if (isMobile) return <SidebarMobile />;
-
-  return <SidebarDesktopTablet />;
+  if (breakpoint === null) return null;
+  if (breakpoint === 'mobile') return <SidebarMobile />;
+  else return <SidebarDesktopTablet />;
 }
 
 // 모바일일 때 렌더링 되는 사이드바 컴포넌트
 function SidebarMobile() {
   return (
-    <div className="flex items-center justify-between border-b-2 border-[#DDDDDD] bg-white px-5 py-4">
-      <div className="flex gap-[12px]">
-        <MenuIcon size={24} className="text-[#737373] hover:cursor-pointer" />
-        <span className="text-base font-semibold text-[#333333]">체다치즈님의 목표</span>
-      </div>
-      <button className="group relative text-[#737373] transition-all duration-200 hover:bg-gray-100 hover:text-[#FF8442]">
-        <BellIcon size={24} className="transition-transform group-hover:scale-110" />
-        <div className="absolute top-0.5 right-0.5 h-2 w-2 rounded-full bg-[#FF8442]"></div>
-      </button>
+    <div className="flex items-center border-b-2 border-[#DDDDDD] bg-white px-5 py-4">
+      <MenuIcon size={24} className="pr-3 text-[#737373] hover:cursor-pointer" />
+      <SidebarMobileCase />
     </div>
   );
 }

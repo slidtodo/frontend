@@ -14,7 +14,7 @@ export default function FormField({ label, required, error, children, className 
     <div className={twMerge(clsx('flex w-full flex-col gap-2', className))}>
       <label className="text-sm font-medium text-gray-700">
         {label}
-        {required && <span className="ml-0.5 text-red-500">*</span>}
+        {required && <span className="ml-0.5 text-[#FF8442]">*</span>}
       </label>
       {children}
       {error && <p className="px-1 text-sm text-red-500">{error}</p>}

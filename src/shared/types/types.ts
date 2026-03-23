@@ -10,14 +10,6 @@ export type Todo = {
   star: boolean;
 };
 
-export interface TaskCardProps {
-  todo: Todo;
-  starred?: boolean;
-  onToggle?: (id: string) => void;
-  onStarToggle?: (id: string) => void;
-  variant?: 'default' | 'orange';
-}
-
 export interface TagProps {
   string: string;
   onClose?: () => void;

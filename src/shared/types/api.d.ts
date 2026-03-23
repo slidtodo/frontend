@@ -11,6 +11,7 @@ export interface TodoItem {
   dueDate: string;
   createdAt: string;
   updatedAt: string;
+  favorite: boolean;
   goal: {
     id: number;
     title: string;

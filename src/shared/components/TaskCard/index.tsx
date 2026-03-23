@@ -107,10 +107,8 @@ export function TaskCard({
           'min-w-0 flex-1 cursor-pointer truncate',
           'text-base leading-6 tracking-[-0.03em]',
           'transition-colors duration-150',
-          checked
-            ? 'font-medium text-[#737373] group-hover:font-semibold group-hover:text-[#EF6C00]'
-            : 'font-medium text-[#262626]',
-          isOrange ? 'group-hover:text-white' : '',
+          checked ? 'font-medium text-[#737373] group-hover:font-semibold group-hover:text-[#EF6C00]' : 'font-medium',
+          isOrange ? 'text-[#ffffff] group-hover:text-white' : 'text-[#262626]',
         )}
       >
         {todo.title}

@@ -2,9 +2,10 @@ import React from 'react';
 import Image from 'next/image';
 import { FlagIcon, CalendarIcon, HashIcon, XIcon, LinkIcon } from 'lucide-react';
 
+import Tag from '@/shared/components/Tag';
+
 import { TodoItem } from '@/shared/types/api';
 import { useModalStore } from '@/shared/stores/useModalStore';
-
 // TODO: 현재 디자인과 데이터 응답이 이상함 추후 API 명세 수정될 때 같이 수정 필요
 interface DetailTodoModalProps {
   todo: TodoItem;
@@ -28,8 +29,14 @@ export default function DetailTodoModal({ todo }: DetailTodoModalProps) {
       </div>
       <div className="flex flex-col gap-4">
         <DetailItemSummary icon={<FlagIcon size={18} />} label="목표" value={todo.goal.title} />
-        <DetailItemSummary icon={<CalendarIcon size={18} />} label="마감기한" value={'2026.09.12'} />
-        <DetailItemSummary icon={<HashIcon size={18} />} label="태그" value={['코딩', '프로그래밍'].join(', ')} />
+        <DetailItemSummary icon={<CalendarIcon size={18} />} label="마감기한" value={todo.dueDate} />
+        <DetailItemSummary
+          icon={<HashIcon size={18} />}
+          label="태그"
+          value={todo.tags.map((tag) => (
+            <Tag key={tag.id} string={tag.name} />
+          ))}
+        />
       </div>
       {(todo.fileUrl || todo.linkUrl) && (
         <div className="flex flex-col gap-2">
@@ -65,12 +72,12 @@ export default function DetailTodoModal({ todo }: DetailTodoModalProps) {
 interface DetailItemSummaryProps {
   icon: React.ReactNode;
   label: string;
-  value: string;
+  value: string | React.ReactNode;
 }
 function DetailItemSummary({ icon, label, value }: DetailItemSummaryProps) {
   return (
     <div className="flex gap-2">
-      <div className="flex gap-1">
+      <div className="flex items-center gap-1">
         <div className="flex items-center text-[#A4A4A4]">{icon}</div>
         <span className="text-sm font-medium text-[#A4A4A4]">{label}</span>
       </div>

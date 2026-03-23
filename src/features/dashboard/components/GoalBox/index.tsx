@@ -4,13 +4,15 @@ import Progressbar from '@/shared/components/Progressbar';
 import TaskCard from '@/shared/components/TaskCard';
 import SearchInput from '@/shared/components/SearchInput';
 import Button from '@/shared/components/Button';
+import { TodoItem } from '@/shared/types/api';
+
 interface GoalBoxProps {
   data: {
     id: number;
     title: string;
     progress: number;
-    todoList: { id: number; title: string; isCompleted: boolean; star: boolean }[];
-    doneList: { id: number; title: string; star: boolean }[];
+    todoList: TodoItem[];
+    doneList: TodoItem[];
   };
 }
 
@@ -46,7 +48,7 @@ export default function GoalBox({ data }: GoalBoxProps) {
 interface ListBoxProps {
   title: string;
   variant: 'todo' | 'done';
-  items: { id: number; title: string; star: boolean; isCompleted?: boolean }[];
+  items: TodoItem[];
 }
 function ListBox({ title, variant, items }: ListBoxProps) {
   let bgColor, textColor;
@@ -65,28 +67,7 @@ function ListBox({ title, variant, items }: ListBoxProps) {
       <span className={`text-sm font-bold ${textColor} lg:text-base`}>{title}</span>
       <div className="flex max-h-[236px] flex-col gap-1 overflow-y-auto">
         {items.map((item) => (
-          <TaskCard
-            key={item.id}
-            todo={{
-              id: item.id,
-              title: item.title,
-              done: item.isCompleted ?? variant === 'done',
-              fileUrl: null,
-              linkUrl: null,
-              userId: 0,
-              goalId: 0,
-              createdAt: new Date().toISOString(),
-              source: 'manual',
-              sourceItemId: null,
-              updatedAt: new Date().toISOString(),
-              noteIds: [],
-              goal: {
-                id: 0,
-                title: '',
-              },
-            }}
-            starred={item.star}
-          />
+          <TaskCard key={item.id} todo={item} starred={item.favorite} />
         ))}
       </div>
     </div>

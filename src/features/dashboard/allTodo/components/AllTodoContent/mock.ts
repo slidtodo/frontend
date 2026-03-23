@@ -15,6 +15,7 @@ export const mockTodoItems: TodoItem[] = Array.from({ length: 30 }, (_, i) => {
     linkUrl: `https://example.com/todo/${id}`,
     source: 'github_pr',
     sourceItemId: null,
+    dueDate: new Date(Date.now() + id * 24 * 60 * 60 * 1000).toISOString(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     goal: {
@@ -22,5 +23,11 @@ export const mockTodoItems: TodoItem[] = Array.from({ length: 30 }, (_, i) => {
       title: '자바스크립트로 웹 서비스 만들기',
     },
     noteIds: [id * 10 + 1],
+    tags: [
+      {
+        id: 1,
+        name: '중요',
+      },
+    ],
   };
 });

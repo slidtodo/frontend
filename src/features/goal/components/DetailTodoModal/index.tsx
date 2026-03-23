@@ -31,25 +31,24 @@ export default function DetailTodoModal({ todo }: DetailTodoModalProps) {
         <DetailItemSummary icon={<CalendarIcon size={18} />} label="마감기한" value={'2026.09.12'} />
         <DetailItemSummary icon={<HashIcon size={18} />} label="태그" value={['코딩', '프로그래밍'].join(', ')} />
       </div>
-      {todo.fileUrl ||
-        (todo.linkUrl && (
-          <div className="flex flex-col gap-2">
-            <span className="text-base font-semibold text-[#333333]">첨부파일</span>
-            <div className="flex flex-col gap-3">
-              <div className="flex gap-1">
-                <LinkIcon size={17} className="inline-block text-[#A4A4A4]" />
-                <a
-                  href={todo.fileUrl ?? todo.linkUrl ?? '#'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-[#1E90FF]"
-                >
-                  {todo.fileUrl ?? todo.linkUrl}
-                </a>
-              </div>
+      {(todo.fileUrl || todo.linkUrl) && (
+        <div className="flex flex-col gap-2">
+          <span className="text-base font-semibold text-[#333333]">첨부파일</span>
+          <div className="flex flex-col gap-3">
+            <div className="flex gap-1">
+              <LinkIcon size={17} className="inline-block text-[#A4A4A4]" />
+              <a
+                href={todo.fileUrl ?? todo.linkUrl ?? '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-[#1E90FF]"
+              >
+                {todo.fileUrl ?? todo.linkUrl}
+              </a>
             </div>
           </div>
-        ))}
+        </div>
+      )}
 
       {todo.noteIds.length > 0 && (
         <div className="flex flex-col gap-2">

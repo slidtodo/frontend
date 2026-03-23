@@ -70,7 +70,7 @@ function ListBox({ title, variant, items }: ListBoxProps) {
             todo={{
               id: item.id,
               title: item.title,
-              done: item.isCompleted ?? false,
+              done: item.isCompleted ?? variant === 'done',
               fileUrl: null,
               linkUrl: null,
               userId: 0,

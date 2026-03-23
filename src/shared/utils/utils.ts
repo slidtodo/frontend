@@ -1,4 +1,3 @@
-import { format } from 'date-fns/format';
 import { TAG_COLORS } from '../constants/constants';
 
 /**
@@ -19,11 +18,11 @@ export function formatDate(date: Date) {
 /**
  * API에 넘기는 날짜 포맷팅 (ISO 8601)
  * @param date
- * @returns 2026-03-19
+ * @returns 2026-03-06T00:00:00.000Z
  */
-export function formatDateForAPI(date: Date): string {
-  return format(date, 'yyyy-MM-dd');
-}
+export const formatDateForAPI = (date: Date): string => {
+  return date.toISOString();
+};
 
 /**
  * 해시 기반 색상 매핑

@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { ImageType } from '@/features/todo/components/types/types';
 import { ImageUpIcon, XIcon } from 'lucide-react';
 
@@ -25,6 +25,14 @@ export default function ImageInput({ image, onChange }: ImageInput) {
       e.target.value = '';
     }
   };
+
+    useEffect(() => {
+    return () => {
+      if (image?.previewUrl) {
+        URL.revokeObjectURL(image.previewUrl);
+      }
+    };
+  }, [image]);
   return (
     <>
       {image ? (

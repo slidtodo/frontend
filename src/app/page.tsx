@@ -90,7 +90,6 @@ export default function LandingPage() {
             <h2 className="mt-3 text-2xl font-bold text-gray-900 md:text-3xl">쉽고 빠르게 할 일을 시작해요</h2>
           </div>
 
-          {/* 모바일: 1열 세로 스택 / 데스크톱: 3열 */}
           <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-3">
             {features.map((feature) => (
               <div

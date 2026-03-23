@@ -89,7 +89,7 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
                   onClick={onNextClick}
                   className="flex size-8 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent hover:bg-[#FAFAFA]"
                 >
-                  <ChevronRightIcon size={20} className="hover:stroke -[#333] stroke-[#A4A4A4]" />
+                  <ChevronRightIcon size={20} className="hover:stroke-[#333] stroke-[#A4A4A4]" />
                 </Button>
               </div>
             ),

@@ -1,0 +1,37 @@
+'use client';
+
+import { useCallback } from 'react';
+
+export interface DraftNote {
+  title: string;
+  content: string;
+  linkUrl?: string;
+  savedAt: string; // ISO string
+}
+
+const DRAFT_KEY = 'note_draft';
+
+export function useDraftNote() {
+  /** localStorage에 임시 저장 */
+  const saveDraft = useCallback((draft: Omit<DraftNote, 'savedAt'>) => {
+    const data: DraftNote = { ...draft, savedAt: new Date().toISOString() };
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
+  }, []);
+
+  /** localStorage에서 임시 저장본 불러오기 */
+  const getDraft = useCallback((): DraftNote | null => {
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      return raw ? (JSON.parse(raw) as DraftNote) : null;
+    } catch {
+      return null;
+    }
+  }, []);
+
+  /** localStorage에서 임시 저장본 삭제 */
+  const clearDraft = useCallback(() => {
+    localStorage.removeItem(DRAFT_KEY);
+  }, []);
+
+  return { saveDraft, getDraft, clearDraft };
+}

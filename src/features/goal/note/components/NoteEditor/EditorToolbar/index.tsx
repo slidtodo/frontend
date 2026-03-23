@@ -8,7 +8,11 @@ import { useState } from 'react';
 
 const ALIGN_TOOLS = ['align-left', 'align-center', 'align-right'];
 
-export default function EditorToolbar() {
+interface EditorToolbarProps {
+  onLinkUrlChange?: (value: string | null) => void;
+}
+
+export default function EditorToolbar({onLinkUrlChange} : EditorToolbarProps) {
   const [activeTools, setActiveTools] = useState<string[]>([]);
   const { openModal } = useModalStore();
 

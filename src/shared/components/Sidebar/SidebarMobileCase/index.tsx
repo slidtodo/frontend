@@ -1,6 +1,8 @@
 import { usePathname } from 'next/navigation';
 import { BellIcon } from 'lucide-react';
 
+import PageHeader from '@/shared/components/PageHeader';
+
 export default function SidebarMobileCase() {
   // TODO: 전역관리가 좋아보임. 해당 데이터 받아오기
   const pathname = usePathname();
@@ -11,7 +13,7 @@ export default function SidebarMobileCase() {
   if (pathname === '/dashboard' || /^\/goal\/[^/]+$/.test(pathname)) {
     return (
       <div className="flex w-full items-center justify-between">
-        <span className="text-base font-semibold">{`${userName}님의 대시보드`}</span>
+        <PageHeader title={`${userName}님의 대시보드`} />
         <BellButton />
       </div>
     );
@@ -20,10 +22,7 @@ export default function SidebarMobileCase() {
   if (pathname === '/dashboard/all-todo') {
     return (
       <div className="flex w-full items-center justify-between">
-        <div className="flex gap-1">
-          <span className="text-base font-semibold">모든 할 일</span>
-          <span className="text-base font-semibold text-[#EF6C00]">{allTodoCount}</span>
-        </div>
+        <PageHeader title="모든 할 일" count={allTodoCount} />
         <BellButton />
       </div>
     );
@@ -32,7 +31,7 @@ export default function SidebarMobileCase() {
   if (/^\/goal\/[^/]+\/note$/.test(pathname)) {
     return (
       <div className="flex w-full items-center justify-between">
-        <span className="text-base font-semibold">노트 모아보기</span>
+        <PageHeader title="노트 모아보기" />
         <BellButton />
       </div>
     );
@@ -41,7 +40,7 @@ export default function SidebarMobileCase() {
   if (/^\/goal\/[^/]+\/note\/create$/.test(pathname)) {
     return (
       <div className="flex w-full items-center justify-between">
-        <span className="text-base font-semibold">노트 작성하기</span>
+        <PageHeader title="노트 작성하기" />
         <div className="flex gap-1">
           <button type="button" className="px-[6px] text-[#737373] transition-all duration-200 hover:text-[#FF8442]">
             임시저장
@@ -57,10 +56,7 @@ export default function SidebarMobileCase() {
   if (pathname === '/favorite-todo') {
     return (
       <div className="flex w-full items-center justify-between">
-        <div className="flex gap-1">
-          <span className="text-base font-semibold">찜한 할 일</span>
-          <span className="text-base font-semibold text-[#EF6C00]">{favoriteCount}</span>
-        </div>
+        <PageHeader title="찜한 할 일" count={favoriteCount} />
         <BellButton />
       </div>
     );
@@ -69,7 +65,7 @@ export default function SidebarMobileCase() {
   if (pathname === '/calendar') {
     return (
       <div className="flex w-full items-center justify-between">
-        <span className="text-base font-semibold">{`${userName}님의 캘린더`}</span>
+        <PageHeader title={`${userName}님의 캘린더`} />
         <BellButton />
       </div>
     );
@@ -78,7 +74,7 @@ export default function SidebarMobileCase() {
   if (pathname === '/mypage') {
     return (
       <div className="flex w-full items-center justify-between">
-        <span className="text-base font-semibold">내 정보 관리</span>
+        <PageHeader title="내 정보 관리" />
         <BellButton />
       </div>
     );

@@ -26,7 +26,7 @@ export default function SearchInput({ placeholder, className, onIconClick, ...pr
       <input
         type="text"
         placeholder={placeholder}
-        className="w-full border-none bg-transparent text-sm font-medium text-[#737373] outline-none focus:ring-0"
+        className="w-full border-none bg-transparent text-sm font-medium text-[#404040] outline-none placeholder:text-[#A4A4A4] focus:ring-0"
         ref={inputRef}
         {...props}
       />

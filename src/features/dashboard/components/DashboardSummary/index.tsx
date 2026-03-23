@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronRightIcon } from 'lucide-react';
 
@@ -5,8 +6,7 @@ import PageSubTitle from '@/shared/components/PageSubTitle';
 import ProgressCircle from '@/shared/components/ProgressCircle';
 import TaskCard from '@/shared/components/TaskCard';
 
-import { mockData } from './mock';
-import Link from 'next/link';
+import { mockTodoItems } from '../../allTodo/components/AllTodoContent/mock';
 
 export default function DashBoardSummary() {
   return (
@@ -39,18 +39,9 @@ export default function DashBoardSummary() {
 
 function RecentPostCard() {
   return (
-    <article className="h-[256px] rounded-[40px] bg-[#FF8442] p-4 shadow-[0_10px_40px_0_rgba(255,158,89,0.40)] lg:p-8">
-      {mockData.map((task) => (
-        <TaskCard
-          key={task.id}
-          todo={{
-            id: String(task.id),
-            title: task.title,
-            done: task.done,
-            star: task.star,
-          }}
-          starred={task.star}
-        />
+    <article className="flex h-[256px] flex-col gap-[6px] rounded-[40px] bg-[#FF8442] p-4 shadow-[0_10px_40px_0_rgba(255,158,89,0.40)] lg:p-8">
+      {mockTodoItems.slice(0, 4).map((task) => (
+        <TaskCard key={task.id} todo={task} variant="orange" />
       ))}
     </article>
   );

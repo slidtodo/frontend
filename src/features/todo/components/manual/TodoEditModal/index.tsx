@@ -13,14 +13,14 @@ import { useForm, useWatch } from 'react-hook-form';
 import { TagInput } from '../shared/TagInput';
 import LinkInput from '../shared/LinkInput';
 import ImageInput from '../shared/ImageInput';
-import DateInput from '../shared/DateInput';
 import { formatDateForAPI } from '@/shared/utils/utils';
-import { TodoCreateForm } from '@/shared/types/types';
+import { TodoEditForm } from '@/shared/types/types';
+import StatusField from '../shared/StatusField';
+import DateInput from '../shared/DateInput';
 
-export default function TodoCreateModal() {
+export default function TodoEditModal({ todo }: { todo: TodoEditForm }) {
   const { closeModal } = useModalStore();
 
-  // react-hook-form으로 관리 안 되는 것들만 별도 state
   const [image, setImage] = useState<ImageType | null>(null);
   const [date, setDate] = useState<Date | undefined>();
   const [tempDate, setTempDate] = useState<Date | undefined>();
@@ -31,29 +31,26 @@ export default function TodoCreateModal() {
     setValue,
     control,
     formState: { errors },
-  } = useForm<TodoCreateForm>({
+  } = useForm<TodoEditForm>({
     mode: 'onSubmit',
     defaultValues: {
-      title: '',
-      goalId: 1,
-      dueDate: null,
-      linkUrl: null,
-      imageUrl: null,
-      tags: [],
+      done: todo.done ?? false,
+      title: todo.title ?? '',
+      goalId: todo.goalId ?? 1,
+      dueDate: todo.dueDate ?? null,
+      linkUrl: todo.linkUrl ?? null,
+      imageUrl: todo.imageUrl ?? null,
+      tags: todo.tags ?? [],
     },
   });
-
+  const done = useWatch({ control, name: 'done' });
   const tags = useWatch({ control, name: 'tags' }) ?? [];
   const goalId = useWatch({ control, name: 'goalId' });
   const linkUrl = useWatch({ control, name: 'linkUrl' });
 
-  const onSubmit = (data: TodoCreateForm) => {
-    const body = {
-      source: 'manual',
-      ...data,
-    };
+  const onSubmit = (data: TodoEditForm) => {
     /** @TODO 추후 API 연결로 대체 */
-    console.log(body);
+    console.log(data);
     closeModal();
   };
 
@@ -67,13 +64,20 @@ export default function TodoCreateModal() {
         'max-h-[90vh] overflow-y-auto',
       )}
     >
-      {/* 할 일 생성 헤더 */}
+      {/* 할 일 수정 헤더 */}
       <div className="mb-1 flex items-center justify-between md:mb-4">
-        <h1 className="text-xl font-semibold text-[#262626]">할 일 생성</h1>
+        <h1 className="text-xl font-semibold text-[#262626]">할 일 수정</h1>
         <button type="button" className="cursor-pointer" onClick={closeModal}>
           <XIcon size={24} className="stroke-[#A4A4A4]" />
         </button>
       </div>
+
+      {/** 상태 필드 */}
+      <StatusField
+        done={done}
+        onChange={(val) => setValue('done', val, { shouldValidate: true })}
+        errorMessage={errors.done?.message}
+      />
 
       {/* 제목 */}
       <FormField label="제목" required>

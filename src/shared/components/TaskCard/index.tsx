@@ -4,10 +4,9 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckIcon, EllipsisVertical, GithubIcon, Star, TextAlignJustifyIcon } from 'lucide-react';
+import { CheckIcon, EllipsisVertical, GithubIcon, Star } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
-
-import { TaskCardProps } from '@/shared/types/types';
+import { TodoItem } from '@/shared/types/api';
 
 /**
  * A single to-do list row.
@@ -22,6 +21,16 @@ import { TaskCardProps } from '@/shared/types/types';
  *  variant='orange'
  * />
  */
+
+interface TaskCardProps {
+  todo: TodoItem;
+  starred?: boolean;
+  onClick?: () => void;
+  onToggle?: (id: number) => void;
+  onStarToggle?: (id: number) => void;
+  variant?: 'default' | 'orange';
+}
+
 export function TaskCard({
   /**
    * [todo]
@@ -30,7 +39,7 @@ export function TaskCard({
    */
   todo,
   starred: initialStarred = false,
-
+  onClick,
   // 이벤트 핸들러
   onToggle, // 체크박스
   onStarToggle, // 별
@@ -93,14 +102,13 @@ export function TaskCard({
       {/* ── Text ─────────────────────────────────────────────── */}
       {/** @TODO onClick에 모달 연결 */}
       <div
+        onClick={onClick}
         className={clsx(
-          'min-w-0 flex-1 truncate',
+          'min-w-0 flex-1 cursor-pointer truncate',
           'text-base leading-6 tracking-[-0.03em]',
           'transition-colors duration-150',
-          checked
-            ? 'font-medium text-[#737373] group-hover:font-semibold group-hover:text-[#EF6C00]'
-            : 'font-medium text-[#262626]',
-          isOrange ? 'group-hover:text-white' : '',
+          checked ? 'font-medium text-[#737373] group-hover:font-semibold group-hover:text-[#EF6C00]' : 'font-medium',
+          isOrange ? 'text-[#ffffff] group-hover:text-white' : 'text-[#262626]',
         )}
       >
         {todo.title}
@@ -113,7 +121,7 @@ export function TaskCard({
             'relative flex h-6 w-6 cursor-pointer items-center justify-center rounded-full p-1 group-hover:bg-white',
             isOrange ? 'bg-[#FFFFFF]/40' : 'bg-[#FF9E59]/20',
           )}
-          onClick={() => router.push(`goal/${todo.id}/note/create`)}
+          onClick={() => router.push(`${todo.id}/note/create`)}
         >
           <Image src={'/image/todo-list.svg'} alt="todo-list menu" width={9} height={10} className="cursor-pointer" />
         </button>

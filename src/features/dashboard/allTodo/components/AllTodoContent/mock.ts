@@ -1,34 +1,34 @@
+import { TodoItem } from '@/shared/types/api';
+
 //TODO 삭제 예정
 
-export const mockTodo = [
-  { id: '1', title: '할 일 1', done: false, star: false },
-  { id: '2', title: '할 일 2', done: true, star: false },
-  { id: '3', title: '할 일 3', done: false, star: true },
-  { id: '4', title: '할 일 4', done: false, star: false },
-  { id: '5', title: '할 일 5', done: true, star: false },
-  { id: '6', title: '할 일 6', done: false, star: true },
-  { id: '7', title: '할 일 7', done: false, star: false },
-  { id: '8', title: '할 일 8', done: true, star: false },
-  { id: '9', title: '할 일 9', done: false, star: true },
-  { id: '10', title: '할 일 10', done: false, star: false },
-  { id: '11', title: '할 일 11', done: true, star: false },
-  { id: '12', title: '할 일 12', done: false, star: true },
-  { id: '13', title: '할 일 13', done: false, star: false },
-  { id: '14', title: '할 일 14', done: true, star: false },
-  { id: '15', title: '할 일 15', done: false, star: true },
-  { id: '16', title: '할 일 16', done: false, star: false },
-  { id: '17', title: '할 일 17', done: true, star: false },
-  { id: '18', title: '할 일 18', done: false, star: true },
-  { id: '19', title: '할 일 19', done: false, star: false },
-  { id: '20', title: '할 일 20', done: true, star: false },
-  { id: '21', title: '할 일 21', done: false, star: true },
-  { id: '22', title: '할 일 22', done: false, star: false },
-  { id: '23', title: '할 일 23', done: true, star: false },
-  { id: '24', title: '할 일 24', done: false, star: true },
-  { id: '25', title: '할 일 25', done: false, star: false },
-  { id: '26', title: '할 일 26', done: true, star: false },
-  { id: '27', title: '할 일 27', done: false, star: true },
-  { id: '28', title: '할 일 28', done: false, star: false },
-  { id: '29', title: '할 일 29', done: true, star: false },
-  { id: '30', title: '할 일 30', done: false, star: true },
-];
+export const mockTodoItems: TodoItem[] = Array.from({ length: 30 }, (_, i) => {
+  const id = i + 1;
+
+  return {
+    id,
+    userId: 1,
+    goalId: 1,
+    title: `할 일 ${id}`,
+    done: id % 3 === 0, // 일부 완료 처리
+    fileUrl: null,
+    linkUrl: `https://example.com/todo/${id}`,
+    source: 'github_pr',
+    sourceItemId: null,
+    dueDate: new Date(Date.now() + id * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    favorite: id % 5 === 0,
+    goal: {
+      id: 1,
+      title: '자바스크립트로 웹 서비스 만들기',
+    },
+    noteIds: [id * 10 + 1],
+    tags: [
+      {
+        id: 1,
+        name: '중요',
+      },
+    ],
+  };
+});

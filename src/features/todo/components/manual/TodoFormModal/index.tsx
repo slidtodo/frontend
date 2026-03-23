@@ -7,7 +7,7 @@ import Input from '@/shared/components/Input';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import clsx from 'clsx';
 import { XIcon } from 'lucide-react';
-import { ImageType } from '@/features/todo/components/types/types';
+import { ImageType, TodoCreateForm, TodoEditForm } from '@/features/todo/components/types/types';
 import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { TagInput } from '../shared/TagInput';
@@ -15,7 +15,6 @@ import LinkInput from '../shared/LinkInput';
 import ImageInput from '../shared/ImageInput';
 import DateInput from '../shared/DateInput';
 import { formatDateForAPI } from '@/shared/utils/utils';
-import { TodoCreateForm, TodoEditForm } from '@/shared/types/types';
 import StatusField from '../shared/StatusField';
 
 // ────────────────────────────────────────────────────────────
@@ -86,6 +85,7 @@ export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
         },
   });
 
+  register('dueDate', { required: '마감기한은 필수입니다.' });
   const done = useWatch({ control, name: 'done' });
   const tags = useWatch({ control, name: 'tags' }) ?? [];
   const goalId = useWatch({ control, name: 'goalId' });
@@ -124,9 +124,7 @@ export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
     >
       {/* 헤더 */}
       <div className="mb-1 flex items-center justify-between md:mb-4">
-        <h1 className="text-xl font-semibold text-[#262626]">
-          {isEditMode ? '할 일 수정' : '할 일 생성'}
-        </h1>
+        <h1 className="text-xl font-semibold text-[#262626]">{isEditMode ? '할 일 수정' : '할 일 생성'}</h1>
         <button type="button" className="cursor-pointer" onClick={closeModal}>
           <XIcon size={24} className="stroke-[#A4A4A4]" />
         </button>
@@ -149,9 +147,7 @@ export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
           placeholder="할 일의 제목을 적어주세요"
           className="h-11 rounded-xl border-[#CCC] p-3 text-sm font-normal text-[#333] placeholder:text-[#737373] md:h-14 md:rounded-2xl md:p-4 md:text-base"
         />
-        {errors.title && (
-          <p className="px-1 text-xs text-red-500 md:text-sm">{errors.title.message}</p>
-        )}
+        {errors.title && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.title.message}</p>}
       </FormField>
 
       {/* 목표 */}
@@ -166,9 +162,7 @@ export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
           onSelectItem={(item) => setValue('goalId', Number(item.value))}
           className="h-11 rounded-xl p-3 placeholder:text-[#737373] md:h-14 md:rounded-2xl md:p-4"
         />
-        {errors.goalId && (
-          <p className="px-1 text-xs text-red-500 md:text-sm">{errors.goalId.message}</p>
-        )}
+        {errors.goalId && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.goalId.message}</p>}
       </FormField>
 
       {/* 마감기한 */}
@@ -182,9 +176,7 @@ export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
           }}
           onCancel={() => setTempDate(date)}
         />
-        {errors.dueDate && (
-          <p className="px-1 text-xs text-red-500 md:text-sm">{errors.dueDate.message}</p>
-        )}
+        {errors.dueDate && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.dueDate.message}</p>}
       </FormField>
 
       {/* 태그 */}

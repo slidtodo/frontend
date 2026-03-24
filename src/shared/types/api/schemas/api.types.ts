@@ -594,6 +594,20 @@ export interface components {
       userId?: number;
       /** Format: int32 */
       todoCount?: number;
+      progress?: number;
+
+      todoList: {
+        id: number;
+        title: string;
+        favorite: boolean;
+      }[];
+
+      doneList: {
+        id: number;
+        title: string;
+        favorite: boolean;
+      }[];
+
       /** Format: int32 */
       completedCount?: number;
       /** Format: date-time */

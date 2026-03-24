@@ -33,6 +33,8 @@ export default function DashboardDetail() {
 function GoalDetailItem({ goal }: { goal: GoalItemWithId }) {
   const { data: goalDetail } = useQuery(goalQueries.detail(goal.id));
 
-  return null;
-  // return <GoalBox data={goal} detail={goalDetail} />;
+  if (!goalDetail) {
+    return <div>현재 할 일이 없습니다.</div>;
+  }
+  return <GoalBox data={goalDetail} />;
 }

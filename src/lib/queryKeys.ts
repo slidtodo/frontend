@@ -46,7 +46,7 @@ export const todoQueries = {
    * @example useQuery(todoQueries.list({ goalId: 1 }))
    * @example useQuery(todoQueries.list({ goalId: 1, done: true }))
    */
-  list: (params?: GetTodosParams) =>
+  list: (params: GetTodosParams) =>
     queryOptions({
       queryKey: ['todos', 'list', params ?? {}],
       queryFn: () => getTodos(params),

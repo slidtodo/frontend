@@ -2,6 +2,7 @@ import type { components } from '@/shared/types/api/schemas/api.types';
 
 type TodoResponse = components['schemas']['TodoResponse'];
 
+// TODO: 삭제 예정 스키마 파일에 정의된 타입으로 대체 예정
 export type TodoItem = Omit<
   TodoResponse,
   'id' | 'title' | 'done' | 'favorite' | 'goal' | 'tags' | 'noteIds' | 'linkUrl' | 'imageUrl' | 'dueDate' | 'source'

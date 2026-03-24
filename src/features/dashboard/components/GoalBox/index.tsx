@@ -4,7 +4,7 @@ import Progressbar from '@/shared/components/Progressbar';
 import TaskCard from '@/shared/components/TaskCard';
 import SearchInput from '@/shared/components/SearchInput';
 import Button from '@/shared/components/Button';
-import { TodoItem } from '@/shared/types/api';
+import type { TodoItem } from '@/shared/types/api';
 
 interface GoalBoxProps {
   data: {

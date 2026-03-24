@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckIcon, EllipsisVertical, GithubIcon, Star } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
-import { TodoItem } from '@/shared/types/api';
+import type { TodoItem } from '@/shared/types/api';
 
 /**
  * A single to-do list row.

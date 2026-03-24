@@ -1,4 +1,4 @@
-import { TodoItem } from '@/shared/types/api';
+import type { TodoItem } from '@/shared/types/api';
 
 //TODO 삭제 예정
 

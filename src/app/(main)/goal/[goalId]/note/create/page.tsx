@@ -64,7 +64,7 @@ export default function Page() {
           linkUrl={linkUrl}
           onLinkUrlChange={setLinkUrl}
         />
-        {showSuccessToast && <Toast>임시 저장이 완료되었습니다.</Toast>}
+        {showSuccessToast && <Toast>임시 저장이 완료되었습니다</Toast>}
       </section>
     </div>
   );

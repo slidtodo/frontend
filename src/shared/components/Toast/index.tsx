@@ -1,15 +1,14 @@
 'use client';
 
-import { Check, XIcon } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 interface ToastProps {
   children: React.ReactNode;
   subText?: string;
   onLoad: () => void;
-  onClose: () => void;
 }
 
-export default function Toast({ children, subText, onLoad, onClose }: ToastProps) {
+export default function Toast({ children, subText, onLoad }: ToastProps) {
   return (
     <>
       {/* 포지션 래퍼 */}
@@ -17,7 +16,7 @@ export default function Toast({ children, subText, onLoad, onClose }: ToastProps
         <div className="flex h-10 -translate-x-1/2 items-center gap-1 rounded-[28px] bg-[#fff8e4] px-4 whitespace-nowrap shadow-[0_4px_16px_rgba(0,0,0,0.08)] md:-translate-x-[80%]">
           {/* 체크 아이콘 */}
           <span className="flex size-6 shrink-0 items-center justify-center">
-            <Check fill="none" className="aria-hidden h-[10px] w-[14px]" />
+            <Check className="aria-hidden h-[10px] w-[14px] stroke-[#EF6C00]" />
           </span>
 
           {/* 텍스트 영역 */}
@@ -37,16 +36,6 @@ export default function Toast({ children, subText, onLoad, onClose }: ToastProps
               </>
             )}
           </div>
-
-          {/* 닫기 버튼 */}
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="토스트 닫기"
-            className="ml-1 flex size-5 shrink-0 items-center justify-center rounded-full text-[#ef6c00] opacity-60 transition-opacity hover:opacity-100"
-          >
-            <XIcon size="10" fill="none" className="aria-hidden" />
-          </button>
         </div>
       </div>
     </>

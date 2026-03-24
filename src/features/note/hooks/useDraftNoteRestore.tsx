@@ -37,10 +37,6 @@ export function useDraftNoteRestore({ onRestore }: UseDraftNoteRestoreOptions) {
     setDraftState((prev) => ({ ...prev, showToast: false }));
   }, []);
 
-  const handleCloseSuccessToast = useCallback(() => {
-    setDraftState((prev) => ({ ...prev, showSuccessToast: false }));
-  }, []);
-
   const handleConfirm = useCallback(() => {
     if (!draft) return;
     onRestore(draft);
@@ -63,7 +59,6 @@ export function useDraftNoteRestore({ onRestore }: UseDraftNoteRestoreOptions) {
     showToast,
     showSuccessToast,
     handleCloseToast,
-    handleCloseSuccessToast,
     handleToastLoad,
   };
 }

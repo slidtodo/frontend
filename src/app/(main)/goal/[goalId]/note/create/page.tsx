@@ -17,7 +17,7 @@ export default function Page() {
 
   const { saveDraft } = useDraftNote();
 
-  const { showToast, showSuccessToast, handleCloseToast, handleToastLoad, handleCloseSuccessToast } =
+  const { showToast, showSuccessToast, handleCloseToast, handleToastLoad } =
     useDraftNoteRestore({
       onRestore: (saved) => {
         setTitle(saved.title);
@@ -41,12 +41,9 @@ export default function Page() {
               임시저장
             </Button>
             {showToast && <DraftNoteToast onLoad={handleToastLoad} onClose={handleCloseToast} />}
-            {showSuccessToast && (
-              <Toast onLoad={() => showSuccessToast} onClose={handleCloseSuccessToast}>
-                임시 저장된 노트를 불러왔어요
-              </Toast>
-            )}
+            {showSuccessToast && <Toast onLoad={() => showSuccessToast}>임시 저장된 노트를 불러왔어요</Toast>}
           </div>
+          <Toast onLoad={() => showSuccessToast}>임시 저장된 노트를 불러왔어요</Toast>
           <Button variant="primary" className="cursor-pointer text-sm md:h-10 md:px-[27px]">
             등록하기
           </Button>

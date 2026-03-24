@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme {
+  /* ─────────────────────────────────────────────
+     Colors - Grayscale
+  ───────────────────────────────────────────── */
+  --color-gray-50:  #FAFAFA;
+  --color-gray-100: #F2F2F2;
+  --color-gray-200: #DDDDDD;
+  --color-gray-300: #CCCCCC;
+  --color-gray-400: #A4A4A4;
+  --color-gray-500: #737373;
+  --color-gray-600: #535353;
+  --color-gray-700: #333333;
+  --color-gray-800: #262626;
+  --color-gray-900: #121212;
+
+  /* ─────────────────────────────────────────────
+     Colors - 베어로그 브랜드
+  ───────────────────────────────────────────── */
+  --color-bearlog-300:     #7EFFD0;
+  --color-bearlog:         #00C87F;
+  --color-bearlog-600:     #008354;
+
+  /* ─────────────────────────────────────────────
+     Breakpoint @TODO 추후 수정 예정
+  ───────────────────────────────────────────── */
+  /* --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px; */
+}
+
+/* ─────────────────────────────────────────────
+   Semantic Tokens (CSS Variables)
+───────────────────────────────────────────── */
+:root {
+  /* Text */
+  --color-text-primary:   var(--color-gray-900);
+  --color-text-secondary: var(--color-gray-600);
+  --color-text-tertiary:  var(--color-gray-400);
+  --color-text-disabled:  var(--color-gray-300);
+  --color-text-inverse:   #FFFFFF;
+  --color-text-brand:     var(--color-bearlog);
+
+  /* Background */
+  --color-bg-primary:     #FFFFFF;
+  --color-bg-secondary:   var(--color-gray-50);
+  --color-bg-tertiary:    var(--color-gray-100);
+  --color-bg-brand:       var(--color-bearlog);
+  --color-bg-brand-light: var(--color-bearlog-300);
+
+  /* Border */
+  --color-border-default: var(--color-gray-200);
+  --color-border-strong:  var(--color-gray-300);
+  --color-border-brand:   var(--color-bearlog);
+}

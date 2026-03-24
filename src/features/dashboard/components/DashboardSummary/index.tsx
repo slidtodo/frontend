@@ -10,6 +10,7 @@ import ProgressCircle from '@/shared/components/ProgressCircle';
 import TaskCard from '@/shared/components/TaskCard';
 
 import { todoQueries, userQueries } from '@/lib/queryKeys';
+import { CurrentUserResponse } from '@/lib/api';
 
 export default function DashBoardSummary() {
   const { data: user } = useQuery(userQueries.current());
@@ -38,7 +39,7 @@ export default function DashBoardSummary() {
             subTitle="내 진행 상황"
             icons={<Image src={'/image/progress.png'} alt="Progress Icon" width={40} height={40} />}
           />
-          <CurrentProgressCard />
+          <CurrentProgressCard user={user} />
         </div>
       </section>
     </>
@@ -56,8 +57,7 @@ function RecentPostCard() {
     }),
   );
 
-  const recentTodos =
-    todos?.todos?.sort((a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime()) ?? [];
+  const recentTodos = (todos?.todos ?? []).slice(0, 4);
 
   return (
     <article className="flex h-[256px] flex-col gap-[6px] rounded-[40px] bg-[#FF8442] p-4 shadow-[0_10px_40px_0_rgba(255,158,89,0.40)] lg:p-8">
@@ -72,7 +72,10 @@ function RecentPostCard() {
   );
 }
 
-function CurrentProgressCard() {
+interface CurrentProgressCardProps {
+  user?: CurrentUserResponse;
+}
+function CurrentProgressCard({ user }: CurrentProgressCardProps) {
   const { data: percents } = useQuery(userQueries.progress());
 
   return (
@@ -98,7 +101,7 @@ function CurrentProgressCard() {
           <ProgressCircle percent={percents?.totalProgress ?? 0} className="h-auto w-full" color="#009D97" />
         </div>
         <div className="flex flex-col items-start gap-2">
-          <span className="text-[clamp(12px,2vw,20px)] font-semibold text-white">체다치즈님의 진행도는</span>
+          <span className="text-[clamp(12px,2vw,20px)] font-semibold text-white">{user?.nickname}님의 진행도는</span>
           <div className="flex items-baseline gap-1">
             <span className="text-[clamp(20px,5vw,60px)] leading-[1] font-bold text-white">
               {percents?.totalProgress}

@@ -1,4 +1,5 @@
-import type { TodoItem } from '@/shared/types/api';
+import { TodoListResponse } from '@/lib/api';
+// import type { TodoItem } from '@/shared/types/api';
 
 //TODO 삭제 예정
 
@@ -14,7 +15,7 @@ export const mockTodoItems: TodoItem[] = Array.from({ length: 30 }, (_, i) => {
     fileUrl: null,
     linkUrl: `https://example.com/todo/${id}`,
     source: 'github_pr',
-    dueDate: new Date(Date.now() + id * 24 * 60 * 60 * 1000).toISOString(),
+    dueDate: id % 2 === 0 ? undefined : new Date(Date.now() + id * 24 * 60 * 60 * 1000).toISOString(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     favorite: id % 5 === 0,

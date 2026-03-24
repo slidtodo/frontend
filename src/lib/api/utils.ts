@@ -32,6 +32,8 @@ export const toQueryString = (params?: Record<string, QueryValue>): string => {
   return searchParams.toString();
 };
 
+const appUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? process.env.API_BASE_URL ?? 'http://localhost:3000';
+
 type ApiRequestOptions<TBody> = {
   method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
   params?: Record<string, QueryValue>;
@@ -42,35 +44,6 @@ type ApiRequestOptions<TBody> = {
   next?: { revalidate?: number | false; tags?: string[] };
 };
 
-const resolveRequestUrl = (url: string, queryString: string) => {
-  const requestUrl = queryString ? `${url}?${queryString}` : url;
-
-  if (!requestUrl.startsWith('/')) {
-    return requestUrl;
-  }
-
-  if (typeof window !== 'undefined') {
-    return requestUrl;
-  }
-
-  if (process.env.NODE_ENV === 'development') {
-    const port = process.env.PORT ?? '3000';
-    return `http://127.0.0.1:${port}${requestUrl}`;
-  }
-
-  const vercelUrl = process.env.VERCEL_URL;
-  const normalizedVercelUrl = vercelUrl
-    ? vercelUrl.startsWith('http://') || vercelUrl.startsWith('https://')
-      ? vercelUrl
-      : `https://${vercelUrl}`
-    : undefined;
-
-  const appUrl =
-    process.env.NEXT_PUBLIC_APP_URL ?? process.env.APP_URL ?? normalizedVercelUrl ?? 'http://localhost:3000';
-
-  return `${appUrl.replace(/\/+$/, '')}${requestUrl}`;
-};
-
 export const apiRequest = async <TResponse, TBody = never>(
   url: string,
   options: ApiRequestOptions<TBody> = {},
@@ -79,20 +52,20 @@ export const apiRequest = async <TResponse, TBody = never>(
 
   const { method = 'GET', params, body, headers, signal, cache, next } = options;
   const queryString = toQueryString(params);
-  const requestUrl = resolveRequestUrl(url, queryString);
+  const requestUrl = queryString ? `${appUrl}${url}?${queryString}` : `${appUrl}${url}`;
 
   const response = await fetch(requestUrl, {
     method,
     credentials: 'include',
     signal,
-    cache,
-    next,
     headers: {
       ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
       ...(tempToken ? { Authorization: `Bearer ${tempToken}` } : {}),
       ...headers,
     },
     body: body === undefined ? undefined : JSON.stringify(body),
+    cache,
+    next,
   });
 
   if (!response.ok) {
@@ -105,7 +78,7 @@ export const apiRequest = async <TResponse, TBody = never>(
       message = errorBody.message ?? fallbackMessage;
       code = errorBody.code;
     } catch {
-      //
+      // Ignore JSON parse failure and keep fallback message.
     }
 
     throw new ApiError(response.status, message, code);

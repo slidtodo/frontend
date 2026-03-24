@@ -44,6 +44,8 @@ export const apiRequest = async <TResponse, TBody = never>(
   url: string,
   options: ApiRequestOptions<TBody> = {},
 ): Promise<TResponse> => {
+  const tempToken = process.env.NEXT_PUBLIC_TEMP_ACCESS_TOKEN;
+
   const { method = 'GET', params, body, headers, signal } = options;
   const queryString = toQueryString(params);
   const requestUrl = queryString ? `${url}?${queryString}` : url;
@@ -54,6 +56,7 @@ export const apiRequest = async <TResponse, TBody = never>(
     signal,
     headers: {
       ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+      ...(tempToken ? { Authorization: `Bearer ${tempToken}` } : {}),
       ...headers,
     },
     body: body === undefined ? undefined : JSON.stringify(body),

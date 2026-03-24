@@ -7,8 +7,7 @@ export type GoalResponse = operations['getDetail_2']['responses'][200]['content'
 export type PostGoalRequest = operations['create_2']['requestBody']['content']['application/json'];
 export type PatchGoalRequest = operations['update_2']['requestBody']['content']['application/json'];
 
-export const getGoals = (params?: GetGoalsParams) =>
-  apiRequest<GoalListResponse>('/api/v1/goals', { params });
+export const getGoals = (params: GetGoalsParams) => apiRequest<GoalListResponse>('/api/v1/goals', { params });
 
 export const getGoal = (goalId: number) => apiRequest<GoalResponse>(`/api/v1/goals/${goalId}`);
 

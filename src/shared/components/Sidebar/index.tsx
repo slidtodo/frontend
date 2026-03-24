@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ChevronsRightIcon, SettingsIcon, LogOutIcon, FlagIcon, CopyCheckIcon, BellIcon, MenuIcon } from 'lucide-react';
 
 import SidebarMobileCase from './SidebarMobileCase';
-import { LinkUploadModal } from '../Modal/LinkUploadModal';
+import { SinglePostModal } from '../Modal/SinglePostModal';
 
 import { useSidebarContext } from '@/contexts/SidebarContext';
 import { useSidebarOpen } from '@/contexts/SidebarContext';
@@ -119,7 +119,7 @@ function SidebarDesktopTablet() {
           <button
             onClick={() =>
               openModal(
-                <LinkUploadModal
+                <SinglePostModal
                   title="목표 생성"
                   placeholder="목표 제목을 입력하세요"
                   onConfirm={(title) => mutate({ title })}

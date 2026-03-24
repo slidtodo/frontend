@@ -4,17 +4,17 @@ import { useState } from 'react';
 import Button from '../../Button';
 import Input from '../../Input';
 
-interface LinkUploadModalProps {
+interface SinglePostModalProps {
   title?: string;
   placeholder?: string;
   onConfirm: (url: string) => void;
 }
 
-export function LinkUploadModal({
+export function SinglePostModal({
   title = '링크 업로드',
   placeholder = '링크를 입력하세요',
   onConfirm,
-}: LinkUploadModalProps) {
+}: SinglePostModalProps) {
   const [url, setUrl] = useState('');
   const { closeModal } = useModalStore();
 

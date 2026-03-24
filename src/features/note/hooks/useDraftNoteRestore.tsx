@@ -16,20 +16,18 @@ export function useDraftNoteRestore({ onRestore }: UseDraftNoteRestoreOptions) {
   const [draftState, setDraftState] = useState<{
     draft: DraftNote | null;
     showToast: boolean;
-    showSuccessToast: boolean;
   }>({
     draft: null,
     showToast: false,
-    showSuccessToast: false,
   });
 
-  const { draft, showToast, showSuccessToast } = draftState;
+  const { draft, showToast } = draftState;
 
   useEffect(() => {
     const saved = getDraft();
     if (saved) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setDraftState({ draft: saved, showToast: true, showSuccessToast: false });
+      setDraftState({ draft: saved, showToast: true });
     }
   }, [getDraft]);
 
@@ -42,10 +40,6 @@ export function useDraftNoteRestore({ onRestore }: UseDraftNoteRestoreOptions) {
     onRestore(draft);
     clearDraft();
     closeModal();
-    setDraftState((prev) => ({ ...prev, showSuccessToast: true }));
-    setTimeout(() => {
-      setDraftState((prev) => ({ ...prev, showSuccessToast: false }));
-    }, 3000);
   }, [draft, onRestore, clearDraft, closeModal]);
 
   const handleToastLoad = useCallback(() => {
@@ -57,7 +51,6 @@ export function useDraftNoteRestore({ onRestore }: UseDraftNoteRestoreOptions) {
   return {
     draft,
     showToast,
-    showSuccessToast,
     handleCloseToast,
     handleToastLoad,
   };

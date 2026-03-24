@@ -5,9 +5,10 @@ type EditorContentProps = {
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   className?: string;
   readOnly?: boolean;
+  linkUrl? : string | null;
 };
 
-export default function EditorContent({ content, onChange, className, readOnly = false }: EditorContentProps) {
+export default function EditorContent({ content, onChange, className, linkUrl, readOnly = false, }: EditorContentProps) {
   const withSpace = content.length;
   const withoutSpace = content.replace(/\s/g, '').length;
 

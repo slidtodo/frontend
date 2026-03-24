@@ -34,11 +34,13 @@ interface EditorMetaProps {
     done: boolean;
   };
   tags: MetaTag[];
+  createdAt: string;
 }
 
-export default function EditorMeta({ goal, todos, tags }: EditorMetaProps) {
+export default function EditorMeta({ goal, todos, createdAt, tags }: EditorMetaProps) {
   const todosTagLabel = todos.done ? 'DONE' : 'TODO';
   const today = formatDate(new Date());
+  const formattedCreatedAt = createdAt ? formatDate(new Date(createdAt)) : null;
 
   return (
     <div className="flex w-full flex-col gap-3 md:flex-row">
@@ -59,7 +61,7 @@ export default function EditorMeta({ goal, todos, tags }: EditorMetaProps) {
       {/* 오른쪽 — 작성일 / 태그 */}
       <div className="flex flex-1 flex-col gap-3 md:w-1/2">
         <MetaRow icon={<CalendarIcon size={17} className="line-clamp-1 text-[#A4A4A4]" />} label="작성일">
-          <span className="line-clamp-1 text-sm font-normal text-[#333333]">{today}</span>
+          <span className="line-clamp-1 text-sm font-normal text-[#333333]">{formattedCreatedAt ?? today}</span>
         </MetaRow>
 
         <MetaRow icon={<Hash size={17} className="text-[#A4A4A4]" />} label="태그">

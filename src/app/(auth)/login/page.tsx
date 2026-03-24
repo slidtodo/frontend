@@ -72,11 +72,12 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </FormField>
+          <Button type="submit" className="mt-8 h-14 w-full" disabled={!email || !password}>
+            로그인하기
+          </Button>
         </form>
         {/* 로그인 버튼 */}
-        <Button type="submit" className="mt-8 h-14 w-full" disabled={!email || !password}>
-          로그인하기
-        </Button>
+
         {/* 회원가입 링크 */}
         <div className="mt-6 flex h-6 w-full items-center justify-center gap-2 text-sm">
           <span className="text-base leading-6 font-medium text-[#333333]">슬리드투두가 처음이신가요?</span>
@@ -92,22 +93,22 @@ export default function LoginPage() {
         </div>
         {/* SNS 버튼 */}
         <div className="flex w-full justify-center gap-4">
-          <Image
-            src="/icons/google-icon.png"
-            alt="구글 로그인"
-            width={56}
-            height={56}
+          <button
+            type="button"
             onClick={() => alert('구글 로그인')}
-            className="flex items-center justify-center rounded-full border border-[#DDDDDD] bg-white p-4 hover:bg-gray-50"
-          />
-          <Image
-            src="/icons/GitHub.png"
-            alt="깃허브 로그인"
-            width={56}
-            height={56}
+            aria-label="구글 로그인"
+            className="flex h-14 w-14 items-center justify-center rounded-full border border-[#DDDDDD] bg-white p-4 hover:bg-gray-50"
+          >
+            <Image src="/icons/google-icon.png" alt="구글 아이콘" width={24} height={24} />
+          </button>
+          <button
+            type="button"
             onClick={() => alert('깃허브 로그인')}
-            className="flex items-center justify-center rounded-full border border-[#DDDDDD] bg-white p-4 hover:bg-gray-50"
-          />
+            aria-label="깃허브 로그인"
+            className="flex h-14 w-14 items-center justify-center rounded-full border border-[#DDDDDD] bg-white p-4 hover:bg-gray-50"
+          >
+            <Image src="/icons/GitHub.png" alt="깃허브 아이콘" width={24} height={24} />
+          </button>
         </div>
       </div>
     </main>

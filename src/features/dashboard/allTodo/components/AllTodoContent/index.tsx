@@ -1,11 +1,13 @@
 'use client';
+import { useQuery } from '@tanstack/react-query';
 import { PlusIcon } from 'lucide-react';
 
 import Button from '@/shared/components/Button';
 import TaskCard from '@/shared/components/TaskCard';
 import Empty from '@/shared/components/Empty';
 
-import { mockTodoItems } from './mock';
+import { todoQueries } from '@/lib/queryKeys';
+import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 
 export default function AllTodoContent() {
   return (
@@ -22,6 +24,7 @@ function AllTodoFilter() {
     { id: 2, label: 'TO DO' },
     { id: 3, label: 'DONE' },
   ];
+  const { openTodoCreateModal } = useTodoCreateModal();
   // TODO: 머지되면 모달 추가 만들어야 함
   return (
     <div className="flex justify-between px-2">
@@ -38,6 +41,7 @@ function AllTodoFilter() {
       <Button
         variant="cancel"
         className="flex items-center gap-1 bg-[#F2F2F2] px-3 py-[10px] hover:bg-[#E0E0E0] md:px-[20px]"
+        onClick={openTodoCreateModal}
       >
         <PlusIcon size={20} color="#737373" />
         <span className="overflow-hidden text-sm font-semibold text-ellipsis whitespace-nowrap text-[#737373]">
@@ -49,11 +53,15 @@ function AllTodoFilter() {
 }
 // TODO: 상위에서 상태 받고 API 연동해서 리액트 쿼리로 필터링된 할 일 리스트 보여주기
 function AllTodoFetcher() {
+  const now = new Date();
+  const { data: todos } = useQuery(
+    todoQueries.list({ year: now.getFullYear(), month: now.getMonth() + 1, sort: 'LATEST' }),
+  );
   return (
     <section className="rounded-4xl bg-white p-4 md:p-8">
       <div className="flex max-h-[680px] flex-col gap-4 overflow-y-auto">
-        {mockTodoItems.length > 0 ? (
-          mockTodoItems.map((todo) => <TaskCard key={todo.id} todo={todo} />)
+        {todos?.todos ? (
+          todos.todos.map((todo) => <TaskCard key={todo.id} todo={todo} />)
         ) : (
           <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>
         )}

@@ -1,17 +1,25 @@
 import type { components } from '@/shared/types/api/schemas/api.types';
 
 type TodoResponse = components['schemas']['TodoResponse'];
-type GoalInfo = NonNullable<TodoResponse['goal']>;
-type TagInfo = NonNullable<NonNullable<TodoResponse['tags']>[number]>;
 
-export type TodoItem = Omit<TodoResponse, 'goal' | 'tags' | 'noteIds' | 'source'> & {
+export type TodoItem = Omit<
+  TodoResponse,
+  'id' | 'title' | 'done' | 'favorite' | 'goal' | 'tags' | 'noteIds' | 'linkUrl' | 'imageUrl' | 'dueDate' | 'source'
+> & {
+  id: number;
+  title: string;
+  done: boolean;
+  favorite: boolean;
+  dueDate: string | null;
+  linkUrl: string | null;
+  imageUrl?: string | null;
   goal: {
-    id: GoalInfo['id'];
-    title: GoalInfo['title'];
+    id: number;
+    title: string;
   };
   tags: Array<{
-    id: TagInfo['id'];
-    name: TagInfo['name'];
+    id: number;
+    name: string;
   }>;
   noteIds: number[];
   goalId?: number;

@@ -4,16 +4,15 @@ import Progressbar from '@/shared/components/Progressbar';
 import TaskCard from '@/shared/components/TaskCard';
 import SearchInput from '@/shared/components/SearchInput';
 import Button from '@/shared/components/Button';
-import type { TodoItem } from '@/shared/types/api';
+
+import type { GoalListResponse, GoalResponse } from '@/lib/api';
+
+type GoalItem = NonNullable<GoalListResponse['goals']>[number];
+type GoalTodoItem = GoalResponse['todoList'][number];
+type GoalDoneItem = GoalResponse['doneList'][number];
 
 interface GoalBoxProps {
-  data: {
-    id: number;
-    title: string;
-    progress: number;
-    todoList: TodoItem[];
-    doneList: TodoItem[];
-  };
+  data: GoalItem;
 }
 
 export default function GoalBox({ data }: GoalBoxProps) {
@@ -24,8 +23,9 @@ export default function GoalBox({ data }: GoalBoxProps) {
           <div className="font-base w-full max-w-[229px] overflow-hidden font-semibold text-ellipsis whitespace-nowrap text-[#333]">
             {data.title}
           </div>
-          <Progressbar progress={data.progress} />
+          <Progressbar progress={data.progress ?? 0} />
         </div>
+
         <div className="flex w-full flex-1 justify-between gap-0 md:justify-end md:gap-2 lg:gap-[14px]">
           <SearchInput placeholder="할 일을 검색해주세요" />
           <Button
@@ -37,9 +37,20 @@ export default function GoalBox({ data }: GoalBoxProps) {
           </Button>
         </div>
       </div>
-      <div className="flex flex-col gap-2 md:flex-row lg:gap-8">
-        <ListBox title="TODO" variant="todo" items={data.todoList} />
-        <ListBox title="DONE" variant="done" items={data.doneList} />
+
+      <div className="flex flex-col justify-around gap-2 md:flex-row lg:gap-8">
+        <div className="flex flex-col justify-around gap-2 md:flex-row lg:gap-8">
+          {data.todoList.length === 0 && data.doneList.length === 0 ? (
+            <div className="flex h-full w-full items-center justify-center">
+              <span className="py-10 text-[#A4A4A4]">현재 등록된 할 일이 없습니다.</span>
+            </div>
+          ) : (
+            <>
+              <ListBox title="TODO" variant="todo" items={data.todoList} />
+              <ListBox title="DONE" variant="done" items={data.doneList} />
+            </>
+          )}
+        </div>
       </div>
     </article>
   );
@@ -48,20 +59,13 @@ export default function GoalBox({ data }: GoalBoxProps) {
 interface ListBoxProps {
   title: string;
   variant: 'todo' | 'done';
-  items: TodoItem[];
+  items: GoalTodoItem[] | GoalDoneItem[];
 }
+
 function ListBox({ title, variant, items }: ListBoxProps) {
-  let bgColor, textColor;
-  switch (variant) {
-    case 'todo':
-      bgColor = 'bg-[#FFF8E4]';
-      textColor = 'text-[#EE7016]';
-      break;
-    case 'done':
-      bgColor = 'bg-[#ffffff]';
-      textColor = 'text-[#A4A4A4]';
-      break;
-  }
+  const bgColor = variant === 'todo' ? 'bg-[#FFF8E4]' : 'bg-[#ffffff]';
+  const textColor = variant === 'todo' ? 'text-[#EE7016]' : 'text-[#A4A4A4]';
+
   return (
     <div className={`flex max-h-[324px] flex-1 flex-col gap-4 rounded-[16px] ${bgColor} p-4 lg:rounded-[24px] lg:p-6`}>
       <span className={`text-sm font-bold ${textColor} lg:text-base`}>{title}</span>

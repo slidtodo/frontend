@@ -4,1722 +4,1736 @@
  */
 
 export interface paths {
-    "/api/v1/todos": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 월별 할일 조회 (캘린더)
-         * @description 연/월로 할일 목록을 조회합니다
-         */
-        get: operations["getList"];
-        put?: never;
-        /**
-         * 할일 생성
-         * @description 새로운 할일을 생성합니다 (일반/개발자 모드 공통, source로 분기)
-         */
-        post: operations["create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+  '/api/v1/todos': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/notes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 노트 목록 조회
-         * @description goalId 필터 + 페이지 기반으로 노트 목록을 조회합니다
-         */
-        get: operations["getList_1"];
-        put?: never;
-        /**
-         * 노트 생성
-         * @description 할일에 연결된 노트를 생성합니다 (todoId in body)
-         */
-        post: operations["create_1"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * 월별 할일 조회 (캘린더)
+     * @description 연/월로 할일 목록을 조회합니다
+     */
+    get: operations['getList'];
+    put?: never;
+    /**
+     * 할일 생성
+     * @description 새로운 할일을 생성합니다 (일반/개발자 모드 공통, source로 분기)
+     */
+    post: operations['create'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/notes': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/goals": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 목표 목록 조회
-         * @description 커서 기반 무한스크롤로 목표 목록을 조회합니다
-         */
-        get: operations["getList_2"];
-        put?: never;
-        /**
-         * 목표 생성
-         * @description 새로운 목표를 생성합니다
-         */
-        post: operations["create_2"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * 노트 목록 조회
+     * @description goalId 필터 + 페이지 기반으로 노트 목록을 조회합니다
+     */
+    get: operations['getList_1'];
+    put?: never;
+    /**
+     * 노트 생성
+     * @description 할일에 연결된 노트를 생성합니다 (todoId in body)
+     */
+    post: operations['create_1'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/goals': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/auth/signup": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 회원가입
-         * @description 이메일, 비밀번호, 닉네임으로 회원가입
-         */
-        post: operations["signup"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * 목표 목록 조회
+     * @description 커서 기반 무한스크롤로 목표 목록을 조회합니다
+     */
+    get: operations['getList_2'];
+    put?: never;
+    /**
+     * 목표 생성
+     * @description 새로운 목표를 생성합니다
+     */
+    post: operations['create_2'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/auth/signup': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/auth/refresh": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 토큰 재발급
-         * @description 리프레시 토큰으로 액세스/리프레시 토큰 재발급
-         */
-        post: operations["refresh"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * 회원가입
+     * @description 이메일, 비밀번호, 닉네임으로 회원가입
+     */
+    post: operations['signup'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/auth/refresh': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/auth/oauth/github": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * GitHub 로그인
-         * @description GitHub OAuth 인증 코드로 로그인/회원가입
-         */
-        post: operations["githubLogin"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * 토큰 재발급
+     * @description 리프레시 토큰으로 액세스/리프레시 토큰 재발급
+     */
+    post: operations['refresh'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/auth/oauth/github': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/auth/logout": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 로그아웃
-         * @description 리프레시 토큰 무효화 및 쿠키 삭제
-         */
-        post: operations["logout"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * GitHub 로그인
+     * @description GitHub OAuth 인증 코드로 로그인/회원가입
+     */
+    post: operations['githubLogin'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/auth/logout': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/auth/login": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 로그인
-         * @description 이메일, 비밀번호로 로그인
-         */
-        post: operations["login"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * 로그아웃
+     * @description 리프레시 토큰 무효화 및 쿠키 삭제
+     */
+    post: operations['logout'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/auth/login': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/auth/login/google": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 구글 로그인
-         * @description 구글 OAuth 인증 코드로 로그인/회원가입
-         */
-        post: operations["googleLogin"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * 로그인
+     * @description 이메일, 비밀번호로 로그인
+     */
+    post: operations['login'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/auth/login/google': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/users/me": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 내 정보 조회
-         * @description 로그인한 사용자의 정보를 조회합니다
-         */
-        get: operations["getMe"];
-        put?: never;
-        post?: never;
-        /**
-         * 회원 탈퇴
-         * @description 회원 탈퇴 (LOCAL 사용자는 비밀번호 확인 필요)
-         */
-        delete: operations["deleteMe"];
-        options?: never;
-        head?: never;
-        /**
-         * 내 정보 수정
-         * @description 닉네임, 프로필 이미지를 수정합니다
-         */
-        patch: operations["updateMe"];
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * 구글 로그인
+     * @description 구글 OAuth 인증 코드로 로그인/회원가입
+     */
+    post: operations['googleLogin'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/users/me': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/users/me/password": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 비밀번호 변경
-         * @description 현재 비밀번호를 확인하고 새 비밀번호로 변경합니다 (LOCAL 사용자만)
-         */
-        patch: operations["changePassword"];
-        trace?: never;
+    /**
+     * 내 정보 조회
+     * @description 로그인한 사용자의 정보를 조회합니다
+     */
+    get: operations['getMe'];
+    put?: never;
+    post?: never;
+    /**
+     * 회원 탈퇴
+     * @description 회원 탈퇴 (LOCAL 사용자는 비밀번호 확인 필요)
+     */
+    delete: operations['deleteMe'];
+    options?: never;
+    head?: never;
+    /**
+     * 내 정보 수정
+     * @description 닉네임, 프로필 이미지를 수정합니다
+     */
+    patch: operations['updateMe'];
+    trace?: never;
+  };
+  '/api/v1/users/me/password': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/todos/{todoId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 할일 상세 조회
-         * @description 할일 하나를 상세 조회합니다
-         */
-        get: operations["getDetail"];
-        put?: never;
-        post?: never;
-        /**
-         * 할일 삭제
-         * @description 할일을 삭제합니다 (Soft Delete)
-         */
-        delete: operations["delete"];
-        options?: never;
-        head?: never;
-        /**
-         * 할일 수정/완료
-         * @description 할일 정보를 수정하거나 완료 상태를 변경합니다
-         */
-        patch: operations["update"];
-        trace?: never;
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * 비밀번호 변경
+     * @description 현재 비밀번호를 확인하고 새 비밀번호로 변경합니다 (LOCAL 사용자만)
+     */
+    patch: operations['changePassword'];
+    trace?: never;
+  };
+  '/api/v1/todos/{todoId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/todos/{todoId}/favorite": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 즐겨찾기 토글
-         * @description 할일의 즐겨찾기 상태를 토글합니다
-         */
-        patch: operations["toggleFavorite"];
-        trace?: never;
+    /**
+     * 할일 상세 조회
+     * @description 할일 하나를 상세 조회합니다
+     */
+    get: operations['getDetail'];
+    put?: never;
+    post?: never;
+    /**
+     * 할일 삭제
+     * @description 할일을 삭제합니다 (Soft Delete)
+     */
+    delete: operations['delete'];
+    options?: never;
+    head?: never;
+    /**
+     * 할일 수정/완료
+     * @description 할일 정보를 수정하거나 완료 상태를 변경합니다
+     */
+    patch: operations['update'];
+    trace?: never;
+  };
+  '/api/v1/todos/{todoId}/favorite': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/notifications/{notificationId}/read": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 알림 읽음 처리
-         * @description 특정 알림을 읽음으로 표시합니다
-         */
-        patch: operations["markAsRead"];
-        trace?: never;
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * 즐겨찾기 토글
+     * @description 할일의 즐겨찾기 상태를 토글합니다
+     */
+    patch: operations['toggleFavorite'];
+    trace?: never;
+  };
+  '/api/v1/notifications/{notificationId}/read': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/notes/{noteId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 노트 상세 조회
-         * @description 특정 노트의 상세 정보를 조회합니다
-         */
-        get: operations["getDetail_1"];
-        put?: never;
-        post?: never;
-        /**
-         * 노트 삭제
-         * @description 노트를 삭제합니다 (Soft Delete)
-         */
-        delete: operations["delete_1"];
-        options?: never;
-        head?: never;
-        /**
-         * 노트 수정
-         * @description 노트 제목, 내용, 링크를 수정합니다
-         */
-        patch: operations["update_1"];
-        trace?: never;
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * 알림 읽음 처리
+     * @description 특정 알림을 읽음으로 표시합니다
+     */
+    patch: operations['markAsRead'];
+    trace?: never;
+  };
+  '/api/v1/notes/{noteId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/goals/{goalId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 목표 상세 조회
-         * @description 특정 목표의 상세 정보를 조회합니다
-         */
-        get: operations["getDetail_2"];
-        put?: never;
-        post?: never;
-        /**
-         * 목표 삭제
-         * @description 목표를 삭제합니다 (Soft Delete, 일반 모드만)
-         */
-        delete: operations["delete_2"];
-        options?: never;
-        head?: never;
-        /**
-         * 목표 수정
-         * @description 목표 제목을 수정합니다 (일반 모드만)
-         */
-        patch: operations["update_2"];
-        trace?: never;
+    /**
+     * 노트 상세 조회
+     * @description 특정 노트의 상세 정보를 조회합니다
+     */
+    get: operations['getDetail_1'];
+    put?: never;
+    post?: never;
+    /**
+     * 노트 삭제
+     * @description 노트를 삭제합니다 (Soft Delete)
+     */
+    delete: operations['delete_1'];
+    options?: never;
+    head?: never;
+    /**
+     * 노트 수정
+     * @description 노트 제목, 내용, 링크를 수정합니다
+     */
+    patch: operations['update_1'];
+    trace?: never;
+  };
+  '/api/v1/goals/{goalId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/health": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["health"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * 목표 상세 조회
+     * @description 특정 목표의 상세 정보를 조회합니다
+     */
+    get: operations['getDetail_2'];
+    put?: never;
+    post?: never;
+    /**
+     * 목표 삭제
+     * @description 목표를 삭제합니다 (Soft Delete, 일반 모드만)
+     */
+    delete: operations['delete_2'];
+    options?: never;
+    head?: never;
+    /**
+     * 목표 수정
+     * @description 목표 제목을 수정합니다 (일반 모드만)
+     */
+    patch: operations['update_2'];
+    trace?: never;
+  };
+  '/health': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/users/me/progress": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 내 진행률 조회
-         * @description 목표별 할일 완료 진행률을 조회합니다
-         */
-        get: operations["getProgress"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get: operations['health'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/users/me/progress': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/tags": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 태그 목록 조회
-         * @description 전체 태그 목록을 조회합니다 (자동완성용)
-         */
-        get: operations["getList_3"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * 내 진행률 조회
+     * @description 목표별 할일 완료 진행률을 조회합니다
+     */
+    get: operations['getProgress'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/tags': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/notifications": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 알림 목록 조회
-         * @description 로그인한 사용자의 알림 목록을 조회합니다
-         */
-        get: operations["getList_4"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * 태그 목록 조회
+     * @description 전체 태그 목록을 조회합니다 (자동완성용)
+     */
+    get: operations['getList_3'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/notifications': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/auth/oauth/google/url": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 구글 로그인 URL 조회
-         * @description 프론트에서 redirect할 구글 OAuth 로그인 URL을 발급합니다
-         */
-        get: operations["getGoogleAuthorizeUrl"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * 알림 목록 조회
+     * @description 로그인한 사용자의 알림 목록을 조회합니다
+     */
+    get: operations['getList_4'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/auth/oauth/google/url': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/auth/oauth/github/url": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * GitHub 로그인 URL 조회
-         * @description 프론트에서 redirect할 GitHub OAuth 로그인 URL을 발급합니다
-         */
-        get: operations["getGithubAuthorizeUrl"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * 구글 로그인 URL 조회
+     * @description 프론트에서 redirect할 구글 OAuth 로그인 URL을 발급합니다
+     */
+    get: operations['getGoogleAuthorizeUrl'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/auth/oauth/github/url': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
+    /**
+     * GitHub 로그인 URL 조회
+     * @description 프론트에서 redirect할 GitHub OAuth 로그인 URL을 발급합니다
+     */
+    get: operations['getGithubAuthorizeUrl'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: {
-        CreateTodoRequest: {
-            title: string;
-            /** Format: int64 */
-            goalId: number;
-            /** Format: date-time */
-            dueDate?: string;
-            linkUrl?: string;
-            imageUrl?: string;
-            /** @enum {string} */
-            source?: "MANUAL" | "GITHUB_ISSUE" | "GITHUB_PR";
-            /** Format: int64 */
-            sourceItemId?: number;
-            status?: string;
-            tags?: string[];
-        };
-        GoalInfo: {
-            /** Format: int64 */
-            id?: number;
-            title?: string;
-        };
-        TagInfo: {
-            /** Format: int64 */
-            id?: number;
-            name?: string;
-        };
-        TodoResponse: {
-            /** Format: int64 */
-            id?: number;
-            title?: string;
-            done?: boolean;
-            /** Format: date-time */
-            dueDate?: string;
-            imageUrl?: string;
-            linkUrl?: string;
-            /** @enum {string} */
-            source?: "MANUAL" | "GITHUB_ISSUE" | "GITHUB_PR";
-            /** Format: int64 */
-            sourceItemId?: number;
-            status?: string;
-            favorite?: boolean;
-            goal?: components["schemas"]["GoalInfo"];
-            /** Format: int64 */
-            userId?: number;
-            noteIds?: number[];
-            tags?: components["schemas"]["TagInfo"][];
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            updatedAt?: string;
-        };
-        ErrorResponse: {
-            message?: string;
-            code?: string;
-        };
-        CreateNoteRequest: {
-            /** Format: int64 */
-            todoId: number;
-            title: string;
-            content?: string;
-            linkUrl?: string;
-        };
-        NoteResponse: {
-            /** Format: int64 */
-            id?: number;
-            /** Format: int64 */
-            todoId?: number;
-            /** Format: int64 */
-            goalId?: number;
-            /** Format: int64 */
-            userId?: number;
-            title?: string;
-            content?: string;
-            linkUrl?: string;
-            /** @enum {string} */
-            source?: "MANUAL" | "GITHUB_ISSUE" | "GITHUB_PR";
-            /** Format: int64 */
-            sourceItemId?: number;
-            status?: string;
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            updatedAt?: string;
-            todo?: components["schemas"]["TodoInfo"];
-        };
-        TodoInfo: {
-            /** Format: int64 */
-            id?: number;
-            title?: string;
-            done?: boolean;
-        };
-        CreateGoalRequest: {
-            title: string;
-        };
-        GoalResponse: {
-            /** Format: int64 */
-            id?: number;
-            title?: string;
-            /** @enum {string} */
-            source?: "MANUAL" | "GITHUB";
-            /** Format: int64 */
-            repositoryId?: number;
-            repositoryFullName?: string;
-            /** Format: int64 */
-            userId?: number;
-            /** Format: int32 */
-            todoCount?: number;
-            /** Format: int32 */
-            completedCount?: number;
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            updatedAt?: string;
-        };
-        SignupRequest: {
-            email: string;
-            password: string;
-            nickname: string;
-        };
-        AuthResponse: {
-            /** Format: int64 */
-            id?: number;
-            email?: string;
-            nickname?: string;
-            profileImageUrl?: string;
-            /** @enum {string} */
-            loginProvider?: "LOCAL" | "GITHUB" | "GOOGLE";
-            githubConnected?: boolean;
-        };
-        OAuthLoginRequest: {
-            code: string;
-        };
-        LoginRequest: {
-            email: string;
-            password: string;
-        };
-        UpdateUserRequest: {
-            nickname?: string;
-            profileImageUrl?: string;
-        };
-        UserResponse: {
-            /** Format: int64 */
-            id?: number;
-            email?: string;
-            nickname?: string;
-            profileImageUrl?: string;
-            /** @enum {string} */
-            loginProvider?: "LOCAL" | "GITHUB" | "GOOGLE";
-            githubConnected?: boolean;
-        };
-        ChangePasswordRequest: {
-            currentPassword: string;
-            newPassword: string;
-            newPasswordConfirm: string;
-        };
-        UpdateTodoRequest: {
-            title?: string;
-            done?: boolean;
-            /** Format: date-time */
-            dueDate?: string;
-            linkUrl?: string;
-            imageUrl?: string;
-            tags?: string[];
-        };
-        NotificationResponse: {
-            /** Format: int64 */
-            id?: number;
-            /** @enum {string} */
-            type?: "COMMENT" | "TODO";
-            message?: string;
-            isRead?: boolean;
-            /** Format: date-time */
-            createdAt?: string;
-        };
-        UpdateNoteRequest: {
-            title?: string;
-            content?: string;
-            linkUrl?: string;
-        };
-        UpdateGoalRequest: {
-            title: string;
-        };
-        GoalProgress: {
-            /** Format: int64 */
-            goalId?: number;
-            title?: string;
-            /** Format: int32 */
-            totalTodos?: number;
-            /** Format: int32 */
-            doneTodos?: number;
-            /** Format: int32 */
-            progressPercent?: number;
-        };
-        UserProgressResponse: {
-            /** Format: int32 */
-            totalProgress?: number;
-            goals?: components["schemas"]["GoalProgress"][];
-        };
-        TodoListResponse: {
-            todos?: components["schemas"]["TodoResponse"][];
-            /** Format: int64 */
-            nextCursor?: number;
-            hasMore?: boolean;
-            /** Format: int64 */
-            totalCount?: number;
-        };
-        TagResponse: {
-            /** Format: int64 */
-            id?: number;
-            name?: string;
-        };
-        NoteListItem: {
-            /** Format: int64 */
-            id?: number;
-            title?: string;
-            /** Format: int64 */
-            todoId?: number;
-            /** Format: date-time */
-            createdAt?: string;
-        };
-        NoteListResponse: {
-            notes?: components["schemas"]["NoteListItem"][];
-            pageInfo?: components["schemas"]["PageInfo"];
-        };
-        PageInfo: {
-            /** Format: int32 */
-            page?: number;
-            /** Format: int32 */
-            size?: number;
-            /** Format: int64 */
-            totalElements?: number;
-            /** Format: int32 */
-            totalPages?: number;
-        };
-        GoalListResponse: {
-            goals?: components["schemas"]["GoalResponse"][];
-            /** Format: int64 */
-            nextCursor?: number;
-            hasMore?: boolean;
-            /** Format: int64 */
-            totalCount?: number;
-        };
-        OAuthAuthorizeUrlResponse: {
-            loginUrl?: string;
-        };
-        DeleteUserRequest: {
-            password?: string;
-        };
+  schemas: {
+    CreateTodoRequest: {
+      title: string;
+      /** Format: int64 */
+      goalId: number;
+      /** Format: date-time */
+      dueDate?: string;
+      linkUrl?: string;
+      imageUrl?: string;
+      /** @enum {string} */
+      source?: 'MANUAL' | 'GITHUB_ISSUE' | 'GITHUB_PR';
+      /** Format: int64 */
+      sourceItemId?: number;
+      status?: string;
+      tags?: string[];
     };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+    GoalInfo: {
+      /** Format: int64 */
+      id?: number;
+      title?: string;
+    };
+    TagInfo: {
+      /** Format: int64 */
+      id?: number;
+      name?: string;
+    };
+    TodoResponse: {
+      /** Format: int64 */
+      id?: number;
+      title?: string;
+      done?: boolean;
+      /** Format: date-time */
+      dueDate?: string;
+      imageUrl?: string;
+      linkUrl?: string;
+      /** @enum {string} */
+      source?: 'MANUAL' | 'GITHUB_ISSUE' | 'GITHUB_PR';
+      /** Format: int64 */
+      sourceItemId?: number;
+      status?: string;
+      favorite?: boolean;
+      goal?: components['schemas']['GoalInfo'];
+      /** Format: int64 */
+      userId?: number;
+      noteIds?: number[];
+      tags?: components['schemas']['TagInfo'][];
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
+    };
+    ErrorResponse: {
+      message?: string;
+      code?: string;
+    };
+    CreateNoteRequest: {
+      /** Format: int64 */
+      todoId: number;
+      title: string;
+      content?: string;
+      linkUrl?: string;
+    };
+    NoteResponse: {
+      /** Format: int64 */
+      id?: number;
+      /** Format: int64 */
+      todoId?: number;
+      /** Format: int64 */
+      goalId?: number;
+      /** Format: int64 */
+      userId?: number;
+      title?: string;
+      content?: string;
+      linkUrl?: string;
+      /** @enum {string} */
+      source?: 'MANUAL' | 'GITHUB_ISSUE' | 'GITHUB_PR';
+      /** Format: int64 */
+      sourceItemId?: number;
+      status?: string;
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
+      todo?: components['schemas']['TodoInfo'];
+    };
+    TodoInfo: {
+      /** Format: int64 */
+      id?: number;
+      title?: string;
+      done?: boolean;
+    };
+    CreateGoalRequest: {
+      title: string;
+    };
+    GoalResponse: {
+      /** Format: int64 */
+      id?: number;
+      title?: string;
+      /** @enum {string} */
+      source?: 'MANUAL' | 'GITHUB';
+      /** Format: int64 */
+      repositoryId?: number;
+      repositoryFullName?: string;
+      /** Format: int64 */
+      userId?: number;
+      /** Format: int32 */
+      todoCount?: number;
+      progress?: number;
+
+      todoList: {
+        id: number;
+        title: string;
+        favorite: boolean;
+      }[];
+
+      doneList: {
+        id: number;
+        title: string;
+        favorite: boolean;
+      }[];
+
+      /** Format: int32 */
+      completedCount?: number;
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
+    };
+    SignupRequest: {
+      email: string;
+      password: string;
+      nickname: string;
+    };
+    AuthResponse: {
+      /** Format: int64 */
+      id?: number;
+      email?: string;
+      nickname?: string;
+      profileImageUrl?: string;
+      /** @enum {string} */
+      loginProvider?: 'LOCAL' | 'GITHUB' | 'GOOGLE';
+      githubConnected?: boolean;
+    };
+    OAuthLoginRequest: {
+      code: string;
+    };
+    LoginRequest: {
+      email: string;
+      password: string;
+    };
+    UpdateUserRequest: {
+      nickname?: string;
+      profileImageUrl?: string;
+    };
+    UserResponse: {
+      /** Format: int64 */
+      id?: number;
+      email?: string;
+      nickname?: string;
+      profileImageUrl?: string;
+      /** @enum {string} */
+      loginProvider?: 'LOCAL' | 'GITHUB' | 'GOOGLE';
+      githubConnected?: boolean;
+    };
+    ChangePasswordRequest: {
+      currentPassword: string;
+      newPassword: string;
+      newPasswordConfirm: string;
+    };
+    UpdateTodoRequest: {
+      title?: string;
+      done?: boolean;
+      /** Format: date-time */
+      dueDate?: string;
+      linkUrl?: string;
+      imageUrl?: string;
+      tags?: string[];
+    };
+    NotificationResponse: {
+      /** Format: int64 */
+      id?: number;
+      /** @enum {string} */
+      type?: 'COMMENT' | 'TODO';
+      message?: string;
+      isRead?: boolean;
+      /** Format: date-time */
+      createdAt?: string;
+    };
+    UpdateNoteRequest: {
+      title?: string;
+      content?: string;
+      linkUrl?: string;
+    };
+    UpdateGoalRequest: {
+      title: string;
+    };
+    GoalProgress: {
+      /** Format: int64 */
+      goalId?: number;
+      title?: string;
+      /** Format: int32 */
+      totalTodos?: number;
+      /** Format: int32 */
+      doneTodos?: number;
+      /** Format: int32 */
+      progressPercent?: number;
+    };
+    UserProgressResponse: {
+      /** Format: int32 */
+      totalProgress?: number;
+      goals?: components['schemas']['GoalProgress'][];
+    };
+    TodoListResponse: {
+      todos?: components['schemas']['TodoResponse'][];
+      /** Format: int64 */
+      nextCursor?: number;
+      hasMore?: boolean;
+      /** Format: int64 */
+      totalCount?: number;
+    };
+    TagResponse: {
+      /** Format: int64 */
+      id?: number;
+      name?: string;
+    };
+    NoteListItem: {
+      /** Format: int64 */
+      id?: number;
+      title?: string;
+      /** Format: int64 */
+      todoId?: number;
+      /** Format: date-time */
+      createdAt?: string;
+    };
+    NoteListResponse: {
+      notes?: components['schemas']['NoteListItem'][];
+      pageInfo?: components['schemas']['PageInfo'];
+    };
+    PageInfo: {
+      /** Format: int32 */
+      page?: number;
+      /** Format: int32 */
+      size?: number;
+      /** Format: int64 */
+      totalElements?: number;
+      /** Format: int32 */
+      totalPages?: number;
+    };
+    GoalListResponse: {
+      goals?: components['schemas']['GoalResponse'][];
+      /** Format: int64 */
+      nextCursor?: number;
+      hasMore?: boolean;
+      /** Format: int64 */
+      totalCount?: number;
+    };
+    OAuthAuthorizeUrlResponse: {
+      loginUrl?: string;
+    };
+    DeleteUserRequest: {
+      password?: string;
+    };
+  };
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    getList: {
-        parameters: {
-            query: {
-                /** @description 목표 ID (필터) */
-                goalId?: number;
-                /** @description 커서 */
-                cursor?: number;
-                /** @description 한 페이지에 가져올 항목 수 (기본값 10) */
-                limit?: number;
-                /** @description 완료 여부 필터 */
-                done?: boolean;
-                /** @description 제목 검색어 */
-                search?: string;
-                /** @description 정렬 (LATEST 또는 OLDEST, 기본값 LATEST) */
-                sort?: "LATEST" | "OLDEST";
-                /** @description 연도 */
-                year: number;
-                /** @description 월 */
-                month: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 조회 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TodoListResponse"];
-                };
-            };
-        };
+  getList: {
+    parameters: {
+      query: {
+        /** @description 목표 ID (필터) */
+        goalId?: number;
+        /** @description 커서 */
+        cursor?: number;
+        /** @description 한 페이지에 가져올 항목 수 (기본값 10) */
+        limit?: number;
+        /** @description 완료 여부 필터 */
+        done?: boolean;
+        /** @description 제목 검색어 */
+        search?: string;
+        /** @description 정렬 (LATEST 또는 OLDEST, 기본값 LATEST) */
+        sort?: 'LATEST' | 'OLDEST';
+        /** @description 연도 */
+        year: number;
+        /** @description 월 */
+        month: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateTodoRequest"];
-            };
+        content: {
+          'application/json': components['schemas']['TodoListResponse'];
         };
-        responses: {
-            /** @description 생성 성공 */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TodoResponse"];
-                };
-            };
-            /** @description 필수값 누락 / 존재하지 않는 목표 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+      };
     };
-    getList_1: {
-        parameters: {
-            query?: {
-                /** @description 목표 ID (필터) */
-                goalId?: number;
-                /** @description 페이지 번호 (0부터 시작, 기본값 0) */
-                page?: number;
-                /** @description 한 페이지에 가져올 항목 수 (기본값 10) */
-                size?: number;
-                /** @description 정렬 (LATEST 또는 OLDEST, 기본값 LATEST) */
-                sort?: "LATEST" | "OLDEST";
-                /** @description 제목 검색어 */
-                search?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 조회 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NoteListResponse"];
-                };
-            };
-        };
+  };
+  create: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    create_1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateNoteRequest"];
-            };
-        };
-        responses: {
-            /** @description 생성 성공 */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NoteResponse"];
-                };
-            };
-            /** @description 필수값 누락 / 존재하지 않는 할일 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateTodoRequest'];
+      };
     };
-    getList_2: {
-        parameters: {
-            query?: {
-                /** @description 커서 (이전 페이지의 마지막 goalId) */
-                cursor?: number;
-                /** @description 한 페이지에 가져올 항목 수 (기본값 10) */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description 생성 성공 */
+      201: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description 조회 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GoalListResponse"];
-                };
-            };
+        content: {
+          'application/json': components['schemas']['TodoResponse'];
         };
+      };
+      /** @description 필수값 누락 / 존재하지 않는 목표 */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
     };
-    create_2: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateGoalRequest"];
-            };
-        };
-        responses: {
-            /** @description 생성 성공 */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GoalResponse"];
-                };
-            };
-            /** @description 필수값 누락 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+  };
+  getList_1: {
+    parameters: {
+      query?: {
+        /** @description 목표 ID (필터) */
+        goalId?: number;
+        /** @description 페이지 번호 (0부터 시작, 기본값 0) */
+        page?: number;
+        /** @description 한 페이지에 가져올 항목 수 (기본값 10) */
+        size?: number;
+        /** @description 정렬 (LATEST 또는 OLDEST, 기본값 LATEST) */
+        sort?: 'LATEST' | 'OLDEST';
+        /** @description 제목 검색어 */
+        search?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    signup: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SignupRequest"];
-            };
+        content: {
+          'application/json': components['schemas']['NoteListResponse'];
         };
-        responses: {
-            /** @description 회원가입 성공 */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AuthResponse"];
-                };
-            };
-            /** @description 이미 가입된 이메일 / 필수값 누락 / 형식 오류 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+      };
     };
-    refresh: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 토큰 재발급 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 유효하지 않은 리프레시 토큰 */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+  };
+  create_1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    githubLogin: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["OAuthLoginRequest"];
-            };
-        };
-        responses: {
-            /** @description 로그인 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AuthResponse"];
-                };
-            };
-            /** @description 유효하지 않은 인증 코드 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateNoteRequest'];
+      };
     };
-    logout: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description 생성 성공 */
+      201: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description 로그아웃 성공 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
+        content: {
+          'application/json': components['schemas']['NoteResponse'];
         };
+      };
+      /** @description 필수값 누락 / 존재하지 않는 할일 */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
     };
-    login: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["LoginRequest"];
-            };
-        };
-        responses: {
-            /** @description 로그인 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AuthResponse"];
-                };
-            };
-            /** @description 이메일 또는 비밀번호 불일치 */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+  };
+  getList_2: {
+    parameters: {
+      query?: {
+        /** @description 커서 (이전 페이지의 마지막 goalId) */
+        cursor?: number;
+        /** @description 한 페이지에 가져올 항목 수 (기본값 10) */
+        limit?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    googleLogin: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["OAuthLoginRequest"];
-            };
+        content: {
+          'application/json': components['schemas']['GoalListResponse'];
         };
-        responses: {
-            /** @description 로그인 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AuthResponse"];
-                };
-            };
-            /** @description 유효하지 않은 인증 코드 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+      };
     };
-    getMe: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 조회 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UserResponse"];
-                };
-            };
-            /** @description 인증 실패 */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+  };
+  create_2: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    deleteMe: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["DeleteUserRequest"];
-            };
-        };
-        responses: {
-            /** @description 탈퇴 성공 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 비밀번호 불일치 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description 인증 실패 */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateGoalRequest'];
+      };
     };
-    updateMe: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description 생성 성공 */
+      201: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateUserRequest"];
-            };
+        content: {
+          'application/json': components['schemas']['GoalResponse'];
         };
-        responses: {
-            /** @description 수정 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UserResponse"];
-                };
-            };
-            /** @description 인증 실패 */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
+      };
+      /** @description 필수값 누락 */
+      400: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
     };
-    changePassword: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ChangePasswordRequest"];
-            };
-        };
-        responses: {
-            /** @description 변경 성공 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 비밀번호 불일치 / OAuth 사용자 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+  };
+  signup: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    getDetail: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                todoId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 조회 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TodoResponse"];
-                };
-            };
-            /** @description 할일을 찾을 수 없음 */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SignupRequest'];
+      };
     };
-    delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                todoId: number;
-            };
-            cookie?: never;
+    responses: {
+      /** @description 회원가입 성공 */
+      201: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description 삭제 성공 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 할일을 찾을 수 없음 */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
+        content: {
+          'application/json': components['schemas']['AuthResponse'];
         };
+      };
+      /** @description 이미 가입된 이메일 / 필수값 누락 / 형식 오류 */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
     };
-    update: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                todoId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateTodoRequest"];
-            };
-        };
-        responses: {
-            /** @description 수정 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TodoResponse"];
-                };
-            };
-            /** @description 할일을 찾을 수 없음 */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+  };
+  refresh: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    toggleFavorite: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                todoId: number;
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description 토큰 재발급 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description 토글 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TodoResponse"];
-                };
-            };
-            /** @description 할일을 찾을 수 없음 */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
+        content?: never;
+      };
+      /** @description 유효하지 않은 리프레시 토큰 */
+      401: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
     };
-    markAsRead: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                notificationId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 읽음 처리 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotificationResponse"];
-                };
-            };
-            /** @description 알림을 찾을 수 없음 */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+  };
+  githubLogin: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    getDetail_1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                noteId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 조회 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NoteResponse"];
-                };
-            };
-            /** @description 노트를 찾을 수 없음 */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['OAuthLoginRequest'];
+      };
     };
-    delete_1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                noteId: number;
-            };
-            cookie?: never;
+    responses: {
+      /** @description 로그인 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description 삭제 성공 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 노트를 찾을 수 없음 */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
+        content: {
+          'application/json': components['schemas']['AuthResponse'];
         };
+      };
+      /** @description 유효하지 않은 인증 코드 */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
     };
-    update_1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                noteId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateNoteRequest"];
-            };
-        };
-        responses: {
-            /** @description 수정 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NoteResponse"];
-                };
-            };
-            /** @description 노트를 찾을 수 없음 */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+  };
+  logout: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    getDetail_2: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                goalId: number;
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description 로그아웃 성공 */
+      204: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description 조회 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GoalResponse"];
-                };
-            };
-            /** @description 목표를 찾을 수 없음 */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+        content?: never;
+      };
     };
-    delete_2: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                goalId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 삭제 성공 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 목표를 찾을 수 없음 */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+  };
+  login: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    update_2: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                goalId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateGoalRequest"];
-            };
-        };
-        responses: {
-            /** @description 수정 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GoalResponse"];
-                };
-            };
-            /** @description 목표를 찾을 수 없음 */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['LoginRequest'];
+      };
     };
-    health: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description 로그인 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": string;
-                };
-            };
+        content: {
+          'application/json': components['schemas']['AuthResponse'];
         };
+      };
+      /** @description 이메일 또는 비밀번호 불일치 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
     };
-    getProgress: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 조회 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UserProgressResponse"];
-                };
-            };
-            /** @description 인증 실패 */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
+  };
+  googleLogin: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    getList_3: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 조회 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TagResponse"][];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['OAuthLoginRequest'];
+      };
     };
-    getList_4: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description 로그인 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description 조회 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotificationResponse"][];
-                };
-            };
+        content: {
+          'application/json': components['schemas']['AuthResponse'];
         };
+      };
+      /** @description 유효하지 않은 인증 코드 */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
     };
-    getGoogleAuthorizeUrl: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 로그인 URL 발급 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OAuthAuthorizeUrlResponse"];
-                };
-            };
-        };
+  };
+  getMe: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    getGithubAuthorizeUrl: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description 로그인 URL 발급 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OAuthAuthorizeUrlResponse"];
-                };
-            };
+        content: {
+          'application/json': components['schemas']['UserResponse'];
         };
+      };
+      /** @description 인증 실패 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
     };
+  };
+  deleteMe: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['DeleteUserRequest'];
+      };
+    };
+    responses: {
+      /** @description 탈퇴 성공 */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description 비밀번호 불일치 */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+      /** @description 인증 실패 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  updateMe: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateUserRequest'];
+      };
+    };
+    responses: {
+      /** @description 수정 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserResponse'];
+        };
+      };
+      /** @description 인증 실패 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  changePassword: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ChangePasswordRequest'];
+      };
+    };
+    responses: {
+      /** @description 변경 성공 */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description 비밀번호 불일치 / OAuth 사용자 */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  getDetail: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        todoId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['TodoResponse'];
+        };
+      };
+      /** @description 할일을 찾을 수 없음 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        todoId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 삭제 성공 */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description 할일을 찾을 수 없음 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  update: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        todoId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateTodoRequest'];
+      };
+    };
+    responses: {
+      /** @description 수정 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['TodoResponse'];
+        };
+      };
+      /** @description 할일을 찾을 수 없음 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  toggleFavorite: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        todoId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 토글 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['TodoResponse'];
+        };
+      };
+      /** @description 할일을 찾을 수 없음 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  markAsRead: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        notificationId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 읽음 처리 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotificationResponse'];
+        };
+      };
+      /** @description 알림을 찾을 수 없음 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  getDetail_1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        noteId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NoteResponse'];
+        };
+      };
+      /** @description 노트를 찾을 수 없음 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  delete_1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        noteId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 삭제 성공 */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description 노트를 찾을 수 없음 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  update_1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        noteId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateNoteRequest'];
+      };
+    };
+    responses: {
+      /** @description 수정 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NoteResponse'];
+        };
+      };
+      /** @description 노트를 찾을 수 없음 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  getDetail_2: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        goalId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['GoalResponse'];
+        };
+      };
+      /** @description 목표를 찾을 수 없음 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  delete_2: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        goalId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 삭제 성공 */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description 목표를 찾을 수 없음 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  update_2: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        goalId: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateGoalRequest'];
+      };
+    };
+    responses: {
+      /** @description 수정 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['GoalResponse'];
+        };
+      };
+      /** @description 목표를 찾을 수 없음 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  health: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': string;
+        };
+      };
+    };
+  };
+  getProgress: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserProgressResponse'];
+        };
+      };
+      /** @description 인증 실패 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  getList_3: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['TagResponse'][];
+        };
+      };
+    };
+  };
+  getList_4: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NotificationResponse'][];
+        };
+      };
+    };
+  };
+  getGoogleAuthorizeUrl: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 로그인 URL 발급 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['OAuthAuthorizeUrlResponse'];
+        };
+      };
+    };
+  };
+  getGithubAuthorizeUrl: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 로그인 URL 발급 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['OAuthAuthorizeUrlResponse'];
+        };
+      };
+    };
+  };
 }

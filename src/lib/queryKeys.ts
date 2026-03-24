@@ -1,7 +1,11 @@
 import { queryOptions } from '@tanstack/react-query';
-import { fetchGoal, fetchGoals } from './api/goals';
-import { fetchTodo, fetchTodos } from './api/todos';
-import { fetchNote, fetchNotes } from './api/notes';
+import { getGithubAuthorizeUrl, getGoogleAuthorizeUrl } from './api/fetchAuth';
+import { getGoal, getGoals, type GetGoalsParams } from './api/fetchGoals';
+import { getTodo, getTodos, type GetTodosParams } from './api/fetchTodos';
+import { getNote, getNotes, type GetNotesParams } from './api/fetchNotes';
+import { getNotifications } from './api/fetchNotifications';
+import { getTags } from './api/fetchTags';
+import { getCurrentUser, getUserProgress } from './api/fetchUsers';
 
 // ────────────────────────────────────────────────────────────
 // Goal 쿼리
@@ -12,10 +16,10 @@ export const goalQueries = {
    * 목표 목록 조회
    * @example useQuery(goalQueries.list())
    */
-  list: () =>
+  list: (params?: GetGoalsParams) =>
     queryOptions({
-      queryKey: ['goals', 'list'],
-      queryFn: fetchGoals,
+      queryKey: ['goals', 'list', params ?? {}],
+      queryFn: () => getGoals(params),
     }),
 
   /**
@@ -25,7 +29,7 @@ export const goalQueries = {
   detail: (goalId: number) =>
     queryOptions({
       queryKey: ['goals', 'detail', goalId],
-      queryFn: () => fetchGoal(goalId),
+      queryFn: () => getGoal(goalId),
     }),
 };
 
@@ -42,10 +46,10 @@ export const todoQueries = {
    * @example useQuery(todoQueries.list({ goalId: 1 }))
    * @example useQuery(todoQueries.list({ goalId: 1, done: true }))
    */
-  list: (params?: { goalId?: number; done?: boolean }) =>
+  list: (params: GetTodosParams) =>
     queryOptions({
       queryKey: ['todos', 'list', params ?? {}],
-      queryFn: () => fetchTodos(params),
+      queryFn: () => getTodos(params),
     }),
 
   /**
@@ -55,7 +59,7 @@ export const todoQueries = {
   detail: (todoId: number) =>
     queryOptions({
       queryKey: ['todos', 'detail', todoId],
-      queryFn: () => fetchTodo(todoId),
+      queryFn: () => getTodo(todoId),
     }),
 };
 
@@ -67,12 +71,12 @@ export const noteQueries = {
   /**
    * 노트 목록 조회
    * @example useQuery(noteQueries.list())
-   * @example useQuery(noteQueries.list({ sort: 'latest' }))
+   * @example useQuery(noteQueries.list({ sort: 'LATEST' }))
    */
-  list: (params?: { sort?: 'latest' | 'oldest'; search?: string }) =>
+  list: (params?: GetNotesParams) =>
     queryOptions({
       queryKey: ['notes', 'list', params ?? {}],
-      queryFn: () => fetchNotes(params),
+      queryFn: () => getNotes(params),
     }),
 
   /**
@@ -82,6 +86,50 @@ export const noteQueries = {
   detail: (noteId: number) =>
     queryOptions({
       queryKey: ['notes', 'detail', noteId],
-      queryFn: () => fetchNote(noteId),
+      queryFn: () => getNote(noteId),
+    }),
+};
+
+export const authQueries = {
+  googleAuthorizeUrl: () =>
+    queryOptions({
+      queryKey: ['auth', 'googleAuthorizeUrl'],
+      queryFn: getGoogleAuthorizeUrl,
+    }),
+
+  githubAuthorizeUrl: () =>
+    queryOptions({
+      queryKey: ['auth', 'githubAuthorizeUrl'],
+      queryFn: getGithubAuthorizeUrl,
+    }),
+};
+
+export const userQueries = {
+  current: () =>
+    queryOptions({
+      queryKey: ['users', 'me'],
+      queryFn: getCurrentUser,
+    }),
+
+  progress: () =>
+    queryOptions({
+      queryKey: ['users', 'me', 'progress'],
+      queryFn: getUserProgress,
+    }),
+};
+
+export const notificationQueries = {
+  list: () =>
+    queryOptions({
+      queryKey: ['notifications', 'list'],
+      queryFn: getNotifications,
+    }),
+};
+
+export const tagQueries = {
+  list: () =>
+    queryOptions({
+      queryKey: ['tags', 'list'],
+      queryFn: getTags,
     }),
 };

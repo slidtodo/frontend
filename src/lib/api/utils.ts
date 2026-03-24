@@ -32,7 +32,7 @@ export const toQueryString = (params?: Record<string, QueryValue>): string => {
   return searchParams.toString();
 };
 
-const appUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? process.env.API_BASE_URL ?? 'http://localhost:3000';
+const apiBaseUrl = (process.env.NEXT_PUBLIC_API_BASE_URL ?? process.env.API_BASE_URL ?? '').replace(/\/+$/, '');
 
 type ApiRequestOptions<TBody> = {
   method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
@@ -52,7 +52,8 @@ export const apiRequest = async <TResponse, TBody = never>(
 
   const { method = 'GET', params, body, headers, signal, cache, next } = options;
   const queryString = toQueryString(params);
-  const requestUrl = queryString ? `${appUrl}${url}?${queryString}` : `${appUrl}${url}`;
+  const resolvedUrl = url.startsWith('/api/') && apiBaseUrl ? `${apiBaseUrl}${url}` : url;
+  const requestUrl = queryString ? `${resolvedUrl}?${queryString}` : resolvedUrl;
 
   const response = await fetch(requestUrl, {
     method,

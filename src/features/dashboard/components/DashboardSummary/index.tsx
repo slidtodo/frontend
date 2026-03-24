@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { ChevronRightIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 
+import PageHeader from '@/shared/components/PageHeader';
 import PageSubTitle from '@/shared/components/PageSubTitle';
 import ProgressCircle from '@/shared/components/ProgressCircle';
 import TaskCard from '@/shared/components/TaskCard';
@@ -11,31 +12,36 @@ import TaskCard from '@/shared/components/TaskCard';
 import { todoQueries, userQueries } from '@/lib/queryKeys';
 
 export default function DashBoardSummary() {
+  const { data: user } = useQuery(userQueries.current());
+
   return (
-    <section className="flex w-full flex-col gap-[40px] pb-[40px] md:flex-row md:gap-[12px] lg:gap-[32px] lg:pb-[34px]">
-      <div className="flex w-full flex-col justify-between gap-[10px]">
-        <PageSubTitle
-          subTitle="최근 등록한 할 일"
-          icons={<Image src={'/image/task.png'} alt="Task Icon" width={40} height={40} />}
-          actions={
-            <Link
-              href="/dashboard/all-todo"
-              className="w-full cursor-pointer text-sm font-semibold text-[#ef6c08] md:text-base"
-            >
-              모두 보기 <ChevronRightIcon className="inline-block cursor-pointer" />
-            </Link>
-          }
-        />
-        <RecentPostCard />
-      </div>
-      <div className="flex w-full flex-col justify-between gap-[10px]">
-        <PageSubTitle
-          subTitle="내 진행 상황"
-          icons={<Image src={'/image/progress.png'} alt="Progress Icon" width={40} height={40} />}
-        />
-        <CurrentProgressCard />
-      </div>
-    </section>
+    <>
+      <PageHeader title={`${user?.nickname}님의 대시보드`} className="pb-[30px] text-black lg:pb-[34px]" />
+      <section className="flex w-full flex-col gap-[40px] pb-[40px] md:flex-row md:gap-[12px] lg:gap-[32px] lg:pb-[34px]">
+        <div className="flex w-full flex-col justify-between gap-[10px]">
+          <PageSubTitle
+            subTitle="최근 등록한 할 일"
+            icons={<Image src={'/image/task.png'} alt="Task Icon" width={40} height={40} />}
+            actions={
+              <Link
+                href="/dashboard/all-todo"
+                className="w-full cursor-pointer text-sm font-semibold text-[#ef6c08] md:text-base"
+              >
+                모두 보기 <ChevronRightIcon className="inline-block cursor-pointer" />
+              </Link>
+            }
+          />
+          <RecentPostCard />
+        </div>
+        <div className="flex w-full flex-col justify-between gap-[10px]">
+          <PageSubTitle
+            subTitle="내 진행 상황"
+            icons={<Image src={'/image/progress.png'} alt="Progress Icon" width={40} height={40} />}
+          />
+          <CurrentProgressCard />
+        </div>
+      </section>
+    </>
   );
 }
 

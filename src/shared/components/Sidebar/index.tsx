@@ -3,10 +3,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronsRightIcon, SettingsIcon, LogOutIcon, FlagIcon, CopyCheckIcon, BellIcon, MenuIcon } from 'lucide-react';
 
+import SidebarMobileCase from './SidebarMobileCase';
+import { LinkUploadModal } from '../Modal/LinkUploadModal';
+
 import { useSidebarContext } from '@/contexts/SidebarContext';
 import { useSidebarOpen } from '@/contexts/SidebarContext';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
-import SidebarMobileCase from './SidebarMobileCase';
+import { useModalStore } from '@/shared/stores/useModalStore';
+import { usePostGoal } from '@/lib/mutations';
 
 export default function Sidebar() {
   const breakpoint = useBreakpoint();
@@ -28,8 +32,11 @@ function SidebarMobile() {
 
 // 데스크탑과 태블릿에서 렌더링 되는 사이드바 컴포넌트
 function SidebarDesktopTablet() {
+  const { openModal } = useModalStore();
   const { toggle, getMenus } = useSidebarContext();
   const isOpen = useSidebarOpen();
+
+  const { mutate } = usePostGoal();
 
   const menus = getMenus();
   const projectName = 'Slid To Do';
@@ -109,12 +116,23 @@ function SidebarDesktopTablet() {
 
       <div className="flex flex-col items-center gap-8 transition-all duration-300">
         <div className={`w-full gap-4 ${isOpen ? 'flex' : 'hidden'}`}>
-          <button className="group flex w-full flex-col items-center justify-center gap-2 rounded-[32px] bg-[#FF8442] px-2 py-4 transition-all duration-200 hover:bg-[#F07533] hover:shadow-lg lg:px-[22.5px] lg:py-8">
+          <button
+            onClick={() =>
+              openModal(
+                <LinkUploadModal
+                  title="목표 생성"
+                  placeholder="목표 제목을 입력하세요"
+                  onConfirm={(title) => mutate({ title })}
+                />,
+              )
+            }
+            className="group flex w-full flex-col items-center justify-center gap-2 rounded-[32px] bg-[#FF8442] px-2 py-4 transition-all duration-200 hover:bg-[#F07533] hover:shadow-lg lg:px-[22.5px] lg:py-8"
+          >
             <FlagIcon
               className="h-8 w-8 text-[#ffffff] transition-transform group-hover:scale-110 lg:h-10 lg:w-10"
               size={40}
             />
-            <span className="text-md font-semibold text-[#ffffff] transition-all group-hover:font-bold lg:text-lg">
+            <span className="text-md cursor-pointer font-semibold text-[#ffffff] transition-all group-hover:font-bold lg:text-lg">
               새 목표
             </span>
           </button>
@@ -123,7 +141,7 @@ function SidebarDesktopTablet() {
               className="h-8 w-8 text-[#FF8442] transition-transform group-hover:scale-110 lg:h-10 lg:w-10"
               size={40}
             />
-            <span className="text-md font-semibold text-[#FF8442] transition-all group-hover:font-bold lg:text-lg">
+            <span className="text-md cursor-pointer font-semibold text-[#FF8442] transition-all group-hover:font-bold lg:text-lg">
               새 할일
             </span>
           </button>

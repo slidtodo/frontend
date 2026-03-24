@@ -38,6 +38,37 @@ type ApiRequestOptions<TBody> = {
   body?: TBody;
   headers?: HeadersInit;
   signal?: AbortSignal;
+  cache?: RequestCache;
+  next?: { revalidate?: number | false; tags?: string[] };
+};
+
+const resolveRequestUrl = (url: string, queryString: string) => {
+  const requestUrl = queryString ? `${url}?${queryString}` : url;
+
+  if (!requestUrl.startsWith('/')) {
+    return requestUrl;
+  }
+
+  if (typeof window !== 'undefined') {
+    return requestUrl;
+  }
+
+  if (process.env.NODE_ENV === 'development') {
+    const port = process.env.PORT ?? '3000';
+    return `http://127.0.0.1:${port}${requestUrl}`;
+  }
+
+  const vercelUrl = process.env.VERCEL_URL;
+  const normalizedVercelUrl = vercelUrl
+    ? vercelUrl.startsWith('http://') || vercelUrl.startsWith('https://')
+      ? vercelUrl
+      : `https://${vercelUrl}`
+    : undefined;
+
+  const appUrl =
+    process.env.NEXT_PUBLIC_APP_URL ?? process.env.APP_URL ?? normalizedVercelUrl ?? 'http://localhost:3000';
+
+  return `${appUrl.replace(/\/+$/, '')}${requestUrl}`;
 };
 
 export const apiRequest = async <TResponse, TBody = never>(
@@ -46,14 +77,16 @@ export const apiRequest = async <TResponse, TBody = never>(
 ): Promise<TResponse> => {
   const tempToken = process.env.NEXT_PUBLIC_TEMP_ACCESS_TOKEN;
 
-  const { method = 'GET', params, body, headers, signal } = options;
+  const { method = 'GET', params, body, headers, signal, cache, next } = options;
   const queryString = toQueryString(params);
-  const requestUrl = queryString ? `${url}?${queryString}` : url;
+  const requestUrl = resolveRequestUrl(url, queryString);
 
   const response = await fetch(requestUrl, {
     method,
     credentials: 'include',
     signal,
+    cache,
+    next,
     headers: {
       ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
       ...(tempToken ? { Authorization: `Bearer ${tempToken}` } : {}),
@@ -72,7 +105,7 @@ export const apiRequest = async <TResponse, TBody = never>(
       message = errorBody.message ?? fallbackMessage;
       code = errorBody.code;
     } catch {
-      // Ignore JSON parse failure and keep fallback message.
+      //
     }
 
     throw new ApiError(response.status, message, code);

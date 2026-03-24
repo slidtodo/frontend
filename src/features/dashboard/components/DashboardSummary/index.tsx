@@ -1,12 +1,14 @@
+'use client';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronRightIcon } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 
 import PageSubTitle from '@/shared/components/PageSubTitle';
 import ProgressCircle from '@/shared/components/ProgressCircle';
 import TaskCard from '@/shared/components/TaskCard';
 
-import { mockTodoItems } from '../../allTodo/components/AllTodoContent/mock';
+import { todoQueries, userQueries } from '@/lib/queryKeys';
 
 export default function DashBoardSummary() {
   return (
@@ -14,7 +16,7 @@ export default function DashBoardSummary() {
       <div className="flex w-full flex-col justify-between gap-[10px]">
         <PageSubTitle
           subTitle="최근 등록한 할 일"
-          icons={<Image src={'/image/task-icon.png'} alt="Task Icon" width={40} height={40} />}
+          icons={<Image src={'/image/task.png'} alt="Task Icon" width={40} height={40} />}
           actions={
             <Link
               href="/dashboard/all-todo"
@@ -29,7 +31,7 @@ export default function DashBoardSummary() {
       <div className="flex w-full flex-col justify-between gap-[10px]">
         <PageSubTitle
           subTitle="내 진행 상황"
-          icons={<Image src={'/image/progress-icon.png'} alt="Progress Icon" width={40} height={40} />}
+          icons={<Image src={'/image/progress.png'} alt="Progress Icon" width={40} height={40} />}
         />
         <CurrentProgressCard />
       </div>
@@ -38,17 +40,35 @@ export default function DashBoardSummary() {
 }
 
 function RecentPostCard() {
+  const now = new Date();
+
+  const { data: todos } = useQuery(
+    todoQueries.list({
+      sort: 'LATEST',
+      year: now.getFullYear(),
+      month: now.getMonth() + 1,
+    }),
+  );
+
+  const recentTodos =
+    todos?.todos?.sort((a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime()) ?? [];
+
   return (
     <article className="flex h-[256px] flex-col gap-[6px] rounded-[40px] bg-[#FF8442] p-4 shadow-[0_10px_40px_0_rgba(255,158,89,0.40)] lg:p-8">
-      {mockTodoItems.slice(0, 4).map((task) => (
-        <TaskCard key={task.id} todo={task} variant="orange" />
-      ))}
+      {recentTodos.length > 0 ? (
+        recentTodos.map((task) => <TaskCard key={task.id} todo={task} variant="orange" />)
+      ) : (
+        <div className="flex h-full items-center justify-center">
+          <span className="text-white">최근 등록한 할 일이 없습니다.</span>
+        </div>
+      )}
     </article>
   );
 }
 
 function CurrentProgressCard() {
-  const percent = 74; // 진행도 퍼센트 (예시 값)
+  const { data: percents } = useQuery(userQueries.progress());
+
   return (
     <article className="relative h-[256px] rounded-[40px] bg-[#02CAB5] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)]">
       <div className="absolute right-0 bottom-0">
@@ -69,12 +89,14 @@ function CurrentProgressCard() {
       </div>
       <div className="absolute flex h-full w-full items-center justify-start gap-8 p-6 lg:p-12">
         <div className="w-[120px]">
-          <ProgressCircle percent={percent} className="h-auto w-full" color="#009D97" />
+          <ProgressCircle percent={percents?.totalProgress ?? 0} className="h-auto w-full" color="#009D97" />
         </div>
         <div className="flex flex-col items-start gap-2">
           <span className="text-[clamp(12px,2vw,20px)] font-semibold text-white">체다치즈님의 진행도는</span>
           <div className="flex items-baseline gap-1">
-            <span className="text-[clamp(20px,5vw,60px)] leading-[1] font-bold text-white">{percent}</span>
+            <span className="text-[clamp(20px,5vw,60px)] leading-[1] font-bold text-white">
+              {percents?.totalProgress}
+            </span>
             <span className="text-[clamp(14px,2vw,30px)] text-white">%</span>
           </div>
         </div>

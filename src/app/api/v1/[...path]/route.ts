@@ -22,9 +22,7 @@ const buildCookieHeader = (request: NextRequest) => {
     return incomingCookies || null;
   }
 
-  return incomingCookies
-    ? `${incomingCookies}; accessToken=${tempToken}`
-    : `accessToken=${tempToken}`;
+  return incomingCookies ? `${incomingCookies}; accessToken=${tempToken}` : `accessToken=${tempToken}`;
 };
 
 const proxy = async (request: NextRequest, context: { params: Promise<{ path: string[] }> }) => {
@@ -54,19 +52,6 @@ const proxy = async (request: NextRequest, context: { params: Promise<{ path: st
     redirect: 'manual',
   });
 
-  if (shouldLog) {
-    const requestCookieNames =
-      cookieHeader?.split(';').map((cookie) => cookie.trim().split('=')[0]).filter(Boolean) ?? [];
-    console.log('[api proxy]', {
-      method: request.method,
-      path: `/api/v1/${path.join('/')}`,
-      targetUrl: targetUrl.toString(),
-      hasAccessTokenCookie: requestCookieNames.includes('accessToken'),
-      requestCookieNames,
-      status: response.status,
-    });
-  }
-
   const responseHeaders = new Headers(response.headers);
   const setCookie = response.headers.get('set-cookie');
 
@@ -77,7 +62,7 @@ const proxy = async (request: NextRequest, context: { params: Promise<{ path: st
   if (shouldLog && response.status >= 400) {
     const clonedResponse = response.clone();
     const errorBody = await clonedResponse.text();
-    console.log('[api proxy error body]', errorBody);
+    console.error('[api proxy error body]', errorBody);
   }
 
   return new NextResponse(response.body, {

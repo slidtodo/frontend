@@ -13,18 +13,23 @@ export function useDraftNoteRestore({ onRestore }: UseDraftNoteRestoreOptions) {
   const { getDraft, clearDraft } = useDraftNote();
   const { openModal, closeModal } = useModalStore();
 
-  const [draftState, setDraftState] = useState<{ draft: DraftNote | null; showToast: boolean }>({
+  const [draftState, setDraftState] = useState<{
+    draft: DraftNote | null;
+    showToast: boolean;
+    showSuccessToast: boolean;
+  }>({
     draft: null,
     showToast: false,
+    showSuccessToast: false,
   });
 
-  const { draft, showToast } = draftState;
+  const { draft, showToast, showSuccessToast } = draftState;
 
   useEffect(() => {
     const saved = getDraft();
     if (saved) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setDraftState({ draft: saved, showToast: true });
+      setDraftState({ draft: saved, showToast: true, showSuccessToast: false });
     }
   }, [getDraft]);
 
@@ -32,11 +37,19 @@ export function useDraftNoteRestore({ onRestore }: UseDraftNoteRestoreOptions) {
     setDraftState((prev) => ({ ...prev, showToast: false }));
   }, []);
 
+  const handleCloseSuccessToast = useCallback(() => {
+    setDraftState((prev) => ({ ...prev, showSuccessToast: false }));
+  }, []);
+
   const handleConfirm = useCallback(() => {
     if (!draft) return;
     onRestore(draft);
     clearDraft();
     closeModal();
+    setDraftState((prev) => ({ ...prev, showSuccessToast: true }));
+    setTimeout(() => {
+      setDraftState((prev) => ({ ...prev, showSuccessToast: false }));
+    }, 3000);
   }, [draft, onRestore, clearDraft, closeModal]);
 
   const handleToastLoad = useCallback(() => {
@@ -48,7 +61,9 @@ export function useDraftNoteRestore({ onRestore }: UseDraftNoteRestoreOptions) {
   return {
     draft,
     showToast,
+    showSuccessToast,
     handleCloseToast,
+    handleCloseSuccessToast,
     handleToastLoad,
   };
 }

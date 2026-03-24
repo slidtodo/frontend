@@ -7,23 +7,25 @@ import { useDraftNoteRestore } from '@/features/note/hooks/useDraftNoteRestore';
 import { useState } from 'react';
 import { useDraftNote } from '@/features/note/hooks/useDraftNote';
 import DraftNoteToast from '@/features/note/components/DraftNoteToast.tsx';
+import Toast from '@/shared/components/Toast';
 
 export default function Page() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [createdAt, setCreatedAt] = useState('');
-  const [linkUrl, setLinkUrl] = useState<string | null>(null); // null로 통일
+  const [linkUrl, setLinkUrl] = useState<string | null>(null);
 
   const { saveDraft } = useDraftNote();
 
-  const { showToast, handleCloseToast, handleToastLoad } = useDraftNoteRestore({
-    onRestore: (saved) => {
-      setTitle(saved.title);
-      setContent(saved.content);
-      setCreatedAt(saved.savedAt);
-      setLinkUrl(saved.linkUrl ?? null);
-    },
-  });
+  const { showToast, showSuccessToast, handleCloseToast, handleToastLoad, handleCloseSuccessToast } =
+    useDraftNoteRestore({
+      onRestore: (saved) => {
+        setTitle(saved.title);
+        setContent(saved.content);
+        setCreatedAt(saved.savedAt);
+        setLinkUrl(saved.linkUrl ?? null);
+      },
+    });
 
   return (
     <div className="mx-auto flex h-full w-full max-w-[768px] flex-col">
@@ -39,6 +41,11 @@ export default function Page() {
               임시저장
             </Button>
             {showToast && <DraftNoteToast onLoad={handleToastLoad} onClose={handleCloseToast} />}
+            {showSuccessToast && (
+              <Toast onLoad={() => showSuccessToast} onClose={handleCloseSuccessToast}>
+                임시 저장된 노트를 불러왔어요
+              </Toast>
+            )}
           </div>
           <Button variant="primary" className="cursor-pointer text-sm md:h-10 md:px-[27px]">
             등록하기

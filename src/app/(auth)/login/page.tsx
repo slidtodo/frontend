@@ -16,7 +16,7 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     try {
-      const res = await fetch('/auth/login', {
+      const res = await fetch('/api/proxy/api/v1/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ export default function LoginPage() {
         return;
       }
 
-      router.push('/');
+      router.push('/dashboard');
     } catch (error) {
       console.error(error);
     }

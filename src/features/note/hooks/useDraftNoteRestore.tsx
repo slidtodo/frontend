@@ -41,7 +41,7 @@ export function useDraftNoteRestore({ onRestore }: UseDraftNoteRestoreOptions) {
 
   const handleToastLoad = useCallback(() => {
     if (!draft) return;
-    setDraftState((prev) => ({ ...prev, showToast: false })); 
+    setDraftState((prev) => ({ ...prev, showToast: false }));
     openModal(<PopupModal variant={{ type: 'noteLoad', noteTitle: draft.title }} onConfirm={handleConfirm} />);
   }, [draft, openModal, handleConfirm]);
 

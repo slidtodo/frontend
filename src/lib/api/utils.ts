@@ -32,21 +32,28 @@ export const toQueryString = (params?: Record<string, QueryValue>): string => {
   return searchParams.toString();
 };
 
+const apiBaseUrl = (process.env.NEXT_PUBLIC_API_BASE_URL ?? process.env.API_BASE_URL ?? '').replace(/\/+$/, '');
+
 type ApiRequestOptions<TBody> = {
   method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
   params?: Record<string, QueryValue>;
   body?: TBody;
   headers?: HeadersInit;
   signal?: AbortSignal;
+  cache?: RequestCache;
+  next?: { revalidate?: number | false; tags?: string[] };
 };
 
 export const apiRequest = async <TResponse, TBody = never>(
   url: string,
   options: ApiRequestOptions<TBody> = {},
 ): Promise<TResponse> => {
-  const { method = 'GET', params, body, headers, signal } = options;
+  const tempToken = process.env.NEXT_PUBLIC_TEMP_ACCESS_TOKEN;
+
+  const { method = 'GET', params, body, headers, signal, cache, next } = options;
   const queryString = toQueryString(params);
-  const requestUrl = queryString ? `${url}?${queryString}` : url;
+  const resolvedUrl = url.startsWith('/api/') && apiBaseUrl ? `${apiBaseUrl}${url}` : url;
+  const requestUrl = queryString ? `${resolvedUrl}?${queryString}` : resolvedUrl;
 
   const response = await fetch(requestUrl, {
     method,
@@ -54,9 +61,12 @@ export const apiRequest = async <TResponse, TBody = never>(
     signal,
     headers: {
       ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+      ...(tempToken ? { Authorization: `Bearer ${tempToken}` } : {}),
       ...headers,
     },
     body: body === undefined ? undefined : JSON.stringify(body),
+    cache,
+    next,
   });
 
   if (!response.ok) {

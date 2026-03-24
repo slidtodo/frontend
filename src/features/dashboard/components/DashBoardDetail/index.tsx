@@ -1,31 +1,40 @@
 'use client';
 
 import Image from 'next/image';
-import { ListFilterIcon } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 
 import PageSubTitle from '@/shared/components/PageSubTitle';
 import GoalBox from '../GoalBox';
 
-import { goalMockData } from './mock';
+import { goalQueries } from '@/lib/queryKeys';
+import { GoalListResponse } from '@/lib/api';
+
+type GoalItem = NonNullable<GoalListResponse['goals']>[number];
+type GoalItemWithId = GoalItem & { id: number };
 
 export default function DashboardDetail() {
+  const { data: goals } = useQuery(goalQueries.list());
+
   return (
     <section>
       <PageSubTitle
         subTitle="목표 별 할일"
-        icons={<Image src={'/image/goal-icon.png'} alt="Goal Icon" width={40} height={40} />}
-        actions={
-          <button onClick={() => {}} className="flex cursor-pointer items-center gap-1">
-            <span className="text-sm font-medium text-[#737373] md:text-base">최신순</span>
-            <ListFilterIcon size={20} className="text-[#737373]" />
-          </button>
-        }
+        icons={<Image src={'/image/goal.png'} alt="Goal Icon" width={40} height={40} />}
       />
       <div className="flex flex-col gap-[32px] pt-[10px]">
-        {goalMockData.map((goal) => (
-          <GoalBox key={goal.id} data={goal} />
-        ))}
+        {goals?.goals?.map((goal) =>
+          goal.id != null ? <GoalDetailItem key={goal.id} goal={goal as GoalItemWithId} /> : null,
+        )}
       </div>
     </section>
   );
+}
+
+function GoalDetailItem({ goal }: { goal: GoalItemWithId }) {
+  const { data: goalDetail } = useQuery(goalQueries.detail(goal.id));
+
+  if (!goalDetail) {
+    return <div>현재 할 일이 없습니다.</div>;
+  }
+  return <GoalBox data={goalDetail} />;
 }

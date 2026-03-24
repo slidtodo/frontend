@@ -6,7 +6,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckIcon, EllipsisVertical, GithubIcon, Star } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
-import type { TodoItem } from '@/shared/types/api';
+
+import type { TodoListResponse } from '@/lib/api';
 
 /**
  * A single to-do list row.
@@ -14,7 +15,7 @@ import type { TodoItem } from '@/shared/types/api';
  * @example
  * <TaskCard
  *  todo={{
- *  id: '1',
+ *  id: 1,
  *  title: '항목명',
  *  done: true,
  *  }}
@@ -23,7 +24,7 @@ import type { TodoItem } from '@/shared/types/api';
  */
 
 interface TaskCardProps {
-  todo: TodoItem;
+  todo: NonNullable<TodoListResponse['todos']>[number];
   starred?: boolean;
   onClick?: () => void;
   onToggle?: (id: number) => void;
@@ -56,13 +57,17 @@ export function TaskCard({
 
   function handleToggle() {
     setChecked((prev) => !prev);
-    onToggle?.(todo.id);
+    if (todo.id !== undefined) {
+      onToggle?.(todo.id);
+    }
     // TODO API 연결
   }
 
   function handleStarToggle() {
     setStarred((prev) => !prev);
-    onStarToggle?.(todo.id);
+    if (todo.id !== undefined) {
+      onStarToggle?.(todo.id);
+    }
   }
 
   return (

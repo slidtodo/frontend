@@ -1,6 +1,6 @@
 'use client';
 
-import { LinkUploadModal } from '@/shared/components/Modal/LinkUploadModal';
+import { SinglePostModal } from '@/shared/components/Modal/SinglePostModal';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import clsx from 'clsx';
 import { AlignCenter, AlignLeft, AlignRight, Bold, Italic, Link2, List, Underline } from 'lucide-react';
@@ -12,7 +12,7 @@ interface EditorToolbarProps {
   onLinkUrlChange?: (value: string | null) => void;
 }
 
-export default function EditorToolbar({onLinkUrlChange} : EditorToolbarProps) {
+export default function EditorToolbar({ onLinkUrlChange }: EditorToolbarProps) {
   const [activeTools, setActiveTools] = useState<string[]>([]);
   const { openModal } = useModalStore();
 
@@ -32,7 +32,7 @@ export default function EditorToolbar({onLinkUrlChange} : EditorToolbarProps) {
    */
   const handleLinkUploadClick = () => {
     toggle('link');
-    openModal(<LinkUploadModal onConfirm={(url) => console.log(url)} />, () =>
+    openModal(<SinglePostModal onConfirm={(url) => console.log(url)} />, () =>
       setActiveTools((prev) => prev.filter((t) => t !== 'link')),
     );
   };

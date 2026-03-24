@@ -48,6 +48,7 @@ function RecentPostCard() {
 }
 
 function CurrentProgressCard() {
+  const percent = 74; // 진행도 퍼센트 (예시 값)
   return (
     <article className="relative h-[256px] rounded-[40px] bg-[#02CAB5] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)]">
       <div className="absolute right-0 bottom-0">
@@ -68,12 +69,12 @@ function CurrentProgressCard() {
       </div>
       <div className="absolute flex h-full w-full items-center justify-start gap-8 p-6 lg:p-12">
         <div className="w-[120px]">
-          <ProgressCircle percent={10} className="h-auto w-full" />
+          <ProgressCircle percent={percent} className="h-auto w-full" color="#009D97" />
         </div>
         <div className="flex flex-col items-start gap-2">
           <span className="text-[clamp(12px,2vw,20px)] font-semibold text-white">체다치즈님의 진행도는</span>
           <div className="flex items-baseline gap-1">
-            <span className="text-[clamp(20px,5vw,60px)] leading-[1] font-bold text-white">74</span>
+            <span className="text-[clamp(20px,5vw,60px)] leading-[1] font-bold text-white">{percent}</span>
             <span className="text-[clamp(14px,2vw,30px)] text-white">%</span>
           </div>
         </div>

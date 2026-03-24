@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { ListFilterIcon } from 'lucide-react';
 
 import PageSubTitle from '@/shared/components/PageSubTitle';
 import GoalBox from '../GoalBox';
@@ -14,12 +13,6 @@ export default function DashboardDetail() {
       <PageSubTitle
         subTitle="목표 별 할일"
         icons={<Image src={'/image/goal-icon.png'} alt="Goal Icon" width={40} height={40} />}
-        actions={
-          <button onClick={() => {}} className="flex cursor-pointer items-center gap-1">
-            <span className="text-sm font-medium text-[#737373] md:text-base">최신순</span>
-            <ListFilterIcon size={20} className="text-[#737373]" />
-          </button>
-        }
       />
       <div className="flex flex-col gap-[32px] pt-[10px]">
         {goalMockData.map((goal) => (

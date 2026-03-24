@@ -7,12 +7,14 @@ import { useDraftNoteRestore } from '@/features/note/hooks/useDraftNoteRestore';
 import { useState } from 'react';
 import { useDraftNote } from '@/features/note/hooks/useDraftNote';
 import DraftNoteToast from '@/features/note/components/DraftNoteToast.tsx';
+import Toast from '@/shared/components/Toast';
 
 export default function Page() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [createdAt, setCreatedAt] = useState('');
   const [linkUrl, setLinkUrl] = useState<string | null>(null);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
 
   const { saveDraft } = useDraftNote();
 
@@ -25,6 +27,12 @@ export default function Page() {
     },
   });
 
+  const handleSaveDraft = () => {
+    saveDraft({ title, content, linkUrl: linkUrl ?? undefined });
+    setShowSuccessToast(true);
+    setTimeout(() => setShowSuccessToast(false), 3000);
+  };
+
   return (
     <div className="mx-auto flex h-full w-full max-w-[768px] flex-col">
       <section className="mb-0 flex shrink-0 items-center justify-between md:mt-4 md:mb-3 md:gap-4 lg:mt-10 lg:mb-[22px]">
@@ -32,7 +40,7 @@ export default function Page() {
         <div className="flex gap-2">
           <div className="relative">
             <Button
-              onClick={() => saveDraft({ title, content, linkUrl: linkUrl ?? undefined })}
+              onClick={handleSaveDraft}
               variant="secondary"
               className="cursor-pointer text-sm md:h-10 md:px-[27px]"
             >
@@ -56,6 +64,7 @@ export default function Page() {
           linkUrl={linkUrl}
           onLinkUrlChange={setLinkUrl}
         />
+        {showSuccessToast && <Toast>임시 저장이 완료되었습니다.</Toast>}
       </section>
     </div>
   );

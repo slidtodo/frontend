@@ -5,10 +5,9 @@ import { Check } from 'lucide-react';
 interface ToastProps {
   children: React.ReactNode;
   subText?: string;
-  onLoad: () => void;
 }
 
-export default function Toast({ children, subText, onLoad }: ToastProps) {
+export default function Toast({ children, subText }: ToastProps) {
   return (
     <>
       {/* 포지션 래퍼 */}
@@ -21,13 +20,7 @@ export default function Toast({ children, subText, onLoad }: ToastProps) {
 
           {/* 텍스트 영역 */}
           <div className="flex items-center gap-1 text-[#ef6c00]">
-            <button
-              type="button"
-              onClick={onLoad}
-              className="text-[14px] leading-5 font-semibold tracking-[-0.42px] hover:underline"
-            >
-              {children}
-            </button>
+            <p className="text-[14px] leading-5 font-semibold tracking-[-0.42px]">{children}</p>
 
             {subText && (
               <>

@@ -50,6 +50,7 @@ export function useDraftNoteRestore({ onRestore }: UseDraftNoteRestoreOptions) {
 
   return {
     draft,
+    savedAt: draft?.savedAt ?? null,
     showToast,
     handleCloseToast,
     handleToastLoad,

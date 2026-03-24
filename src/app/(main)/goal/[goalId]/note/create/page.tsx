@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { useDraftNote } from '@/features/note/hooks/useDraftNote';
 import DraftNoteToast from '@/features/note/components/DraftNoteToast.tsx';
 import Toast from '@/shared/components/Toast';
+import { useRelativeTime } from '@/features/note/hooks/useRelativeTime';
 
 export default function Page() {
   const [title, setTitle] = useState('');
@@ -18,7 +19,7 @@ export default function Page() {
 
   const { saveDraft } = useDraftNote();
 
-  const { showToast, handleCloseToast, handleToastLoad } = useDraftNoteRestore({
+  const { draft, showToast, handleCloseToast, handleToastLoad } = useDraftNoteRestore({
     onRestore: (saved) => {
       setTitle(saved.title);
       setContent(saved.content);
@@ -27,10 +28,11 @@ export default function Page() {
     },
   });
 
+  const relativeTime = useRelativeTime(draft?.savedAt ?? null, showToast);
+
   const handleSaveDraft = () => {
     saveDraft({ title, content, linkUrl: linkUrl ?? undefined });
     setShowSuccessToast(true);
-    setTimeout(() => setShowSuccessToast(false), 3000);
   };
 
   return (
@@ -64,8 +66,10 @@ export default function Page() {
           linkUrl={linkUrl}
           onLinkUrlChange={setLinkUrl}
         />
-        {showSuccessToast && <Toast>임시 저장이 완료되었습니다</Toast>}
       </section>
+      <Toast show={showSuccessToast} onClose={() => setShowSuccessToast(false)} subText={relativeTime ?? undefined}>
+        임시 저장이 완료되었습니다
+      </Toast>
     </div>
   );
 }

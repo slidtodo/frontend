@@ -63,34 +63,3 @@
   animation: slide-out-right 0.3s ease-in forwards;
 }
 
-@keyframes toast-slide-up {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-}
-
-@keyframes toast-slide-up-md {
-  from {
-    opacity: 0;
-    transform: translateX(-80%) translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-80%) translateY(0);
-  }
-}
-
-.toast-animate {
-  animation: toast-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@media (min-width: 768px) {
-  .toast-animate {
-    animation: toast-slide-up-md 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-}

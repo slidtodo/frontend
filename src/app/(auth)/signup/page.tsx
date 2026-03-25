@@ -7,7 +7,9 @@ import Link from 'next/link';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
-import { postSignup } from '@/lib/api';
+
+import { postSignup, getGoogleAuthorizeUrl, getGithubAuthorizeUrl } from '@/lib/api/fetchAuth';
+
 export default function SignupPage() {
   const router = useRouter();
   const [name, setName] = useState('');
@@ -34,6 +36,18 @@ export default function SignupPage() {
     }
   };
 
+  const handleGithubLogin = async () => {
+    const res = await fetch('/api/proxy/api/v1/auth/oauth/github/url');
+    const data = await res.json();
+    window.location.href = data.loginUrl;
+  };
+
+  const handleGoogleLogin = async () => {
+    const res = await fetch('/api/proxy/api/v1/auth/oauth/google/url');
+    const data = await res.json();
+    window.location.href = data.loginUrl;
+  };
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#F5F5F5] py-20">
       <div className="flex w-full max-w-[331px] flex-col items-start md:max-w-[400px]">
@@ -51,6 +65,7 @@ export default function SignupPage() {
               onChange={(e) => setName(e.target.value)}
             />
           </FormField>
+
           {/* 이메일 */}
           <FormField label="이메일">
             <Input
@@ -60,6 +75,7 @@ export default function SignupPage() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </FormField>
+
           {/* 비밀번호 */}
           <FormField label="비밀번호">
             <Input
@@ -69,7 +85,6 @@ export default function SignupPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </FormField>
-
           <FormField label="비밀번호 확인">
             <Input
               type="password"
@@ -78,6 +93,7 @@ export default function SignupPage() {
               onChange={(e) => setPasswordConfirm(e.target.value)}
             />
           </FormField>
+
           <Button
             type="submit"
             className="mt-8 h-14 w-full"
@@ -95,12 +111,14 @@ export default function SignupPage() {
             로그인
           </Link>
         </div>
+
         {/* SNS 구분선 */}
         <div className="mt-10 mb-4 flex w-full items-center gap-3">
           <div className="h-px flex-1 bg-gray-200" />
           <span className="text-sm text-gray-400">SNS 계정으로 회원가입</span>
           <div className="h-px flex-1 bg-gray-200" />
         </div>
+
         {/* SNS 버튼 */}
         <div className="flex w-full justify-center gap-4">
           <button

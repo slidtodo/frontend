@@ -28,7 +28,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Generate API types
-        run: npx openapi-typescript ${{ secrets.OPENAPI_URL }} -o src/shared/types/api/schemas/api.types.ts
+        run: pnpm exec openapi-typescript ${{ secrets.OPENAPI_URL }} -o src/shared/types/api/schemas/api.types.ts
 
       - name: Type check
         run: pnpm run typecheck

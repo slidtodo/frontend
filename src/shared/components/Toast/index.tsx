@@ -1,9 +1,11 @@
 'use client';
 
-import { Check } from 'lucide-react';
+import { AlertTriangle, Check, XIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 import { cn } from '@/lib/utils';
+
+const TOAST_DURATION_MS = 3000;
 
 interface ToastProps {
   children: React.ReactNode;
@@ -20,7 +22,7 @@ export default function Toast({ show, children, subText, onClose, variant = 'suc
     if (show) {
       timeOutId = setTimeout(() => {
         onClose();
-      }, 3000);
+      }, TOAST_DURATION_MS);
     }
 
     return () => clearTimeout(timeOutId);
@@ -46,15 +48,12 @@ export default function Toast({ show, children, subText, onClose, variant = 'suc
           >
             {/* 체크 아이콘 */}
             <span className="flex size-6 shrink-0 items-center justify-center">
-              <Check
-                className={cn(
-                  'aria-hidden h-[10px] w-[14px]',
-                  variant === 'success' && 'stroke-[#EF6C00]',
-                  variant === 'fail' && 'stroke-[#B42318]',
-                )}
-              />
+              {variant === 'success' ? (
+                <Check className="aria-hidden h-[10px] w-[14px] stroke-[#EF6C00]" />
+              ) : (
+                <XIcon className="aria-hidden h-[10px] w-[14px] stroke-[#B42318]" />
+              )}
             </span>
-
             {/* 텍스트 영역 */}
             <div
               className={cn(

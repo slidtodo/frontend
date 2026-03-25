@@ -8,18 +8,19 @@ import { useState } from 'react';
 import { useDraftNote } from '@/features/note/hooks/useDraftNote';
 import DraftNoteToast from '@/features/note/components/DraftNoteToast.tsx';
 import Toast from '@/shared/components/Toast';
-import { useRelativeTime } from '@/features/note/hooks/useRelativeTime';
 
 export default function Page() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [createdAt, setCreatedAt] = useState('');
   const [linkUrl, setLinkUrl] = useState<string | null>(null);
+
   const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [showFailToast, setShowFailToast] = useState(false);
 
   const { saveDraft } = useDraftNote();
 
-  const { draft, showToast, handleCloseToast, handleToastLoad } = useDraftNoteRestore({
+  const { showToast, handleCloseToast, handleToastLoad } = useDraftNoteRestore({
     onRestore: (saved) => {
       setTitle(saved.title);
       setContent(saved.content);
@@ -28,13 +29,14 @@ export default function Page() {
     },
   });
 
-  const relativeTime = useRelativeTime(draft?.savedAt ?? null, showToast);
-
   const handleSaveDraft = () => {
-    saveDraft({ title, content, linkUrl: linkUrl ?? undefined });
-    setShowSuccessToast(true);
+    try {
+      saveDraft({ title, content, linkUrl: linkUrl ?? undefined });
+      setShowSuccessToast(true);
+    } catch {
+      setShowFailToast(true);
+    }
   };
-
   return (
     <div className="mx-auto flex h-full w-full max-w-[768px] flex-col">
       <section className="mb-0 flex shrink-0 items-center justify-between md:mt-4 md:mb-3 md:gap-4 lg:mt-10 lg:mb-[22px]">
@@ -67,8 +69,11 @@ export default function Page() {
           onLinkUrlChange={setLinkUrl}
         />
       </section>
-      <Toast show={showSuccessToast} onClose={() => setShowSuccessToast(false)} subText={relativeTime ?? undefined}>
+      <Toast show={showSuccessToast} onClose={() => setShowSuccessToast(false)} subText="1초전">
         임시 저장이 완료되었습니다
+      </Toast>
+      <Toast show={showFailToast} onClose={() => setShowFailToast(false)}>
+        임시 저장에 실패했습니다
       </Toast>
     </div>
   );

@@ -8,7 +8,6 @@ import TaskCard from '@/shared/components/TaskCard';
 import Empty from '@/shared/components/Empty';
 import DetailTodoModal from '../DetailTodoModal';
 
-import { mockTodoItems } from '@/features/dashboard/allTodo/components/AllTodoContent/mock';
 import { useModalStore } from '@/shared/stores/useModalStore';
 
 export default function GoalDetail() {
@@ -37,7 +36,7 @@ export default function GoalDetail() {
         />
         <section className="rounded-2xl bg-[#FFF8E4] px-[28px] py-[32px]">
           <div className="flex max-h-[512px] flex-col gap-4 overflow-y-auto">
-            {mockTodoItems.length > 0 ? (
+            {/* {mockTodoItems.length > 0 ? (
               mockTodoItems
                 .filter((todo) => !todo.done)
                 .map((todo) => (
@@ -45,7 +44,7 @@ export default function GoalDetail() {
                 ))
             ) : (
               <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>
-            )}
+            )} */}
           </div>
         </section>
       </div>
@@ -53,7 +52,7 @@ export default function GoalDetail() {
         <PageSubTitle subTitle="DONE" textClassName="font-semibold" className="py-[6px]" />
         <section className="rounded-2xl bg-[#ffffff] px-[28px] py-[32px]">
           <div className="flex max-h-[512px] flex-col gap-4 overflow-y-auto">
-            {mockTodoItems.length > 0 ? (
+            {/* {mockTodoItems.length > 0 ? (
               mockTodoItems
                 .filter((todo) => todo.done)
                 .map((todo) => (
@@ -61,7 +60,7 @@ export default function GoalDetail() {
                 ))
             ) : (
               <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>
-            )}
+            )} */}
           </div>
         </section>
       </div>

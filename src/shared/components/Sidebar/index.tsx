@@ -3,38 +3,40 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronsRightIcon, SettingsIcon, LogOutIcon, FlagIcon, CopyCheckIcon, BellIcon, MenuIcon } from 'lucide-react';
 
+import SidebarMobileCase from './SidebarMobileCase';
+import { SinglePostModal } from '../Modal/SinglePostModal';
+
 import { useSidebarContext } from '@/contexts/SidebarContext';
 import { useSidebarOpen } from '@/contexts/SidebarContext';
-import { useMobile } from '@/shared/hooks/useBreakPoint';
+import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
+import { useModalStore } from '@/shared/stores/useModalStore';
+import { usePostGoal } from '@/lib/mutations';
 
 export default function Sidebar() {
-  const isMobile = useMobile();
+  const breakpoint = useBreakpoint();
 
-  if (isMobile) return <SidebarMobile />;
-
-  return <SidebarDesktopTablet />;
+  if (breakpoint === null) return null;
+  if (breakpoint === 'mobile') return <SidebarMobile />;
+  else return <SidebarDesktopTablet />;
 }
 
 // 모바일일 때 렌더링 되는 사이드바 컴포넌트
 function SidebarMobile() {
   return (
-    <div className="flex items-center justify-between border-b-2 border-[#DDDDDD] bg-white px-5 py-4">
-      <div className="flex gap-[12px]">
-        <MenuIcon size={24} className="text-[#737373] hover:cursor-pointer" />
-        <span className="text-base font-semibold text-[#333333]">체다치즈님의 목표</span>
-      </div>
-      <button className="group relative text-[#737373] transition-all duration-200 hover:bg-gray-100 hover:text-[#FF8442]">
-        <BellIcon size={24} className="transition-transform group-hover:scale-110" />
-        <div className="absolute top-0.5 right-0.5 h-2 w-2 rounded-full bg-[#FF8442]"></div>
-      </button>
+    <div className="flex items-center border-b-2 border-[#DDDDDD] bg-white px-5 py-4">
+      <MenuIcon size={24} className="pr-3 text-[#737373] hover:cursor-pointer" />
+      <SidebarMobileCase />
     </div>
   );
 }
 
 // 데스크탑과 태블릿에서 렌더링 되는 사이드바 컴포넌트
 function SidebarDesktopTablet() {
+  const { openModal } = useModalStore();
   const { toggle, getMenus } = useSidebarContext();
   const isOpen = useSidebarOpen();
+
+  const { mutate } = usePostGoal();
 
   const menus = getMenus();
   const projectName = 'Slid To Do';
@@ -114,12 +116,23 @@ function SidebarDesktopTablet() {
 
       <div className="flex flex-col items-center gap-8 transition-all duration-300">
         <div className={`w-full gap-4 ${isOpen ? 'flex' : 'hidden'}`}>
-          <button className="group flex w-full flex-col items-center justify-center gap-2 rounded-[32px] bg-[#FF8442] px-2 py-4 transition-all duration-200 hover:bg-[#F07533] hover:shadow-lg lg:px-[22.5px] lg:py-8">
+          <button
+            onClick={() =>
+              openModal(
+                <SinglePostModal
+                  title="목표 생성"
+                  placeholder="목표 제목을 입력하세요"
+                  onConfirm={(title) => mutate({ title })}
+                />,
+              )
+            }
+            className="group flex w-full flex-col items-center justify-center gap-2 rounded-[32px] bg-[#FF8442] px-2 py-4 transition-all duration-200 hover:bg-[#F07533] hover:shadow-lg lg:px-[22.5px] lg:py-8"
+          >
             <FlagIcon
               className="h-8 w-8 text-[#ffffff] transition-transform group-hover:scale-110 lg:h-10 lg:w-10"
               size={40}
             />
-            <span className="text-md font-semibold text-[#ffffff] transition-all group-hover:font-bold lg:text-lg">
+            <span className="text-md cursor-pointer font-semibold text-[#ffffff] transition-all group-hover:font-bold lg:text-lg">
               새 목표
             </span>
           </button>
@@ -128,7 +141,7 @@ function SidebarDesktopTablet() {
               className="h-8 w-8 text-[#FF8442] transition-transform group-hover:scale-110 lg:h-10 lg:w-10"
               size={40}
             />
-            <span className="text-md font-semibold text-[#FF8442] transition-all group-hover:font-bold lg:text-lg">
+            <span className="text-md cursor-pointer font-semibold text-[#FF8442] transition-all group-hover:font-bold lg:text-lg">
               새 할일
             </span>
           </button>

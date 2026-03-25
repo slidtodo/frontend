@@ -4,7 +4,7 @@ import { FlagIcon, CalendarIcon, HashIcon, XIcon, LinkIcon } from 'lucide-react'
 
 import Tag from '@/shared/components/Tag';
 
-import { TodoItem } from '@/shared/types/api';
+import type { TodoItem } from '@/shared/types/api';
 import { useModalStore } from '@/shared/stores/useModalStore';
 // TODO: 현재 디자인과 데이터 응답이 이상함 추후 API 명세 수정될 때 같이 수정 필요
 interface DetailTodoModalProps {

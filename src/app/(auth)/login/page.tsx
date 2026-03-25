@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+
 import FormField from '@/shared/components/FormField';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
@@ -14,6 +15,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  // TODO: 리액트쿼리로 변경 필요, 리액트 훅 폼 적용 필요
   const handleLogin = async () => {
     try {
       const res = await fetch('/api/proxy/api/v1/auth/login', {
@@ -38,16 +40,23 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#F5F5F5]">
-      <div className="flex w-full max-w-[400px] flex-col items-start">
+    <main className="flex min-h-screen items-center justify-center bg-[#F5F5F5] py-20">
+      <div className="flex w-full max-w-[331px] flex-col items-start md:max-w-[400px]">
         {/* 로고 */}
-        <div className="mb-8 flex h-12 w-full items-center gap-4">
+        <div className="mb-10 flex h-12 w-full items-center gap-4">
           <Image src="/icons/todo.png" alt="logo" width={48} height={48} />
           <span className="text-2xl font-bold">Slid to-do</span>
         </div>
-        <div className="flex w-full flex-col gap-4">
+
+        <form
+          className="flex w-full flex-col gap-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleLogin();
+          }}
+        >
           {/* 이메일 */}
-          <FormField label="">
+          <FormField label="이메일">
             <Input
               type="email"
               placeholder="이메일을 입력해주세요"
@@ -56,7 +65,7 @@ export default function LoginPage() {
             />
           </FormField>
           {/* 비밀번호 */}
-          <FormField label="">
+          <FormField label="비밀번호">
             <Input
               type="password"
               placeholder="비밀번호를 입력해주세요"
@@ -64,15 +73,14 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </FormField>
-        </div>
-        {/* 로그인 버튼 */}
-        <div className="mt-8 w-full">
-          <Button onClick={handleLogin} className="h-14 w-full">
+          <Button type="submit" className="mt-8 h-14 w-full" disabled={!email || !password}>
             로그인하기
           </Button>
-        </div>
+        </form>
+        {/* 로그인 버튼 */}
+
         {/* 회원가입 링크 */}
-        <div className="mt-6 flex h-6 w-full items-center justify-center gap-1 text-sm">
+        <div className="mt-6 flex h-6 w-full items-center justify-center gap-2 text-sm">
           <span className="text-base leading-6 font-medium text-[#333333]">슬리드투두가 처음이신가요?</span>
           <Link href="/signup" className="text-base leading-6 font-semibold text-[#EF6C00]">
             회원가입
@@ -86,11 +94,21 @@ export default function LoginPage() {
         </div>
         {/* SNS 버튼 */}
         <div className="flex w-full justify-center gap-4">
-          <button className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 hover:bg-gray-50">
-            <Image src="/icons/google.png" alt="구글 로그인" width={24} height={24} />
+          <button
+            type="button"
+            onClick={() => alert('구글 로그인')}
+            aria-label="구글 로그인"
+            className="flex h-14 w-14 items-center justify-center rounded-full border border-[#DDDDDD] bg-white p-4 hover:bg-gray-50"
+          >
+            <Image src="/icons/google-icon.png" alt="구글 아이콘" width={24} height={24} />
           </button>
-          <button className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 hover:bg-gray-50">
-            <Image src="/icons/GitHub.png" alt="깃허브 로그인" width={24} height={24} />
+          <button
+            type="button"
+            onClick={() => alert('깃허브 로그인')}
+            aria-label="깃허브 로그인"
+            className="flex h-14 w-14 items-center justify-center rounded-full border border-[#DDDDDD] bg-white p-4 hover:bg-gray-50"
+          >
+            <Image src="/icons/GitHub.png" alt="깃허브 아이콘" width={24} height={24} />
           </button>
         </div>
       </div>

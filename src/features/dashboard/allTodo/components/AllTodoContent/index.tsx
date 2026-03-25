@@ -7,34 +7,36 @@ import Button from '@/shared/components/Button';
 import TaskCard from '@/shared/components/TaskCard';
 import Empty from '@/shared/components/Empty';
 import { DataBoundary } from '@/shared/components/ErrorSuspenseBoundary';
+import PageHeader from '@/shared/components/PageHeader';
+
 import { todoQueries } from '@/lib/queryKeys';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
-import type { TodoResponse } from '@/lib/api';
+import type { TodoListResponse } from '@/lib/api';
 import { TodoOptions } from '@/shared/types/types';
 
 export default function AllTodoContent() {
   const [selectedFilter, setSelectedFilter] = useState<TodoOptions>('ALL');
 
-  const now = new Date();
-  const { data: todos } = useQuery(
+  const { data: todoList } = useQuery(
     todoQueries.list({
-      year: now.getFullYear(),
-      month: now.getMonth() + 1,
       done: selectedFilter === 'ALL' ? undefined : selectedFilter === 'DONE' ? true : false,
     }),
   );
 
   return (
-    <section className="flex flex-col gap-3">
-      <AllTodoFilter selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
-      {todos && todos.length === 0 ? (
-        <Empty>등록된 할 일이 없습니다.</Empty>
-      ) : (
-        <DataBoundary>
-          <AllTodoFetcher todos={todos} />
-        </DataBoundary>
-      )}
-    </section>
+    <div className="mx-auto mb-[76px] flex max-w-[720px] flex-col gap-6">
+      <PageHeader title="모든 할 일" count={todoList?.totalCount ?? todoList?.todos?.length ?? 0} className="pl-2" />
+      <section className="flex flex-col gap-3">
+        <AllTodoFilter selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
+        {todoList && (todoList.todos?.length ?? 0) === 0 ? (
+          <Empty>등록된 할 일이 없습니다.</Empty>
+        ) : (
+          <DataBoundary>
+            <AllTodoFetcher todos={todoList?.todos} />
+          </DataBoundary>
+        )}
+      </section>
+    </div>
   );
 }
 
@@ -42,6 +44,7 @@ interface AllTodoFilterProps {
   selectedFilter: TodoOptions;
   setSelectedFilter: React.Dispatch<React.SetStateAction<TodoOptions>>;
 }
+
 function AllTodoFilter({ selectedFilter, setSelectedFilter }: AllTodoFilterProps) {
   const todoButtons: { id: number; label: TodoOptions }[] = [
     { id: 1, label: 'ALL' },
@@ -49,6 +52,7 @@ function AllTodoFilter({ selectedFilter, setSelectedFilter }: AllTodoFilterProps
     { id: 3, label: 'DONE' },
   ];
   const { openTodoCreateModal } = useTodoCreateModal();
+
   return (
     <div className="flex justify-between px-2">
       <div className="flex gap-0 md:gap-2">
@@ -81,8 +85,9 @@ function AllTodoFilter({ selectedFilter, setSelectedFilter }: AllTodoFilterProps
 }
 
 interface AllTodoFetcherProps {
-  todos: TodoResponse[] | undefined;
+  todos: TodoListResponse['todos'];
 }
+
 function AllTodoFetcher({ todos }: AllTodoFetcherProps) {
   return (
     <section className="rounded-4xl bg-white p-4 md:p-8">

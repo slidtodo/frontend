@@ -7,9 +7,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "eslint .",
     "prepare": "husky",
     "test": "jest --passWithNoTests",
+    "typecheck": "pnpm run lint && tsc --noEmit",
     "api:gen": "openapi-typescript https://slidtodo.store/v3/api-docs -o src/shared/types/api/schemas/api.types.ts"
   },
   "dependencies": {
@@ -18,6 +19,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "framer-motion": "^12.38.0",
     "lucide-react": "^0.577.0",
     "next": "16.1.6",
     "next-auth": "^4.24.13",

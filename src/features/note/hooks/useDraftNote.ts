@@ -14,8 +14,9 @@ const DRAFT_KEY = 'note_draft';
 export function useDraftNote() {
   /** localStorage에 임시 저장 */
   const saveDraft = useCallback((draft: Omit<DraftNote, 'savedAt'>) => {
-    const data: DraftNote = { ...draft, savedAt: new Date().toISOString() };
-    localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
+    const savedAt = new Date().toISOString();
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...draft, savedAt }));
+    return savedAt;
   }, []);
 
   /** localStorage에서 임시 저장본 불러오기 */

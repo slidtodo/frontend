@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { CheckIcon, EllipsisVertical, GithubIcon, Star } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
-import type { TodoListResponse } from '@/lib/api';
+import type { TodoResponse } from '@/lib/api';
 
 /**
  * A single to-do list row.
@@ -24,7 +24,7 @@ import type { TodoListResponse } from '@/lib/api';
  */
 
 interface TaskCardProps {
-  todo: NonNullable<TodoListResponse['todos']>[number];
+  todo: NonNullable<TodoResponse>;
   starred?: boolean;
   onClick?: () => void;
   onToggle?: (id: number) => void;

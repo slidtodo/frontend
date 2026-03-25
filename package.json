@@ -7,9 +7,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "eslint .",
     "prepare": "husky",
     "test": "jest --passWithNoTests",
+    "typecheck": "pnpm run lint && tsc --noEmit",
     "api:gen": "openapi-typescript https://slidtodo.store/v3/api-docs -o src/shared/types/api/schemas/api.types.ts"
   },
   "dependencies": {

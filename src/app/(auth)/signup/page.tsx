@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
+
 import { postSignup, getGoogleAuthorizeUrl, getGithubAuthorizeUrl } from '@/lib/api/fetchAuth';
 
 export default function SignupPage() {
@@ -27,6 +28,7 @@ export default function SignupPage() {
 
     try {
       await postSignup({ nickname: name, email, password });
+
       alert('회원가입 성공!');
       router.push('/login');
     } catch (error) {

@@ -41,19 +41,17 @@ export default function GoalBox({ data }: GoalBoxProps) {
         </div>
       </div>
 
-      <div className="flex flex-col justify-around gap-2 md:flex-row lg:gap-8">
-        <div className="flex flex-col justify-around gap-2 md:flex-row lg:gap-8">
-          {todoList.length === 0 && doneList.length === 0 ? (
-            <div className="flex h-full w-full items-center justify-center">
-              <span className="py-10 text-[#A4A4A4]">현재 등록된 할 일이 없습니다.</span>
-            </div>
-          ) : (
-            <>
-              <ListBox title="TODO" variant="todo" items={todoList} />
-              <ListBox title="DONE" variant="done" items={doneList} />
-            </>
-          )}
-        </div>
+      <div className="flex w-full flex-col justify-around gap-2 md:flex-row lg:gap-8">
+        {todoList.length === 0 && doneList.length === 0 ? (
+          <div className="flex h-full w-full items-center justify-center">
+            <span className="py-10 text-[#A4A4A4]">현재 등록된 할 일이 없습니다.</span>
+          </div>
+        ) : (
+          <>
+            <ListBox title="TODO" variant="todo" items={todoList} />
+            <ListBox title="DONE" variant="done" items={doneList} />
+          </>
+        )}
       </div>
     </article>
   );

@@ -8,16 +8,29 @@ import FormField from '@/shared/components/FormField';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import Image from 'next/image';
-import { postLogin, getGoogleAuthorizeUrl, getGithubAuthorizeUrl } from '@/lib/api/fetchAuth';
+import { postLogin } from '@/lib/api/fetchAuth';
+import { validateEmail } from '@/lib/validation';
 
 export default function LoginPage() {
   const router = useRouter();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState('');
+
+  const handleGithubLogin = async () => {
+    const res = await fetch('/api/proxy/api/v1/auth/oauth/github/url');
+    const data = await res.json();
+    window.location.href = data.loginUrl;
+  };
 
   // TODO: 리액트쿼리로 변경 필요, 리액트 훅 폼 적용 필요
   const handleLogin = async () => {
+    const error = validateEmail(email);
+    if (error) {
+      setEmailError(error);
+      return;
+    }
     try {
       await postLogin({ email, password });
 
@@ -44,9 +57,9 @@ export default function LoginPage() {
           }}
         >
           {/* 이메일 */}
-          <FormField label="이메일">
+          <FormField label="이메일" error={emailError}>
             <Input
-              type="email"
+              type="text"
               placeholder="이메일을 입력해주세요"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -92,7 +105,7 @@ export default function LoginPage() {
           </button>
           <button
             type="button"
-            onClick={() => alert('깃허브 로그인')}
+            onClick={handleGithubLogin}
             aria-label="깃허브 로그인"
             className="flex h-14 w-14 items-center justify-center rounded-full border border-[#DDDDDD] bg-white p-4 hover:bg-gray-50"
           >

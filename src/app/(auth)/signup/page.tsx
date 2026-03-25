@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
-import { postSignup, getGoogleAuthorizeUrl, getGithubAuthorizeUrl } from '@/lib/api/fetchAuth';
+import { validateEmail, validatePassword } from '@/lib/validation';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -15,33 +15,46 @@ export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   // TODO: 리액트쿼리로 변경 필요, 리액트 훅 폼 적용 필요
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (password !== passwordConfirm) {
-      alert('비밀번호가 일치하지 않습니다.');
-      return;
-    }
+    const emailErr = validateEmail(email);
+    const passwordErr = validatePassword(password, passwordConfirm);
+    setEmailError(emailErr);
+    setPasswordError(passwordErr);
+    if (emailErr || passwordErr) return;
 
     try {
-      await postSignup({ nickname: name, email, password });
-      alert('회원가입 성공!');
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nickname: name, email, password }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        alert(data.message);
+        return;
+      }
+
       router.push('/login');
     } catch (error) {
-      alert('오류가 발생했습니다.');
+      console.error(error);
     }
   };
 
   const handleGithubLogin = async () => {
-    const res = await fetch('/api/proxy/api/v1/auth/oauth/github/url');
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/oauth/github/url`);
     const data = await res.json();
     window.location.href = data.loginUrl;
   };
 
   const handleGoogleLogin = async () => {
-    const res = await fetch('/api/proxy/api/v1/auth/oauth/google/url');
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/oauth/google/url`);
     const data = await res.json();
     window.location.href = data.loginUrl;
   };
@@ -65,9 +78,9 @@ export default function SignupPage() {
           </FormField>
 
           {/* 이메일 */}
-          <FormField label="이메일">
+          <FormField label="이메일" error={emailError}>
             <Input
-              type="email"
+              type="text"
               placeholder="이메일을 입력해주세요"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -83,7 +96,7 @@ export default function SignupPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </FormField>
-          <FormField label="비밀번호 확인">
+          <FormField label="비밀번호 확인" error={passwordError}>
             <Input
               type="password"
               placeholder="비밀번호를 한 번 더 입력해주세요"
@@ -121,7 +134,7 @@ export default function SignupPage() {
         <div className="flex w-full justify-center gap-4">
           <button
             type="button"
-            onClick={() => alert('구글 로그인')}
+            onClick={handleGoogleLogin}
             aria-label="구글 로그인"
             className="flex h-14 w-14 items-center justify-center rounded-full border border-[#DDDDDD] bg-white p-4 hover:bg-gray-50"
           >
@@ -129,7 +142,7 @@ export default function SignupPage() {
           </button>
           <button
             type="button"
-            onClick={() => alert('깃허브 로그인')}
+            onClick={handleGithubLogin}
             aria-label="깃허브 로그인"
             className="flex h-14 w-14 items-center justify-center rounded-full border border-[#DDDDDD] bg-white p-4 hover:bg-gray-50"
           >

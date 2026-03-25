@@ -1,14 +1,14 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   /* ─────────────────────────────────────────────
      Colors - Grayscale
   ───────────────────────────────────────────── */
-  --color-gray-50:  #FAFAFA;
-  --color-gray-100: #F2F2F2;
-  --color-gray-200: #DDDDDD;
-  --color-gray-300: #CCCCCC;
-  --color-gray-400: #A4A4A4;
+  --color-gray-50: #fafafa;
+  --color-gray-100: #f2f2f2;
+  --color-gray-200: #dddddd;
+  --color-gray-300: #cccccc;
+  --color-gray-400: #a4a4a4;
   --color-gray-500: #737373;
   --color-gray-600: #535353;
   --color-gray-700: #333333;
@@ -18,9 +18,9 @@
   /* ─────────────────────────────────────────────
      Colors - 베어로그 브랜드
   ───────────────────────────────────────────── */
-  --color-bearlog-300:     #7EFFD0;
-  --color-bearlog:         #00C87F;
-  --color-bearlog-600:     #008354;
+  --color-bearlog-300: #7effd0;
+  --color-bearlog-500: #00c87f;
+  --color-bearlog-600: #008354;
 
   /* ─────────────────────────────────────────────
      Breakpoint @TODO 추후 수정 예정

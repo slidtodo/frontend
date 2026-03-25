@@ -7,12 +7,16 @@ import { useDraftNoteRestore } from '@/features/note/hooks/useDraftNoteRestore';
 import { useState } from 'react';
 import { useDraftNote } from '@/features/note/hooks/useDraftNote';
 import DraftNoteToast from '@/features/note/components/DraftNoteToast.tsx';
+import Toast from '@/shared/components/Toast';
 
 export default function Page() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [createdAt, setCreatedAt] = useState('');
-  const [linkUrl, setLinkUrl] = useState<string | null>(null); // null로 통일
+  const [linkUrl, setLinkUrl] = useState<string | null>(null);
+
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [showFailToast, setShowFailToast] = useState(false);
 
   const { saveDraft } = useDraftNote();
 
@@ -25,6 +29,15 @@ export default function Page() {
     },
   });
 
+  const handleSaveDraft = () => {
+    try {
+      saveDraft({ title, content, linkUrl: linkUrl ?? undefined });
+      setShowSuccessToast(true);
+    } catch (error) {
+      console.error('임시 저장 실패:', error);
+      setShowFailToast(true);
+    }
+  };
   return (
     <div className="mx-auto flex h-full w-full max-w-[768px] flex-col">
       <section className="mb-0 flex shrink-0 items-center justify-between md:mt-4 md:mb-3 md:gap-4 lg:mt-10 lg:mb-[22px]">
@@ -32,7 +45,7 @@ export default function Page() {
         <div className="flex gap-2">
           <div className="relative">
             <Button
-              onClick={() => saveDraft({ title, content, linkUrl: linkUrl ?? undefined })}
+              onClick={handleSaveDraft}
               variant="secondary"
               className="cursor-pointer text-sm md:h-10 md:px-[27px]"
             >
@@ -57,6 +70,12 @@ export default function Page() {
           onLinkUrlChange={setLinkUrl}
         />
       </section>
+      <Toast show={showSuccessToast} onClose={() => setShowSuccessToast(false)} subText="1초전" variant="success">
+        임시 저장이 완료되었습니다
+      </Toast>
+      <Toast show={showFailToast} onClose={() => setShowFailToast(false)} variant="fail">
+        임시 저장에 실패했습니다
+      </Toast>
     </div>
   );
 }

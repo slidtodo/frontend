@@ -69,10 +69,10 @@ export default function Page() {
           onLinkUrlChange={setLinkUrl}
         />
       </section>
-      <Toast show={showSuccessToast} onClose={() => setShowSuccessToast(false)} subText="1초전">
+      <Toast show={showSuccessToast} onClose={() => setShowSuccessToast(false)} subText="1초전" variant="success">
         임시 저장이 완료되었습니다
       </Toast>
-      <Toast show={showFailToast} onClose={() => setShowFailToast(false)}>
+      <Toast show={showFailToast} onClose={() => setShowFailToast(false)} variant="fail">
         임시 저장에 실패했습니다
       </Toast>
     </div>

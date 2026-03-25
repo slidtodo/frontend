@@ -3,15 +3,17 @@
 import { Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
+import { cn } from '@/lib/utils';
 
 interface ToastProps {
   children: React.ReactNode;
   subText?: string;
   show: boolean;
   onClose: () => void;
+  variant?: 'success' | 'fail';
 }
 
-export default function Toast({ show, children, subText, onClose }: ToastProps) {
+export default function Toast({ show, children, subText, onClose, variant = 'success' }: ToastProps) {
   useEffect(() => {
     let timeOutId: NodeJS.Timeout;
 
@@ -34,14 +36,33 @@ export default function Toast({ show, children, subText, onClose }: ToastProps) 
           exit={{ opacity: 0, x: '-50%', y: 16 }}
           transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="flex h-10 items-center gap-1 rounded-[28px] bg-[#fff8e4] px-4 whitespace-nowrap shadow-[0_4px_16px_rgba(0,0,0,0.08)]">
+          <div
+            className={cn(
+              'flex h-10 items-center gap-1 rounded-[28px] px-4 whitespace-nowrap shadow-[0_4px_16px_rgba(0,0,0,0.08)]',
+              variant === 'success' && 'bg-[#fff8e4]',
+              variant === 'fail' && 'bg-[#FEF3F2]',
+              '',
+            )}
+          >
             {/* 체크 아이콘 */}
             <span className="flex size-6 shrink-0 items-center justify-center">
-              <Check className="aria-hidden h-[10px] w-[14px] stroke-[#EF6C00]" />
+              <Check
+                className={cn(
+                  'aria-hidden h-[10px] w-[14px]',
+                  variant === 'success' && 'stroke-[#EF6C00]',
+                  variant === 'fail' && 'stroke-[#B42318]',
+                )}
+              />
             </span>
 
             {/* 텍스트 영역 */}
-            <div className="flex items-center gap-1 text-[#ef6c00]">
+            <div
+              className={cn(
+                'flex items-center gap-1',
+                variant === 'success' && 'text-[#ef6c00]',
+                variant === 'fail' && 'text-[#B42318]',
+              )}
+            >
               <p className="text-[14px] leading-5 font-semibold tracking-[-0.42px]">{children}</p>
 
               {subText && (

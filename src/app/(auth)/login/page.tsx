@@ -24,7 +24,7 @@ export default function LoginPage() {
     window.location.href = data.loginUrl;
   };
 
-  // TODO: 리액트쿼리로 변경 필요, 리액트 훅 폼 적용 필요
+  // TODO: 리액트쿼리로 변경 필요, 리액트 훅 폼 적용 필요.
   const handleLogin = async () => {
     const error = validateEmail(email);
     if (error) {

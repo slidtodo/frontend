@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
+import { postSignup, getGoogleAuthorizeUrl, getGithubAuthorizeUrl } from '@/lib/api/fetchAuth';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -25,22 +26,24 @@ export default function SignupPage() {
     }
 
     try {
-      const res = await fetch('/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      if (res.ok) {
-        alert('회원가입 성공!');
-        router.push('/login');
-      } else {
-        const data = await res.json();
-        alert(data.message);
-      }
+      await postSignup({ nickname: name, email, password });
+      alert('회원가입 성공!');
+      router.push('/login');
     } catch (error) {
       alert('오류가 발생했습니다.');
     }
+  };
+
+  const handleGithubLogin = async () => {
+    const res = await fetch('/api/proxy/api/v1/auth/oauth/github/url');
+    const data = await res.json();
+    window.location.href = data.loginUrl;
+  };
+
+  const handleGoogleLogin = async () => {
+    const res = await fetch('/api/proxy/api/v1/auth/oauth/google/url');
+    const data = await res.json();
+    window.location.href = data.loginUrl;
   };
 
   return (
@@ -60,6 +63,7 @@ export default function SignupPage() {
               onChange={(e) => setName(e.target.value)}
             />
           </FormField>
+
           {/* 이메일 */}
           <FormField label="이메일">
             <Input
@@ -69,6 +73,7 @@ export default function SignupPage() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </FormField>
+
           {/* 비밀번호 */}
           <FormField label="비밀번호">
             <Input
@@ -78,7 +83,6 @@ export default function SignupPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </FormField>
-
           <FormField label="비밀번호 확인">
             <Input
               type="password"
@@ -87,6 +91,7 @@ export default function SignupPage() {
               onChange={(e) => setPasswordConfirm(e.target.value)}
             />
           </FormField>
+
           <Button
             type="submit"
             className="mt-8 h-14 w-full"
@@ -104,12 +109,14 @@ export default function SignupPage() {
             로그인
           </Link>
         </div>
+
         {/* SNS 구분선 */}
         <div className="mt-10 mb-4 flex w-full items-center gap-3">
           <div className="h-px flex-1 bg-gray-200" />
           <span className="text-sm text-gray-400">SNS 계정으로 회원가입</span>
           <div className="h-px flex-1 bg-gray-200" />
         </div>
+
         {/* SNS 버튼 */}
         <div className="flex w-full justify-center gap-4">
           <button

@@ -1,0 +1,32 @@
+@import 'tailwindcss';
+
+@theme {
+  /* ─────────────────────────────────────────────
+     Colors - Grayscale
+  ───────────────────────────────────────────── */
+  --color-gray-50: #fafafa;
+  --color-gray-100: #f2f2f2;
+  --color-gray-200: #dddddd;
+  --color-gray-300: #cccccc;
+  --color-gray-400: #a4a4a4;
+  --color-gray-500: #737373;
+  --color-gray-600: #535353;
+  --color-gray-700: #333333;
+  --color-gray-800: #262626;
+  --color-gray-900: #121212;
+
+  /* ─────────────────────────────────────────────
+     Colors - 베어로그 브랜드
+  ───────────────────────────────────────────── */
+  --color-bearlog-300: #7effd0;
+  --color-bearlog-500: #00c87f;
+  --color-bearlog-600: #008354;
+
+  /* ─────────────────────────────────────────────
+     Breakpoint @TODO 추후 수정 예정
+  ───────────────────────────────────────────── */
+  /* --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px; */
+}

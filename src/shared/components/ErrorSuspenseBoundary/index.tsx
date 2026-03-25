@@ -2,38 +2,31 @@
 
 import { Suspense } from 'react';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
+import { QueryErrorResetBoundary } from '@tanstack/react-query';
+
+import Empty from '../Empty';
 
 const IS_DEV = process.env.NODE_ENV === 'development';
 
 function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
-      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-md">
-        <h2 className="mb-2 text-xl font-bold text-red-600">오류 발생</h2>
-        <p className="mb-4 text-sm text-gray-600">
-          {IS_DEV && error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.'}
-        </p>
-        <button
-          type="button"
-          onClick={resetErrorBoundary}
-          className="w-full rounded bg-blue-500 py-2 font-semibold text-white hover:bg-blue-600"
-        >
-          다시 시도
-        </button>
-      </div>
-    </div>
+    <Empty>
+      <p className="mb-4 text-sm text-gray-600">
+        {IS_DEV && error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.'}
+      </p>
+      <button
+        type="button"
+        onClick={resetErrorBoundary}
+        className="w-full rounded bg-blue-500 py-2 font-semibold text-white hover:bg-blue-600"
+      >
+        다시 시도
+      </button>
+    </Empty>
   );
 }
 
 function SuspenseFallback() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <div className="text-center">
-        <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-500"></div>
-        <p className="text-gray-700">로딩 중...</p>
-      </div>
-    </div>
-  );
+  return <Empty>잠시만 기다려주세요...</Empty>;
 }
 
 interface ErrorSuspenseBoundaryProps {
@@ -59,7 +52,7 @@ interface ErrorSuspenseBoundaryProps {
    */
   resetKeys?: unknown[];
 }
-export default function ErrorSuspenseBoundary({
+export function ErrorSuspenseBoundary({
   children,
   errorFallback,
   suspenseFallback,
@@ -70,5 +63,31 @@ export default function ErrorSuspenseBoundary({
     <ErrorBoundary FallbackComponent={errorFallback ?? ErrorFallback} onReset={onReset} resetKeys={resetKeys}>
       <Suspense fallback={suspenseFallback ?? <SuspenseFallback />}>{children}</Suspense>
     </ErrorBoundary>
+  );
+}
+
+// 리액트 쿼리와 함께 사용할 수 있는 데이터 경계 컴포넌트
+export function DataBoundary({
+  children,
+  errorFallback,
+  suspenseFallback,
+  onReset,
+  resetKeys,
+}: ErrorSuspenseBoundaryProps) {
+  return (
+    <QueryErrorResetBoundary>
+      {({ reset }) => (
+        <ErrorBoundary
+          FallbackComponent={errorFallback ?? ErrorFallback}
+          onReset={() => {
+            reset();
+            onReset?.();
+          }}
+          resetKeys={resetKeys}
+        >
+          <Suspense fallback={suspenseFallback ?? <SuspenseFallback />}>{children}</Suspense>
+        </ErrorBoundary>
+      )}
+    </QueryErrorResetBoundary>
   );
 }

@@ -24,3 +24,4 @@ export interface Note {
   createdAt: string;
 }
 
+export type TodoOptions = 'ALL' | 'TO DO' | 'DONE';

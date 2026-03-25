@@ -29,18 +29,9 @@ export default function SignupPage() {
     if (emailErr || passwordErr) return;
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nickname: name, email, password }),
-      });
+      await postSignup({ nickname: name, email, password });
 
-      if (!res.ok) {
-        const data = await res.json();
-        alert(data.message);
-        return;
-      }
-
+      alert('회원가입 성공!');
       router.push('/login');
     } catch (error) {
       console.error(error);

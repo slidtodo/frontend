@@ -11,6 +11,7 @@ import Image from 'next/image';
 import { postLogin } from '@/lib/api/fetchAuth';
 import { validateEmail } from '@/lib/validation';
 
+import { postLogin } from '@/lib/api';
 export default function LoginPage() {
   const router = useRouter();
 
@@ -48,7 +49,6 @@ export default function LoginPage() {
           <Image src="/icons/todo.png" alt="logo" width={48} height={48} />
           <span className="text-2xl font-bold">Slid to-do</span>
         </div>
-
         <form
           className="flex w-full flex-col gap-4"
           onSubmit={(e) => {

@@ -1,4 +1,5 @@
 import type { operations } from '@/shared/types/api/schemas/api.types';
+import { serverApiRequest } from './server-utils';
 import { apiRequest } from './utils';
 
 export type CurrentUserResponse = operations['getMe']['responses'][200]['content']['application/json'];
@@ -11,6 +12,7 @@ export type PatchCurrentUserPasswordRequest =
 export type UserProgressResponse = operations['getProgress']['responses'][200]['content']['application/json'];
 
 export const getCurrentUser = () => apiRequest<CurrentUserResponse>('/api/v1/users/me');
+export const getCurrentUserServer = () => serverApiRequest<CurrentUserResponse>('/api/v1/users/me');
 
 export const patchCurrentUser = (body: PatchCurrentUserRequest) =>
   apiRequest<CurrentUserResponse, PatchCurrentUserRequest>('/api/v1/users/me', {
@@ -31,3 +33,5 @@ export const patchCurrentUserPassword = (body: PatchCurrentUserPasswordRequest) 
   });
 
 export const getUserProgress = () => apiRequest<UserProgressResponse>('/api/v1/users/me/progress');
+export const getUserProgressServer = () =>
+  serverApiRequest<UserProgressResponse>('/api/v1/users/me/progress');

@@ -1,11 +1,16 @@
 import { queryOptions } from '@tanstack/react-query';
-import { getGithubAuthorizeUrl, getGoogleAuthorizeUrl } from './api/fetchAuth';
-import { getGoal, getGoals, type GetGoalsParams } from './api/fetchGoals';
-import { getTodo, getTodos, type GetTodosParams } from './api/fetchTodos';
-import { getNote, getNotes, type GetNotesParams } from './api/fetchNotes';
-import { getNotifications } from './api/fetchNotifications';
-import { getTags } from './api/fetchTags';
-import { getCurrentUser, getUserProgress } from './api/fetchUsers';
+import {
+  getGithubAuthorizeUrl,
+  getGithubAuthorizeUrlServer,
+  getGoogleAuthorizeUrl,
+  getGoogleAuthorizeUrlServer,
+} from './api/fetchAuth';
+import { getGoal, getGoalServer, getGoals, getGoalsServer, type GetGoalsParams } from './api/fetchGoals';
+import { getTodo, getTodoServer, getTodos, getTodosServer, type GetTodosParams } from './api/fetchTodos';
+import { getNote, getNoteServer, getNotes, getNotesServer, type GetNotesParams } from './api/fetchNotes';
+import { getNotifications, getNotificationsServer } from './api/fetchNotifications';
+import { getTags, getTagsServer } from './api/fetchTags';
+import { getCurrentUser, getCurrentUserServer, getUserProgress, getUserProgressServer } from './api/fetchUsers';
 
 // ────────────────────────────────────────────────────────────
 // Goal 쿼리
@@ -21,6 +26,11 @@ export const goalQueries = {
       queryKey: ['goals', 'list', params ?? {}],
       queryFn: () => getGoals(params),
     }),
+  listServer: (params?: GetGoalsParams) =>
+    queryOptions({
+      queryKey: ['goals', 'list', params ?? {}],
+      queryFn: () => getGoalsServer(params),
+    }),
 
   /**
    * 목표 상세 조회
@@ -30,6 +40,11 @@ export const goalQueries = {
     queryOptions({
       queryKey: ['goals', 'detail', goalId],
       queryFn: () => getGoal(goalId),
+    }),
+  detailServer: (goalId: number) =>
+    queryOptions({
+      queryKey: ['goals', 'detail', goalId],
+      queryFn: () => getGoalServer(goalId),
     }),
 };
 
@@ -51,6 +66,11 @@ export const todoQueries = {
       queryKey: ['todos', 'list', params ?? {}],
       queryFn: () => getTodos(params),
     }),
+  listServer: (params: GetTodosParams) =>
+    queryOptions({
+      queryKey: ['todos', 'list', params ?? {}],
+      queryFn: () => getTodosServer(params),
+    }),
 
   /**
    * 할일 상세 조회
@@ -60,6 +80,11 @@ export const todoQueries = {
     queryOptions({
       queryKey: ['todos', 'detail', todoId],
       queryFn: () => getTodo(todoId),
+    }),
+  detailServer: (todoId: number) =>
+    queryOptions({
+      queryKey: ['todos', 'detail', todoId],
+      queryFn: () => getTodoServer(todoId),
     }),
 };
 
@@ -78,6 +103,11 @@ export const noteQueries = {
       queryKey: ['notes', 'list', params ?? {}],
       queryFn: () => getNotes(params),
     }),
+  listServer: (params?: GetNotesParams) =>
+    queryOptions({
+      queryKey: ['notes', 'list', params ?? {}],
+      queryFn: () => getNotesServer(params),
+    }),
 
   /**
    * 노트 상세 조회
@@ -88,6 +118,11 @@ export const noteQueries = {
       queryKey: ['notes', 'detail', noteId],
       queryFn: () => getNote(noteId),
     }),
+  detailServer: (noteId: number) =>
+    queryOptions({
+      queryKey: ['notes', 'detail', noteId],
+      queryFn: () => getNoteServer(noteId),
+    }),
 };
 
 export const authQueries = {
@@ -96,11 +131,21 @@ export const authQueries = {
       queryKey: ['auth', 'googleAuthorizeUrl'],
       queryFn: getGoogleAuthorizeUrl,
     }),
+  googleAuthorizeUrlServer: () =>
+    queryOptions({
+      queryKey: ['auth', 'googleAuthorizeUrl'],
+      queryFn: getGoogleAuthorizeUrlServer,
+    }),
 
   githubAuthorizeUrl: () =>
     queryOptions({
       queryKey: ['auth', 'githubAuthorizeUrl'],
       queryFn: getGithubAuthorizeUrl,
+    }),
+  githubAuthorizeUrlServer: () =>
+    queryOptions({
+      queryKey: ['auth', 'githubAuthorizeUrl'],
+      queryFn: getGithubAuthorizeUrlServer,
     }),
 };
 
@@ -110,11 +155,21 @@ export const userQueries = {
       queryKey: ['users', 'me'],
       queryFn: getCurrentUser,
     }),
+  currentServer: () =>
+    queryOptions({
+      queryKey: ['users', 'me'],
+      queryFn: getCurrentUserServer,
+    }),
 
   progress: () =>
     queryOptions({
       queryKey: ['users', 'me', 'progress'],
       queryFn: getUserProgress,
+    }),
+  progressServer: () =>
+    queryOptions({
+      queryKey: ['users', 'me', 'progress'],
+      queryFn: getUserProgressServer,
     }),
 };
 
@@ -124,6 +179,11 @@ export const notificationQueries = {
       queryKey: ['notifications', 'list'],
       queryFn: getNotifications,
     }),
+  listServer: () =>
+    queryOptions({
+      queryKey: ['notifications', 'list'],
+      queryFn: getNotificationsServer,
+    }),
 };
 
 export const tagQueries = {
@@ -131,5 +191,10 @@ export const tagQueries = {
     queryOptions({
       queryKey: ['tags', 'list'],
       queryFn: getTags,
+    }),
+  listServer: () =>
+    queryOptions({
+      queryKey: ['tags', 'list'],
+      queryFn: getTagsServer,
     }),
 };

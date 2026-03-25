@@ -1,4 +1,5 @@
 import type { operations } from '@/shared/types/api/schemas/api.types';
+import { serverApiRequest } from './server-utils';
 import { apiRequest } from './utils';
 
 export type SignupRequest = operations['signup']['requestBody']['content']['application/json'];
@@ -43,6 +44,10 @@ export const postLogout = () =>
 
 export const getGoogleAuthorizeUrl = () =>
   apiRequest<OAuthAuthorizeUrlResponse>('/api/v1/auth/oauth/google/url');
+export const getGoogleAuthorizeUrlServer = () =>
+  serverApiRequest<OAuthAuthorizeUrlResponse>('/api/v1/auth/oauth/google/url');
 
 export const getGithubAuthorizeUrl = () =>
   apiRequest<OAuthAuthorizeUrlResponse>('/api/v1/auth/oauth/github/url');
+export const getGithubAuthorizeUrlServer = () =>
+  serverApiRequest<OAuthAuthorizeUrlResponse>('/api/v1/auth/oauth/github/url');

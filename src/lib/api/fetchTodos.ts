@@ -1,4 +1,5 @@
 import type { operations } from '@/shared/types/api/schemas/api.types';
+import { serverApiRequest } from './server-utils';
 import { apiRequest } from './utils';
 
 export type GetTodosParams = operations['getList']['parameters']['query'];
@@ -8,8 +9,12 @@ export type PostTodoRequest = operations['create']['requestBody']['content']['ap
 export type PatchTodoRequest = operations['update']['requestBody']['content']['application/json'];
 
 export const getTodos = (params?: GetTodosParams) => apiRequest<TodoListResponse>('/api/v1/todos', { params });
+export const getTodosServer = (params?: GetTodosParams) =>
+  serverApiRequest<TodoListResponse>('/api/v1/todos', { params });
 
 export const getTodo = (todoId: number) => apiRequest<TodoResponse>(`/api/v1/todos/${todoId}`);
+export const getTodoServer = (todoId: number) =>
+  serverApiRequest<TodoResponse>(`/api/v1/todos/${todoId}`);
 
 export const postTodo = (body: PostTodoRequest) =>
   apiRequest<TodoResponse, PostTodoRequest>('/api/v1/todos', {

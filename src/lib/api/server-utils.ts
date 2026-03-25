@@ -1,64 +1,40 @@
+'use server';
+/**
+ * @description 서버 컴포넌트에서 API 요청을 보낼 때 사용하는 유틸 함수입니다. 클라이언트 컴포넌트에서는 사용하지 말아주세요
+ */
+import { cookies } from 'next/headers';
+import { ApiError, toQueryString } from './utils';
+
 type QueryValue = string | number | boolean | null | undefined | Array<string | number | boolean>;
-
-export class ApiError extends Error {
-  constructor(
-    public readonly status: number,
-    message: string,
-    public readonly code?: string,
-  ) {
-    super(message);
-    this.name = 'ApiError';
-  }
-}
-
-export const toQueryString = (params?: Record<string, QueryValue>): string => {
-  if (!params) return '';
-
-  const searchParams = new URLSearchParams();
-
-  for (const [key, value] of Object.entries(params)) {
-    if (value === undefined || value === null) continue;
-
-    if (Array.isArray(value)) {
-      for (const item of value) {
-        searchParams.append(key, String(item));
-      }
-      continue;
-    }
-
-    searchParams.set(key, String(value));
-  }
-
-  return searchParams.toString();
-};
 
 const apiBaseUrl = (process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL ?? '').replace(/\/+$/, '');
 
-type ApiRequestOptions<TBody> = {
+type ServerApiRequestOptions<TBody> = {
   method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
   params?: Record<string, QueryValue>;
   body?: TBody;
   headers?: HeadersInit;
-  signal?: AbortSignal;
   cache?: RequestCache;
   next?: { revalidate?: number | false; tags?: string[] };
 };
 
-export const apiRequest = async <TResponse, TBody = never>(
+export const serverApiRequest = async <TResponse, TBody = never>(
   url: string,
-  options: ApiRequestOptions<TBody> = {},
+  options: ServerApiRequestOptions<TBody> = {},
 ): Promise<TResponse> => {
-  const { method = 'GET', params, body, headers, signal, cache, next } = options;
+  const { method = 'GET', params, body, headers, cache = 'no-store', next } = options;
   const queryString = toQueryString(params);
   const resolvedUrl = url.startsWith('/api/') && apiBaseUrl ? `${apiBaseUrl}${url}` : url;
   const requestUrl = queryString ? `${resolvedUrl}?${queryString}` : resolvedUrl;
 
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.toString();
+
   const response = await fetch(requestUrl, {
     method,
-    credentials: 'include',
-    signal,
     headers: {
       ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+      ...(cookieHeader ? { cookie: cookieHeader } : {}),
       ...headers,
     },
     body: body === undefined ? undefined : JSON.stringify(body),

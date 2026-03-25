@@ -13,7 +13,10 @@ export function useDraftNoteRestore({ onRestore }: UseDraftNoteRestoreOptions) {
   const { getDraft, clearDraft } = useDraftNote();
   const { openModal, closeModal } = useModalStore();
 
-  const [draftState, setDraftState] = useState<{ draft: DraftNote | null; showToast: boolean }>({
+  const [draftState, setDraftState] = useState<{
+    draft: DraftNote | null;
+    showToast: boolean;
+  }>({
     draft: null,
     showToast: false,
   });
@@ -47,6 +50,7 @@ export function useDraftNoteRestore({ onRestore }: UseDraftNoteRestoreOptions) {
 
   return {
     draft,
+    savedAt: draft?.savedAt ?? null,
     showToast,
     handleCloseToast,
     handleToastLoad,

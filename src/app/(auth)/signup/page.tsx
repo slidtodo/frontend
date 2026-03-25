@@ -8,6 +8,7 @@ import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
 import { validateEmail, validatePassword } from '@/lib/validation';
+import { postSignup } from '@/lib/api/fetchAuth';
 
 export default function SignupPage() {
   const router = useRouter();

@@ -11,7 +11,6 @@ import Image from 'next/image';
 import { postLogin } from '@/lib/api/fetchAuth';
 import { validateEmail } from '@/lib/validation';
 
-import { postLogin } from '@/lib/api';
 export default function LoginPage() {
   const router = useRouter();
 

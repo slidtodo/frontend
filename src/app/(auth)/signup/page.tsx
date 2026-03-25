@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
+import { postSignup, getGoogleAuthorizeUrl, getGithubAuthorizeUrl } from '@/lib/api/fetchAuth';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -25,19 +26,9 @@ export default function SignupPage() {
     }
 
     try {
-      const res = await fetch('/api/proxy/api/v1/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, nickname: name }),
-      });
-
-      if (res.ok) {
-        alert('회원가입 성공!');
-        router.push('/login');
-      } else {
-        const data = await res.json();
-        alert(data.message);
-      }
+      await postSignup({ nickname: name, email, password });
+      alert('회원가입 성공!');
+      router.push('/login');
     } catch (error) {
       alert('오류가 발생했습니다.');
     }

@@ -10,6 +10,7 @@
     "lint": "eslint",
     "prepare": "husky",
     "test": "jest --passWithNoTests",
+    "typecheck": "next lint && tsc --noEmit",
     "api:gen": "openapi-typescript https://slidtodo.store/v3/api-docs -o src/shared/types/api/schemas/api.types.ts"
   },
   "dependencies": {

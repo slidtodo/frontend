@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
-
+import { postSignup } from '@/lib/api';
 export default function SignupPage() {
   const router = useRouter();
   const [name, setName] = useState('');
@@ -25,19 +25,10 @@ export default function SignupPage() {
     }
 
     try {
-      const res = await fetch('/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
-      });
+      await postSignup({ nickname: name, email, password });
 
-      if (res.ok) {
-        alert('회원가입 성공!');
-        router.push('/login');
-      } else {
-        const data = await res.json();
-        alert(data.message);
-      }
+      alert('회원가입 성공!');
+      router.push('/login');
     } catch (error) {
       alert('오류가 발생했습니다.');
     }

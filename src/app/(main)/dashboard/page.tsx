@@ -6,8 +6,6 @@ import DashboardDetail from '@/features/dashboard/components/DashBoardDetail';
  * 'use client'로 변경 x
  */
 export default async function DashboardPage() {
-  //  const currentUser = await getCurrentUser();
-
   return (
     <div className="flex w-full flex-col">
       <DashBoardSummary />

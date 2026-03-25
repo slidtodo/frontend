@@ -8,12 +8,18 @@ import Empty from '@/shared/components/Empty';
 
 import { todoQueries } from '@/lib/queryKeys';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
+import type { TodoResponse } from '@/lib/api';
 
 export default function AllTodoContent() {
+  const now = new Date();
+  const { data: todos } = useQuery(
+    todoQueries.list({ year: now.getFullYear(), month: now.getMonth() + 1, sort: 'LATEST' }),
+  );
+
   return (
     <section className="flex flex-col gap-3">
       <AllTodoFilter />
-      <AllTodoFetcher />
+      <AllTodoFetcher todos={todos} />
     </section>
   );
 }
@@ -51,21 +57,17 @@ function AllTodoFilter() {
     </div>
   );
 }
-// TODO: 상위에서 상태 받고 API 연동해서 리액트 쿼리로 필터링된 할 일 리스트 보여주기
-function AllTodoFetcher() {
-  const now = new Date();
-  const { data: todos } = useQuery(
-    todoQueries.list({ year: now.getFullYear(), month: now.getMonth() + 1, sort: 'LATEST' }),
-  );
+
+interface AllTodoFetcherProps {
+  todos: TodoResponse[] | undefined;
+}
+function AllTodoFetcher({ todos }: AllTodoFetcherProps) {
   return (
     <section className="rounded-4xl bg-white p-4 md:p-8">
       <div className="flex max-h-[680px] flex-col gap-4 overflow-y-auto">
-        {/* {mockTodoItems.length > 0 ? (
-          mockTodoItems.map((todo) => <TaskCard key={todo.id} todo={todo} />)
-
-        ) : (
-          <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>
-        )} */}
+        {todos?.map((todo) => (
+          <TaskCard key={todo.id} todo={todo} />
+        ))}
       </div>
     </section>
   );

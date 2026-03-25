@@ -57,7 +57,7 @@ function RecentPostCard() {
     }),
   );
 
-  const recentTodos = (todos?.todos ?? []).slice(0, 4);
+  const recentTodos = todos?.slice(0, 4) ?? [];
 
   return (
     <article className="flex h-[256px] flex-col gap-[6px] rounded-[40px] bg-[#FF8442] p-4 shadow-[0_10px_40px_0_rgba(255,158,89,0.40)] lg:p-8">

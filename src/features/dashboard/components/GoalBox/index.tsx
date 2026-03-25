@@ -1,4 +1,6 @@
+'use client';
 import { PlusIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import Progressbar from '@/shared/components/Progressbar';
 import TaskCard from '@/shared/components/TaskCard';
@@ -16,6 +18,8 @@ interface GoalBoxProps {
 }
 
 export default function GoalBox({ data }: GoalBoxProps) {
+  const router = useRouter();
+
   const todoList = data.todoList ?? [];
   const doneList = data.doneList ?? [];
 
@@ -23,8 +27,13 @@ export default function GoalBox({ data }: GoalBoxProps) {
     <article className="flex flex-col gap-4 rounded-[40px] bg-white p-6 lg:px-8 lg:py-6">
       <div className="flex flex-col items-center gap-2 px-2 md:flex-row md:gap-12 lg:gap-8">
         <div className="flex w-full flex-1 flex-col gap-1 lg:flex-row lg:gap-4">
-          <div className="font-base w-full max-w-[229px] overflow-hidden font-semibold text-ellipsis whitespace-nowrap text-[#333]">
-            {data.title}
+          <div className="w-full max-w-[229px]">
+            <button
+              onClick={() => router.push(`goal/${data.id}`)}
+              className="font-base overflow-hidden text-left font-semibold text-ellipsis whitespace-nowrap text-[#333]"
+            >
+              {data.title}
+            </button>
           </div>
           <Progressbar progress={data.progress ?? 0} />
         </div>

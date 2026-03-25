@@ -7,8 +7,7 @@ export type TodoResponse = operations['getDetail']['responses'][200]['content'][
 export type PostTodoRequest = operations['create']['requestBody']['content']['application/json'];
 export type PatchTodoRequest = operations['update']['requestBody']['content']['application/json'];
 
-export const getTodos = (params?: GetTodosParams) =>
-  apiRequest<TodoListResponse>('/api/v1/todos', { params });
+export const getTodos = (params?: GetTodosParams) => apiRequest<TodoListResponse>('/api/v1/todos', { params });
 
 export const getTodo = (todoId: number) => apiRequest<TodoResponse>(`/api/v1/todos/${todoId}`);
 

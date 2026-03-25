@@ -597,6 +597,7 @@ export interface components {
       id?: number;
       title?: string;
       done?: boolean;
+      tags?: components['schemas']['TagInfo'][];
     };
     CreateGoalRequest: {
       title: string;

@@ -45,7 +45,7 @@ export default function LoginPage() {
           <Image src="/icons/todo.png" alt="logo" width={48} height={48} />
           <span className="text-2xl font-bold">Slid to-do</span>
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex w-full flex-col gap-4">
           {/* 이메일 */}
           <FormField label="">
             <Input

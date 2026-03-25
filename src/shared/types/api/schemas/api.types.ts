@@ -12,8 +12,8 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * 월별 할일 조회 (캘린더)
-     * @description 연/월로 할일 목록을 조회합니다
+     * 할일 목록 조회
+     * @description goalId 필터 + 커서 기반 무한스크롤로 할일 목록을 조회합니다
      */
     get: operations['getList'];
     put?: never;
@@ -404,6 +404,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/v1/todos/calendar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 월별 할일 조회 (캘린더)
+     * @description 연/월로 할일 목록을 조회합니다. 페이지네이션 없이 해당 월의 전체 할일을 반환합니다.
+     */
+    get: operations['getCalendar'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/v1/tags': {
     parameters: {
       query?: never;
@@ -594,20 +614,6 @@ export interface components {
       userId?: number;
       /** Format: int32 */
       todoCount?: number;
-      progress?: number;
-
-      todoList: {
-        id: number;
-        title: string;
-        favorite: boolean;
-      }[];
-
-      doneList: {
-        id: number;
-        title: string;
-        favorite: boolean;
-      }[];
-
       /** Format: int32 */
       completedCount?: number;
       /** Format: date-time */
@@ -707,6 +713,9 @@ export interface components {
       /** Format: int64 */
       totalCount?: number;
     };
+    CalendarResponse: {
+      todos?: components['schemas']['TodoResponse'][];
+    };
     TagResponse: {
       /** Format: int64 */
       id?: number;
@@ -743,6 +752,36 @@ export interface components {
       /** Format: int64 */
       totalCount?: number;
     };
+    GoalDetailResponse: {
+      /** Format: int64 */
+      id?: number;
+      title?: string;
+      /** @enum {string} */
+      source?: 'MANUAL' | 'GITHUB';
+      /** Format: int64 */
+      repositoryId?: number;
+      repositoryFullName?: string;
+      /** Format: int64 */
+      userId?: number;
+      /** Format: int32 */
+      todoCount?: number;
+      /** Format: int32 */
+      completedCount?: number;
+      /** Format: int32 */
+      progress?: number;
+      todoList?: components['schemas']['TodoSummary'][];
+      doneList?: components['schemas']['TodoSummary'][];
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
+    };
+    TodoSummary: {
+      /** Format: int64 */
+      id?: number;
+      title?: string;
+      favorite?: boolean;
+    };
     OAuthAuthorizeUrlResponse: {
       loginUrl?: string;
     };
@@ -760,7 +799,7 @@ export type $defs = Record<string, never>;
 export interface operations {
   getList: {
     parameters: {
-      query: {
+      query?: {
         /** @description 목표 ID (필터) */
         goalId?: number;
         /** @description 커서 */
@@ -773,10 +812,6 @@ export interface operations {
         search?: string;
         /** @description 정렬 (LATEST 또는 OLDEST, 기본값 LATEST) */
         sort?: 'LATEST' | 'OLDEST';
-        /** @description 연도 */
-        year: number;
-        /** @description 월 */
-        month: number;
       };
       header?: never;
       path?: never;
@@ -1529,7 +1564,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['GoalResponse'];
+          'application/json': components['schemas']['GoalDetailResponse'];
         };
       };
       /** @description 목표를 찾을 수 없음 */
@@ -1652,6 +1687,33 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ErrorResponse'];
+        };
+      };
+    };
+  };
+  getCalendar: {
+    parameters: {
+      query: {
+        /** @description 연도 */
+        year: number;
+        /** @description 월 */
+        month: number;
+        /** @description 목표 ID (필터) */
+        goalId?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CalendarResponse'];
         };
       };
     };

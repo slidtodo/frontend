@@ -5,17 +5,20 @@ import TaskCard from '@/shared/components/TaskCard';
 import SearchInput from '@/shared/components/SearchInput';
 import Button from '@/shared/components/Button';
 
-import type { GoalListResponse, GoalResponse } from '@/lib/api';
+import type { GoalDetailResponse } from '@/lib/api';
 
-type GoalItem = NonNullable<GoalListResponse['goals']>[number];
-type GoalTodoItem = GoalResponse['todoList'][number];
-type GoalDoneItem = GoalResponse['doneList'][number];
+type GoalItem = GoalDetailResponse;
+type GoalTodoItem = NonNullable<GoalDetailResponse['todoList']>[number];
+type GoalDoneItem = NonNullable<GoalDetailResponse['doneList']>[number];
 
 interface GoalBoxProps {
   data: GoalItem;
 }
 
 export default function GoalBox({ data }: GoalBoxProps) {
+  const todoList = data.todoList ?? [];
+  const doneList = data.doneList ?? [];
+
   return (
     <article className="flex flex-col gap-4 rounded-[40px] bg-white p-6 lg:px-8 lg:py-6">
       <div className="flex flex-col items-center gap-2 px-2 md:flex-row md:gap-12 lg:gap-8">
@@ -40,14 +43,14 @@ export default function GoalBox({ data }: GoalBoxProps) {
 
       <div className="flex flex-col justify-around gap-2 md:flex-row lg:gap-8">
         <div className="flex flex-col justify-around gap-2 md:flex-row lg:gap-8">
-          {data.todoList.length === 0 && data.doneList.length === 0 ? (
+          {todoList.length === 0 && doneList.length === 0 ? (
             <div className="flex h-full w-full items-center justify-center">
               <span className="py-10 text-[#A4A4A4]">현재 등록된 할 일이 없습니다.</span>
             </div>
           ) : (
             <>
-              <ListBox title="TODO" variant="todo" items={data.todoList} />
-              <ListBox title="DONE" variant="done" items={data.doneList} />
+              <ListBox title="TODO" variant="todo" items={todoList} />
+              <ListBox title="DONE" variant="done" items={doneList} />
             </>
           )}
         </div>

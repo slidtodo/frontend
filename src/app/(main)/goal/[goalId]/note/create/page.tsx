@@ -33,7 +33,8 @@ export default function Page() {
     try {
       saveDraft({ title, content, linkUrl: linkUrl ?? undefined });
       setShowSuccessToast(true);
-    } catch {
+    } catch (error) {
+      console.error('임시 저장 실패:', error);
       setShowFailToast(true);
     }
   };

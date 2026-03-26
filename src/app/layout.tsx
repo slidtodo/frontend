@@ -1,8 +1,6 @@
-import { Modal } from '@/shared/components/Modal';
 import type { Viewport } from 'next';
 import './globals.css';
 import Providers from './providers';
-import ToastContainer from '@/shared/components/Toast/ToastContainer';
 
 export const viewport: Viewport = {
   width: 'device-width',

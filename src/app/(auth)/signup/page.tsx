@@ -7,8 +7,8 @@ import Link from 'next/link';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
-
-import { postSignup, getGoogleAuthorizeUrl, getGithubAuthorizeUrl } from '@/lib/api/fetchAuth';
+import { validateEmail, validatePassword } from '@/lib/validation';
+import { postSignup, getGithubAuthorizeUrl, getGoogleAuthorizeUrl } from '@/lib/api/fetchAuth';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -16,15 +16,18 @@ export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   // TODO: 리액트쿼리로 변경 필요, 리액트 훅 폼 적용 필요
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (password !== passwordConfirm) {
-      alert('비밀번호가 일치하지 않습니다.');
-      return;
-    }
+    const emailErr = validateEmail(email);
+    const passwordErr = validatePassword(password, passwordConfirm);
+    setEmailError(emailErr);
+    setPasswordError(passwordErr);
+    if (emailErr || passwordErr) return;
 
     try {
       await postSignup({ nickname: name, email, password });
@@ -32,20 +35,19 @@ export default function SignupPage() {
       alert('회원가입 성공!');
       router.push('/login');
     } catch (error) {
-      alert('오류가 발생했습니다.');
+      console.error(error);
+      alert('회원가입 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
     }
   };
 
   const handleGithubLogin = async () => {
-    const res = await fetch('/api/proxy/api/v1/auth/oauth/github/url');
-    const data = await res.json();
-    window.location.href = data.loginUrl;
+    const data = await getGithubAuthorizeUrl();
+    if (data.loginUrl) window.location.href = data.loginUrl;
   };
 
   const handleGoogleLogin = async () => {
-    const res = await fetch('/api/proxy/api/v1/auth/oauth/google/url');
-    const data = await res.json();
-    window.location.href = data.loginUrl;
+    const data = await getGoogleAuthorizeUrl();
+    if (data.loginUrl) window.location.href = data.loginUrl;
   };
 
   return (
@@ -67,12 +69,12 @@ export default function SignupPage() {
           </FormField>
 
           {/* 이메일 */}
-          <FormField label="이메일">
+          <FormField label="이메일" error={emailError}>
             <Input
-              type="email"
+              type="text"
               placeholder="이메일을 입력해주세요"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => { setEmail(e.target.value); setEmailError(''); }}
             />
           </FormField>
 
@@ -82,15 +84,15 @@ export default function SignupPage() {
               type="password"
               placeholder="비밀번호를 입력해주세요"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => { setPassword(e.target.value); setPasswordError(''); }}
             />
           </FormField>
-          <FormField label="비밀번호 확인">
+          <FormField label="비밀번호 확인" error={passwordError}>
             <Input
               type="password"
               placeholder="비밀번호를 한 번 더 입력해주세요"
               value={passwordConfirm}
-              onChange={(e) => setPasswordConfirm(e.target.value)}
+              onChange={(e) => { setPasswordConfirm(e.target.value); setPasswordError(''); }}
             />
           </FormField>
 
@@ -123,7 +125,7 @@ export default function SignupPage() {
         <div className="flex w-full justify-center gap-4">
           <button
             type="button"
-            onClick={() => alert('구글 로그인')}
+            onClick={handleGoogleLogin}
             aria-label="구글 로그인"
             className="flex h-14 w-14 items-center justify-center rounded-full border border-[#DDDDDD] bg-white p-4 hover:bg-gray-50"
           >
@@ -131,7 +133,7 @@ export default function SignupPage() {
           </button>
           <button
             type="button"
-            onClick={() => alert('깃허브 로그인')}
+            onClick={handleGithubLogin}
             aria-label="깃허브 로그인"
             className="flex h-14 w-14 items-center justify-center rounded-full border border-[#DDDDDD] bg-white p-4 hover:bg-gray-50"
           >

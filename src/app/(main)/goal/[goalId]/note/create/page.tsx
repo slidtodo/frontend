@@ -43,16 +43,15 @@ export default function Page() {
     },
   });
 
-  const getNoteBody = () => ({
-    todoId,
-    title,
-    content,
-    ...(linkUrl ? { linkUrl } : {}),
-  });
-
   const handleSaveDraft = () => {
     try {
-      saveDraft(getNoteBody());
+      const body = {
+        todoId,
+        title,
+        content,
+        ...(linkUrl ? { linkUrl } : {}),
+      };
+      saveDraft(body);
       showToast('임시 저장이 완료되었습니다 ・ 1초전', 'success');
     } catch (error) {
       showToast('임시 저장이 실패했습니다', 'fail');
@@ -66,7 +65,13 @@ export default function Page() {
       redirect('/dashboard/all-todo');
     }
 
-    createNote(getNoteBody() as PostNoteRequest);
+    const body = {
+      todoId,
+      title,
+      content,
+      ...(linkUrl ? { linkUrl } : {}),
+    };
+    createNote(body);
   };
 
   return (

@@ -11,6 +11,7 @@ import { useToastStore } from '@/shared/stores/useToastStore';
 import { useSearchParams } from 'next/navigation';
 import DraftNoteToast from '@/features/note/components/DraftNoteToast.tsx';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
+import { getNote } from '@/lib/api';
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -43,15 +44,16 @@ export default function Page() {
     },
   });
 
+  const getNoteBody = () => ({
+    todoId,
+    title,
+    content,
+    ...(linkUrl ? { linkUrl } : {}),
+  });
+
   const handleSaveDraft = () => {
     try {
-      const body = {
-        todoId,
-        title,
-        content,
-        ...(linkUrl ? { linkUrl } : {}),
-      };
-      saveDraft(body);
+      saveDraft(getNoteBody());
       showToast('임시 저장이 완료되었습니다 ・ 1초전', 'success');
     } catch (error) {
       showToast('임시 저장이 실패했습니다', 'fail');
@@ -64,13 +66,8 @@ export default function Page() {
       showToast('먼저 할 일을 등록해주세요', 'fail');
       return;
     }
-    const body = {
-      todoId,
-      title,
-      content,
-      ...(linkUrl ? { linkUrl } : {}),
-    };
-    createNote(body);
+
+    createNote(getNoteBody());
   };
 
   return (

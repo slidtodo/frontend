@@ -6,6 +6,11 @@ import EditorTitle from './EditorTitle';
 import EditorMeta from './EditorMeta';
 import EditorContent from './EditorContent';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
+import { useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
+import TextAlign from '@tiptap/extension-text-align';
+import Placeholder from '@tiptap/extension-placeholder';
 
 interface NoteEditorProps {
   title: string;
@@ -33,9 +38,19 @@ export default function NoteEditor({
     }
   };
 
-  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onContentChange(e.target.value);
-  };
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      Placeholder.configure({ placeholder: '이 곳을 통해 노트 작성을 시작해주세요' }),
+    ],
+    content,
+    immediatelyRender: false,
+    onUpdate: ({ editor }) => {
+      onContentChange(editor.getHTML());
+    },
+  });
 
   const breakpoint = useBreakpoint();
 
@@ -47,7 +62,7 @@ export default function NoteEditor({
         'md:rounded-4xl md:px-[30px] md:py-8',
       )}
     >
-      {breakpoint !== 'mobile' && <EditorToolbar onLinkUrlChange={onLinkUrlChange} />}
+      {breakpoint !== 'mobile' && <EditorToolbar editor={editor} onLinkUrlChange={onLinkUrlChange} />}
 
       <section className="border-b border-b-[#DDD] pb-4 md:pt-[19px] md:pb-5 lg:pb-7">
         <EditorTitle title={title} onChange={handleTitleChange} />
@@ -62,7 +77,7 @@ export default function NoteEditor({
           createdAt={createdAt}
         />
       </section>
-      <EditorContent content={content} onChange={handleContentChange} linkUrl={linkUrl} />
+      <EditorContent editor={editor} linkUrl={linkUrl} onLinkUrlChange={onLinkUrlChange} />
     </div>
   );
 }

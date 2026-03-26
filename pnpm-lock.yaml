@@ -11,6 +11,15 @@ dependencies:
   '@tanstack/react-query-devtools':
     specifier: ^5.91.3
     version: 5.95.2(@tanstack/react-query@5.95.2)(react@19.2.3)
+  '@tiptap/extension-placeholder':
+    specifier: ^3.20.5
+    version: 3.20.5(@tiptap/extensions@3.20.5)
+  '@tiptap/extension-text-align':
+    specifier: ^3.20.5
+    version: 3.20.5(@tiptap/core@3.20.5)
+  '@tiptap/extension-underline':
+    specifier: ^3.20.5
+    version: 3.20.5(@tiptap/core@3.20.5)
   '@tiptap/pm':
     specifier: ^3.20.5
     version: 3.20.5
@@ -3547,8 +3556,24 @@ packages:
       '@tiptap/core': 3.20.5(@tiptap/pm@3.20.5)
     dev: false
 
+  /@tiptap/extension-placeholder@3.20.5(@tiptap/extensions@3.20.5):
+    resolution: {integrity: sha512-PcZJbzJ8j+YcRdYWFjmFFVnOOx3nETA0pzMj9fXADi28vNABnrWLwsHAseh3I5QfLmywKQb9SpTSTU2LxQgBoA==}
+    peerDependencies:
+      '@tiptap/extensions': ^3.20.5
+    dependencies:
+      '@tiptap/extensions': 3.20.5(@tiptap/core@3.20.5)(@tiptap/pm@3.20.5)
+    dev: false
+
   /@tiptap/extension-strike@3.20.5(@tiptap/core@3.20.5):
     resolution: {integrity: sha512-uwhvmfS4ciGYJRLUg0AHbWsprMCwyWVWd2RXOLRm0ZQeWkvzonPXZhJvzIhIgsFkPLj/dsN5t0+LdiK4UQMnyA==}
+    peerDependencies:
+      '@tiptap/core': ^3.20.5
+    dependencies:
+      '@tiptap/core': 3.20.5(@tiptap/pm@3.20.5)
+    dev: false
+
+  /@tiptap/extension-text-align@3.20.5(@tiptap/core@3.20.5):
+    resolution: {integrity: sha512-r7xIt6AE1Zf6epMg2GLAD55YIqJewunQnLUeApLkcWdTNuCJqZUrmVIXUvTtj2Ivw0VIaPoCtnB+VBvXEuC3Kg==}
     peerDependencies:
       '@tiptap/core': ^3.20.5
     dependencies:

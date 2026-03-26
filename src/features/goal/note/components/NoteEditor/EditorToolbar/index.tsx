@@ -4,106 +4,90 @@ import { SinglePostModal } from '@/shared/components/Modal/SinglePostModal';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import clsx from 'clsx';
 import { AlignCenter, AlignLeft, AlignRight, Bold, Italic, Link2, List, Underline } from 'lucide-react';
-import { useState } from 'react';
-
-const ALIGN_TOOLS = ['align-left', 'align-center', 'align-right'];
+import { Editor } from '@tiptap/react';
 
 interface EditorToolbarProps {
+  editor: Editor | null;
   onLinkUrlChange?: (value: string | null) => void;
 }
 
-export default function EditorToolbar({ onLinkUrlChange }: EditorToolbarProps) {
-  const [activeTools, setActiveTools] = useState<string[]>([]);
+export default function EditorToolbar({ editor, onLinkUrlChange }: EditorToolbarProps) {
   const { openModal } = useModalStore();
 
-  const toggle = (tool: string) => {
-    setActiveTools((prev) => (prev.includes(tool) ? prev.filter((t) => t !== tool) : [...prev, tool]));
-  };
-
-  const toggleAlign = (tool: string) => {
-    setActiveTools((prev) =>
-      prev.includes(tool) ? prev.filter((t) => t !== tool) : [...prev.filter((t) => !ALIGN_TOOLS.includes(t)), tool],
-    );
-  };
-
-  /**
-   * @TODO
-   * onConfirm에 넘겨주는 함수 링크 업로드 API로 바꾸기
-   */
   const handleLinkUploadClick = () => {
-    toggle('link');
-    openModal(<SinglePostModal onConfirm={(url) => console.log(url)} />, () =>
-      setActiveTools((prev) => prev.filter((t) => t !== 'link')),
+    openModal(
+      <SinglePostModal onConfirm={(url) => onLinkUrlChange?.(url)} />,
+      () => {},
     );
   };
 
   return (
     <div className={clsx('flex h-11 w-full items-center rounded-[18px] bg-[#FAFAFA]', 'text-slate-500', 'px-4 py-1.5')}>
       <button
-        onClick={() => toggle('bold')}
+        onClick={() => editor?.chain().focus().toggleBold().run()}
         className={clsx(
           'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',
-          activeTools.includes('bold') && 'bg-[#DDD] text-slate-700',
+          editor?.isActive('bold') && 'bg-[#DDD] text-slate-700',
         )}
       >
         <Bold size={20} />
       </button>
 
       <button
-        onClick={() => toggle('italic')}
+        onClick={() => editor?.chain().focus().toggleItalic().run()}
         className={clsx(
           'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',
-          activeTools.includes('italic') && 'bg-[#DDD] text-slate-700',
+          editor?.isActive('italic') && 'bg-[#DDD] text-slate-700',
         )}
       >
         <Italic size={20} />
       </button>
 
       <button
-        onClick={() => toggle('underline')}
+        onClick={() => editor?.chain().focus().toggleUnderline().run()}
         className={clsx(
           'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',
-          activeTools.includes('underline') && 'bg-[#DDD] text-slate-700',
+          editor?.isActive('underline') && 'bg-[#DDD] text-slate-700',
         )}
       >
         <Underline size={20} />
       </button>
 
       <button
-        onClick={() => toggleAlign('align-left')}
+        onClick={() => editor?.chain().focus().setTextAlign('left').run()}
         className={clsx(
           'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',
-          activeTools.includes('align-left') && 'bg-[#DDD] text-slate-700',
+          editor?.isActive({ textAlign: 'left' }) && 'bg-[#DDD] text-slate-700',
         )}
       >
         <AlignLeft size={20} />
       </button>
 
       <button
-        onClick={() => toggleAlign('align-center')}
+        onClick={() => editor?.chain().focus().setTextAlign('center').run()}
         className={clsx(
           'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',
-          activeTools.includes('align-center') && 'bg-[#DDD] text-slate-700',
+          editor?.isActive({ textAlign: 'center' }) && 'bg-[#DDD] text-slate-700',
         )}
       >
         <AlignCenter size={20} />
       </button>
 
       <button
-        onClick={() => toggleAlign('align-right')}
+        onClick={() => editor?.chain().focus().setTextAlign('right').run()}
         className={clsx(
           'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',
-          activeTools.includes('align-right') && 'bg-[#DDD] text-slate-700',
+          editor?.isActive({ textAlign: 'right' }) && 'bg-[#DDD] text-slate-700',
         )}
       >
         <AlignRight size={20} />
       </button>
 
       <button
-        onClick={() => toggle('list')}
+        onClick={() => editor?.chain().focus().toggleBulletList().run()}
         className={clsx(
           'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',
-          activeTools.includes('list') && 'bg-[#DDD] text-slate-700',
+          editor?.isActive('bulletList') && 'bg-[#DDD] text-slate-700',
         )}
       >
         <List size={20} />
@@ -111,10 +95,7 @@ export default function EditorToolbar({ onLinkUrlChange }: EditorToolbarProps) {
 
       <button
         onClick={handleLinkUploadClick}
-        className={clsx(
-          'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',
-          activeTools.includes('link') && 'bg-[#DDD] text-slate-700',
-        )}
+        className="cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]"
       >
         <Link2 size={20} className="rotate-135" />
       </button>

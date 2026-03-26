@@ -7,7 +7,11 @@ import { ApiError, toQueryString } from './utils';
 
 type QueryValue = string | number | boolean | null | undefined | Array<string | number | boolean>;
 
-const apiBaseUrl = (process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL ?? '').replace(/\/+$/, '');
+const apiBaseUrl = process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL;
+
+if (!apiBaseUrl) {
+  throw new Error('API_BASE_URL is not defined in environment variables');
+}
 
 type ServerApiRequestOptions<TBody> = {
   method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
@@ -28,13 +32,13 @@ export const serverApiRequest = async <TResponse, TBody = never>(
   const requestUrl = queryString ? `${resolvedUrl}?${queryString}` : resolvedUrl;
 
   const cookieStore = await cookies();
-  const cookieHeader = cookieStore.toString();
+  const accessToken = cookieStore.get('accessToken')?.value;
 
   const response = await fetch(requestUrl, {
     method,
     headers: {
       ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
-      ...(cookieHeader ? { cookie: cookieHeader } : {}),
+      ...(accessToken ? { Cookie: `accessToken=${accessToken}` } : {}),
       ...headers,
     },
     body: body === undefined ? undefined : JSON.stringify(body),

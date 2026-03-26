@@ -5,10 +5,14 @@ export const validateEmail = (value: string): string => {
   return '';
 };
 
-export const validatePassword = (password: string, confirm: string): string => {
+export const validatePassword = (password: string): string => {
   if (!password) return '비밀번호를 입력해주세요.';
   if (password.length < 8) return '비밀번호는 8자 이상이어야 합니다.';
-  if (!confirm) return '비밀번호를 다시 한번 입력해주세요.';
+  return '';
+};
+
+export const validatePasswordConfirm = (password: string, confirm: string): string => {
+  if (!confirm) return '비밀번호 확인을 입력해주세요.';
   if (password !== confirm) return '비밀번호가 일치하지 않습니다.';
   return '';
 };

@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
-import { validateEmail, validatePassword } from '@/lib/validation';
+import { validateEmail, validatePassword, validatePasswordConfirm } from '@/lib/validation';
 import { postSignup, getGithubAuthorizeUrl, getGoogleAuthorizeUrl } from '@/lib/api/fetchAuth';
 
 export default function SignupPage() {
@@ -24,7 +24,7 @@ export default function SignupPage() {
     e.preventDefault();
 
     const emailErr = validateEmail(email);
-    const passwordErr = validatePassword(password, passwordConfirm);
+    const passwordErr = validatePassword(password) || validatePasswordConfirm(password, passwordConfirm);
     setEmailError(emailErr);
     setPasswordError(passwordErr);
     if (emailErr || passwordErr) return;

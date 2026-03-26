@@ -16,7 +16,8 @@ import { PostNoteRequest } from '@/lib/api';
 export default function Page() {
   const searchParams = useSearchParams();
   const todoIdParam = searchParams.get('todoId');
-  const todoId = todoIdParam ? Number(todoIdParam) : null;
+  const todoId = 4;
+  // const todoId = todoIdParam ? Number(todoIdParam) : null;
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');

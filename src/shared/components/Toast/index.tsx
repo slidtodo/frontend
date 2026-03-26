@@ -1,6 +1,6 @@
 'use client';
 
-import { AlertTriangle, Check, XIcon } from 'lucide-react';
+import { Check, XIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 import { cn } from '@/lib/utils';

@@ -8,16 +8,15 @@ import { useState } from 'react';
 import { useDraftNote } from '@/features/note/hooks/useDraftNote';
 import { usePostNote } from '@/features/note/hooks/usePostNote';
 import { useToastStore } from '@/shared/stores/useToastStore';
-import { useSearchParams } from 'next/navigation';
+import { redirect, useSearchParams } from 'next/navigation';
 import DraftNoteToast from '@/features/note/components/DraftNoteToast.tsx';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
-import { getNote } from '@/lib/api';
+import { PostNoteRequest } from '@/lib/api';
 
 export default function Page() {
   const searchParams = useSearchParams();
   const todoIdParam = searchParams.get('todoId');
-  const todoId = 4;
-  // const todoId = todoIdParam ? Number(todoIdParam) : null;
+  const todoId = todoIdParam ? Number(todoIdParam) : null;
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -64,10 +63,10 @@ export default function Page() {
   const handleSubmit = () => {
     if (!todoId) {
       showToast('먼저 할 일을 등록해주세요', 'fail');
-      return;
+      redirect('/dashboard/all-todo');
     }
 
-    createNote(getNoteBody());
+    createNote(getNoteBody() as PostNoteRequest);
   };
 
   return (

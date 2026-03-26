@@ -23,11 +23,7 @@ export default function RootLayout({
         </head>
       ) : null}
       <body>
-        <Providers>
-          {children}
-          <ToastContainer />
-          <Modal />
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

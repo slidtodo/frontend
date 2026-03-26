@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { postGithubLogin } from '@/lib/api/fetchAuth';
 
 export default function GithubCallbackPage() {
   const router = useRouter();
@@ -16,20 +17,10 @@ export default function GithubCallbackPage() {
 
     const login = async () => {
       try {
-        const res = await fetch('/api/proxy/api/v1/auth/oauth/github', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ code }),
-        });
-
-        if (!res.ok) {
-          router.push('/login');
-          return;
-        }
-
+        await postGithubLogin({ code });
         router.push('/dashboard');
-      } catch {
+      } catch (error) {
+        console.error('GitHub login callback failed:', error);
         router.push('/login');
       }
     };

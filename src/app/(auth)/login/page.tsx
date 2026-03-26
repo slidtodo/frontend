@@ -8,7 +8,7 @@ import FormField from '@/shared/components/FormField';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import Image from 'next/image';
-import { postLogin } from '@/lib/api/fetchAuth';
+import { postLogin, getGithubAuthorizeUrl } from '@/lib/api/fetchAuth';
 import { validateEmail } from '@/lib/validation';
 
 export default function LoginPage() {
@@ -19,9 +19,13 @@ export default function LoginPage() {
   const [emailError, setEmailError] = useState('');
 
   const handleGithubLogin = async () => {
-    const res = await fetch('/api/proxy/api/v1/auth/oauth/github/url');
-    const data = await res.json();
-    window.location.href = data.loginUrl;
+    try {
+      const data = await getGithubAuthorizeUrl();
+      if (data.loginUrl) window.location.href = data.loginUrl;
+    } catch (error) {
+      console.error(error);
+      alert('로그인에 실패했습니다. 잠시 후 다시 시도해주세요.');
+    }
   };
 
   // TODO: 리액트쿼리로 변경 필요, 리액트 훅 폼 적용 필요.
@@ -61,7 +65,7 @@ export default function LoginPage() {
               type="text"
               placeholder="이메일을 입력해주세요"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => { setEmail(e.target.value); setEmailError(''); }}
             />
           </FormField>
           {/* 비밀번호 */}

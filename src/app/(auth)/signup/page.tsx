@@ -8,7 +8,7 @@ import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
 import { validateEmail, validatePassword } from '@/lib/validation';
-import { postSignup } from '@/lib/api/fetchAuth';
+import { postSignup, getGithubAuthorizeUrl, getGoogleAuthorizeUrl } from '@/lib/api/fetchAuth';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -36,19 +36,18 @@ export default function SignupPage() {
       router.push('/login');
     } catch (error) {
       console.error(error);
+      alert('회원가입 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
     }
   };
 
   const handleGithubLogin = async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/oauth/github/url`);
-    const data = await res.json();
-    window.location.href = data.loginUrl;
+    const data = await getGithubAuthorizeUrl();
+    if (data.loginUrl) window.location.href = data.loginUrl;
   };
 
   const handleGoogleLogin = async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/oauth/google/url`);
-    const data = await res.json();
-    window.location.href = data.loginUrl;
+    const data = await getGoogleAuthorizeUrl();
+    if (data.loginUrl) window.location.href = data.loginUrl;
   };
 
   return (
@@ -75,7 +74,7 @@ export default function SignupPage() {
               type="text"
               placeholder="이메일을 입력해주세요"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => { setEmail(e.target.value); setEmailError(''); }}
             />
           </FormField>
 
@@ -85,7 +84,7 @@ export default function SignupPage() {
               type="password"
               placeholder="비밀번호를 입력해주세요"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => { setPassword(e.target.value); setPasswordError(''); }}
             />
           </FormField>
           <FormField label="비밀번호 확인" error={passwordError}>
@@ -93,7 +92,7 @@ export default function SignupPage() {
               type="password"
               placeholder="비밀번호를 한 번 더 입력해주세요"
               value={passwordConfirm}
-              onChange={(e) => setPasswordConfirm(e.target.value)}
+              onChange={(e) => { setPasswordConfirm(e.target.value); setPasswordError(''); }}
             />
           </FormField>
 

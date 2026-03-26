@@ -8,7 +8,7 @@ import FormField from '@/shared/components/FormField';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import Image from 'next/image';
-import { postLogin, getGithubAuthorizeUrl } from '@/lib/api/fetchAuth';
+import { postLogin, getGithubAuthorizeUrl, getGoogleAuthorizeUrl } from '@/lib/api/fetchAuth';
 import { validateEmail } from '@/lib/validation';
 
 export default function LoginPage() {
@@ -17,6 +17,16 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
+
+  const handleGoogleLogin = async () => {
+    try {
+      const data = await getGoogleAuthorizeUrl();
+      if (data.loginUrl) window.location.href = data.loginUrl;
+    } catch (error) {
+      console.error(error);
+      alert('로그인에 실패했습니다. 잠시 후 다시 시도해주세요.');
+    }
+  };
 
   const handleGithubLogin = async () => {
     try {
@@ -100,7 +110,7 @@ export default function LoginPage() {
         <div className="flex w-full justify-center gap-4">
           <button
             type="button"
-            onClick={() => alert('구글 로그인')}
+            onClick={handleGoogleLogin}
             aria-label="구글 로그인"
             className="flex h-14 w-14 items-center justify-center rounded-full border border-[#DDDDDD] bg-white p-4 hover:bg-gray-50"
           >

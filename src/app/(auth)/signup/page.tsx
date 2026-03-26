@@ -18,16 +18,19 @@ export default function SignupPage() {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [passwordConfirmError, setPasswordConfirmError] = useState('');
 
   // TODO: 리액트쿼리로 변경 필요, 리액트 훅 폼 적용 필요
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const emailErr = validateEmail(email);
-    const passwordErr = validatePassword(password) || validatePasswordConfirm(password, passwordConfirm);
+    const passwordErr = validatePassword(password);
+    const passwordConfirmErr = validatePasswordConfirm(password, passwordConfirm);
     setEmailError(emailErr);
     setPasswordError(passwordErr);
-    if (emailErr || passwordErr) return;
+    setPasswordConfirmError(passwordConfirmErr);
+    if (emailErr || passwordErr || passwordConfirmErr) return;
 
     try {
       await postSignup({ nickname: name, email, password });
@@ -79,7 +82,7 @@ export default function SignupPage() {
           </FormField>
 
           {/* 비밀번호 */}
-          <FormField label="비밀번호">
+          <FormField label="비밀번호" error={passwordError}>
             <Input
               type="password"
               placeholder="비밀번호를 입력해주세요"
@@ -87,12 +90,12 @@ export default function SignupPage() {
               onChange={(e) => { setPassword(e.target.value); setPasswordError(''); }}
             />
           </FormField>
-          <FormField label="비밀번호 확인" error={passwordError}>
+          <FormField label="비밀번호 확인" error={passwordConfirmError}>
             <Input
               type="password"
               placeholder="비밀번호를 한 번 더 입력해주세요"
               value={passwordConfirm}
-              onChange={(e) => { setPasswordConfirm(e.target.value); setPasswordError(''); }}
+              onChange={(e) => { setPasswordConfirm(e.target.value); setPasswordConfirmError(''); }}
             />
           </FormField>
 

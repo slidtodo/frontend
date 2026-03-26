@@ -10,6 +10,7 @@ import { usePostNote } from '@/features/note/hooks/usePostNote';
 import { useToastStore } from '@/shared/stores/useToastStore';
 import { useSearchParams } from 'next/navigation';
 import DraftNoteToast from '@/features/note/components/DraftNoteToast.tsx';
+import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -30,6 +31,8 @@ export default function Page() {
       showToast('노트 작성에 실패했습니다', 'fail');
     },
   });
+
+  const breakpoint = useBreakpoint();
 
   const { showDraftToast, handleCloseToast, handleToastLoad } = useDraftNoteRestore({
     onRestore: (saved) => {
@@ -72,29 +75,31 @@ export default function Page() {
 
   return (
     <div className="mx-auto flex h-full w-full max-w-[768px] flex-col">
-      <section className="mb-0 flex shrink-0 items-center justify-between md:mt-4 md:mb-3 md:gap-4 lg:mt-10 lg:mb-[22px]">
-        <PageHeader title={'노트 작성하기'} />
-        <div className="flex gap-2">
-          <div className="relative">
+      {breakpoint !== 'mobile' && (
+        <section className="mb-0 flex shrink-0 items-center justify-between md:mt-4 md:mb-3 md:gap-4 lg:mt-10 lg:mb-[22px]">
+          <PageHeader title={'노트 작성하기'} />
+          <div className="flex gap-2">
+            <div className="relative">
+              <Button
+                onClick={handleSaveDraft}
+                variant="secondary"
+                className="cursor-pointer text-sm md:h-10 md:px-[27px]"
+              >
+                임시저장
+              </Button>
+              {showDraftToast && <DraftNoteToast onLoad={handleToastLoad} onClose={handleCloseToast} />}
+            </div>
             <Button
-              onClick={handleSaveDraft}
-              variant="secondary"
+              onClick={handleSubmit}
+              disabled={isPending}
+              variant="primary"
               className="cursor-pointer text-sm md:h-10 md:px-[27px]"
             >
-              임시저장
+              {isPending ? '등록 중...' : '등록하기'}
             </Button>
-            {showDraftToast && <DraftNoteToast onLoad={handleToastLoad} onClose={handleCloseToast} />}
           </div>
-          <Button
-            onClick={handleSubmit}
-            disabled={isPending}
-            variant="primary"
-            className="cursor-pointer text-sm md:h-10 md:px-[27px]"
-          >
-            {isPending ? '등록 중...' : '등록하기'}
-          </Button>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section className="flex-1 md:mb-[30px] lg:mb-[62px]">
         <NoteEditor

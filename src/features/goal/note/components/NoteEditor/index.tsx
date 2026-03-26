@@ -5,6 +5,7 @@ import EditorToolbar from './EditorToolbar';
 import EditorTitle from './EditorTitle';
 import EditorMeta from './EditorMeta';
 import EditorContent from './EditorContent';
+import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 
 interface NoteEditorProps {
   title: string;
@@ -36,6 +37,8 @@ export default function NoteEditor({
     onContentChange(e.target.value);
   };
 
+  const breakpoint = useBreakpoint();
+
   return (
     <div
       className={clsx(
@@ -44,7 +47,7 @@ export default function NoteEditor({
         'md:rounded-4xl md:px-[30px] md:py-8',
       )}
     >
-      <EditorToolbar onLinkUrlChange={onLinkUrlChange} />
+      {breakpoint !== 'mobile' && <EditorToolbar onLinkUrlChange={onLinkUrlChange} />}
 
       <section className="border-b border-b-[#DDD] pb-4 md:pt-[19px] md:pb-5 lg:pb-7">
         <EditorTitle title={title} onChange={handleTitleChange} />

@@ -8,8 +8,6 @@ import EditorContent from './EditorContent';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import { NoteEditorProps } from '../../types/types';
 
-
-
 export default function NoteEditor({
   editor,
   title,

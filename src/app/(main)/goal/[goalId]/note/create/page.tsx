@@ -2,12 +2,13 @@ import NoteCreateClient from '../../../../../../features/note/components/NoteCre
 import { fetchTodos } from '@/lib/api/fetchTodos';
 import { fetchGoals } from '@/lib/api/fetchGoals';
 
-interface PageProps {
+export default async function Page({
+  params,
+  searchParams,
+}: {
   params: Promise<{ goalId: string }>;
   searchParams: Promise<{ todoId?: string }>;
-}
-
-export default async function Page({ params, searchParams }: PageProps) {
+}) {
   const { goalId } = await params;
   const { todoId } = await searchParams;
 

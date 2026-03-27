@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { CalendarIcon, PlusIcon } from 'lucide-react';
 
@@ -37,7 +38,9 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
                 className="rounded-full bg-[#F2F2F2] p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
               >
                 <CalendarIcon size={20} color="#737373" />
-                <span className="hidden w-full w-max text-sm font-semibold text-[#737373] md:block">캘린더 보기</span>
+                <Link href={`/calendar`} className="hidden w-full w-max text-sm font-semibold text-[#737373] md:block">
+                  캘린더 보기
+                </Link>
               </Button>
               <Button
                 className="rounded-full p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
@@ -53,7 +56,13 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
           <div className="flex max-h-[512px] flex-col gap-4 overflow-y-auto">
             {goalDetail?.todoList && goalDetail?.todoList.length > 0 ? (
               goalDetail.todoList.map((todo) => (
-                <TaskCard key={todo.id} todo={todo} onClick={() => openModal(<DetailTodoModal todo={todo} />)} />
+                <TaskCard
+                  key={todo.id}
+                  todo={todo}
+                  onClick={() => {
+                    if (todo.id) openModal(<DetailTodoModal todoId={todo.id} />);
+                  }}
+                />
               ))
             ) : (
               <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>
@@ -67,7 +76,13 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
           <div className="flex max-h-[512px] flex-col gap-4 overflow-y-auto">
             {goalDetail?.doneList && goalDetail?.doneList.length > 0 ? (
               goalDetail.doneList.map((todo) => (
-                <TaskCard key={todo.id} todo={todo} onClick={() => openModal(<DetailTodoModal todo={todo} />)} />
+                <TaskCard
+                  key={todo.id}
+                  todo={todo}
+                  onClick={() => {
+                    if (todo.id) openModal(<DetailTodoModal todoId={todo.id} />);
+                  }}
+                />
               ))
             ) : (
               <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>

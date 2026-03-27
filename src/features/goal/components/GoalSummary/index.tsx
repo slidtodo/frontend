@@ -28,7 +28,7 @@ export default function GoalSummary({ goalId }: GoalSummaryProps) {
 
         <div className="flex shrink-0 flex-col justify-between gap-6 md:flex-row xl:flex-1">
           <GoalProgress goalDetail={goalDetail} />
-          <LinkNote />
+          <LinkNote goalDetail={goalDetail} />
         </div>
       </section>
     </div>
@@ -75,8 +75,11 @@ function GoalProgress({ goalDetail }: GoalProgressProps) {
   );
 }
 
-function LinkNote() {
-  const goalId = 1;
+interface LinkNoteProps {
+  goalDetail: GoalDetailResponse | undefined;
+}
+function LinkNote({ goalDetail }: LinkNoteProps) {
+  const goalId = goalDetail?.id;
   return (
     <div className="relative min-h-[160px] w-full rounded-[32px] bg-[#02CAB5] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)]">
       <Link className="absolute bottom-1/5 left-1/7 flex items-center gap-['2px']" href={`/goal/${goalId}/note`}>

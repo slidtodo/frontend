@@ -63,7 +63,8 @@ const getServerRequestContext = async (): Promise<{ origin: string; cookieHeader
     const [{ headers: nextHeaders, cookies: nextCookies }] = await Promise.all([import('next/headers')]);
     const requestHeaders = await nextHeaders();
     const host = requestHeaders.get('x-forwarded-host') ?? requestHeaders.get('host');
-    const protocol = requestHeaders.get('x-forwarded-proto') ?? (process.env.NODE_ENV === 'development' ? 'http' : 'https');
+    const protocol =
+      requestHeaders.get('x-forwarded-proto') ?? (process.env.NODE_ENV === 'development' ? 'http' : 'https');
     const cookieStore = await nextCookies();
     const cookieHeader = cookieStore
       .getAll()
@@ -76,8 +77,8 @@ const getServerRequestContext = async (): Promise<{ origin: string; cookieHeader
         cookieHeader,
       };
     }
-  } catch {
-    // Fallback to configured origin when request headers are unavailable.
+  } catch (error) {
+    console.warn('Could not get server request context, falling back to configured origin. Error:', error);
   }
 
   return {
@@ -140,8 +141,8 @@ export const apiRequest = async <TResponse, TBody = never>(
       const errorBody = (await response.json()) as { message?: string; code?: string };
       message = errorBody.message ?? fallbackMessage;
       code = errorBody.code;
-    } catch {
-      // Ignore JSON parse failure and keep fallback message.
+    } catch (error) {
+      console.warn('Failed to parse error response as JSON. Using fallback message. Error:', error);
     }
 
     throw new ApiError(response.status, message, code);

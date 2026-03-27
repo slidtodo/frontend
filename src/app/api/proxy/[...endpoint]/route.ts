@@ -42,14 +42,14 @@ const syncAuthCookies = async (pathname: string, response: Response, nextRespons
     if (data.accessToken) {
       nextResponse.cookies.set('accessToken', data.accessToken, {
         ...AUTH_COOKIE_OPTIONS,
-        maxAge: 60 * 14,
+        maxAge: 60 * 30,
       });
     }
 
     if (data.refreshToken) {
       nextResponse.cookies.set('refreshToken', data.refreshToken, {
         ...AUTH_COOKIE_OPTIONS,
-        maxAge: 60 * 59,
+        maxAge: 60 * 60 * 24 * 7,
       });
     }
   } catch {

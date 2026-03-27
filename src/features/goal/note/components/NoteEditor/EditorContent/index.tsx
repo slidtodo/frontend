@@ -33,7 +33,7 @@ export default function EditorContent({
   const withoutSpace = text.replace(/\s/g, '').length;
 
   return (
-    <section className={clsx('flex justify-between min-h-144 flex-1 flex-col gap-2 overflow-y-auto pt-[14px] lg:pt-[10px]', className)}>
+    <section className={clsx('flex justify-between min-h-0 flex-1 flex-col gap-2 pt-[14px] lg:pt-[10px]', className)}>
       {readOnly ? (
         <div
           className="h-full w-full flex-1 cursor-default text-base font-normal leading-6 tracking-[-0.02em] text-[#333333]"
@@ -45,7 +45,7 @@ export default function EditorContent({
           <TiptapEditorContent
             editor={editor}
             className={clsx(
-              'w-full',
+              'max-h-98.25 md:max-h-166 lg:max-h-134.25 min-h-0 w-full overflow-y-auto',
               '[&_.ProseMirror]:min-h-75',
               '[&_.ProseMirror]:outline-none',
               '[&_.ProseMirror]:border-none',

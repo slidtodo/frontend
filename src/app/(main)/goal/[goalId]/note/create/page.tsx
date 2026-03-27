@@ -101,7 +101,7 @@ export default function Page() {
         </section>
       )}
 
-      <section className="flex-1 md:mb-[30px] lg:mb-[62px]">
+      <section className="flex-1 lg:mb-[30px]">
         <NoteEditor
           title={title}
           content={content}

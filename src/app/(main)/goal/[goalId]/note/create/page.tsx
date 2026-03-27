@@ -11,12 +11,11 @@ import { useToastStore } from '@/shared/stores/useToastStore';
 import { redirect, useSearchParams } from 'next/navigation';
 import DraftNoteToast from '@/features/note/components/DraftNoteToast.tsx';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
-import { PostNoteRequest } from '@/lib/api/fetchNotes';
 
 export default function Page() {
   const searchParams = useSearchParams();
   const todoIdParam = searchParams.get('todoId');
-  const todoId = todoIdParam ? Number(todoIdParam) : null;
+  const todoId = Number(todoIdParam);
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');

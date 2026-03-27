@@ -11,7 +11,13 @@ import { useToastStore } from '@/shared/stores/useToastStore';
 import { redirect, useSearchParams } from 'next/navigation';
 import DraftNoteToast from '@/features/note/components/DraftNoteToast.tsx';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
-import { PostNoteRequest } from '@/lib/api/fetchNotes';
+import { useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
+import TextAlign from '@tiptap/extension-text-align';
+import Placeholder from '@tiptap/extension-placeholder';
+import EditorToolbar from '@/features/goal/note/components/NoteEditor/EditorToolbar';
+import { createPortal } from 'react-dom';
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -74,8 +80,27 @@ export default function Page() {
     createNote(body);
   };
 
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      Placeholder.configure({ placeholder: '이 곳을 통해 노트 작성을 시작해주세요' }),
+    ],
+    content,
+    immediatelyRender: false,
+    onUpdate: ({ editor }) => {
+      setContent(editor.getHTML());
+    },
+  });
+
   return (
     <div className="mx-auto flex h-full w-full max-w-[768px] flex-col">
+      {breakpoint === 'mobile' &&
+        createPortal(
+          <EditorToolbar editor={editor} onLinkUrlChange={setLinkUrl} />,
+          document.getElementById('mobile-toolbar-slot') ?? document.body,
+        )}
       {breakpoint !== 'mobile' && (
         <section className="mb-0 flex shrink-0 items-center justify-between md:mt-4 md:mb-3 md:gap-4 lg:mt-10 lg:mb-[22px]">
           <PageHeader title={'노트 작성하기'} />
@@ -102,12 +127,11 @@ export default function Page() {
         </section>
       )}
 
-      <section className="flex-1 md:mb-[30px] lg:mb-[62px]">
+      <section className="flex-1 lg:mb-[30px]">
         <NoteEditor
+          editor={editor}
           title={title}
-          content={content}
           onTitleChange={setTitle}
-          onContentChange={setContent}
           createdAt={createdAt}
           linkUrl={linkUrl}
           onLinkUrlChange={setLinkUrl}

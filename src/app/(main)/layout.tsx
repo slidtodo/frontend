@@ -11,6 +11,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
     <SidebarProvider>
       <div className="flex h-full min-h-screen flex-col bg-[#F2F2F2] md:flex-row">
         <Sidebar />
+        <div id="mobile-toolbar-slot" className="md:hidden" />
         <Main>{children}</Main>
       </div>
     </SidebarProvider>

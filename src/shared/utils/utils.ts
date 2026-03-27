@@ -5,12 +5,14 @@ import { TAG_COLORS } from '../constants/constants';
  * @param date
  * @returns @example 2025. 03. 17
  */
-export function formatDate(date: Date) {
-  return date
+export function formatDate(date: Date | string) {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  return d
     .toLocaleDateString('ko-KR', {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
+      timeZone: 'Asia/Seoul',
     })
     .replace(/\.$/, '');
 }

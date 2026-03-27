@@ -8,9 +8,11 @@ import { Modal } from '@/shared/components/Modal';
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <MSWProvider>
-      <ReactQueryProvider>{children}</ReactQueryProvider>
-      <ToastContainer />
-      <Modal />
+      <ReactQueryProvider>
+        {children}
+        <ToastContainer />
+        <Modal />
+      </ReactQueryProvider>
     </MSWProvider>
   );
 }

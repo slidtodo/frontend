@@ -1,5 +1,6 @@
 'use client';
-
+import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
 import { CalendarIcon, PlusIcon } from 'lucide-react';
 
 import PageSubTitle from '@/shared/components/PageSubTitle';
@@ -8,12 +9,21 @@ import TaskCard from '@/shared/components/TaskCard';
 import Empty from '@/shared/components/Empty';
 import DetailTodoModal from '../DetailTodoModal';
 
+import { goalQueries } from '@/lib/queryKeys';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 
-export default function GoalDetail() {
+interface GoalDetailProps {
+  goalId: number;
+}
+export default function GoalDetail({ goalId }: GoalDetailProps) {
   const { openTodoCreateModal } = useTodoCreateModal();
   const { openModal } = useModalStore();
+
+  const { data: goalDetail } = useQuery({
+    ...goalQueries.detail(goalId),
+    enabled: !!goalId,
+  });
 
   return (
     <section className="flex flex-col gap-8 lg:flex-row">
@@ -28,7 +38,9 @@ export default function GoalDetail() {
                 className="rounded-full bg-[#F2F2F2] p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
               >
                 <CalendarIcon size={20} color="#737373" />
-                <span className="hidden w-full w-max text-sm font-semibold text-[#737373] md:block">캘린더 보기</span>
+                <Link href={`/calendar`} className="hidden w-full w-max text-sm font-semibold text-[#737373] md:block">
+                  캘린더 보기
+                </Link>
               </Button>
               <Button
                 className="rounded-full p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
@@ -42,15 +54,19 @@ export default function GoalDetail() {
         />
         <section className="rounded-2xl bg-[#FFF8E4] px-[28px] py-[32px]">
           <div className="flex max-h-[512px] flex-col gap-4 overflow-y-auto">
-            {/* {mockTodoItems.length > 0 ? (
-              mockTodoItems
-                .filter((todo) => !todo.done)
-                .map((todo) => (
-                  <TaskCard key={todo.id} todo={todo} onClick={() => openModal(<DetailTodoModal todo={todo} />)} />
-                ))
+            {goalDetail?.todoList && goalDetail?.todoList.length > 0 ? (
+              goalDetail.todoList.map((todo) => (
+                <TaskCard
+                  key={todo.id}
+                  todo={todo}
+                  onClick={() => {
+                    if (todo.id) openModal(<DetailTodoModal todoId={todo.id} />);
+                  }}
+                />
+              ))
             ) : (
               <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>
-            )} */}
+            )}
           </div>
         </section>
       </div>
@@ -58,15 +74,19 @@ export default function GoalDetail() {
         <PageSubTitle subTitle="DONE" textClassName="font-semibold" className="py-[6px]" />
         <section className="rounded-2xl bg-[#ffffff] px-[28px] py-[32px]">
           <div className="flex max-h-[512px] flex-col gap-4 overflow-y-auto">
-            {/* {mockTodoItems.length > 0 ? (
-              mockTodoItems
-                .filter((todo) => todo.done)
-                .map((todo) => (
-                  <TaskCard key={todo.id} todo={todo} onClick={() => openModal(<DetailTodoModal todo={todo} />)} />
-                ))
+            {goalDetail?.doneList && goalDetail?.doneList.length > 0 ? (
+              goalDetail.doneList.map((todo) => (
+                <TaskCard
+                  key={todo.id}
+                  todo={todo}
+                  onClick={() => {
+                    if (todo.id) openModal(<DetailTodoModal todoId={todo.id} />);
+                  }}
+                />
+              ))
             ) : (
               <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>
-            )} */}
+            )}
           </div>
         </section>
       </div>

@@ -12,6 +12,8 @@ interface EditorToolbarProps {
   onLinkUrlChange?: (value: string | null) => void;
 }
 
+const prevent = (e: React.MouseEvent) => e.preventDefault();
+
 export default function EditorToolbar({ editor, onLinkUrlChange }: EditorToolbarProps) {
   const { openModal } = useModalStore();
   const isMobile = useBreakpoint() === 'mobile';
@@ -23,11 +25,12 @@ export default function EditorToolbar({ editor, onLinkUrlChange }: EditorToolbar
   return (
     <div
       className={clsx(
-        'flex h-11 w-full items-center bg-[#FAFAFA] text-slate-500 px-4 py-1.5',
+        'flex h-11 w-full items-center bg-[#FAFAFA] px-4 py-1.5 text-slate-500',
         !isMobile && 'rounded-[18px]',
       )}
     >
       <button
+        onMouseDown={prevent}
         onClick={() => editor?.chain().focus().toggleBold().run()}
         className={clsx(
           'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',
@@ -38,6 +41,7 @@ export default function EditorToolbar({ editor, onLinkUrlChange }: EditorToolbar
       </button>
 
       <button
+        onMouseDown={prevent}
         onClick={() => editor?.chain().focus().toggleItalic().run()}
         className={clsx(
           'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',
@@ -48,6 +52,7 @@ export default function EditorToolbar({ editor, onLinkUrlChange }: EditorToolbar
       </button>
 
       <button
+        onMouseDown={prevent}
         onClick={() => editor?.chain().focus().toggleUnderline().run()}
         className={clsx(
           'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',
@@ -58,6 +63,7 @@ export default function EditorToolbar({ editor, onLinkUrlChange }: EditorToolbar
       </button>
 
       <button
+        onMouseDown={prevent}
         onClick={() => editor?.chain().focus().setTextAlign('left').run()}
         className={clsx(
           'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',
@@ -68,6 +74,7 @@ export default function EditorToolbar({ editor, onLinkUrlChange }: EditorToolbar
       </button>
 
       <button
+        onMouseDown={prevent}
         onClick={() => editor?.chain().focus().setTextAlign('center').run()}
         className={clsx(
           'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',
@@ -78,6 +85,7 @@ export default function EditorToolbar({ editor, onLinkUrlChange }: EditorToolbar
       </button>
 
       <button
+        onMouseDown={prevent}
         onClick={() => editor?.chain().focus().setTextAlign('right').run()}
         className={clsx(
           'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',
@@ -88,6 +96,7 @@ export default function EditorToolbar({ editor, onLinkUrlChange }: EditorToolbar
       </button>
 
       <button
+        onMouseDown={prevent}
         onClick={() => editor?.chain().focus().toggleBulletList().run()}
         className={clsx(
           'cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]',

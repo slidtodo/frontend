@@ -17,6 +17,7 @@ import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
 import EditorToolbar from '@/features/goal/note/components/NoteEditor/EditorToolbar';
+import { createPortal } from 'react-dom';
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -95,7 +96,11 @@ export default function Page() {
 
   return (
     <div className="mx-auto flex h-full w-full max-w-[768px] flex-col">
-      {breakpoint === 'mobile' && <EditorToolbar editor={editor} onLinkUrlChange={setLinkUrl} />}
+      {breakpoint === 'mobile' &&
+        createPortal(
+          <EditorToolbar editor={editor} onLinkUrlChange={setLinkUrl} />,
+          document.getElementById('mobile-toolbar-slot') ?? document.body,
+        )}
       {breakpoint !== 'mobile' && (
         <section className="mb-0 flex shrink-0 items-center justify-between md:mt-4 md:mb-3 md:gap-4 lg:mt-10 lg:mb-[22px]">
           <PageHeader title={'노트 작성하기'} />

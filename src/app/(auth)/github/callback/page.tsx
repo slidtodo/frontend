@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { postGithubLogin } from '@/lib/api/fetchAuth';
+import { fetchAuth } from '@/lib/api/fetchAuth';
 
 export default function GithubCallbackPage() {
   const router = useRouter();
@@ -17,7 +17,7 @@ export default function GithubCallbackPage() {
 
     const login = async () => {
       try {
-        await postGithubLogin({ code });
+        await fetchAuth.postGithubLogin({ code });
         router.push('/dashboard');
       } catch (error) {
         console.error('GitHub login callback failed:', error);

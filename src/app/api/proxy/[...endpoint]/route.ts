@@ -3,10 +3,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const apiBaseUrl = (process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL ?? '').replace(/\/+$/, '');
 
-if (!apiBaseUrl) {
-  throw new Error('API_BASE_URL is not defined in environment variables');
-}
-
 const AUTH_COOKIE_OPTIONS = {
   httpOnly: true,
   secure: process.env.NODE_ENV === 'production',
@@ -62,6 +58,10 @@ const syncAuthCookies = async (pathname: string, response: Response, nextRespons
 };
 
 const handler = async (request: NextRequest, context: ProxyRouteContext) => {
+  if (!apiBaseUrl) {
+    return NextResponse.json({ message: 'API_BASE_URL is not defined in environment variables' }, { status: 500 });
+  }
+
   const { endpoint } = await context.params;
   const pathname = endpoint.join('/');
   const targetUrl = `${apiBaseUrl}/api/v1/${pathname}${request.nextUrl.search}`;

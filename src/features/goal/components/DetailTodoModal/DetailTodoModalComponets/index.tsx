@@ -1,8 +1,8 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
+import { useQuery } from '@tanstack/react-query';
 import { FlagIcon, CalendarIcon, HashIcon, XIcon, LinkIcon } from 'lucide-react';
 
 import Tag from '@/shared/components/Tag';
@@ -10,7 +10,7 @@ import Tag from '@/shared/components/Tag';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { TodoResponse } from '@/lib/api';
 import { noteQueries } from '@/lib/queryKeys';
-
+import { dateFormatter } from '@/shared/utils/utils';
 interface DetailTodoModalComponentsProps {
   todo: TodoResponse | undefined;
 }
@@ -32,10 +32,11 @@ export default function DetailTodoModalComponents({ todo }: DetailTodoModalCompo
       </div>
       <div className="flex flex-col gap-4">
         <DetailItemSummary icon={<FlagIcon size={18} />} label="목표" value={todo?.goal?.title} />
-
-        <DetailItemSummary icon={<FlagIcon size={18} />} label="목표" value={todo?.dueDate} />
-
-        <DetailItemSummary icon={<CalendarIcon size={18} />} label="마감기한" value={todo?.dueDate} />
+        <DetailItemSummary
+          icon={<CalendarIcon size={18} />}
+          label="마감기한"
+          value={todo?.dueDate ? dateFormatter(todo.dueDate) : ''}
+        />
         <DetailItemSummary
           icon={<HashIcon size={18} />}
           label="태그"
@@ -97,6 +98,8 @@ function NoteItem({ noteId }: { noteId: number }) {
     ...noteQueries.detail(noteId),
     enabled: Boolean(noteId) && noteId !== undefined,
   });
+
+  if (!note) return null;
 
   return (
     <Link

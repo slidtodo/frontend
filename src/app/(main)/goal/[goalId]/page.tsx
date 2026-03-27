@@ -17,12 +17,13 @@ interface GoalDetailPageProps {
 
 export default async function GoalDetailPage({ params }: GoalDetailPageProps) {
   const { goalId } = await params;
+  const numericGoalId = Number(goalId);
 
   const queryClient = new QueryClient();
 
   await Promise.all([
     queryClient.prefetchQuery(userQueries.current()),
-    queryClient.prefetchQuery(goalQueries.detail(Number(goalId))),
+    queryClient.prefetchQuery(goalQueries.detail(numericGoalId)),
   ]);
 
   const dehydratedState = dehydrate(queryClient);
@@ -30,8 +31,8 @@ export default async function GoalDetailPage({ params }: GoalDetailPageProps) {
   return (
     <ReactQueryProvider state={dehydratedState}>
       <div className="flex flex-col gap-16">
-        <GoalSummary goalId={Number(goalId)} />
-        <GoalDetail goalId={Number(goalId)} />
+        <GoalSummary goalId={numericGoalId} />
+        <GoalDetail goalId={numericGoalId} />
       </div>
     </ReactQueryProvider>
   );

@@ -11,7 +11,7 @@ interface DetailTodoModalProps {
 export default function DetailTodoModal({ todoId }: DetailTodoModalProps) {
   const { data: todo } = useQuery({
     ...todoQueries.detail(todoId),
-    enabled: Boolean(todoId) && todoId !== undefined,
+    enabled: !!todoId,
   });
 
   return <DetailTodoModalComponents todo={todo} />;

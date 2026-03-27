@@ -5,17 +5,10 @@ import EditorToolbar from './EditorToolbar';
 import EditorTitle from './EditorTitle';
 import EditorMeta from './EditorMeta';
 import EditorContent from './EditorContent';
-import { Editor } from '@tiptap/react';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
+import { NoteEditorProps } from '../../types/types';
 
-interface NoteEditorProps {
-  editor: Editor | null;
-  title: string;
-  onTitleChange: (value: string) => void;
-  createdAt: string;
-  linkUrl?: string | null;
-  onLinkUrlChange?: (value: string | null) => void;
-}
+
 
 export default function NoteEditor({
   editor,
@@ -24,6 +17,8 @@ export default function NoteEditor({
   createdAt,
   linkUrl,
   onLinkUrlChange,
+  goal,
+  todo,
 }: NoteEditorProps) {
   const isMobile = useBreakpoint() === 'mobile';
 
@@ -33,6 +28,13 @@ export default function NoteEditor({
       onTitleChange(value);
     }
   };
+
+  const githubSourceLabel =
+    todo?.source === 'GITHUB_ISSUE' ? 'ISSUES' : todo?.source === 'GITHUB_PR' ? 'PR' : null;
+
+  const tags = githubSourceLabel
+    ? [{ id: 'source', string: githubSourceLabel }]
+    : (todo?.tags ?? []).map((t) => ({ id: String(t.id), string: t.name ?? '' }));
 
   return (
     <div
@@ -47,13 +49,9 @@ export default function NoteEditor({
       <section className="border-b border-b-[#DDD] pb-4 md:pt-[19px] md:pb-5 lg:pb-7">
         <EditorTitle title={title} onChange={handleTitleChange} />
         <EditorMeta
-          goal={{ title: '올해 안에 풀스택 개발자 되기' }}
-          todos={{ title: 'React 컴포넌트 설계 공부하기', done: false }}
-          tags={[
-            { id: '1', string: 'React', variant: 'green' },
-            { id: '2', string: 'TypeScript', variant: 'purple' },
-            { id: '3', string: '공부', variant: 'orange' },
-          ]}
+          goal={{ title: goal?.title ?? todo?.goal?.title ?? '' }}
+          todos={{ title: todo?.title ?? '', done: todo?.done ?? false }}
+          tags={tags}
           createdAt={createdAt}
         />
       </section>

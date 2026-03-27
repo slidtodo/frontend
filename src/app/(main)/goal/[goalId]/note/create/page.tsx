@@ -22,7 +22,7 @@ import { createPortal } from 'react-dom';
 export default function Page() {
   const searchParams = useSearchParams();
   const todoIdParam = searchParams.get('todoId');
-  const todoId = Number(todoIdParam);
+  const todoId = todoIdParam ? Number(todoIdParam) : null;
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -88,7 +88,6 @@ export default function Page() {
       Placeholder.configure({ placeholder: '이 곳을 통해 노트 작성을 시작해주세요' }),
     ],
     content,
-    immediatelyRender: false,
     onUpdate: ({ editor }) => {
       setContent(editor.getHTML());
     },

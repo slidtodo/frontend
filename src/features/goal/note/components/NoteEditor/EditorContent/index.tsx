@@ -56,11 +56,11 @@ export default function EditorContent({
               '[&_.ProseMirror]:text-[#333333]',
               '[&_.ProseMirror_ul]:list-disc',
               '[&_.ProseMirror_ul]:pl-5',
-              !linkUrl && '[&_.ProseMirror_p.is-editor-empty:first-child::before]:content-[attr(data-placeholder)]',
-              !linkUrl && '[&_.ProseMirror_p.is-editor-empty:first-child::before]:text-gray-400',
-              !linkUrl && '[&_.ProseMirror_p.is-editor-empty:first-child::before]:float-left',
-              !linkUrl && '[&_.ProseMirror_p.is-editor-empty:first-child::before]:pointer-events-none',
-              !linkUrl && '[&_.ProseMirror_p.is-editor-empty:first-child::before]:h-0',
+              '[&_.ProseMirror_p.is-editor-empty:first-child::before]:content-[attr(data-placeholder)]',
+              '[&_.ProseMirror_p.is-editor-empty:first-child::before]:text-gray-400',
+              '[&_.ProseMirror_p.is-editor-empty:first-child::before]:float-left',
+              '[&_.ProseMirror_p.is-editor-empty:first-child::before]:pointer-events-none',
+              '[&_.ProseMirror_p.is-editor-empty:first-child::before]:h-0',
             )}
           />
         </>

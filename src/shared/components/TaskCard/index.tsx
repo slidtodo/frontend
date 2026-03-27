@@ -10,20 +10,6 @@ import { twMerge } from 'tailwind-merge';
 import type { TodoResponse } from '@/lib/api';
 import { usePatchTodoFavorite } from '@/lib/mutations';
 
-/**
- * A single to-do list row.
- *
- * @example
- * <TaskCard
- *  todo={{
- *  id: 1,
- *  title: '항목명',
- *  done: true,
- *  }}
- *  variant='orange'
- * />
- */
-
 interface TaskCardProps {
   todo: NonNullable<TodoResponse>;
   starred?: boolean;
@@ -32,6 +18,11 @@ interface TaskCardProps {
   variant?: 'default' | 'orange';
 }
 
+/**
+ * TODO
+ * 할 일 수정, 삭제 로직
+ * 할 일 Done으로 post 하는 로직
+ */
 export function TaskCard({
   /**
    * [todo]
@@ -41,7 +32,6 @@ export function TaskCard({
   todo,
   starred: initialStarred = false,
   onClick,
-  // 이벤트 핸들러
   onToggle, // 체크박스
   /**
    * varaint: 'default' | 'orange'
@@ -50,7 +40,6 @@ export function TaskCard({
 }: TaskCardProps) {
   const [checked, setChecked] = useState(todo.done);
   const [starred, setStarred] = useState(initialStarred);
-
   const router = useRouter();
   const isOrange = variant === 'orange';
 

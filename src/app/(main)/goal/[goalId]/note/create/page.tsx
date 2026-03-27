@@ -10,7 +10,9 @@ export default async function Page({
   searchParams: Promise<{ todoId?: string }>;
 }) {
   const { goalId } = await params;
-  const { todoId } = await searchParams;
+  // const { todoId } = await searchParams;
+  // @TODO 13번 줄 주석 풀고 15번 줄 주석
+  const todoId = 8;
 
   const [goal, todo] = await Promise.all([
     fetchGoals.getGoal(Number(goalId)),

@@ -57,12 +57,9 @@ export default function MyPageForm() {
       const pwError = validatePassword(newPassword);
       const confirmError = validatePasswordConfirm(newPassword, newPasswordConfirm);
 
-      if (pwError) {
-        setNewPasswordError(pwError);
-        return;
-      }
-      if (confirmError) {
-        setNewPasswordConfirmError(confirmError);
+      if (pwError || confirmError) {
+        if (pwError) setNewPasswordError(pwError);
+        if (confirmError) setNewPasswordConfirmError(confirmError);
         return;
       }
 

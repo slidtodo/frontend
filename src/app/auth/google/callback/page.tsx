@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { postGoogleLogin } from '@/lib/api/fetchAuth';
+import { fetchAuth } from '@/lib/api/fetchAuth';
 
 export default function GoogleCallbackPage() {
   const router = useRouter();
@@ -17,7 +17,7 @@ export default function GoogleCallbackPage() {
 
     const login = async () => {
       try {
-        await postGoogleLogin({ code });
+        await fetchAuth.postGoogleLogin({ code });
         router.push('/dashboard');
       } catch (error) {
         console.error('구글 로그인 콜백 실패:', error);

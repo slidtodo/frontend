@@ -1,11 +1,11 @@
 import { queryOptions } from '@tanstack/react-query';
-import { getGithubAuthorizeUrl, getGoogleAuthorizeUrl } from './api/fetchAuth';
-import { getGoal, getGoals, type GetGoalsParams } from './api/fetchGoals';
-import { getTodo, getTodos, type GetTodosParams } from './api/fetchTodos';
-import { getNote, getNotes, type GetNotesParams } from './api/fetchNotes';
-import { getNotifications } from './api/fetchNotifications';
-import { getTags } from './api/fetchTags';
-import { getCurrentUser, getUserProgress } from './api/fetchUsers';
+import { fetchAuth } from './api/fetchAuth';
+import { fetchGoals, type GetGoalsParams } from './api/fetchGoals';
+import { fetchTodos, type GetTodosParams } from './api/fetchTodos';
+import { fetchNotes, type GetNotesParams } from './api/fetchNotes';
+import { fetchNotifications } from './api/fetchNotifications';
+import { fetchTags } from './api/fetchTags';
+import { fetchUsers } from './api/fetchUsers';
 
 // ────────────────────────────────────────────────────────────
 // Goal 쿼리
@@ -19,7 +19,7 @@ export const goalQueries = {
   list: (params?: GetGoalsParams) =>
     queryOptions({
       queryKey: ['goals', 'list', params ?? {}],
-      queryFn: () => getGoals(params),
+      queryFn: () => fetchGoals.getGoals(params),
     }),
 
   /**
@@ -29,7 +29,7 @@ export const goalQueries = {
   detail: (goalId: number) =>
     queryOptions({
       queryKey: ['goals', 'detail', goalId],
-      queryFn: () => getGoal(goalId),
+      queryFn: () => fetchGoals.getGoal(goalId),
     }),
 };
 
@@ -49,7 +49,7 @@ export const todoQueries = {
   list: (params: GetTodosParams) =>
     queryOptions({
       queryKey: ['todos', 'list', params ?? {}],
-      queryFn: () => getTodos(params),
+      queryFn: () => fetchTodos.getTodos(params),
     }),
 
   /**
@@ -59,7 +59,7 @@ export const todoQueries = {
   detail: (todoId: number) =>
     queryOptions({
       queryKey: ['todos', 'detail', todoId],
-      queryFn: () => getTodo(todoId),
+      queryFn: () => fetchTodos.getTodo(todoId),
     }),
 };
 
@@ -76,7 +76,7 @@ export const noteQueries = {
   list: (params?: GetNotesParams) =>
     queryOptions({
       queryKey: ['notes', 'list', params ?? {}],
-      queryFn: () => getNotes(params),
+      queryFn: () => fetchNotes.getNotes(params),
     }),
 
   /**
@@ -86,7 +86,7 @@ export const noteQueries = {
   detail: (noteId: number) =>
     queryOptions({
       queryKey: ['notes', 'detail', noteId],
-      queryFn: () => getNote(noteId),
+      queryFn: () => fetchNotes.getNote(noteId),
     }),
 };
 
@@ -94,13 +94,13 @@ export const authQueries = {
   googleAuthorizeUrl: () =>
     queryOptions({
       queryKey: ['auth', 'googleAuthorizeUrl'],
-      queryFn: getGoogleAuthorizeUrl,
+      queryFn: fetchAuth.getGoogleAuthorizeUrl,
     }),
 
   githubAuthorizeUrl: () =>
     queryOptions({
       queryKey: ['auth', 'githubAuthorizeUrl'],
-      queryFn: getGithubAuthorizeUrl,
+      queryFn: fetchAuth.getGithubAuthorizeUrl,
     }),
 };
 
@@ -108,13 +108,13 @@ export const userQueries = {
   current: () =>
     queryOptions({
       queryKey: ['users', 'me'],
-      queryFn: getCurrentUser,
+      queryFn: fetchUsers.getCurrentUser,
     }),
 
   progress: () =>
     queryOptions({
       queryKey: ['users', 'me', 'progress'],
-      queryFn: getUserProgress,
+      queryFn: fetchUsers.getUserProgress,
     }),
 };
 
@@ -122,7 +122,7 @@ export const notificationQueries = {
   list: () =>
     queryOptions({
       queryKey: ['notifications', 'list'],
-      queryFn: getNotifications,
+      queryFn: fetchNotifications.getNotifications,
     }),
 };
 
@@ -130,6 +130,6 @@ export const tagQueries = {
   list: () =>
     queryOptions({
       queryKey: ['tags', 'list'],
-      queryFn: getTags,
+      queryFn: fetchTags.getTags,
     }),
 };

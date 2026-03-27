@@ -32,7 +32,69 @@ export const toQueryString = (params?: Record<string, QueryValue>): string => {
   return searchParams.toString();
 };
 
-const apiBaseUrl = (process.env.NEXT_PUBLIC_API_BASE_URL ?? process.env.API_BASE_URL ?? '').replace(/\/+$/, '');
+const apiProxyPrefix = '/api/proxy';
+
+const normalizeOrigin = (value?: string): string | null => {
+  if (!value) {
+    return null;
+  }
+
+  return value.startsWith('http://') || value.startsWith('https://') ? value : `https://${value}`;
+};
+
+const getServerOrigin = (): string => {
+  const configuredOrigin = normalizeOrigin(
+    process.env.NEXT_PUBLIC_APP_URL ?? process.env.APP_URL ?? process.env.VERCEL_URL,
+  );
+
+  if (configuredOrigin) {
+    return configuredOrigin;
+  }
+
+  if (process.env.NODE_ENV !== 'production') {
+    return 'http://localhost:3000';
+  }
+
+  throw new Error('APP_URL or VERCEL_URL is not defined in environment variables');
+};
+
+const getServerRequestContext = async (): Promise<{ origin: string; cookieHeader: string }> => {
+  try {
+    const [{ headers: nextHeaders, cookies: nextCookies }] = await Promise.all([import('next/headers')]);
+    const requestHeaders = await nextHeaders();
+    const host = requestHeaders.get('x-forwarded-host') ?? requestHeaders.get('host');
+    const protocol =
+      requestHeaders.get('x-forwarded-proto') ?? (process.env.NODE_ENV === 'development' ? 'http' : 'https');
+    const cookieStore = await nextCookies();
+    const cookieHeader = cookieStore
+      .getAll()
+      .map(({ name, value }) => `${name}=${value}`)
+      .join('; ');
+
+    if (host) {
+      return {
+        origin: `${protocol}://${host}`,
+        cookieHeader,
+      };
+    }
+  } catch (error) {
+    console.warn('Could not get server request context, falling back to configured origin. Error:', error);
+  }
+
+  return {
+    origin: getServerOrigin(),
+    cookieHeader: '',
+  };
+};
+
+export const toProxyPath = (url: string): string => {
+  if (!url.startsWith('/api/')) {
+    return url;
+  }
+
+  const normalizedUrl = url.replace(/^\/api\/v1\/?/, '');
+  return `${apiProxyPrefix}/${normalizedUrl}`;
+};
 
 type ApiRequestOptions<TBody> = {
   method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
@@ -50,7 +112,10 @@ export const apiRequest = async <TResponse, TBody = never>(
 ): Promise<TResponse> => {
   const { method = 'GET', params, body, headers, signal, cache, next } = options;
   const queryString = toQueryString(params);
-  const resolvedUrl = url.startsWith('/api/') && apiBaseUrl ? `${apiBaseUrl}${url}` : url;
+  const proxyPath = toProxyPath(url);
+  const serverRequestContext =
+    typeof window === 'undefined' && proxyPath.startsWith('/') ? await getServerRequestContext() : null;
+  const resolvedUrl = serverRequestContext ? `${serverRequestContext.origin}${proxyPath}` : proxyPath;
   const requestUrl = queryString ? `${resolvedUrl}?${queryString}` : resolvedUrl;
 
   const response = await fetch(requestUrl, {
@@ -59,6 +124,7 @@ export const apiRequest = async <TResponse, TBody = never>(
     signal,
     headers: {
       ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+      ...(serverRequestContext?.cookieHeader ? { Cookie: serverRequestContext.cookieHeader } : {}),
       ...headers,
     },
     body: body === undefined ? undefined : JSON.stringify(body),
@@ -75,8 +141,8 @@ export const apiRequest = async <TResponse, TBody = never>(
       const errorBody = (await response.json()) as { message?: string; code?: string };
       message = errorBody.message ?? fallbackMessage;
       code = errorBody.code;
-    } catch {
-      // Ignore JSON parse failure and keep fallback message.
+    } catch (error) {
+      console.warn('Failed to parse error response as JSON. Using fallback message. Error:', error);
     }
 
     throw new ApiError(response.status, message, code);

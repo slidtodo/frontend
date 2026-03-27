@@ -12,16 +12,13 @@ import TaskCard from '@/shared/components/TaskCard';
 import { todoQueries, userQueries } from '@/lib/queryKeys';
 import { CurrentUserResponse } from '@/lib/api';
 
-interface DashboardSummaryProps {
-  res: CurrentUserResponse;
-}
-export default function DashBoardSummary({ res }: DashboardSummaryProps) {
-  // const { data: user } = useQuery(userQueries.current());
+export default function DashBoardSummary() {
+  const { data: user } = useQuery(userQueries.current());
 
   return (
     <>
-      <PageHeader title={`${res.nickname}님의 대시보드`} className="pb-[30px] text-black lg:pb-[34px]" />
-      {/* <section className="flex w-full flex-col gap-[40px] pb-[40px] md:flex-row md:gap-[12px] lg:gap-[32px] lg:pb-[34px]">
+      <PageHeader title={`${user?.nickname}님의 대시보드`} className="pb-[30px] text-black lg:pb-[34px]" />
+      <section className="flex w-full flex-col gap-[40px] pb-[40px] md:flex-row md:gap-[12px] lg:gap-[32px] lg:pb-[34px]">
         <div className="flex w-full flex-col justify-between gap-[10px]">
           <PageSubTitle
             subTitle="최근 등록한 할 일"
@@ -44,7 +41,7 @@ export default function DashBoardSummary({ res }: DashboardSummaryProps) {
           />
           <CurrentProgressCard user={user} />
         </div>
-      </section> */}
+      </section>
     </>
   );
 }

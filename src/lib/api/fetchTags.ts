@@ -1,8 +1,11 @@
 import type { operations } from '@/shared/types/api/schemas/api.types';
-import { serverApiRequest } from './server-utils';
 import { apiRequest } from './utils';
 
 export type TagsResponse = operations['getList_3']['responses'][200]['content']['application/json'];
 
-export const getTags = () => apiRequest<TagsResponse>('/api/v1/tags');
-export const getTagsServer = () => serverApiRequest<TagsResponse>('/api/v1/tags');
+class FetchTags {
+  getTags = () => apiRequest<TagsResponse>('/api/v1/tags');
+}
+
+const fetchTags = new FetchTags();
+export { fetchTags };

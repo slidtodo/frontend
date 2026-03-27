@@ -12,7 +12,9 @@ import { validatePassword, validatePasswordConfirm } from '@/lib/validation';
 export default function MyPage() {
   const { data: user } = useQuery(userQueries.current());
 
-  const [nickname, setNickname] = useState('');
+  const [nickname, setNickname] = useState(() => {
+    return user?.nickname || '';
+  });
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
@@ -25,13 +27,6 @@ export default function MyPage() {
   const { mutate: patchPassword, isPending: isPatchingPassword } = usePatchCurrentUserPassword();
 
   const isLocalLogin = user?.loginProvider === 'LOCAL';
-
-  useEffect(() => {
-    if (user?.nickname) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setNickname(user.nickname);
-    }
-  }, [user]);
 
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);

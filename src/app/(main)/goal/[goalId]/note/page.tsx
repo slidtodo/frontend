@@ -1,9 +1,9 @@
-import GoalItem from '@/features/goal/note/components/GoalItem';
-import NoteListHeader from '@/features/goal/note/components/NoteListHeader';
+import GoalItem from '@/features/note/components/GoalItem';
+import NoteListHeader from '@/features/note/components/NoteListHeader';
 import clsx from 'clsx';
 import { Note } from '@/shared/types/types';
 import Empty from '@/shared/components/Empty';
-import NoteItem from '@/features/goal/note/components/NoteItem';
+import NoteItem from '@/features/note/components/NoteItem';
 
 /**
  * @TODO mock 데이터 추후 삭제 예정

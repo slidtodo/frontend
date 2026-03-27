@@ -1,4 +1,4 @@
-import NoteCreateClient from '../../../../../../features/goal/note/components/NoteCreateClient';
+import NoteCreateClient from '../../../../../../features/note/components/NoteCreateClient';
 import { fetchTodos } from '@/lib/api/fetchTodos';
 import { fetchGoals } from '@/lib/api/fetchGoals';
 

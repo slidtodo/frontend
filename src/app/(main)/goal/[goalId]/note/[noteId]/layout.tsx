@@ -16,7 +16,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
-import NoteCloseButton from '@/features/goal/note/components/NoteEditor/EditorTitle/NoteCloseButton';
+import NoteCloseButton from '@/features/note/components/NoteEditor/EditorTitle/NoteCloseButton';
 
 export default function NoteDetailLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();

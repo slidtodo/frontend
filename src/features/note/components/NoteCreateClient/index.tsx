@@ -1,7 +1,7 @@
 'use client';
 
 import PageHeader from '@/shared/components/PageHeader';
-import NoteEditor from '@/features/goal/note/components/NoteEditor';
+import NoteEditor from '@/features/note/components/NoteEditor';
 import Button from '@/shared/components/Button';
 import { useDraftNoteRestore } from '@/features/note/hooks/useDraftNoteRestore';
 import { useState } from 'react';
@@ -16,7 +16,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
-import EditorToolbar from '@/features/goal/note/components/NoteEditor/EditorToolbar';
+import EditorToolbar from '@/features/note/components/NoteEditor/EditorToolbar';
 import { createPortal } from 'react-dom';
 import { TodoResponse } from '@/lib/api/fetchTodos';
 import { GoalDetailResponse } from '@/lib/api/fetchGoals';

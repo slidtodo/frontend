@@ -17,7 +17,7 @@ export function SinglePostModal({
 }: SinglePostModalProps) {
   const [url, setUrl] = useState('');
   const { closeModal } = useModalStore();
-
+  
   return (
     <div className="w-85.75 rounded-3xl bg-white p-4 shadow-[0px_0px_60px_0px_rgba(0,0,0,0.05)] md:w-114 md:rounded-[40px] md:p-8">
       <div className="flex flex-col">

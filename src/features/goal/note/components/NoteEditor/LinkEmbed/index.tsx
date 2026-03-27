@@ -1,8 +1,6 @@
-// features/goal/note/components/NoteEditor/LinkEmbed/index.tsx
 'use client';
 
 import { XIcon } from 'lucide-react';
-import { useState } from 'react';
 
 interface LinkEmbedProps {
   url: string;
@@ -47,24 +45,20 @@ export default function LinkEmbed({ url, onRemove }: LinkEmbedProps) {
             />
           </div>
           {/* 사이트 제목 */}
-          <p className="text-sm font-medium text-[#333] tracking-[-0.42px]">
-            {getSiteName(url)}
-          </p>
+          <p className="text-sm font-medium tracking-[-0.42px] text-[#333]">{getSiteName(url)}</p>
         </div>
         {/* 삭제 버튼 */}
         <button
           type="button"
           onClick={onRemove}
-          className="cursor-pointer text-[#A4A4A4] hover:text-[#333] transition-colors"
+          className="cursor-pointer text-[#A4A4A4] transition-colors hover:text-[#333]"
         >
           <XIcon size={20} />
         </button>
       </div>
 
       {/* 하단 — URL */}
-      <p className="ml-[5px] truncate text-xs font-normal text-[#A4A4A4]">
-        {url}
-      </p>
+      <p className="ml-[5px] truncate text-xs font-normal text-[#A4A4A4]">{url}</p>
     </div>
   );
 }

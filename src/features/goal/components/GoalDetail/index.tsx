@@ -9,9 +9,12 @@ import Empty from '@/shared/components/Empty';
 import DetailTodoModal from '../DetailTodoModal';
 
 import { useModalStore } from '@/shared/stores/useModalStore';
+import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 
 export default function GoalDetail() {
+  const { openTodoCreateModal } = useTodoCreateModal();
   const { openModal } = useModalStore();
+
   return (
     <section className="flex flex-col gap-8 lg:flex-row">
       <div className="flex flex-1 flex-col gap-[10px]">
@@ -27,7 +30,10 @@ export default function GoalDetail() {
                 <CalendarIcon size={20} color="#737373" />
                 <span className="hidden w-full w-max text-sm font-semibold text-[#737373] md:block">캘린더 보기</span>
               </Button>
-              <Button className="rounded-full p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]">
+              <Button
+                className="rounded-full p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
+                onClick={openTodoCreateModal}
+              >
                 <PlusIcon size={20} />
                 <span className="hidden w-full w-max text-sm font-semibold md:block">할 일 추가</span>
               </Button>

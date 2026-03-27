@@ -1,9 +1,9 @@
 'use client';
+import { XIcon } from 'lucide-react';
+import { useRef, KeyboardEvent } from 'react';
 
 import { TAG_COLORS } from '@/shared/constants/constants';
 import { getColorIndex } from '@/shared/utils/utils';
-import { XIcon } from 'lucide-react';
-import { KeyboardEvent, useState } from 'react';
 
 interface TagInputProps {
   tags: string[];
@@ -12,7 +12,7 @@ interface TagInputProps {
 }
 
 export function TagInput({ tags, onAddTag, onRemoveTag }: TagInputProps) {
-  const [inputValue, setInputValue] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -20,14 +20,16 @@ export function TagInput({ tags, onAddTag, onRemoveTag }: TagInputProps) {
 
       if (e.nativeEvent.isComposing) return;
 
-      const trimmed = inputValue.trim();
+      const trimmed = inputRef.current?.value.trim();
       if (trimmed && !tags.includes(trimmed)) {
         onAddTag(trimmed);
-        setInputValue('');
+        if (inputRef.current) {
+          inputRef.current.value = '';
+        }
       }
     }
 
-    if (e.key === 'Backspace' && inputValue === '' && tags.length > 0) {
+    if (e.key === 'Backspace' && inputRef.current?.value === '' && tags.length > 0) {
       if (e.nativeEvent.isComposing) return;
       onRemoveTag(tags[tags.length - 1]);
     }
@@ -56,8 +58,7 @@ export function TagInput({ tags, onAddTag, onRemoveTag }: TagInputProps) {
 
       <input
         type="text"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
+        ref={inputRef}
         onKeyDown={handleKeyDown}
         placeholder={tags.length === 0 ? '입력 후 Enter' : ''}
         className="min-w-[80px] flex-1 border-none bg-transparent p-0 text-sm text-[#333] placeholder:text-[#737373] focus:outline-none md:text-base"

@@ -1,7 +1,7 @@
 'use client';
 import clsx from 'clsx';
 import { XIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 
 import Button from '@/shared/components/Button';
@@ -12,51 +12,37 @@ import { TagInput } from '../shared/TagInput';
 import LinkInput from '../shared/LinkInput';
 import ImageInput from '../shared/ImageInput';
 import DateInput from '../shared/DateInput';
-import StatusField from '../shared/StatusField';
 
-import { ImageType, TodoCreateForm, TodoEditForm } from '@/features/todo/components/types/types';
+import { fetchTodos } from '@/lib/api';
 import { formatDateForAPI } from '@/shared/utils/utils';
 import { useModalStore } from '@/shared/stores/useModalStore';
+import { PostTodoRequest, PatchTodoRequest } from '@/lib/api';
 
-// ────────────────────────────────────────────────────────────
-// 타입
-// ────────────────────────────────────────────────────────────
-
-type CreateMode = {
+interface BaseProps {
+  goalId: number;
+}
+interface CreateMode extends BaseProps {
   mode: 'create';
-  todo?: never;
-};
+  todo?: PostTodoRequest;
+}
 
-type EditMode = {
+interface EditMode extends BaseProps {
   mode: 'edit';
-  todo: TodoEditForm;
-};
+  todo: PatchTodoRequest & { id: number };
+}
 
 type TodoFormModalProps = CreateMode | EditMode;
 
-// create 모드에서 사용할 폼 타입 (done 필드 없음)
-type FormValues = TodoEditForm; // done을 포함한 상위 타입으로 통일
-
-// ────────────────────────────────────────────────────────────
-// 컴포넌트
-// ────────────────────────────────────────────────────────────
+type FormValues = PostTodoRequest;
 
 export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
   const { closeModal } = useModalStore();
   const isEditMode = mode === 'edit';
 
-  const [image, setImage] = useState<ImageType | null>(null);
+  const [image, setImage] = useState<string | null>(null);
   const [date, setDate] = useState<Date | undefined>();
-  const [tempDate, setTempDate] = useState<Date | undefined>();
 
-  useEffect(() => {
-    const url = image?.previewUrl;
-    return () => {
-      if (url) URL.revokeObjectURL(url);
-    };
-  }, [image]);
-
-  // ── 폼 초기값: edit이면 기존 데이터, create이면 빈 값 ──
+  console.log('todo in modal', todo);
   const {
     register,
     handleSubmit,
@@ -67,39 +53,40 @@ export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
     mode: 'onSubmit',
     defaultValues: isEditMode
       ? {
-          done: todo.done ?? false,
           title: todo.title ?? '',
-          goalId: todo.goalId ?? 1,
-          dueDate: todo.dueDate ?? null,
-          linkUrl: todo.linkUrl ?? null,
-          imageUrl: todo.imageUrl ?? null,
+          dueDate: todo.dueDate ?? undefined,
+          linkUrl: todo.linkUrl ?? undefined,
+          imageUrl: todo.imageUrl ?? undefined,
           tags: todo.tags ?? [],
         }
       : {
-          done: false,
           title: '',
-          goalId: 1,
-          dueDate: null,
-          linkUrl: null,
-          imageUrl: null,
+          dueDate: undefined,
+          linkUrl: undefined,
+          imageUrl: undefined,
           tags: [],
         },
   });
 
   register('dueDate', { required: '마감기한은 필수입니다.' });
-  const done = useWatch({ control, name: 'done' });
   const tags = useWatch({ control, name: 'tags' }) ?? [];
   const goalId = useWatch({ control, name: 'goalId' });
   const linkUrl = useWatch({ control, name: 'linkUrl' });
 
-  // ── 모드별 onSubmit 분기 ──
-  const onSubmit = (data: FormValues) => {
+  // TODO: mutain처리
+  const onSubmit = async (data: FormValues) => {
     if (isEditMode) {
-      /** @TODO edit API 연결 */
-      console.log('[edit]', data);
+      await fetchTodos.patchTodo(todo.id, {
+        title: data.title,
+        dueDate: data.dueDate,
+        linkUrl: data.linkUrl,
+        imageUrl: data.imageUrl,
+        tags: data.tags,
+        done: todo.done,
+      });
     } else {
-      const body: TodoCreateForm & { source: string } = {
-        source: 'manual',
+      const body: PostTodoRequest = {
+        source: 'MANUAL',
         title: data.title,
         goalId: data.goalId,
         dueDate: data.dueDate,
@@ -107,8 +94,7 @@ export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
         imageUrl: data.imageUrl,
         tags: data.tags,
       };
-      /** @TODO create API 연결 */
-      console.log('[create]', body);
+      await fetchTodos.postTodo(body);
     }
     closeModal();
   };
@@ -132,13 +118,13 @@ export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
       </div>
 
       {/* 상태 필드: edit 모드에서만 노출 */}
-      {isEditMode && (
+      {/* {isEditMode && (
         <StatusField
-          done={done}
+          done={todo.done ?? false}
           onChange={(val) => setValue('done', val, { shouldValidate: true })}
           errorMessage={errors.done?.message}
         />
-      )}
+      )} */}
 
       {/* 제목 */}
       <FormField label="제목" required>
@@ -169,13 +155,15 @@ export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
       {/* 마감기한 */}
       <FormField label="마감기한" required>
         <DateInput
-          date={tempDate}
-          onSelect={setTempDate}
+          date={date}
+          onSelect={(date) => {
+            setDate(date);
+            setValue('dueDate', date ? formatDateForAPI(date) : undefined, { shouldValidate: true });
+          }}
           onConfirm={(d) => {
             setDate(d);
-            setValue('dueDate', d ? formatDateForAPI(d) : null, { shouldValidate: true });
+            setValue('dueDate', date ? formatDateForAPI(date) : undefined, { shouldValidate: true });
           }}
-          onCancel={() => setTempDate(date)}
         />
         {errors.dueDate && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.dueDate.message}</p>}
       </FormField>
@@ -196,7 +184,7 @@ export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
 
       {/* 링크 */}
       <FormField label="링크">
-        <LinkInput value={linkUrl ?? ''} onChange={(val) => setValue('linkUrl', val || null)} />
+        <LinkInput value={linkUrl ?? ''} onChange={(val) => setValue('linkUrl', val || undefined)} />
       </FormField>
 
       {/* 이미지 */}
@@ -205,7 +193,7 @@ export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
           image={image}
           onChange={(img) => {
             setImage(img);
-            setValue('imageUrl', img?.previewUrl ?? null);
+            setValue('imageUrl', img ?? undefined);
           }}
         />
       </FormField>

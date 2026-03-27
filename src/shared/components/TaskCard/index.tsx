@@ -8,6 +8,7 @@ import { CheckIcon, EllipsisVertical, GithubIcon, Star } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
 import type { TodoResponse } from '@/lib/api';
+import { usePatchTodoFavorite } from '@/lib/mutations';
 
 /**
  * A single to-do list row.
@@ -28,7 +29,6 @@ interface TaskCardProps {
   starred?: boolean;
   onClick?: () => void;
   onToggle?: (id: number) => void;
-  onStarToggle?: (id: number) => void;
   variant?: 'default' | 'orange';
 }
 
@@ -43,7 +43,6 @@ export function TaskCard({
   onClick,
   // 이벤트 핸들러
   onToggle, // 체크박스
-  onStarToggle, // 별
   /**
    * varaint: 'default' | 'orange'
    */
@@ -63,11 +62,16 @@ export function TaskCard({
     // TODO API 연결
   }
 
+  const { mutate: patchTodoFavorite } = usePatchTodoFavorite(todo.id!);
+
   function handleStarToggle() {
     setStarred((prev) => !prev);
-    if (todo.id !== undefined) {
-      onStarToggle?.(todo.id);
-    }
+
+    patchTodoFavorite(undefined, {
+      onError: () => {
+        setStarred((prev) => !prev);
+      },
+    });
   }
 
   return (

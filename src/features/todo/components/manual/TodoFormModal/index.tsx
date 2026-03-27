@@ -40,7 +40,6 @@ export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
   const [image, setImage] = useState<string | null>(null);
   const [date, setDate] = useState<Date | undefined>();
 
-  const { data: goals } = useQuery(goalQueries.list());
   const {
     register,
     handleSubmit,
@@ -97,6 +96,24 @@ export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
     closeModal();
   };
 
+  const { data: goals } = useQuery(goalQueries.list());
+
+  const goalOptions = () => {
+    if (!goals) return [];
+    return (goals?.goals ?? []).map((goal) => ({
+      label: goal.title ?? '',
+      value: String(goal.id),
+    }));
+  };
+
+  const defaultGoalId = () => {
+    if (isEditMode) {
+      // return String(todo.id);
+    } else {
+      return todo?.goalId ? String(todo.goalId) : goalOptions()[0]?.value;
+    }
+  };
+  console.log('defaultGoalId', defaultGoalId());
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -138,11 +155,9 @@ export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
       {/* 목표 */}
       <FormField label="목표" required>
         <Dropdown
+          defaultValue={defaultGoalId()}
           {...register('goalId', { required: '목표는 필수입니다.' })}
-          items={(goals?.goals ?? []).map((goal) => ({
-            label: goal.title ?? '',
-            value: String(goal.id),
-          }))}
+          items={goalOptions()}
           selectedValue={String(goalId)}
           onSelectItem={(item) => setValue('goalId', Number(item.value))}
           className="h-11 rounded-xl p-3 placeholder:text-[#737373] md:h-14 md:rounded-2xl md:p-4"

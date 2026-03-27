@@ -27,6 +27,9 @@ jobs:
       - name: Install deps
         run: pnpm install --frozen-lockfile
 
+      - name: pnpm build
+        run: pnpm run build
+
       - name: Generate API types
         run: pnpm exec openapi-typescript ${{ secrets.OPENAPI_URL }} -o src/shared/types/api/schemas/api.types.ts
 

@@ -20,12 +20,15 @@ import { useModalStore } from '@/shared/stores/useModalStore';
 import { goalQueries } from '@/lib/queryKeys';
 import { PostTodoRequest, PatchTodoRequest } from '@/lib/api';
 
-interface CreateMode {
+interface BaseProps {
+  goalDetailId?: number;
+}
+interface CreateMode extends BaseProps {
   mode: 'create';
   todo?: PostTodoRequest;
 }
 
-interface EditMode {
+interface EditMode extends BaseProps {
   mode: 'edit';
   todo: PatchTodoRequest & { id: number };
 }
@@ -34,7 +37,7 @@ type TodoFormModalProps = CreateMode | EditMode;
 
 type FormValues = PostTodoRequest;
 
-export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
+export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModalProps) {
   const { closeModal } = useModalStore();
   const isEditMode = mode === 'edit';
   const [image, setImage] = useState<string | null>(null);
@@ -57,6 +60,7 @@ export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
           tags: todo.tags ?? [],
         }
       : {
+          goalId: goalDetailId ?? todo?.goalId ?? undefined,
           title: '',
           dueDate: undefined,
           linkUrl: undefined,
@@ -105,7 +109,7 @@ export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
       value: String(goal.id),
     }));
   };
-
+  // TODO: 수정모드에서 골id가 없음... 아님 수정하지 말아야 하는지 흠...
   const defaultGoalId = () => {
     if (isEditMode) {
       // return String(todo.id);
@@ -113,7 +117,7 @@ export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
       return todo?.goalId ? String(todo.goalId) : goalOptions()[0]?.value;
     }
   };
-  console.log('defaultGoalId', defaultGoalId());
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}

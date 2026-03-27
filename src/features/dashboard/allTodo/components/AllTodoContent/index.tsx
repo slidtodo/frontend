@@ -72,7 +72,7 @@ function AllTodoFilter({ selectedFilter, setSelectedFilter }: AllTodoFilterProps
       <Button
         variant="cancel"
         className="flex items-center gap-1 bg-[#F2F2F2] px-3 py-[10px] hover:bg-[#E0E0E0] md:px-[20px]"
-        onClick={openTodoCreateModal}
+        onClick={() => openTodoCreateModal({ goalDetailId: undefined })}
       >
         <PlusIcon size={20} color="#737373" />
         <span className="overflow-hidden text-sm font-semibold text-ellipsis whitespace-nowrap text-[#737373]">

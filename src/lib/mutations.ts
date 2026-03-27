@@ -19,7 +19,9 @@ export const usePatchTodoFavorite = (todoId: number) => {
     mutationFn: () => fetchTodos.patchTodoFavorite(todoId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todos', 'detail', todoId] });
-      queryClient.invalidateQueries({ queryKey: ['todos'] });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos', 'list'] });
     },
     onError: () => {
       showToast('Error updating favorite status');

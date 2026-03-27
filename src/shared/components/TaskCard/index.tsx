@@ -130,7 +130,7 @@ export function TaskCard({
             'relative flex h-6 w-6 cursor-pointer items-center justify-center rounded-full p-1 group-hover:bg-white',
             isOrange ? 'bg-[#FFFFFF]/40' : 'bg-[#FF9E59]/20',
           )}
-          onClick={() => router.push(`goal/${todo.goal?.id}/note/create`)}
+          onClick={() => router.push(`/goal/${todo.goal?.id}/note/create`)}
         >
           <Image src={'/image/todo-list.svg'} alt="todo-list menu" width={9} height={10} className="cursor-pointer" />
         </button>

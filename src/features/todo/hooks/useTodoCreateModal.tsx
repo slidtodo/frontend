@@ -6,11 +6,14 @@ import TodoFormModal from '../components/manual/TodoFormModal';
 
 import { useModalStore } from '@/shared/stores/useModalStore';
 
+interface UseTodoCreateModalResult {
+  goalDetailId?: number;
+}
 export function useTodoCreateModal() {
   const { openModal } = useModalStore();
 
-  const openTodoCreateModal = () => {
-    openModal(<TodoFormModal mode="create" />, undefined, 'bottom');
+  const openTodoCreateModal = ({ goalDetailId }: UseTodoCreateModalResult = {}) => {
+    openModal(<TodoFormModal mode="create" goalDetailId={goalDetailId} />, undefined, 'bottom');
   };
 
   return { openTodoCreateModal };

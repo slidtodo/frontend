@@ -107,7 +107,7 @@ export interface paths {
         put?: never;
         /**
          * 토큰 재발급
-         * @description 리프레시 토큰으로 액세스/리프레시 토큰 재발급 (쿠키 또는 요청 바디로 전달)
+         * @description 리프레시 토큰으로 액세스/리프레시 토큰 재발급
          */
         post: operations["refresh"];
         delete?: never;
@@ -627,7 +627,7 @@ export interface components {
             password: string;
             nickname: string;
         };
-        AuthTokenResponse: {
+        AuthResponse: {
             /** Format: int64 */
             id?: number;
             email?: string;
@@ -636,15 +636,6 @@ export interface components {
             /** @enum {string} */
             loginProvider?: "LOCAL" | "GITHUB" | "GOOGLE";
             githubConnected?: boolean;
-            accessToken?: string;
-            refreshToken?: string;
-        };
-        RefreshRequest: {
-            refreshToken?: string;
-        };
-        RefreshResponse: {
-            accessToken?: string;
-            refreshToken?: string;
         };
         OAuthLoginRequest: {
             code: string;
@@ -1014,7 +1005,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AuthTokenResponse"];
+                    "application/json": components["schemas"]["AuthResponse"];
                 };
             };
             /** @description 이미 가입된 이메일 / 필수값 누락 / 형식 오류 */
@@ -1035,20 +1026,14 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["RefreshRequest"];
-            };
-        };
+        requestBody?: never;
         responses: {
             /** @description 토큰 재발급 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["RefreshResponse"];
-                };
+                content?: never;
             };
             /** @description 유효하지 않은 리프레시 토큰 */
             401: {
@@ -1080,7 +1065,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AuthTokenResponse"];
+                    "application/json": components["schemas"]["AuthResponse"];
                 };
             };
             /** @description 유효하지 않은 인증 코드 */
@@ -1131,7 +1116,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AuthTokenResponse"];
+                    "application/json": components["schemas"]["AuthResponse"];
                 };
             };
             /** @description 이메일 또는 비밀번호 불일치 */
@@ -1164,7 +1149,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AuthTokenResponse"];
+                    "application/json": components["schemas"]["AuthResponse"];
                 };
             };
             /** @description 유효하지 않은 인증 코드 */

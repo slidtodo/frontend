@@ -1,23 +1,19 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { postGoal, PostGoalRequest } from './api/fetchGoals';
-import {
-  patchCurrentUser,
-  patchCurrentUserPassword,
-  PatchCurrentUserRequest,
-  PatchCurrentUserPasswordRequest,
-} from './api/fetchUsers';
+import { fetchGoals } from './api/fetchGoals';
+import { PostGoalRequest } from './api/fetchGoals';
+import { fetchUsers, PatchCurrentUserRequest, PatchCurrentUserPasswordRequest } from './api/fetchUsers';
 
 export const usePostGoal = () => {
   return useMutation({
-    mutationFn: (data: PostGoalRequest) => postGoal(data),
+    mutationFn: (data: PostGoalRequest) => fetchGoals.postGoal(data),
   });
 };
 
 export const usePatchCurrentUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: PatchCurrentUserRequest) => patchCurrentUser(data),
+    mutationFn: (data: PatchCurrentUserRequest) => fetchUsers.patchCurrentUser(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
     },
@@ -26,6 +22,6 @@ export const usePatchCurrentUser = () => {
 
 export const usePatchCurrentUserPassword = () => {
   return useMutation({
-    mutationFn: (data: PatchCurrentUserPasswordRequest) => patchCurrentUserPassword(data),
+    mutationFn: (data: PatchCurrentUserPasswordRequest) => fetchUsers.patchCurrentUserPassword(data),
   });
 };

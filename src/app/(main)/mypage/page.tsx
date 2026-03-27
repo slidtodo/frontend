@@ -28,6 +28,7 @@ export default function MyPage() {
 
   useEffect(() => {
     if (user?.nickname) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setNickname(user.nickname);
     }
   }, [user]);

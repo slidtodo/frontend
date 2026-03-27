@@ -15,24 +15,24 @@ export function useDraftNoteRestore({ onRestore }: UseDraftNoteRestoreOptions) {
 
   const [draftState, setDraftState] = useState<{
     draft: DraftNote | null;
-    showToast: boolean;
+    showDraftToast: boolean;
   }>({
     draft: null,
-    showToast: false,
+    showDraftToast: false,
   });
 
-  const { draft, showToast } = draftState;
+  const { draft, showDraftToast } = draftState;
 
   useEffect(() => {
     const saved = getDraft();
     if (saved) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setDraftState({ draft: saved, showToast: true });
+      setDraftState({ draft: saved, showDraftToast: true });
     }
   }, [getDraft]);
 
   const handleCloseToast = useCallback(() => {
-    setDraftState((prev) => ({ ...prev, showToast: false }));
+    setDraftState((prev) => ({ ...prev, showDraftToast: false }));
   }, []);
 
   const handleConfirm = useCallback(() => {
@@ -44,14 +44,14 @@ export function useDraftNoteRestore({ onRestore }: UseDraftNoteRestoreOptions) {
 
   const handleToastLoad = useCallback(() => {
     if (!draft) return;
-    setDraftState((prev) => ({ ...prev, showToast: false }));
+    setDraftState((prev) => ({ ...prev, showDraftToast: false }));
     openModal(<PopupModal variant={{ type: 'noteLoad', noteTitle: draft.title }} onConfirm={handleConfirm} />);
   }, [draft, openModal, handleConfirm]);
 
   return {
     draft,
     savedAt: draft?.savedAt ?? null,
-    showToast,
+    showDraftToast,
     handleCloseToast,
     handleToastLoad,
   };

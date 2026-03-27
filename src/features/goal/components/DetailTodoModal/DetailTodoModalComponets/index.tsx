@@ -10,7 +10,7 @@ import Tag from '@/shared/components/Tag';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { TodoResponse } from '@/lib/api';
 import { noteQueries } from '@/lib/queryKeys';
-import { dateFormatter } from '@/shared/utils/utils';
+import { formatDate } from '@/shared/utils/utils';
 interface DetailTodoModalComponentsProps {
   todo: TodoResponse | undefined;
 }
@@ -35,7 +35,7 @@ export default function DetailTodoModalComponents({ todo }: DetailTodoModalCompo
         <DetailItemSummary
           icon={<CalendarIcon size={18} />}
           label="마감기한"
-          value={todo?.dueDate ? dateFormatter(todo.dueDate) : ''}
+          value={todo?.dueDate ? formatDate(todo.dueDate) : ''}
         />
         <DetailItemSummary
           icon={<HashIcon size={18} />}

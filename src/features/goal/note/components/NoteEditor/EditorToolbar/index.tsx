@@ -5,6 +5,7 @@ import { useModalStore } from '@/shared/stores/useModalStore';
 import clsx from 'clsx';
 import { AlignCenter, AlignLeft, AlignRight, Bold, Italic, Link2, List, Underline } from 'lucide-react';
 import { Editor } from '@tiptap/react';
+import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 
 interface EditorToolbarProps {
   editor: Editor | null;
@@ -13,16 +14,19 @@ interface EditorToolbarProps {
 
 export default function EditorToolbar({ editor, onLinkUrlChange }: EditorToolbarProps) {
   const { openModal } = useModalStore();
+  const isMobile = useBreakpoint() === 'mobile';
 
   const handleLinkUploadClick = () => {
-    openModal(
-      <SinglePostModal onConfirm={(url) => onLinkUrlChange?.(url)} />,
-      () => {},
-    );
+    openModal(<SinglePostModal onConfirm={(url) => onLinkUrlChange?.(url)} />, () => {});
   };
 
   return (
-    <div className={clsx('flex h-11 w-full items-center rounded-[18px] bg-[#FAFAFA]', 'text-slate-500', 'px-4 py-1.5')}>
+    <div
+      className={clsx(
+        'flex h-11 w-full items-center bg-[#FAFAFA] text-slate-500 px-4 py-1.5',
+        !isMobile && 'rounded-[18px]',
+      )}
+    >
       <button
         onClick={() => editor?.chain().focus().toggleBold().run()}
         className={clsx(
@@ -93,10 +97,7 @@ export default function EditorToolbar({ editor, onLinkUrlChange }: EditorToolbar
         <List size={20} />
       </button>
 
-      <button
-        onClick={handleLinkUploadClick}
-        className="cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]"
-      >
+      <button onClick={handleLinkUploadClick} className="cursor-pointer rounded-lg p-1.5 hover:bg-[#DDD]">
         <Link2 size={20} className="rotate-135" />
       </button>
     </div>

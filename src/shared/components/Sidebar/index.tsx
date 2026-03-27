@@ -14,7 +14,6 @@ import { usePostGoal } from '@/lib/mutations';
 
 export default function Sidebar() {
   const breakpoint = useBreakpoint();
-
   if (breakpoint === null) return null;
   if (breakpoint === 'mobile') return <SidebarMobile />;
   else return <SidebarDesktopTablet />;

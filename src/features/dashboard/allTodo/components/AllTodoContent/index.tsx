@@ -44,7 +44,6 @@ interface AllTodoFilterProps {
   selectedFilter: TodoOptions;
   setSelectedFilter: React.Dispatch<React.SetStateAction<TodoOptions>>;
 }
-
 function AllTodoFilter({ selectedFilter, setSelectedFilter }: AllTodoFilterProps) {
   const todoButtons: { id: number; label: TodoOptions }[] = [
     { id: 1, label: 'ALL' },
@@ -87,7 +86,6 @@ function AllTodoFilter({ selectedFilter, setSelectedFilter }: AllTodoFilterProps
 interface AllTodoFetcherProps {
   todos: TodoListResponse['todos'];
 }
-
 function AllTodoFetcher({ todos }: AllTodoFetcherProps) {
   return (
     <section className="rounded-4xl bg-white p-4 md:p-8">

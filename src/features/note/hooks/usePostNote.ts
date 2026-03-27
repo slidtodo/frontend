@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { postNote } from '@/lib/api/fetchNotes';
+import { fetchNotes } from '@/lib/api/fetchNotes';
 import { noteQueries } from '@/lib/queryKeys';
 
 export const usePostNote = (callbacks?: { onError: (error: Error) => void }) => {
@@ -8,7 +8,7 @@ export const usePostNote = (callbacks?: { onError: (error: Error) => void }) => 
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: postNote,
+    mutationFn: fetchNotes.postNote,
     onSuccess: (response) => {
       if (!response.id || !response.goalId) return;
 

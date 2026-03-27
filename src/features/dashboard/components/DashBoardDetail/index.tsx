@@ -8,12 +8,17 @@ import GoalBox from '../GoalBox';
 
 import { goalQueries } from '@/lib/queryKeys';
 import { GoalListResponse } from '@/lib/api';
+import Empty from '@/shared/components/Empty';
 
 type GoalItem = NonNullable<GoalListResponse['goals']>[number];
 type GoalItemWithId = GoalItem & { id: number };
 
 export default function DashboardDetail() {
   const { data: goals } = useQuery(goalQueries.list());
+
+  if (!goals || goals?.goals?.length === 0) {
+    return <Empty>현재 등록된 목표가 없어요...</Empty>;
+  }
 
   return (
     <section>

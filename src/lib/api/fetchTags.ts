@@ -3,4 +3,9 @@ import { apiRequest } from './utils';
 
 export type TagsResponse = operations['getList_3']['responses'][200]['content']['application/json'];
 
-export const getTags = () => apiRequest<TagsResponse>('/api/v1/tags');
+class FetchTags {
+  getTags = () => apiRequest<TagsResponse>('/api/v1/tags');
+}
+
+const fetchTags = new FetchTags();
+export { fetchTags };

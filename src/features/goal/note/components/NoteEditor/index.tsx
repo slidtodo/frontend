@@ -5,35 +5,33 @@ import EditorToolbar from './EditorToolbar';
 import EditorTitle from './EditorTitle';
 import EditorMeta from './EditorMeta';
 import EditorContent from './EditorContent';
+import { Editor } from '@tiptap/react';
+import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 
 interface NoteEditorProps {
+  editor: Editor | null;
   title: string;
-  content: string;
   onTitleChange: (value: string) => void;
-  onContentChange: (value: string) => void;
   createdAt: string;
   linkUrl?: string | null;
   onLinkUrlChange?: (value: string | null) => void;
 }
 
 export default function NoteEditor({
+  editor,
   title,
-  content,
   onTitleChange,
-  onContentChange,
   createdAt,
   linkUrl,
   onLinkUrlChange,
 }: NoteEditorProps) {
+  const isMobile = useBreakpoint() === 'mobile';
+
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (value.length <= 30) {
       onTitleChange(value);
     }
-  };
-
-  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onContentChange(e.target.value);
   };
 
   return (
@@ -44,7 +42,7 @@ export default function NoteEditor({
         'md:rounded-4xl md:px-[30px] md:py-8',
       )}
     >
-      <EditorToolbar onLinkUrlChange={onLinkUrlChange} />
+      {!isMobile && <EditorToolbar editor={editor} onLinkUrlChange={onLinkUrlChange} />}
 
       <section className="border-b border-b-[#DDD] pb-4 md:pt-[19px] md:pb-5 lg:pb-7">
         <EditorTitle title={title} onChange={handleTitleChange} />
@@ -59,7 +57,7 @@ export default function NoteEditor({
           createdAt={createdAt}
         />
       </section>
-      <EditorContent content={content} onChange={handleContentChange} linkUrl={linkUrl} />
+      <EditorContent editor={editor} linkUrl={linkUrl} onLinkUrlChange={onLinkUrlChange} />
     </div>
   );
 }

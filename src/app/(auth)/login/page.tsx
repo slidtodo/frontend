@@ -8,7 +8,6 @@ import FormField from '@/shared/components/FormField';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import Image from 'next/image';
-import { postLogin, getGoogleAuthorizeUrl, getGithubAuthorizeUrl } from '@/lib/api/fetchAuth';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,7 +18,20 @@ export default function LoginPage() {
   // TODO: 리액트쿼리로 변경 필요, 리액트 훅 폼 적용 필요
   const handleLogin = async () => {
     try {
-      await postLogin({ email, password });
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
 
       router.push('/dashboard');
     } catch (error) {
@@ -35,7 +47,6 @@ export default function LoginPage() {
           <Image src="/icons/todo.png" alt="logo" width={48} height={48} />
           <span className="text-2xl font-bold">Slid to-do</span>
         </div>
-
         <form
           className="flex w-full flex-col gap-4"
           onSubmit={(e) => {

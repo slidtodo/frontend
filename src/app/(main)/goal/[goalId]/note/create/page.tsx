@@ -88,6 +88,7 @@ export default function Page() {
       Placeholder.configure({ placeholder: '이 곳을 통해 노트 작성을 시작해주세요' }),
     ],
     content,
+    immediatelyRender: false,
     onUpdate: ({ editor }) => {
       setContent(editor.getHTML());
     },

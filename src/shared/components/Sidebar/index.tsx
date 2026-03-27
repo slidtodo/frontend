@@ -11,6 +11,7 @@ import { useSidebarOpen } from '@/contexts/SidebarContext';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { usePostGoal } from '@/lib/mutations';
+import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 
 export default function Sidebar() {
   const breakpoint = useBreakpoint();
@@ -38,7 +39,9 @@ function SidebarDesktopTablet() {
   const { mutate } = usePostGoal();
 
   const menus = getMenus();
-  const projectName = 'Slid To Do';
+  const projectName = 'Bearlog';
+
+  const { openTodoCreateModal } = useTodoCreateModal();
 
   return (
     <div
@@ -135,7 +138,10 @@ function SidebarDesktopTablet() {
               새 목표
             </span>
           </button>
-          <button className="group flex w-full flex-col items-center justify-center gap-2 rounded-[32px] border border-[#FF8442] bg-[#ffffff] px-2 py-4 transition-all duration-200 hover:bg-[#FEF2E3] hover:shadow-lg lg:px-[22.5px] lg:py-8">
+          <button
+            onClick={() => openTodoCreateModal()}
+            className="group flex w-full flex-col items-center justify-center gap-2 rounded-[32px] border border-[#FF8442] bg-[#ffffff] px-2 py-4 transition-all duration-200 hover:bg-[#FEF2E3] hover:shadow-lg lg:px-[22.5px] lg:py-8"
+          >
             <CopyCheckIcon
               className="h-8 w-8 text-[#FF8442] transition-transform group-hover:scale-110 lg:h-10 lg:w-10"
               size={40}

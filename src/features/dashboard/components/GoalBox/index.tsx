@@ -8,6 +8,7 @@ import SearchInput from '@/shared/components/SearchInput';
 import Button from '@/shared/components/Button';
 
 import type { GoalDetailResponse } from '@/lib/api';
+import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 
 type GoalItem = GoalDetailResponse;
 type GoalTodoItem = NonNullable<GoalDetailResponse['todoList']>[number];
@@ -23,6 +24,7 @@ export default function GoalBox({ data }: GoalBoxProps) {
   const todoList = data.todoList ?? [];
   const doneList = data.doneList ?? [];
 
+  const { openTodoCreateModal } = useTodoCreateModal();
   return (
     <article className="flex flex-col gap-4 rounded-[40px] bg-white p-6 lg:px-8 lg:py-6">
       <div className="flex flex-col items-center gap-2 px-2 md:flex-row md:gap-12 lg:gap-8">
@@ -43,6 +45,7 @@ export default function GoalBox({ data }: GoalBoxProps) {
           <Button
             variant="secondary"
             className="rounded-full p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
+            onClick={() => openTodoCreateModal()}
           >
             <PlusIcon size={20} />
             <span className="hidden w-full w-max text-sm font-semibold md:block">할 일 추가</span>

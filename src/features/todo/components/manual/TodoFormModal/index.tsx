@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { XIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
+import { useQuery } from '@tanstack/react-query';
 
 import Button from '@/shared/components/Button';
 import Dropdown from '@/shared/components/Dropdown';
@@ -16,17 +17,15 @@ import DateInput from '../shared/DateInput';
 import { fetchTodos } from '@/lib/api';
 import { formatDateForAPI } from '@/shared/utils/utils';
 import { useModalStore } from '@/shared/stores/useModalStore';
+import { goalQueries } from '@/lib/queryKeys';
 import { PostTodoRequest, PatchTodoRequest } from '@/lib/api';
 
-interface BaseProps {
-  goalId: number;
-}
-interface CreateMode extends BaseProps {
+interface CreateMode {
   mode: 'create';
   todo?: PostTodoRequest;
 }
 
-interface EditMode extends BaseProps {
+interface EditMode {
   mode: 'edit';
   todo: PatchTodoRequest & { id: number };
 }
@@ -38,11 +37,10 @@ type FormValues = PostTodoRequest;
 export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
   const { closeModal } = useModalStore();
   const isEditMode = mode === 'edit';
-
   const [image, setImage] = useState<string | null>(null);
   const [date, setDate] = useState<Date | undefined>();
 
-  console.log('todo in modal', todo);
+  const { data: goals } = useQuery(goalQueries.list());
   const {
     register,
     handleSubmit,
@@ -141,10 +139,10 @@ export default function TodoFormModal({ mode, todo }: TodoFormModalProps) {
       <FormField label="목표" required>
         <Dropdown
           {...register('goalId', { required: '목표는 필수입니다.' })}
-          items={[
-            { label: '자바스크립트로 웹 서비스 만들기', value: '1' },
-            { label: '디자인 시스템 정복하기', value: '2' },
-          ]}
+          items={(goals?.goals ?? []).map((goal) => ({
+            label: goal.title ?? '',
+            value: String(goal.id),
+          }))}
           selectedValue={String(goalId)}
           onSelectItem={(item) => setValue('goalId', Number(item.value))}
           className="h-11 rounded-xl p-3 placeholder:text-[#737373] md:h-14 md:rounded-2xl md:p-4"

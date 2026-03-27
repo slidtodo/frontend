@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import Input from '@/shared/components/Input';
@@ -11,8 +11,7 @@ import { validatePassword, validatePasswordConfirm } from '@/lib/validation';
 
 export default function MyPageForm() {
   const { data: user } = useQuery(userQueries.current());
-
-  const [nickname, setNickname] = useState('');
+  const [nickname, setNickname] = useState(user?.nickname || '');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
@@ -25,12 +24,6 @@ export default function MyPageForm() {
   const { mutate: patchPassword, isPending: isPatchingPassword } = usePatchCurrentUserPassword();
 
   const isLocalLogin = user?.loginProvider === 'LOCAL';
-
-  useEffect(() => {
-    if (user?.nickname) {
-      setNickname(user.nickname);
-    }
-  }, [user]);
 
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);

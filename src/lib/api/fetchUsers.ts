@@ -11,7 +11,6 @@ export type PatchCurrentUserPasswordRequest =
   operations['changePassword']['requestBody']['content']['application/json'];
 export type UserProgressResponse = operations['getProgress']['responses'][200]['content']['application/json'];
 
-// TODO: 현재 방식이 아닌 window if 문 써서 클라이언트에서만 apiRequest, 서버에서만 serverApiRequest 쓰도록 리팩토링 고려
 export const getCurrentUser = () => apiRequest<CurrentUserResponse>('/api/v1/users/me');
 export const getCurrentUserServer = () => serverApiRequest<CurrentUserResponse>('/api/v1/users/me');
 

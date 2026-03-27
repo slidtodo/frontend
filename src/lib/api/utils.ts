@@ -1,3 +1,8 @@
+/**
+ * @description 클라이언트 컴포넌트에서 API 요청을 보낼 때 사용하는 유틸 함수입니다.
+ * 서버 컴포넌트에서는 사용하지 말아주세요
+ */
+
 type QueryValue = string | number | boolean | null | undefined | Array<string | number | boolean>;
 
 export class ApiError extends Error {
@@ -32,7 +37,11 @@ export const toQueryString = (params?: Record<string, QueryValue>): string => {
   return searchParams.toString();
 };
 
-const apiBaseUrl = (process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL ?? '').replace(/\/+$/, '');
+const apiBaseUrl = process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL;
+
+if (!apiBaseUrl) {
+  throw new Error('API_BASE_URL is not defined in environment variables');
+}
 
 type ApiRequestOptions<TBody> = {
   method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';

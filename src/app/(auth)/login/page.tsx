@@ -8,45 +8,30 @@ import FormField from '@/shared/components/FormField';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import Image from 'next/image';
-import { postLogin, getGithubAuthorizeUrl, getGoogleAuthorizeUrl } from '@/lib/api/fetchAuth';
-import { validateEmail } from '@/lib/validation';
 
 export default function LoginPage() {
   const router = useRouter();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [emailError, setEmailError] = useState('');
 
-  const handleGoogleLogin = async () => {
-    try {
-      const data = await getGoogleAuthorizeUrl();
-      if (data.loginUrl) window.location.href = data.loginUrl;
-    } catch (error) {
-      console.error(error);
-      alert('로그인에 실패했습니다. 잠시 후 다시 시도해주세요.');
-    }
-  };
-
-  const handleGithubLogin = async () => {
-    try {
-      const data = await getGithubAuthorizeUrl();
-      if (data.loginUrl) window.location.href = data.loginUrl;
-    } catch (error) {
-      console.error(error);
-      alert('로그인에 실패했습니다. 잠시 후 다시 시도해주세요.');
-    }
-  };
-
-  // TODO: 리액트쿼리로 변경 필요, 리액트 훅 폼 적용 필요.
+  // TODO: 리액트쿼리로 변경 필요, 리액트 훅 폼 적용 필요
   const handleLogin = async () => {
-    const error = validateEmail(email);
-    if (error) {
-      setEmailError(error);
-      return;
-    }
     try {
-      await postLogin({ email, password });
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
 
       router.push('/dashboard');
     } catch (error) {
@@ -70,15 +55,12 @@ export default function LoginPage() {
           }}
         >
           {/* 이메일 */}
-          <FormField label="이메일" error={emailError}>
+          <FormField label="이메일">
             <Input
-              type="text"
+              type="email"
               placeholder="이메일을 입력해주세요"
               value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setEmailError('');
-              }}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </FormField>
           {/* 비밀번호 */}
@@ -113,7 +95,7 @@ export default function LoginPage() {
         <div className="flex w-full justify-center gap-4">
           <button
             type="button"
-            onClick={handleGoogleLogin}
+            onClick={() => alert('구글 로그인')}
             aria-label="구글 로그인"
             className="flex h-14 w-14 items-center justify-center rounded-full border border-[#DDDDDD] bg-white p-4 hover:bg-gray-50"
           >
@@ -121,7 +103,7 @@ export default function LoginPage() {
           </button>
           <button
             type="button"
-            onClick={handleGithubLogin}
+            onClick={() => alert('깃허브 로그인')}
             aria-label="깃허브 로그인"
             className="flex h-14 w-14 items-center justify-center rounded-full border border-[#DDDDDD] bg-white p-4 hover:bg-gray-50"
           >

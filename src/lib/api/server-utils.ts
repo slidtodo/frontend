@@ -1,6 +1,7 @@
 'use server';
 /**
- * @description 서버 컴포넌트에서 API 요청을 보낼 때 사용하는 유틸 함수입니다. 클라이언트 컴포넌트에서는 사용하지 말아주세요
+ * @description 서버 컴포넌트에서 API 요청을 보낼 때 사용하는 유틸 함수입니다.
+ * 클라이언트 컴포넌트에서는 사용하지 말아주세요
  */
 import { cookies } from 'next/headers';
 import { ApiError, toQueryString } from './utils';
@@ -38,7 +39,7 @@ export const serverApiRequest = async <TResponse, TBody = never>(
     method,
     headers: {
       ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
-      ...(accessToken ? { Cookie: `accessToken=${accessToken}` } : {}),
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
       ...headers,
     },
     body: body === undefined ? undefined : JSON.stringify(body),

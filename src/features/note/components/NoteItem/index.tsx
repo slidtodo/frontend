@@ -2,7 +2,7 @@ import { formatDate } from '@/shared/utils/utils';
 import EllipsisButton from '../EllipsisButton';
 import Image from 'next/image';
 import { Note } from '@/shared/types/types';
-import noteIcon from '@/features/goal/note/assets/icons/icon-note.png';
+import noteIcon from '@/features/note/assets/icons/icon-note.png';
 import TodoTitle from '@/features/note/components/TodoTitle';
 import Link from 'next/link';
 

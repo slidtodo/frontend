@@ -4,33 +4,36 @@ import { FlagIcon, CalendarIcon, HashIcon, XIcon, LinkIcon } from 'lucide-react'
 
 import Tag from '@/shared/components/Tag';
 
-import type { TodoItem } from '@/shared/types/api';
+import type { GoalDetailResponse } from '@/lib/api';
 import { useModalStore } from '@/shared/stores/useModalStore';
-// import type{compone}
-// TODO: 현재 디자인과 데이터 응답이 이상함 추후 API 명세 수정될 때 같이 수정 필요
+
+type GoalItem = GoalDetailResponse;
+// type GoalTodoItem = NonNullable<GoalDetailResponse['todoList']>[number];
+// type GoalDoneItem = NonNullable<GoalDetailResponse['doneList']>[number];
+
 interface DetailTodoModalProps {
-  todo: any; // TODO: TodoItem 타입으로 수정 필요
+  goal: GoalItem;
 }
-export default function DetailTodoModal({ todo }: DetailTodoModalProps) {
+export default function DetailTodoModal({ goal }: DetailTodoModalProps) {
   const { closeModal } = useModalStore();
 
-  if (!todo) {
+  if (!goal) {
     return null;
   }
   return (
     <div className="flex w-85.75 flex-col gap-6 rounded-3xl bg-white p-4 shadow-[0px_0px_60px_0px_rgba(0,0,0,0.05)] md:w-114 md:rounded-[40px] md:p-8">
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
-          <span className="text-xl font-semibold text-[#262626]">{todo.title}</span>
+          <span className="text-xl font-semibold text-[#262626]">{goal.title}</span>
           <div className="rounded-lg bg-[#FEEFDC] px-[5.5px] py-[3px] text-sm font-semibold text-[#EF6C00]">
-            {todo.done ? 'DONE' : 'TO DO'}
+            {goal.done ? 'DONE' : 'TO DO'}
           </div>
         </div>
         <XIcon className="cursor-pointer text-slate-400" size={24} onClick={closeModal} />
       </div>
       <div className="flex flex-col gap-4">
-        <DetailItemSummary icon={<FlagIcon size={18} />} label="목표" value={todo.goal.title} />
-        <DetailItemSummary icon={<CalendarIcon size={18} />} label="마감기한" value={todo.dueDate} />
+        <DetailItemSummary icon={<FlagIcon size={18} />} label="목표" value={goal.title} />
+        <DetailItemSummary icon={<CalendarIcon size={18} />} label="마감기한" value={goal.} />
         <DetailItemSummary
           icon={<HashIcon size={18} />}
           label="태그"

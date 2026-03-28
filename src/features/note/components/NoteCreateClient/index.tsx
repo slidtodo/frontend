@@ -50,7 +50,6 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
   const { showDraftToast, handleCloseToast, handleToastLoad } = useDraftNoteRestore({
     onRestore: (saved) => {
       setTitle(saved.title);
-      setContent(saved.content);
       editor?.commands.setContent(saved.content);
       setCreatedAt(saved.savedAt);
       setLinkUrl(saved.linkUrl ?? null);

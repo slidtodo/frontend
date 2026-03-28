@@ -112,8 +112,11 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
     if (isEditMode) return;
     if (goalId || !goals?.goals?.length) return;
 
-    setValue('goalId', goalDetailId ?? todo.goalId ?? goals.goals[0]?.id, { shouldDirty: false });
-  }, [goalDetailId, goalId, goals, isEditMode, setValue, todo]);
+    const nextGoalId = goalDetailId ?? goals.goals[0]?.id;
+    if (nextGoalId === undefined) return;
+
+    setValue('goalId', nextGoalId, { shouldDirty: false });
+  }, [goalDetailId, goalId, goals, isEditMode, setValue]);
 
   const goalOptions =
     goals?.goals?.map((goal) => ({

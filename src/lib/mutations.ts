@@ -133,7 +133,6 @@ export const usePatchTodo = (todoId?: number) => {
     onSuccess: () => {
       showToast('할 일이 수정되었습니다.');
       queryClient.invalidateQueries({ queryKey: ['todos', 'detail', todoId] });
-      queryClient.invalidateQueries({ queryKey: ['todos', 'list', {}] });
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['todos', 'list', {}] });
@@ -160,10 +159,9 @@ export const usePatchTodoFavorite = (todoId?: number) => {
     },
     onSuccess: () => {
       showToast('즐겨찾기 설정이 변경되었습니다.');
-      queryClient.invalidateQueries({ queryKey: ['todos', 'list', {}] });
+      queryClient.invalidateQueries({ queryKey: ['todos', 'detail', todoId] });
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos', 'detail', todoId] });
       queryClient.invalidateQueries({ queryKey: ['todos', 'list', {}] });
       queryClient.invalidateQueries({ queryKey: ['goals', 'detail'] });
       queryClient.invalidateQueries({ queryKey: ['users', 'me', 'progress'] });

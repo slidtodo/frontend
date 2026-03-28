@@ -23,15 +23,21 @@ export default function GoalBox({ data }: GoalBoxProps) {
 
   const todoList = data.todoList ?? [];
   const doneList = data.doneList ?? [];
+  const goalId = data.id;
+  const canCreateTodo = goalId !== undefined;
 
   const { openTodoCreateModal } = useTodoCreateModal();
+
   return (
     <article className="flex flex-col gap-4 rounded-[40px] bg-white p-6 lg:px-8 lg:py-6">
       <div className="flex flex-col items-center gap-2 px-2 md:flex-row md:gap-12 lg:gap-8">
         <div className="flex w-full flex-1 flex-col gap-1 lg:flex-row lg:gap-4">
           <div className="w-full max-w-[229px]">
             <button
-              onClick={() => router.push(`goal/${data.id}`)}
+              onClick={() => {
+                if (goalId === undefined) return;
+                router.push(`goal/${goalId}`);
+              }}
               className="font-base overflow-hidden text-left font-semibold text-ellipsis whitespace-nowrap text-[#333]"
             >
               {data.title}
@@ -45,7 +51,22 @@ export default function GoalBox({ data }: GoalBoxProps) {
           <Button
             variant="secondary"
             className="rounded-full p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
-            onClick={() => openTodoCreateModal({ goalDetailId: data.id })}
+            disabled={!canCreateTodo}
+            onClick={() => {
+              if (goalId === undefined) return;
+
+              openTodoCreateModal({
+                goalDetailId: goalId,
+                todo: {
+                  title: '',
+                  goalId,
+                  dueDate: undefined,
+                  linkUrl: undefined,
+                  imageUrl: undefined,
+                  tags: [],
+                },
+              });
+            }}
           >
             <PlusIcon size={20} />
             <span className="hidden w-full w-max text-sm font-semibold md:block">할 일 추가</span>

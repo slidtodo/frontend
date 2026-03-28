@@ -11,13 +11,20 @@ export const usePostGoal = () => {
   });
 };
 
-export const usePatchTodoFavorite = (todoId: number) => {
+export const usePatchTodoFavorite = (todoId?: number) => {
   const { showToast } = useToastStore();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => fetchTodos.patchTodoFavorite(todoId),
+    mutationFn: async () => {
+      if (todoId === undefined) {
+        throw new Error('Todo id is required');
+      }
+
+      return fetchTodos.patchTodoFavorite(todoId);
+    },
     onSuccess: () => {
+      if (todoId === undefined) return;
       queryClient.invalidateQueries({ queryKey: ['todos', 'detail', todoId] });
     },
     onSettled: () => {

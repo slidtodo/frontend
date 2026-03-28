@@ -5,15 +5,17 @@
 import TodoFormModal from '../components/manual/TodoFormModal';
 
 import { useModalStore } from '@/shared/stores/useModalStore';
+import { PostTodoRequest } from '@/lib/api';
 
 interface UseTodoCreateModalResult {
   goalDetailId?: number;
+  todo: PostTodoRequest;
 }
 export function useTodoCreateModal() {
   const { openModal } = useModalStore();
 
-  const openTodoCreateModal = ({ goalDetailId }: UseTodoCreateModalResult = {}) => {
-    openModal(<TodoFormModal mode="create" goalDetailId={goalDetailId} />, undefined, 'bottom');
+  const openTodoCreateModal = ({ goalDetailId, todo }: UseTodoCreateModalResult) => {
+    openModal(<TodoFormModal mode="create" goalDetailId={goalDetailId} todo={todo} />, undefined, 'bottom');
   };
 
   return { openTodoCreateModal };

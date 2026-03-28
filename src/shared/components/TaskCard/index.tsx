@@ -51,7 +51,7 @@ export function TaskCard({
     // TODO API 연결
   }
 
-  const { mutate: patchTodoFavorite } = usePatchTodoFavorite(todo.id!);
+  const { mutate: patchTodoFavorite } = usePatchTodoFavorite(todo.id);
 
   function handleStarToggle() {
     setStarred((prev) => !prev);

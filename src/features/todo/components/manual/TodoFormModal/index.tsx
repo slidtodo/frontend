@@ -25,7 +25,7 @@ interface BaseProps {
 }
 interface CreateMode extends BaseProps {
   mode: 'create';
-  todo?: PostTodoRequest;
+  todo: PostTodoRequest;
 }
 
 interface EditMode extends BaseProps {

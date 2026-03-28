@@ -54,7 +54,7 @@ export default function LoginPage() {
             handleLogin();
           }}
         >
-          {/* 이메일 */}
+          {/* 이메일 .*/}
           <FormField label="이메일">
             <Input
               type="email"

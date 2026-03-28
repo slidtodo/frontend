@@ -1,18 +1,25 @@
 'use client';
+
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronRightIcon, EllipsisVerticalIcon } from 'lucide-react';
 
+import { GoalDetailResponse } from '@/lib/api';
+import { goalQueries, userQueries } from '@/lib/queryKeys';
 import PageHeader from '@/shared/components/PageHeader';
 import ProgressCircle from '@/shared/components/ProgressCircle';
+import { SinglePostModal } from '@/shared/components/Modal/SinglePostModal';
+import { PopupModal } from '@/shared/components/Modal/PopupModal';
 
-import { userQueries, goalQueries } from '@/lib/queryKeys';
-import { GoalDetailResponse } from '@/lib/api';
+import { useDeleteGoal, usePatchGoal } from '@/lib/mutations';
+import { useModalStore } from '@/shared/stores/useModalStore';
 
 interface GoalSummaryProps {
   goalId: number;
 }
+
 export default function GoalSummary({ goalId }: GoalSummaryProps) {
   const { data: user } = useQuery(userQueries.current());
   const { data: goalDetail } = useQuery({
@@ -22,7 +29,7 @@ export default function GoalSummary({ goalId }: GoalSummaryProps) {
 
   return (
     <div className="flex flex-col gap-10">
-      <PageHeader title={`${user?.nickname}님의 목표`} className="pl-2" />
+      <PageHeader title={`${user?.nickname}의 목표`} className="pl-2" />
       <section className="flex flex-col gap-6 xl:flex-row xl:gap-8">
         <GoalInfo goalDetail={goalDetail} />
 
@@ -38,7 +45,45 @@ export default function GoalSummary({ goalId }: GoalSummaryProps) {
 interface GoalInfoProps {
   goalDetail: GoalDetailResponse | undefined;
 }
+
 function GoalInfo({ goalDetail }: GoalInfoProps) {
+  const [open, setOpen] = useState(false);
+  const { openModal } = useModalStore();
+  const { mutate: deleteGoal } = useDeleteGoal(goalDetail?.id);
+  const { mutateAsync: patchGoal } = usePatchGoal(goalDetail?.id);
+
+  if (!goalDetail) return null;
+
+  const handleEdit = () => {
+    setOpen(false);
+    openModal(
+      <SinglePostModal
+        title="목표 수정"
+        placeholder="목표 제목을 입력하세요"
+        defaultValue={goalDetail.title ?? ''}
+        inputType="text"
+        onConfirm={async (title) => {
+          const trimmed = title.trim();
+          if (!trimmed) return;
+          await patchGoal({ title: trimmed });
+        }}
+      />,
+    );
+  };
+
+  const handleDelete = () => {
+    setOpen(false);
+    openModal(
+      <PopupModal
+        variant={{ type: 'goalDelete' }}
+        onConfirm={() => {
+          deleteGoal();
+        }}
+      />,
+    );
+  };
+
+  if (!goalDetail) return null;
   return (
     <div className="flex items-center justify-between rounded-2xl bg-white xl:flex-1">
       <div className="flex items-center justify-center gap-4 py-5 pl-5 md:py-6 md:pl-6 lg:py-15 lg:pl-10">
@@ -47,7 +92,31 @@ function GoalInfo({ goalDetail }: GoalInfoProps) {
           {goalDetail?.title}
         </span>
       </div>
-      <EllipsisVerticalIcon size={24} color="#A4A4A4" className="mr-5 cursor-pointer md:mr-6 lg:mr-10" />
+
+      <div className="relative mr-5 shrink-0 md:mr-6 lg:mr-10">
+        <button type="button" className="cursor-pointer" onClick={() => setOpen((prev) => !prev)}>
+          <EllipsisVerticalIcon size={24} color="#A4A4A4" className="cursor-pointer" />
+        </button>
+
+        {open && (
+          <div className="absolute top-full right-0 z-10 mt-2 min-w-[140px] rounded-xl border border-orange-100 bg-white p-1 shadow-lg">
+            <button
+              type="button"
+              className="block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-orange-50"
+              onClick={handleEdit}
+            >
+              수정
+            </button>
+            <button
+              type="button"
+              className="block w-full rounded-lg px-3 py-2 text-left text-sm text-red-500 hover:bg-red-50"
+              onClick={handleDelete}
+            >
+              삭제
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -55,8 +124,10 @@ function GoalInfo({ goalDetail }: GoalInfoProps) {
 interface GoalProgressProps {
   goalDetail: GoalDetailResponse | undefined;
 }
+
 function GoalProgress({ goalDetail }: GoalProgressProps) {
-  if (!goalDetail) return null; // TODO: 대체 컴포넌트 추가 필요
+  if (!goalDetail) return null;
+
   return (
     <div className="relative flex min-h-[160px] w-full gap-[31px] rounded-[32px] bg-[#FF8442] shadow-[0_10px_40px_0_rgba(255,158,89,0.40)]">
       <div className="absolute flex h-full w-full items-center justify-between gap-1 p-[34px]">
@@ -78,17 +149,19 @@ function GoalProgress({ goalDetail }: GoalProgressProps) {
 interface LinkNoteProps {
   goalDetail: GoalDetailResponse | undefined;
 }
+
 function LinkNote({ goalDetail }: LinkNoteProps) {
   const goalId = goalDetail?.id;
+
   return (
     <div className="relative min-h-[160px] w-full rounded-[32px] bg-[#02CAB5] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)]">
-      <Link className="absolute bottom-1/5 left-1/7 flex items-center gap-['2px']" href={`/goal/${goalId}/note`}>
+      <Link className="absolute bottom-1/5 left-1/7 flex items-center gap-[2px]" href={`/goal/${goalId}/note`}>
         <span className="text-lg font-bold text-white">노트 모아보기</span>
         <ChevronRightIcon size={24} color="#ffffff" className="cursor-pointer" />
       </Link>
 
       <Image
-        src={'/image/note-group.svg'}
+        src="/image/note-group.svg"
         alt="Note Group"
         width={100}
         height={100}

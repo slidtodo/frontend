@@ -192,7 +192,7 @@ function TaskEditTodo({ isOrange, todo }: TaskLinkDetailProps) {
       </button>
 
       {open && (
-        <div className="absolute top-8 right-0 z-10 min-w-[140px] rounded-xl border border-orange-100 bg-white p-1 shadow-lg">
+        <div className="absolute top-full right-0 z-10 mt-2 min-w-[140px] rounded-xl border border-orange-100 bg-white p-1 shadow-lg">
           <button
             className="block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-orange-50"
             onClick={() => {

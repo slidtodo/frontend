@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 import { fetchGoals, PostGoalRequest } from './api/fetchGoals';
 import { fetchTodos, PatchTodoRequest, PostTodoRequest } from './api/fetchTodos';
@@ -21,6 +22,51 @@ export const usePostGoal = () => {
     onSuccess: () => {
       showToast('목표가 생성되었습니다.');
       queryClient.invalidateQueries({ queryKey: ['goals', 'list'] });
+    },
+  });
+};
+
+export const useDeleteGoal = (goalId?: number) => {
+  const router = useRouter();
+  const { showToast } = useToastStore();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      if (goalId === undefined) {
+        throw new Error('Goal id is required');
+      }
+      return fetchGoals.deleteGoal(goalId);
+    },
+    onSuccess: () => {
+      showToast('목표가 삭제되었습니다.');
+      queryClient.invalidateQueries({ queryKey: ['goals', 'list'] });
+      router.push('/dashboard');
+    },
+    onError: () => {
+      showToast('목표 삭제에 실패했습니다.', 'fail');
+    },
+  });
+};
+
+export const usePatchGoal = (goalId?: number) => {
+  const { showToast } = useToastStore();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: { title: string }) => {
+      if (goalId === undefined) {
+        throw new Error('Goal id is required');
+      }
+      return fetchGoals.patchGoal(goalId, data);
+    },
+    onSuccess: () => {
+      showToast('목표가 수정되었습니다.');
+      queryClient.invalidateQueries({ queryKey: ['goals', 'detail', goalId] });
+      queryClient.invalidateQueries({ queryKey: ['goals', 'list'] });
+    },
+    onError: () => {
+      showToast('목표 수정에 실패했습니다.', 'fail');
     },
   });
 };

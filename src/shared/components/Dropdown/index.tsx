@@ -55,11 +55,13 @@ interface DropdownProps extends React.HTMLAttributes<HTMLButtonElement> {
   onSelectItem: (item: DropdownItemType) => void;
   isDisabled?: boolean;
   className?: string;
+  defaultValue?: string;
 }
 
-function Dropdown({ items, selectedValue, onSelectItem, isDisabled, className }: DropdownProps) {
+function Dropdown({ items, selectedValue, onSelectItem, isDisabled, className, defaultValue }: DropdownProps) {
   const [isToggleOpen, setIsToggleOpen] = useState(false);
-  const selectedItem = items.find((item) => item.value === selectedValue);
+  const selectedItem =
+    items.find((item) => item.value === selectedValue) || items.find((item) => item.value === defaultValue);
 
   const ref = useRef<HTMLDivElement>(null);
   useOnClickOutside(ref, () => setIsToggleOpen(false));

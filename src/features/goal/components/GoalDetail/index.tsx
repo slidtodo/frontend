@@ -44,7 +44,21 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
               </Button>
               <Button
                 className="rounded-full p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
-                onClick={openTodoCreateModal}
+                onClick={() => {
+                  if (goalId === undefined) return;
+
+                  openTodoCreateModal({
+                    goalDetailId: goalId,
+                    todo: {
+                      title: '',
+                      goalId,
+                      dueDate: undefined,
+                      linkUrl: undefined,
+                      imageUrl: undefined,
+                      tags: [],
+                    },
+                  });
+                }}
               >
                 <PlusIcon size={20} />
                 <span className="hidden w-full w-max text-sm font-semibold md:block">할 일 추가</span>

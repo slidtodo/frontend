@@ -8,30 +8,21 @@ import { CheckIcon, EllipsisVertical, GithubIcon, Star } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
 import type { TodoResponse } from '@/lib/api';
-
-/**
- * A single to-do list row.
- *
- * @example
- * <TaskCard
- *  todo={{
- *  id: 1,
- *  title: '항목명',
- *  done: true,
- *  }}
- *  variant='orange'
- * />
- */
+import { usePatchTodoFavorite } from '@/lib/mutations';
 
 interface TaskCardProps {
   todo: NonNullable<TodoResponse>;
   starred?: boolean;
   onClick?: () => void;
   onToggle?: (id: number) => void;
-  onStarToggle?: (id: number) => void;
   variant?: 'default' | 'orange';
 }
 
+/**
+ * TODO
+ * 할 일 수정, 삭제 로직
+ * 할 일 Done으로 post 하는 로직
+ */
 export function TaskCard({
   /**
    * [todo]
@@ -41,9 +32,7 @@ export function TaskCard({
   todo,
   starred: initialStarred = false,
   onClick,
-  // 이벤트 핸들러
   onToggle, // 체크박스
-  onStarToggle, // 별
   /**
    * varaint: 'default' | 'orange'
    */
@@ -51,7 +40,6 @@ export function TaskCard({
 }: TaskCardProps) {
   const [checked, setChecked] = useState(todo.done);
   const [starred, setStarred] = useState(initialStarred);
-
   const router = useRouter();
   const isOrange = variant === 'orange';
 
@@ -63,11 +51,16 @@ export function TaskCard({
     // TODO API 연결
   }
 
+  const { mutate: patchTodoFavorite } = usePatchTodoFavorite(todo.id);
+
   function handleStarToggle() {
     setStarred((prev) => !prev);
-    if (todo.id !== undefined) {
-      onStarToggle?.(todo.id);
-    }
+
+    patchTodoFavorite(undefined, {
+      onError: () => {
+        setStarred((prev) => !prev);
+      },
+    });
   }
 
   return (
@@ -126,7 +119,7 @@ export function TaskCard({
             'relative flex h-6 w-6 cursor-pointer items-center justify-center rounded-full p-1 group-hover:bg-white',
             isOrange ? 'bg-[#FFFFFF]/40' : 'bg-[#FF9E59]/20',
           )}
-          onClick={() => router.push(`${todo.id}/note/create`)}
+          onClick={() => router.push(`/goal/${todo.goal?.id}/note/create`)}
         >
           <Image src={'/image/todo-list.svg'} alt="todo-list menu" width={9} height={10} className="cursor-pointer" />
         </button>

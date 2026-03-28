@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { useDraftNote } from '@/features/note/hooks/useDraftNote';
 import { usePostNote } from '@/features/note/hooks/usePostNote';
 import { useToastStore } from '@/shared/stores/useToastStore';
-import { redirect } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import DraftNoteToast from '@/features/note/components/DraftNoteToast';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import { useEditor } from '@tiptap/react';
@@ -28,6 +28,8 @@ interface NoteCreateClientProps {
 
 export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) {
   const todoId = todo?.id ?? null;
+
+  const router = useRouter();
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -74,7 +76,8 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
   const handleSubmit = () => {
     if (!todoId) {
       showToast('먼저 할 일을 등록해주세요', 'fail');
-      redirect('/dashboard/all-todo');
+      router.push('/dashboard/all-todo');
+      return;
     }
 
     const body = {

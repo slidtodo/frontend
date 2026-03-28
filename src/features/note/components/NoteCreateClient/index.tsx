@@ -49,6 +49,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
     onRestore: (saved) => {
       setTitle(saved.title);
       setContent(saved.content);
+      editor?.commands.setContent(saved.content);
       setCreatedAt(saved.savedAt);
       setLinkUrl(saved.linkUrl ?? null);
     },

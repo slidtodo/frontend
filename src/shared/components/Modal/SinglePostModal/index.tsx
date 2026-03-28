@@ -10,7 +10,7 @@ interface SinglePostModalProps {
   title?: string;
   placeholder?: string;
   defaultValue?: string;
-  inputType?: React.HTMLInputTypeAttribute;
+  inputType?: 'text' | 'email' | 'url';
   onConfirm: (value: string) => void;
 }
 

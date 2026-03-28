@@ -1,28 +1,31 @@
 'use client';
+
 import clsx from 'clsx';
 import { XIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 
+import { PatchTodoRequest, PostTodoRequest } from '@/lib/api';
+import { usePatchTodo, usePostTodo } from '@/lib/mutations';
+import { goalQueries, todoQueries } from '@/lib/queryKeys';
 import Button from '@/shared/components/Button';
 import Dropdown from '@/shared/components/Dropdown';
 import FormField from '@/shared/components/FormField';
 import Input from '@/shared/components/Input';
-import { TagInput } from '../shared/TagInput';
-import LinkInput from '../shared/LinkInput';
-import ImageInput from '../shared/ImageInput';
-import DateInput from '../shared/DateInput';
-
-import { fetchTodos } from '@/lib/api';
-import { formatDateForAPI } from '@/shared/utils/utils';
 import { useModalStore } from '@/shared/stores/useModalStore';
-import { goalQueries } from '@/lib/queryKeys';
-import { PostTodoRequest, PatchTodoRequest } from '@/lib/api';
+import { formatDateForAPI } from '@/shared/utils/utils';
+
+import DateInput from '../shared/DateInput';
+import ImageInput from '../shared/ImageInput';
+import LinkInput from '../shared/LinkInput';
+import StatusField from '../shared/StatusField';
+import { TagInput } from '../shared/TagInput';
 
 interface BaseProps {
   goalDetailId?: number;
 }
+
 interface CreateMode extends BaseProps {
   mode: 'create';
   todo: PostTodoRequest;
@@ -34,18 +37,16 @@ interface EditMode extends BaseProps {
 }
 
 type TodoFormModalProps = CreateMode | EditMode;
-
-type FormValues = PostTodoRequest;
+type FormValues = PostTodoRequest & PatchTodoRequest;
 
 export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModalProps) {
   const { closeModal } = useModalStore();
   const isEditMode = mode === 'edit';
-  const [image, setImage] = useState<string | null>(null);
-  const [date, setDate] = useState<Date | undefined>();
 
   const {
     register,
     handleSubmit,
+    reset,
     setValue,
     control,
     formState: { errors },
@@ -58,35 +59,88 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
           linkUrl: todo.linkUrl ?? undefined,
           imageUrl: todo.imageUrl ?? undefined,
           tags: todo.tags ?? [],
+          done: todo.done ?? false,
         }
       : {
-          goalId: goalDetailId ?? todo?.goalId ?? undefined,
+          goalId: goalDetailId ?? todo.goalId ?? undefined,
           title: '',
           dueDate: undefined,
           linkUrl: undefined,
           imageUrl: undefined,
           tags: [],
+          done: false,
         },
   });
 
   register('dueDate', { required: '마감기한은 필수입니다.' });
+
   const tags = useWatch({ control, name: 'tags' }) ?? [];
   const goalId = useWatch({ control, name: 'goalId' });
   const linkUrl = useWatch({ control, name: 'linkUrl' });
+  const imageUrl = useWatch({ control, name: 'imageUrl' }) ?? null;
+  const dueDate = useWatch({ control, name: 'dueDate' });
+  const done = useWatch({ control, name: 'done' }) ?? false;
 
-  // TODO: mutain처리
+  const selectedDate = dueDate ? new Date(dueDate) : undefined;
+
+  const { data: goals } = useQuery(goalQueries.list());
+
+  const todoId = isEditMode && 'id' in todo ? todo.id : 0;
+  const { data: todoDetail } = useQuery({
+    ...todoQueries.detail(todoId),
+    enabled: isEditMode && !!todoId,
+  });
+
+  const postTodoMutation = usePostTodo();
+  const patchTodoMutation = usePatchTodo(todoId);
+
+  useEffect(() => {
+    if (!isEditMode || !todoDetail) return;
+
+    reset({
+      title: todoDetail.title ?? '',
+      goalId: todoDetail.goal?.id,
+      dueDate: todoDetail.dueDate ?? undefined,
+      linkUrl: todoDetail.linkUrl ?? undefined,
+      imageUrl: todoDetail.imageUrl ?? undefined,
+      tags: todoDetail.tags ? todoDetail.tags.map((tag) => tag.name) : [],
+      done: todoDetail.done ?? false,
+    });
+  }, [isEditMode, reset, todoDetail]);
+
+  useEffect(() => {
+    if (isEditMode) return;
+    if (goalId || !goals?.goals?.length) return;
+
+    setValue('goalId', goalDetailId ?? todo.goalId ?? goals.goals[0]?.id, { shouldDirty: false });
+  }, [goalDetailId, goalId, goals, isEditMode, setValue, todo]);
+
+  const goalOptions =
+    goals?.goals?.map((goal) => ({
+      label: goal.title ?? '',
+      value: String(goal.id),
+    })) ?? [];
+
+  const defaultGoalId = isEditMode
+    ? todoDetail?.goal?.id
+      ? String(todoDetail.goal.id)
+      : goalOptions[0]?.value
+    : todo.goalId
+      ? String(todo.goalId)
+      : goalOptions[0]?.value;
+
   const onSubmit = async (data: FormValues) => {
-    if (isEditMode) {
-      await fetchTodos.patchTodo(todo.id, {
+    if (isEditMode && 'id' in todo) {
+      await patchTodoMutation.mutateAsync({
         title: data.title,
         dueDate: data.dueDate,
         linkUrl: data.linkUrl,
         imageUrl: data.imageUrl,
         tags: data.tags,
-        done: todo.done,
+        done: data.done,
       });
     } else {
-      const body: PostTodoRequest = {
+      await postTodoMutation.mutateAsync({
         source: 'MANUAL',
         title: data.title,
         goalId: data.goalId,
@@ -94,28 +148,10 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         linkUrl: data.linkUrl,
         imageUrl: data.imageUrl,
         tags: data.tags,
-      };
-      await fetchTodos.postTodo(body);
+      });
     }
+
     closeModal();
-  };
-
-  const { data: goals } = useQuery(goalQueries.list());
-
-  const goalOptions = () => {
-    if (!goals) return [];
-    return (goals?.goals ?? []).map((goal) => ({
-      label: goal.title ?? '',
-      value: String(goal.id),
-    }));
-  };
-  // TODO: 수정모드에서 골id가 없음... 아님 수정하지 말아야 하는지 흠...
-  const defaultGoalId = () => {
-    if (isEditMode) {
-      // return String(todo.id);
-    } else {
-      return todo?.goalId ? String(todo.goalId) : goalOptions()[0]?.value;
-    }
   };
 
   return (
@@ -124,11 +160,10 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       className={clsx(
         'no-scrollbar flex w-full flex-col bg-white shadow-[0px_0px_60px_0px_rgba(0,0,0,0.05)]',
         'gap-3 rounded-t-[32px] p-6',
-        'md:w-[488px] md:gap-4 md:rounded-[40px] md:p-8',
         'max-h-[90vh] overflow-y-auto',
+        'md:w-[488px] md:gap-4 md:rounded-[40px] md:p-8',
       )}
     >
-      {/* 헤더 */}
       <div className="mb-1 flex items-center justify-between md:mb-4">
         <h1 className="text-xl font-semibold text-[#262626]">{isEditMode ? '할 일 수정' : '할 일 생성'}</h1>
         <button type="button" className="cursor-pointer" onClick={closeModal}>
@@ -136,16 +171,15 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         </button>
       </div>
 
-      {/* 상태 필드: edit 모드에서만 노출 */}
-      {/* {isEditMode && (
+      {isEditMode && (
         <StatusField
-          done={todo.done ?? false}
-          onChange={(val) => setValue('done', val, { shouldValidate: true })}
-          errorMessage={errors.done?.message}
+          done={done}
+          onChange={(nextDone) => {
+            setValue('done', nextDone, { shouldDirty: true });
+          }}
         />
-      )} */}
+      )}
 
-      {/* 제목 */}
       <FormField label="제목" required>
         <Input
           autoFocus
@@ -156,66 +190,62 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         {errors.title && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.title.message}</p>}
       </FormField>
 
-      {/* 목표 */}
       <FormField label="목표" required>
         <Dropdown
-          defaultValue={defaultGoalId()}
+          defaultValue={defaultGoalId}
           {...register('goalId', { required: '목표는 필수입니다.' })}
-          items={goalOptions()}
-          selectedValue={String(goalId)}
-          onSelectItem={(item) => setValue('goalId', Number(item.value))}
+          items={goalOptions}
+          selectedValue={goalId ? String(goalId) : ''}
+          onSelectItem={(item) => setValue('goalId', Number(item.value), { shouldDirty: true })}
+          isDisabled={isEditMode}
           className="h-11 rounded-xl p-3 placeholder:text-[#737373] md:h-14 md:rounded-2xl md:p-4"
         />
         {errors.goalId && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.goalId.message}</p>}
       </FormField>
 
-      {/* 마감기한 */}
       <FormField label="마감기한" required>
         <DateInput
-          date={date}
-          onSelect={(date) => {
-            setDate(date);
-            setValue('dueDate', date ? formatDateForAPI(date) : undefined, { shouldValidate: true });
+          date={selectedDate}
+          onSelect={(nextDate) => {
+            setValue('dueDate', nextDate ? formatDateForAPI(nextDate) : undefined, { shouldValidate: true });
           }}
-          onConfirm={(d) => {
-            setDate(d);
-            setValue('dueDate', date ? formatDateForAPI(date) : undefined, { shouldValidate: true });
+          onConfirm={(nextDate) => {
+            setValue('dueDate', nextDate ? formatDateForAPI(nextDate) : undefined, { shouldValidate: true });
           }}
         />
         {errors.dueDate && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.dueDate.message}</p>}
       </FormField>
 
-      {/* 태그 */}
       <FormField label="태그">
         <TagInput
           tags={tags}
-          onAddTag={(tag) => setValue('tags', [...tags, tag])}
+          onAddTag={(tag) => setValue('tags', [...tags, tag], { shouldDirty: true })}
           onRemoveTag={(tag) =>
             setValue(
               'tags',
-              tags.filter((t) => t !== tag),
+              tags.filter((currentTag) => currentTag !== tag),
+              { shouldDirty: true },
             )
           }
         />
       </FormField>
 
-      {/* 링크 */}
       <FormField label="링크">
-        <LinkInput value={linkUrl ?? ''} onChange={(val) => setValue('linkUrl', val || undefined)} />
+        <LinkInput
+          value={linkUrl ?? ''}
+          onChange={(value) => setValue('linkUrl', value || undefined, { shouldDirty: true })}
+        />
       </FormField>
 
-      {/* 이미지 */}
       <FormField label="이미지">
         <ImageInput
-          image={image}
-          onChange={(img) => {
-            setImage(img);
-            setValue('imageUrl', img ?? undefined);
+          image={imageUrl}
+          onChange={(nextImage) => {
+            setValue('imageUrl', nextImage ?? undefined, { shouldDirty: true });
           }}
         />
       </FormField>
 
-      {/* 버튼 */}
       <div className="mt-1 flex items-center gap-2 md:mt-[34px] md:gap-3">
         <Button
           type="button"

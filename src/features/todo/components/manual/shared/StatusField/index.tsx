@@ -1,9 +1,9 @@
-// shared/StatusField/index.tsx
 'use client';
 
-import FormField from '@/shared/components/FormField';
-import { CheckIcon } from 'lucide-react';
 import clsx from 'clsx';
+import { CheckIcon } from 'lucide-react';
+
+import FormField from '@/shared/components/FormField';
 
 interface StatusFieldProps {
   done: boolean;
@@ -15,41 +15,32 @@ export default function StatusField({ done, onChange, errorMessage }: StatusFiel
   return (
     <FormField label="상태" required>
       <div className="flex gap-2">
-        {/* TO DO */}
-        <button
-          type="button"
-          onClick={() => onChange(false)}
-          className="flex w-[76px] cursor-pointer items-center gap-[6px]"
-        >
-          <div
-            className={clsx(
-              'flex size-[18px] shrink-0 items-center justify-center rounded-[6px] border',
-              !done ? 'border-transparent bg-[#FF8442]' : 'border-[#CCC] bg-white',
-            )}
-          >
-            {!done && <CheckIcon size={12} className="stroke-white stroke-2" />}
-          </div>
-          <span className="text-sm font-medium text-[#737373]">TO DO</span>
-        </button>
-
-        {/* DONE */}
-        <button
-          type="button"
-          onClick={() => onChange(true)}
-          className="flex w-[76px] cursor-pointer items-center gap-[6px]"
-        >
-          <div
-            className={clsx(
-              'flex size-[18px] shrink-0 items-center justify-center rounded-[6px] border',
-              done ? 'border-transparent bg-[#FF8442]' : 'border-[#CCC] bg-white',
-            )}
-          >
-            {done && <CheckIcon size={12} className="stroke-white stroke-2" />}
-          </div>
-          <span className="text-sm font-medium text-[#737373]">DONE</span>
-        </button>
+        <StatusFieldItem label="TO DO" selected={!done} onChange={() => onChange(false)} />
+        <StatusFieldItem label="DONE" selected={done} onChange={() => onChange(true)} />
       </div>
       {errorMessage && <p className="px-1 text-xs text-red-500">{errorMessage}</p>}
     </FormField>
+  );
+}
+
+interface StatusFieldItemProps {
+  label: 'TO DO' | 'DONE';
+  selected: boolean;
+  onChange: () => void;
+}
+
+function StatusFieldItem({ label, selected, onChange }: StatusFieldItemProps) {
+  return (
+    <button type="button" onClick={onChange} className="flex w-[76px] cursor-pointer items-center gap-[6px]">
+      <div
+        className={clsx(
+          'flex size-[18px] shrink-0 items-center justify-center rounded-[6px] border',
+          selected ? 'border-transparent bg-[#FF8442]' : 'border-[#CCC] bg-white',
+        )}
+      >
+        {selected && <CheckIcon size={12} className="stroke-white stroke-2" />}
+      </div>
+      <span className="text-sm font-medium text-[#737373]">{label}</span>
+    </button>
   );
 }

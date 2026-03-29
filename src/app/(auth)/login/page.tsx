@@ -8,6 +8,7 @@ import FormField from '@/shared/components/FormField';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import Image from 'next/image';
+import { fetchAuth } from '@/lib/api/fetchAuth'; // 추가
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,34 +16,29 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // TODO: 리액트쿼리로 변경 필요, 리액트 훅 폼 적용 필요
   const handleLogin = async () => {
     try {
       const response = await fetch('/api/login', {
         method: 'POST',
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        body: JSON.stringify({ email, password }),
+        headers: { 'Content-Type': 'application/json' },
       });
 
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
+      if (!response.ok) throw new Error('Login failed');
 
       router.push('/dashboard');
     } catch (error) {
       console.error(error);
     }
   };
+  const handleGithubLogin = async () => {
+    const { loginUrl } = await fetchAuth.getGithubAuthorizeUrl();
+    if (loginUrl) window.location.href = loginUrl;
+  };
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#F5F5F5] py-20">
       <div className="flex w-full max-w-[331px] flex-col items-start md:max-w-[400px]">
-        {/* 로고 */}
         <div className="mb-10 flex h-12 w-full items-center gap-4">
           <Image src="/icons/todo.png" alt="logo" width={48} height={48} />
           <span className="text-2xl font-bold">Slid to-do</span>
@@ -54,7 +50,6 @@ export default function LoginPage() {
             handleLogin();
           }}
         >
-          {/* 이메일 */}
           <FormField label="이메일">
             <Input
               type="email"
@@ -63,7 +58,6 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </FormField>
-          {/* 비밀번호 */}
           <FormField label="비밀번호">
             <Input
               type="password"
@@ -76,22 +70,20 @@ export default function LoginPage() {
             로그인하기
           </Button>
         </form>
-        {/* 로그인 버튼 */}
 
-        {/* 회원가입 링크 */}
         <div className="mt-6 flex h-6 w-full items-center justify-center gap-2 text-sm">
           <span className="text-base leading-6 font-medium text-[#333333]">슬리드투두가 처음이신가요?</span>
           <Link href="/signup" className="text-base leading-6 font-semibold text-[#EF6C00]">
             회원가입
           </Link>
         </div>
-        {/* SNS 구분선 */}
+
         <div className="mt-10 mb-4 flex w-full items-center gap-3">
           <div className="h-px flex-1 bg-gray-200" />
           <span className="text-sm text-gray-400">SNS 계정으로 로그인</span>
           <div className="h-px flex-1 bg-gray-200" />
         </div>
-        {/* SNS 버튼 */}
+
         <div className="flex w-full justify-center gap-4">
           <button
             type="button"
@@ -103,7 +95,7 @@ export default function LoginPage() {
           </button>
           <button
             type="button"
-            onClick={() => alert('깃허브 로그인')}
+            onClick={handleGithubLogin}
             aria-label="깃허브 로그인"
             className="flex h-14 w-14 items-center justify-center rounded-full border border-[#DDDDDD] bg-white p-4 hover:bg-gray-50"
           >

@@ -2,43 +2,32 @@ import EditorTitle from '@/features/note/components/NoteEditor/EditorTitle';
 import EditorMeta from '@/features/note/components/NoteEditor/EditorMeta';
 import EditorContent from '@/features/note/components/NoteEditor/EditorContent';
 import { notFound } from 'next/navigation';
+import { fetchNotes } from '@/lib/api/fetchNotes';
+import { fetchGoals } from '@/lib/api/fetchGoals';
 
-interface NoteDetailPageProps {
-  params: Promise<{ goalId: string; noteId: string }>;
-}
-
-// @TODO API 연결로 대체
-async function getNote(goalId: string, noteId: string) {
-  /**
-   * @TODO API 연결
-   * const res = await fetch(`/api/goals/${goalId}/notes/${noteId}`, {캐시 설정});
-   * if (!res.ok) return null;
-   * return res.json();
-   */
-
-  return {
-    title: '노트 제목',
-    content: '노트 내용...',
-    goal: { title: '올해 안에 풀스택 개발자 되기' },
-    todos: { title: 'React 컴포넌트 설계 공부하기', done: false },
-    tags: [{ id: '1', string: 'React', variant: 'green' as const }],
-    createdAt: '2026-03-23T00:00:00.000Z',
-  };
-}
-
-export default async function NoteDetailPage({ params }: NoteDetailPageProps) {
+export default async function NoteDetailPage({ params }: { params: Promise<{ goalId: string; noteId: string }> }) {
   const { goalId, noteId } = await params;
-  const note = await getNote(goalId, noteId);
+
+  const [note, goal] = await Promise.all([
+    fetchNotes.getNote(Number(noteId)).catch(() => null),
+    fetchGoals.getGoal(Number(goalId)).catch(() => null),
+  ]);
 
   if (!note) notFound();
 
-  // @TODO ErrorSuspenseBoundary 처리가 의미 있을지 고민
+  const tags = (note.todo?.tags ?? []).map((t) => ({ id: String(t.id), string: t.name ?? '' }));
+
   return (
     <div className="p-5 md:p-10">
-      <EditorTitle title={note.title} readOnly />
-      <EditorMeta goal={note.goal} todos={note.todos} tags={note.tags} createdAt={note.createdAt} />
+      <EditorTitle title={note.title ?? ''} readOnly />
+      <EditorMeta
+        goal={{ title: goal?.title ?? '' }}
+        todos={{ title: note.todo?.title ?? '', done: note.todo?.done ?? false }}
+        tags={tags}
+        createdAt={note.createdAt ?? ''}
+      />
       <hr className="mt-4 mb-5 border-[#DDD] md:mt-6" />
-      <EditorContent content={note.content} readOnly />
+      <EditorContent content={note.content ?? ''} readOnly />
     </div>
   );
 }

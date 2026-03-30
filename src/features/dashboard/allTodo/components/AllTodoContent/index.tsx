@@ -53,7 +53,6 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
   ];
   const { openTodoCreateModal } = useTodoCreateModal();
 
-  console.log(todos);
   return (
     <div className="flex justify-between px-2">
       <div className="flex gap-0 md:gap-2">

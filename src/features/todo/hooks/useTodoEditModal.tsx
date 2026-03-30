@@ -4,13 +4,17 @@
  */
 import { useModalStore } from '@/shared/stores/useModalStore';
 import TodoFormModal from '../components/manual/TodoFormModal';
-import { TodoEditForm } from '../components/types/types';
+import { PatchTodoRequest } from '@/lib/api';
 
+interface UseTodoEditModalResult {
+  goalDetailId?: number;
+  todo: PatchTodoRequest & { id: number };
+}
 export function useTodoEditModal() {
   const { openModal } = useModalStore();
 
-  const openTodoEditModal = (todo: TodoEditForm) => {
-    openModal(<TodoFormModal mode="edit" todo={todo} />, undefined, 'bottom');
+  const openTodoEditModal = ({ goalDetailId, todo }: UseTodoEditModalResult) => {
+    openModal(<TodoFormModal mode="edit" todo={todo} goalDetailId={goalDetailId} />, undefined, 'bottom');
   };
 
   return { openTodoEditModal };

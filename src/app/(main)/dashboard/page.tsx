@@ -1,5 +1,4 @@
-import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import DashBoardSummary from '@/features/dashboard/components/DashboardSummary';
 import DashboardDetail from '@/features/dashboard/components/DashBoardDetail';
@@ -33,11 +32,11 @@ export default async function DashboardPage() {
   const dehydratedState = dehydrate(queryClient);
 
   return (
-    <ReactQueryProvider state={dehydratedState}>
+    <HydrationBoundary state={dehydratedState}>
       <div className="flex w-full flex-col">
         <DashBoardSummary />
         <DashboardDetail />
       </div>
-    </ReactQueryProvider>
+    </HydrationBoundary>
   );
 }

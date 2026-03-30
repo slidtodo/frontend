@@ -73,7 +73,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
                 <TaskCard
                   key={todo.id}
                   todo={todo}
-                  onClick={() => {
+                  onTitleClick={() => {
                     if (todo.id) openModal(<DetailTodoModal todoId={todo.id} />);
                   }}
                 />
@@ -93,7 +93,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
                 <TaskCard
                   key={todo.id}
                   todo={todo}
-                  onClick={() => {
+                  onTitleClick={() => {
                     if (todo.id) openModal(<DetailTodoModal todoId={todo.id} />);
                   }}
                 />

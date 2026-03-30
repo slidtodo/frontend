@@ -2,12 +2,11 @@
 
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
-import { ImageType } from '@/features/todo/components/types/types';
 import { ImageUpIcon, XIcon } from 'lucide-react';
 
 interface ImageInput {
-  image: ImageType | null;
-  onChange: (image: ImageType | null) => void;
+  image: string | null;
+  onChange: (image: string | null) => void;
 }
 
 export default function ImageInput({ image, onChange }: ImageInput) {
@@ -17,19 +16,16 @@ export default function ImageInput({ image, onChange }: ImageInput) {
     if (e.target.files) {
       const file = e.target.files[0];
 
-      onChange({
-        file,
-        previewUrl: URL.createObjectURL(file),
-      });
+      onChange(URL.createObjectURL(file));
 
       e.target.value = '';
     }
   };
 
-    useEffect(() => {
+  useEffect(() => {
     return () => {
-      if (image?.previewUrl) {
-        URL.revokeObjectURL(image.previewUrl);
+      if (image) {
+        URL.revokeObjectURL(image);
       }
     };
   }, [image]);
@@ -38,7 +34,7 @@ export default function ImageInput({ image, onChange }: ImageInput) {
       {image ? (
         <div className="relative h-[101px] w-[160px] overflow-hidden rounded-2xl">
           {/* 이미지 */}
-          <Image src={image.previewUrl} alt="이미지 미리보기" fill className="object-cover" />
+          <Image src={image} alt="이미지 미리보기" fill className="object-cover" />
           {/* 삭제 버튼 */}
           <button
             type="button"

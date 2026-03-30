@@ -27,7 +27,7 @@ export default function AllTodoContent() {
     <div className="mx-auto mb-[76px] flex max-w-[720px] flex-col gap-6">
       <PageHeader title="모든 할 일" count={todoList?.totalCount ?? todoList?.todos?.length ?? 0} className="pl-2" />
       <section className="flex flex-col gap-3">
-        <AllTodoFilter selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
+        <AllTodoFilter todos={todoList?.todos} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
         {todoList && (todoList.todos?.length ?? 0) === 0 ? (
           <Empty>등록된 할 일이 없습니다.</Empty>
         ) : (
@@ -41,10 +41,11 @@ export default function AllTodoContent() {
 }
 
 interface AllTodoFilterProps {
+  todos: TodoListResponse['todos'];
   selectedFilter: TodoOptions;
   setSelectedFilter: React.Dispatch<React.SetStateAction<TodoOptions>>;
 }
-function AllTodoFilter({ selectedFilter, setSelectedFilter }: AllTodoFilterProps) {
+function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilterProps) {
   const todoButtons: { id: number; label: TodoOptions }[] = [
     { id: 1, label: 'ALL' },
     { id: 2, label: 'TO DO' },
@@ -52,6 +53,7 @@ function AllTodoFilter({ selectedFilter, setSelectedFilter }: AllTodoFilterProps
   ];
   const { openTodoCreateModal } = useTodoCreateModal();
 
+  console.log(todos);
   return (
     <div className="flex justify-between px-2">
       <div className="flex gap-0 md:gap-2">
@@ -72,7 +74,19 @@ function AllTodoFilter({ selectedFilter, setSelectedFilter }: AllTodoFilterProps
       <Button
         variant="cancel"
         className="flex items-center gap-1 bg-[#F2F2F2] px-3 py-[10px] hover:bg-[#E0E0E0] md:px-[20px]"
-        onClick={openTodoCreateModal}
+        onClick={() =>
+          openTodoCreateModal({
+            goalDetailId: undefined,
+            todo: {
+              title: '',
+              goalId: 1,
+              dueDate: undefined,
+              linkUrl: undefined,
+              imageUrl: undefined,
+              tags: [],
+            },
+          })
+        }
       >
         <PlusIcon size={20} color="#737373" />
         <span className="overflow-hidden text-sm font-semibold text-ellipsis whitespace-nowrap text-[#737373]">

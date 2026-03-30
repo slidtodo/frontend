@@ -6,12 +6,13 @@ export type ImageType = {
 export interface TodoCreateForm {
   title: string;
   goalId: number;
-  dueDate: string | null;
-  linkUrl: string | null;
-  imageUrl: string | null;
+  dueDate: string | undefined;
+  linkUrl: string | undefined;
+  imageUrl: string | undefined;
   tags: string[];
 }
 
 export interface TodoEditForm extends TodoCreateForm {
+  id: number;
   done: boolean;
 }

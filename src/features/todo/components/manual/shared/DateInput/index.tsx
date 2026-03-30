@@ -14,7 +14,7 @@ interface DateInputProps {
   date: Date | undefined;
   onSelect: (date: Date | undefined) => void;
   onConfirm: (date: Date | undefined) => void;
-  onCancel: () => void;
+  onCancel?: () => void;
 }
 
 export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateInputProps) {
@@ -23,7 +23,7 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
     <Popover
       open={open}
       onOpenChange={(isOpen) => {
-        if (!isOpen) onCancel();
+        if (!isOpen && onCancel) onCancel();
         setOpen(isOpen);
       }}
     >
@@ -89,7 +89,7 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
                   onClick={onNextClick}
                   className="flex size-8 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent hover:bg-[#FAFAFA]"
                 >
-                  <ChevronRightIcon size={20} className="hover:stroke-[#333] stroke-[#A4A4A4]" />
+                  <ChevronRightIcon size={20} className="stroke-[#A4A4A4] hover:stroke-[#333]" />
                 </Button>
               </div>
             ),
@@ -114,7 +114,7 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
             type="button"
             variant="secondary"
             onClick={() => {
-              onCancel();
+              if (onCancel) onCancel();
               setOpen(false);
             }}
             className="flex flex-1 items-center justify-center rounded-full border border-[#CCC] py-[10px] text-sm font-semibold text-[#737373]"

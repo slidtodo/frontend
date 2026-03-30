@@ -13,12 +13,19 @@ import { CalendarIcon, FlagIcon, Hash, SquareCheck } from 'lucide-react';
         done: false,
       }}
       tags={[
-        { id: '1', string: 'React', variant: 'green' },
-        { id: '2', string: 'TypeScript', variant: 'purple' },
-        { id: '3', string: '공부', variant: 'orange' },
+        { id: '1', string: 'React' },
+        { id: '2', string: 'TypeScript' },
+        { id: '3', string: '공부' },
       ]}
     />
  */
+const VARIANTS = ['green', 'orange', 'purple'] as const;
+
+function getVariantByString(str: string): 'green' | 'orange' | 'purple' {
+  const hash = [...str].reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return VARIANTS[hash % VARIANTS.length];
+}
+
 interface MetaTag {
   id: string;
   string: string;
@@ -70,7 +77,7 @@ export default function EditorMeta({ goal, todos, createdAt, tags }: EditorMetaP
               <Tag
                 key={tag.id}
                 string={tag.string}
-                variant={tag.variant}
+                variant={tag.variant ?? getVariantByString(tag.string)}
                 className="rounded-full border px-2 py-1 text-xs font-medium whitespace-nowrap"
               />
             ))}

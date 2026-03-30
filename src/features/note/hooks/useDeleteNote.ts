@@ -15,9 +15,9 @@ export const useDeleteNote = (noteId: number, callbacks?: { onError?: (error: Er
         queryKey: noteQueries.detail(noteId).queryKey,
       });
 
-      // 노트 목록 캐시 무효화
+      // 노트 목록 캐시 무효화 (파라미터 무관하게 전체 무효화)
       queryClient.invalidateQueries({
-        queryKey: noteQueries.list().queryKey,
+        queryKey: noteQueries.lists(),
       });
 
       router.back();

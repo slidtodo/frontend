@@ -7,6 +7,7 @@ import EditorMeta from './EditorMeta';
 import EditorContent from './EditorContent';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import { NoteEditorProps } from '../../types/types';
+import { mapNoteTagsFromSource } from '../../utils/utils';
 
 export default function NoteEditor({
   editor,
@@ -27,12 +28,12 @@ export default function NoteEditor({
     }
   };
 
-  const githubSourceLabel =
-    todo?.source === 'GITHUB_ISSUE' ? 'ISSUES' : todo?.source === 'GITHUB_PR' ? 'PR' : null;
-
-  const tags = githubSourceLabel
-    ? [{ id: 'source', string: githubSourceLabel }]
-    : (todo?.tags ?? []).map((t) => ({ id: String(t.id), string: t.name ?? '' }));
+  const tags = mapNoteTagsFromSource({
+    source: todo?.source,
+    tags: todo?.tags,
+    sourceItemId: todo?.sourceItemId,
+    status: todo?.status,
+  });
 
   return (
     <div

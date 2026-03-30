@@ -1,3 +1,5 @@
+'use client';
+
 import { formatDate } from '@/shared/utils/utils';
 import EllipsisButton from '../EllipsisButton';
 import Image from 'next/image';
@@ -5,9 +7,18 @@ import { Note } from '@/shared/types/types';
 import noteIcon from '@/features/note/assets/icons/icon-note.png';
 import TodoTitle from '@/features/note/components/TodoTitle';
 import Link from 'next/link';
+import { useDeleteNote } from '../../hooks/useDeleteNote';
+import { useToastStore } from '@/shared/stores/useToastStore';
 
-export default async function NoteItem({ note, goalId }: { note: Note; goalId: string }) {
+export default function NoteItem({ note, goalId }: { note: Note; goalId: string }) {
   const createDate = formatDate(new Date(note.createdAt));
+
+  const { showToast } = useToastStore();
+
+  const { mutate: handleDelete } = useDeleteNote(note.id, {
+    onError: () => showToast('노트 삭제에 실패했습니다', 'fail'),
+  });
+
   return (
     <Link href={`/goal/${goalId}/note/${note.id}`}>
       <article className="flex flex-col gap-3 rounded-[20px] bg-[#FFF] p-4 md:gap-4 md:rounded-3xl md:px-[38px] md:pt-7 md:pb-8">
@@ -22,13 +33,11 @@ export default async function NoteItem({ note, goalId }: { note: Note; goalId: s
               { label: '수정하기', value: 'edit' },
               { label: '삭제하기', value: 'delete' },
             ]}
+            onDelete={handleDelete}
           />
         </div>
         <div className="flex items-center justify-between">
-          {/* <ErrorSuspenseBoundary> */}
-          {/* <TodoTitle todoId={note.todoId} /> */}
-          {/* </ErrorSuspenseBoundary> */}
-
+          <TodoTitle todoId={note.todoId} />
           <TodoTitle todoId={10} />
           <div>
             <p className="text-xs font-normal text-[#A4A4A4]">{createDate}</p>

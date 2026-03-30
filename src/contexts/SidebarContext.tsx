@@ -3,22 +3,20 @@
 import { useQuery } from '@tanstack/react-query';
 import { usePathname } from 'next/navigation';
 import { createContext, useContext, useState, ReactNode, useMemo } from 'react';
-import { LayoutGridIcon, FlagIcon, CalendarDaysIcon, ListCheckIcon, MessageSquareIcon, StarIcon } from 'lucide-react';
+import { LayoutGridIcon, FlagIcon, CalendarDaysIcon, ListCheckIcon } from 'lucide-react';
 
 import { goalQueries } from '@/lib/queryKeys';
 interface MenuBase {
   icon?: React.ReactNode;
   name: string;
 }
-interface LeafMenu extends MenuBase {
+interface SubMenu extends MenuBase {
   href: string;
-  subMenus?: string[];
 }
-interface ParentMenu extends MenuBase {
+export interface MenuItem extends MenuBase {
   href: string;
-  subMenus: MenuItem[];
+  subMenus?: SubMenu[];
 }
-export type MenuItem = LeafMenu | ParentMenu;
 
 interface SidebarContextType {
   toggle: () => void;
@@ -36,8 +34,8 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   const { data: goal } = useQuery(goalQueries.list());
-  console.log('goal: ', goal);
-  // TODO: 서브메뉴 목표랑 연결하도록 구현 필요
+  const goalData = useMemo(() => goal?.goals ?? [], [goal]);
+
   const allMenus = useMemo<MenuItem[]>(() => {
     return [
       {
@@ -49,13 +47,10 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
         icon: <FlagIcon />,
         name: '목표',
         href: '/goal',
-        // subMenus: [
-        //   {
-        //     name: `${goal?.goalName ?? '목표 없음'}`,
-        //     href: '/goal/[id]',
-        //     match: `/goal/${goal?.id}`,
-        //   },
-        // ],
+        subMenus: goalData.map((goal) => ({
+          name: goal.title ?? '',
+          href: `/goal/${goal.id}`,
+        })),
       },
       {
         icon: <ListCheckIcon />,
@@ -79,7 +74,7 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
       //   href: '/favorite-todo',
       // },
     ];
-  }, []);
+  }, [goalData]);
 
   const sidebar = useMemo<SidebarContextType>(() => {
     const toggle = () => setIsOpen((prev) => !prev);
@@ -89,7 +84,10 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
   }, [allMenus]);
 
   const currentMenu = useMemo(() => {
-    return allMenus.find((menu) => 'href' in menu && menu.href === pathname) || null;
+    return (
+      allMenus.find((menu) => menu.href === pathname || menu.subMenus?.some((subMenu) => subMenu.href === pathname)) ||
+      null
+    );
   }, [allMenus, pathname]);
 
   return (

@@ -1,9 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { noteQueries, goalQueries } from '@/lib/queryKeys';
 import NoteItem from '@/features/note/components/NoteItem';
 import GoalItem from '@/features/note/components/GoalItem';
+import Pagination from '@/features/note/components/Pagination';
 import Empty from '@/shared/components/Empty';
 import clsx from 'clsx';
 
@@ -12,10 +14,14 @@ interface NoteListClientProps {
 }
 
 export default function NoteListClient({ goalId }: NoteListClientProps) {
+  const [page, setPage] = useState(1);
+
   const { data: goal } = useQuery(goalQueries.detail(goalId));
-  const { data: noteList } = useQuery(noteQueries.list({ goalId }));
+  const { data: noteList } = useQuery(noteQueries.list({ goalId, page: page - 1 }));
 
   const notes = noteList?.notes ?? [];
+  const currentPage = (noteList?.pageInfo?.page ?? 0) + 1;
+  const totalPages = noteList?.pageInfo?.totalPages ?? 1;
 
   return (
     <>
@@ -31,6 +37,12 @@ export default function NoteListClient({ goalId }: NoteListClientProps) {
             <NoteItem key={note.id} note={{ id: note.id ?? 0, title: note.title ?? '', todoId: note.todoId ?? 0, createdAt: note.createdAt ?? '' }} goalId={String(goalId)} />
           ))}
         </section>
+      )}
+
+      {notes.length > 0 && (
+        <div className="mt-6 flex justify-center">
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage} />
+        </div>
       )}
     </>
   );

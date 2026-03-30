@@ -16,7 +16,12 @@ export default async function NoteDetailPage({ params }: { params: Promise<{ goa
 
   if (!note) notFound();
 
-  const tags = mapNoteTagsFromSource(note.source, note.todo?.tags);
+  const tags = mapNoteTagsFromSource({
+    source: note.source,
+    tags: note.todo?.tags,
+    sourceItemId: note.sourceItemId,
+    status: note.status,
+  });
 
   return (
     <div className="p-5 md:p-10">

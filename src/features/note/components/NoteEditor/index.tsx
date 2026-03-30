@@ -28,7 +28,12 @@ export default function NoteEditor({
     }
   };
 
-  const tags = mapNoteTagsFromSource(todo?.source, todo?.tags);
+  const tags = mapNoteTagsFromSource({
+    source: todo?.source,
+    tags: todo?.tags,
+    sourceItemId: todo?.sourceItemId,
+    status: todo?.status,
+  });
 
   return (
     <div

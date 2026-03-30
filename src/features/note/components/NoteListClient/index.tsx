@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { noteQueries, goalQueries } from '@/lib/queryKeys';
 import NoteItem from '@/features/note/components/NoteItem';
 import GoalItem from '@/features/note/components/GoalItem';
@@ -17,7 +17,10 @@ export default function NoteListClient({ goalId }: NoteListClientProps) {
   const [page, setPage] = useState(1);
 
   const { data: goal } = useQuery(goalQueries.detail(goalId));
-  const { data: noteList, isFetching } = useQuery(noteQueries.list({ goalId, page: page - 1 }));
+  const { data: noteList } = useQuery({
+    ...noteQueries.list({ goalId, page: page - 1 }),
+    placeholderData: keepPreviousData,
+  });
 
   const notes = (noteList?.notes ?? []).filter((note) => note.id != null);
   const currentPage = (noteList?.pageInfo?.page ?? 0) + 1;
@@ -29,7 +32,7 @@ export default function NoteListClient({ goalId }: NoteListClientProps) {
         <GoalItem title={goal?.title ?? ''} />
       </section>
 
-      {!isFetching && notes.length === 0 ? (
+      {notes.length === 0 ? (
         <Empty>아직 등록된 노트가 없어요</Empty>
       ) : (
         <section className={clsx('flex flex-col gap-3', 'md:gap-4', 'lg:grid lg:grid-cols-2 lg:gap-[20px]')}>

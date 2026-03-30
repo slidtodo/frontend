@@ -1,6 +1,6 @@
-import EditorTitle from '@/features/goal/note/components/NoteEditor/EditorTitle';
-import EditorMeta from '@/features/goal/note/components/NoteEditor/EditorMeta';
-import EditorContent from '@/features/goal/note/components/NoteEditor/EditorContent';
+import EditorTitle from '@/features/note/components/NoteEditor/EditorTitle';
+import EditorMeta from '@/features/note/components/NoteEditor/EditorMeta';
+import EditorContent from '@/features/note/components/NoteEditor/EditorContent';
 import { notFound } from 'next/navigation';
 
 interface NoteDetailPageProps {

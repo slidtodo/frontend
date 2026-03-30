@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import emptyIcon from '@/features/goal/note/assets/icons/icon-empty.png';
+import emptyIcon from '@/features/note/assets/icons/icon-empty.png';
 
 export default function Empty({ children }: { children: React.ReactNode }) {
   return (

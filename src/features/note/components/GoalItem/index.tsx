@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import goalIcon from '@/features/goal/note/assets/icons/icon-goal.png';
+import goalIcon from '@/features/note/assets/icons/icon-goal.png';
 import Image from 'next/image';
 
 export default function GoalItem({ title }: { title: string }) {

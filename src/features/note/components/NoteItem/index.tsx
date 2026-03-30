@@ -1,10 +1,9 @@
-
 import { formatDate } from '@/shared/utils/utils';
 import EllipsisButton from '../EllipsisButton';
 import Image from 'next/image';
 import { Note } from '@/shared/types/types';
-import noteIcon from '@/features/goal/note/assets/icons/icon-note.png';
-import TodoTitle from '@/features/goal/note/components/TodoTitle';
+import noteIcon from '@/features/note/assets/icons/icon-note.png';
+import TodoTitle from '@/features/note/components/TodoTitle';
 import Link from 'next/link';
 
 export default async function NoteItem({ note, goalId }: { note: Note; goalId: string }) {
@@ -18,12 +17,12 @@ export default async function NoteItem({ note, goalId }: { note: Note; goalId: s
 
             <h1 className="text-sm font-semibold text-[#1E293B] md:text-xl">{note.title}</h1>
           </div>
-            <EllipsisButton
-              items={[
-                { label: '수정하기', value: 'edit' },
-                { label: '삭제하기', value: 'delete' },
-              ]}
-            />
+          <EllipsisButton
+            items={[
+              { label: '수정하기', value: 'edit' },
+              { label: '삭제하기', value: 'delete' },
+            ]}
+          />
         </div>
         <div className="flex items-center justify-between">
           {/* <ErrorSuspenseBoundary> */}

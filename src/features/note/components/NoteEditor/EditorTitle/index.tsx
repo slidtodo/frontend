@@ -1,8 +1,7 @@
 import Image from 'next/image';
-import noteIcon from '@/features/goal/note/assets/icons/icon-note.png';
+import noteIcon from '@/features/note/assets/icons/icon-note.png';
 import Input from '@/shared/components/Input';
 import clsx from 'clsx';
-import NoteCloseButton from './NoteCloseButton';
 
 type EditorTitleProps = {
   title: string;

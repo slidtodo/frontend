@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronsRightIcon, SettingsIcon, LogOutIcon, FlagIcon, CopyCheckIcon, BellIcon, MenuIcon } from 'lucide-react';
+import { Accordion } from 'radix-ui';
 
 import SidebarMobileCase from './SidebarMobileCase';
 import { SinglePostModal } from '../Modal/SinglePostModal';
@@ -12,6 +13,7 @@ import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { usePostGoal } from '@/lib/mutations';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
+import { MenuItem } from '@/contexts/SidebarContext';
 
 export default function Sidebar() {
   const breakpoint = useBreakpoint();
@@ -40,7 +42,7 @@ function SidebarDesktopTablet() {
 
   const menus = getMenus();
   const projectName = 'Bearlog';
-
+  // console.log('menus: ', menus);
   const { openTodoCreateModal } = useTodoCreateModal();
 
   return (
@@ -88,20 +90,11 @@ function SidebarDesktopTablet() {
         </Link>
 
         <div className={`flex w-full flex-col gap-6 transition-all duration-300 ${isOpen ? 'block' : 'hidden'}`}>
-          <div className="flex flex-col gap-3">
+          <Accordion.Root type="multiple" className="flex flex-col gap-3">
             {menus.map((menu) => (
-              <Link
-                key={menu.name}
-                href={menu.href}
-                className="group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 hover:bg-[#FEF2E3] lg:px-[16px] lg:py-[14px]"
-              >
-                <span className="text-[#CCCCCC] group-hover:text-[#EF6C00]">{menu.icon}</span>
-                <span className="text-lg font-semibold text-[#333333] group-hover:font-bold group-hover:text-[#DC5203]">
-                  {menu.name}
-                </span>
-              </Link>
+              <LinkPage key={menu.name} menu={menu} />
             ))}
-          </div>
+          </Accordion.Root>
 
           <div className="flex w-full flex-col">
             <button className="flex items-center justify-start gap-[10px] rounded-[20px] px-[14px] py-[10px] transition-all duration-100 hover:bg-gray-100">
@@ -189,5 +182,63 @@ function SidebarDesktopTablet() {
         </div>
       </div>
     </div>
+  );
+}
+
+interface LinkPageProps {
+  menu: MenuItem;
+}
+function LinkPage({ menu }: LinkPageProps) {
+  return (
+    <Accordion.Item
+      value={menu.name}
+      className="group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 hover:bg-[#FEF2E3] lg:px-[16px] lg:py-[14px]"
+    >
+      <AccordionTrigger menu={menu}>
+        {menu.subMenus && (
+          <AccordionContent>
+            {menu.subMenus.length > 0 &&
+              menu.subMenus.map((subMenu) => (
+                <Link
+                  key={subMenu.name}
+                  href={subMenu.href}
+                  className="flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 hover:bg-[#FEF2E3] lg:px-[16px] lg:py-[14px]"
+                >
+                  <span className="text-[#CCCCCC] group-hover:text-[#EF6C00]">{subMenu.icon}</span>
+                  <span className="text-lg font-semibold text-[#333333] group-hover:font-bold group-hover:text-[#DC5203]">
+                    {subMenu.name}
+                  </span>
+                </Link>
+              ))}
+          </AccordionContent>
+        )}
+      </AccordionTrigger>
+    </Accordion.Item>
+  );
+}
+
+interface AccordionTriggerProps extends React.ComponentPropsWithoutRef<'button'> {
+  menu: MenuItem;
+}
+function AccordionTrigger({ children, menu, ...props }: AccordionTriggerProps) {
+  return (
+    <Accordion.Trigger
+      {...props}
+      className="flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 hover:bg-[#FEF2E3] lg:px-[16px] lg:py-[14px]"
+    >
+      <span className="text-[#CCCCCC] group-hover:text-[#EF6C00]">{menu.icon}</span>
+      <span className="text-lg font-semibold text-[#333333] group-hover:font-bold group-hover:text-[#DC5203]">
+        {menu.name}
+      </span>
+      {children}
+    </Accordion.Trigger>
+  );
+}
+
+function AccordionContent({ children, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+  return (
+    <Accordion.Content className="w-full" {...props}>
+      {children}
+    </Accordion.Content>
   );
 }

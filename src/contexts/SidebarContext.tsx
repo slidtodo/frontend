@@ -1,11 +1,13 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
 import { usePathname } from 'next/navigation';
 import { createContext, useContext, useState, ReactNode, useMemo } from 'react';
-import { LayoutGridIcon, FlagIcon, CalendarDaysIcon, MessageSquareIcon, StarIcon } from 'lucide-react';
+import { LayoutGridIcon, FlagIcon, CalendarDaysIcon, ListCheckIcon, MessageSquareIcon, StarIcon } from 'lucide-react';
 
+import { goalQueries } from '@/lib/queryKeys';
 interface MenuBase {
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   name: string;
 }
 interface LeafMenu extends MenuBase {
@@ -16,7 +18,7 @@ interface ParentMenu extends MenuBase {
   href: string;
   subMenus: MenuItem[];
 }
-type MenuItem = LeafMenu | ParentMenu;
+export type MenuItem = LeafMenu | ParentMenu;
 
 interface SidebarContextType {
   toggle: () => void;
@@ -33,6 +35,8 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(true);
   const pathname = usePathname();
 
+  const { data: goal } = useQuery(goalQueries.list());
+  console.log('goal: ', goal);
   // TODO: 서브메뉴 목표랑 연결하도록 구현 필요
   const allMenus = useMemo<MenuItem[]>(() => {
     return [
@@ -45,22 +49,35 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
         icon: <FlagIcon />,
         name: '목표',
         href: '/goal',
+        // subMenus: [
+        //   {
+        //     name: `${goal?.goalName ?? '목표 없음'}`,
+        //     href: '/goal/[id]',
+        //     match: `/goal/${goal?.id}`,
+        //   },
+        // ],
+      },
+      {
+        icon: <ListCheckIcon />,
+        name: '할 일',
+        href: '/dashboard/all-todo',
       },
       {
         icon: <CalendarDaysIcon />,
         name: '캘린더',
         href: '/calendar',
       },
-      {
-        icon: <MessageSquareIcon />,
-        name: '소통게시판',
-        href: '/community',
-      },
-      {
-        icon: <StarIcon />,
-        name: '찜한 할일',
-        href: '/favorite-todo',
-      },
+      // TODO: 소통게시판, 찜한 할일은 중간 이후에 활성화
+      // {
+      //   icon: <MessageSquareIcon />,
+      //   name: '소통게시판',
+      //   href: '/community',
+      // },
+      // {
+      //   icon: <StarIcon />,
+      //   name: '찜한 할일',
+      //   href: '/favorite-todo',
+      // },
     ];
   }, []);
 

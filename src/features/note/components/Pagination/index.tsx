@@ -1,4 +1,3 @@
-
 import { ChevronLeftIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon } from 'lucide-react';
 
 // ---- 서브 컴포넌트 ----
@@ -45,7 +44,7 @@ interface PageButtonProps {
 
 const PageButton = ({ page, active, onClick, disabled }: PageButtonProps) => {
   const base = 'inline-flex items-center justify-center cursor-pointer rounded-[5px] py-[2px] h-6 min-w-6';
-  const style = active ? 'bg-primary-500 text-white font-body-b' : 'bg-gray-100 text-gray-600 font-body-m';
+  const style = active ? 'bg-primary-500 text-gray-600/50 font-body-b' : 'bg-gray-100 text-gray-600 font-body-m';
 
   if (page === '...') return <div className={`${base} ${style}`}>···</div>;
 
@@ -118,7 +117,13 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) 
       <ChevronLeft disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)} />
 
       {getPages().map((page, idx) => (
-        <PageButton key={idx} page={page} active={page === currentPage} disabled={page === '...'} onClick={() => typeof page === 'number' && onPageChange(page)} />
+        <PageButton
+          key={idx}
+          page={page}
+          active={page === currentPage}
+          disabled={page === '...'}
+          onClick={() => typeof page === 'number' && onPageChange(page)}
+        />
       ))}
 
       <ChevronRight disabled={currentPage === totalPages} onClick={() => onPageChange(currentPage + 1)} />
@@ -128,4 +133,3 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) 
 };
 
 export default Pagination;
-

@@ -54,7 +54,6 @@ function SidebarDesktopTablet() {
 
   const menus = getMenus();
   const projectName = 'Bearlog';
-  // console.log('menus: ', menus);
   const { openTodoCreateModal } = useTodoCreateModal();
 
   return (
@@ -147,7 +146,6 @@ function SidebarDesktopTablet() {
               새 목표
             </span>
           </button>
-          {/** TODO:   goalId: undefined as unknown as number 수정 필요 사이드바 전체적으로 연결할 때 해야함 */}
           <button
             onClick={() =>
               openTodoCreateModal({
@@ -229,12 +227,12 @@ function SidebarMenuEntry({ menu, pathname }: { menu: MenuItem; pathname: string
   return (
     <Accordion.Item value={menu.name} className="w-full">
       <AccordionTrigger menu={menu} isActive={isActive} />
-      <AccordionContent>
+      <Accordion.Content className="w-full">
         {menu.subMenus.map((subMenu) => {
           const isSubMenuActive = subMenu.href === pathname;
           return (
             <Link
-              key={subMenu.name}
+              key={subMenu.href}
               href={subMenu.href}
               className={`group flex w-[calc(100%-1rem)] items-center justify-start gap-2 rounded-[20px] px-4 py-1 transition-all duration-200 lg:px-6 lg:py-2`}
             >
@@ -250,7 +248,7 @@ function SidebarMenuEntry({ menu, pathname }: { menu: MenuItem; pathname: string
             </Link>
           );
         })}
-      </AccordionContent>
+      </Accordion.Content>
     </Accordion.Item>
   );
 }
@@ -274,7 +272,7 @@ function AccordionTrigger({ children, menu, isActive, ...props }: AccordionTrigg
         {menu.name}
       </span>
       {children}
-      <span className="ml-auto relative flex h-5 w-5 items-center justify-center text-[#A0A0A0]">
+      <span className="relative ml-auto flex h-5 w-5 items-center justify-center text-[#A0A0A0]">
         <ChevronDownIcon
           className="accordion-chevron-down absolute h-5 w-5 transition-all duration-200 ease-out group-data-[state=open]:-rotate-180 group-data-[state=open]:opacity-0"
           aria-hidden
@@ -285,13 +283,5 @@ function AccordionTrigger({ children, menu, isActive, ...props }: AccordionTrigg
         />
       </span>
     </Accordion.Trigger>
-  );
-}
-
-function AccordionContent({ children, ...props }: React.ComponentPropsWithoutRef<'div'>) {
-  return (
-    <Accordion.Content className="w-full" {...props}>
-      {children}
-    </Accordion.Content>
   );
 }

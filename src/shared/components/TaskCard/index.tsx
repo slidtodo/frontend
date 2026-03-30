@@ -64,7 +64,7 @@ interface TaskCheckboxProps {
 }
 
 function TaskCheckbox({ todo, isOrange, onToggle, onTitleClick }: TaskCheckboxProps) {
-  const [checked, setChecked] = useState(todo.done);
+  const [checked, setChecked] = useState(todo.done ?? false);
 
   function handleToggle() {
     setChecked((prev) => !prev);
@@ -191,7 +191,7 @@ function TaskEditTodo({ isOrange, todo }: TaskLinkDetailProps) {
 
             openTodoEditModal({
               goalDetailId: todo.goal?.id,
-              todo: { id: todo.id, title: todo.title, done: todo.done },
+              todo: { id: todo.id, title: todo.title, done: todo.done ?? false },
             });
             setOpen(false);
           }}

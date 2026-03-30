@@ -265,7 +265,7 @@ function AccordionTrigger({ children, menu, isActive, ...props }: AccordionTrigg
       {...props}
       className={`group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px] ${
         isActive ? 'bg-[#FEF2E3]' : 'hover:bg-[#FEF2E3]'
-      } [&[data-state=closed]_.accordion-chevron-up]:hidden [&[data-state=open]_.accordion-chevron-down]:hidden`}
+      }`}
     >
       <span className={isActive ? 'text-[#EF6C00]' : 'text-[#CCCCCC] group-hover:text-[#EF6C00]'}>{menu.icon}</span>
       <span
@@ -274,9 +274,15 @@ function AccordionTrigger({ children, menu, isActive, ...props }: AccordionTrigg
         {menu.name}
       </span>
       {children}
-      <span className="ml-auto flex items-center text-[#A0A0A0]">
-        <ChevronDownIcon className="accordion-chevron-down h-5 w-5" aria-hidden />
-        <ChevronUpIcon className="accordion-chevron-up h-5 w-5" aria-hidden />
+      <span className="ml-auto relative flex h-5 w-5 items-center justify-center text-[#A0A0A0]">
+        <ChevronDownIcon
+          className="accordion-chevron-down absolute h-5 w-5 transition-all duration-200 ease-out group-data-[state=open]:-rotate-180 group-data-[state=open]:opacity-0"
+          aria-hidden
+        />
+        <ChevronUpIcon
+          className="accordion-chevron-up absolute h-5 w-5 rotate-180 opacity-0 transition-all duration-200 ease-out group-data-[state=open]:rotate-0 group-data-[state=open]:opacity-100"
+          aria-hidden
+        />
       </span>
     </Accordion.Trigger>
   );

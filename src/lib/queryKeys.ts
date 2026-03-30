@@ -68,6 +68,12 @@ export const todoQueries = {
 // ────────────────────────────────────────────────────────────
 
 export const noteQueries = {
+  /** 노트 전체 캐시 무효화용 상위 키 */
+  all: () => ['notes'] as const,
+
+  /** 노트 목록 전체 무효화용 키 (파라미터 무관) */
+  lists: () => ['notes', 'list'] as const,
+
   /**
    * 노트 목록 조회
    * @example useQuery(noteQueries.list())

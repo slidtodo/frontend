@@ -21,3 +21,4 @@ export default async function Page({
 
   return <NoteCreateClient goal={goal} todo={todo} />;
 }
+

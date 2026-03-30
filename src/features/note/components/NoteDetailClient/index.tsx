@@ -5,7 +5,6 @@ import { noteQueries, goalQueries } from '@/lib/queryKeys';
 import EditorTitle from '@/features/note/components/NoteEditor/EditorTitle';
 import EditorMeta from '@/features/note/components/NoteEditor/EditorMeta';
 import EditorContent from '@/features/note/components/NoteEditor/EditorContent';
-import EllipsisButton from '@/features/note/components/EllipsisButton';
 import { mapNoteTagsFromSource } from '@/features/note/utils/utils';
 
 interface NoteDetailClientProps {
@@ -30,13 +29,6 @@ export default function NoteDetailClient({ noteId, goalId }: NoteDetailClientPro
     <div className="p-5 md:p-10">
       <div className="flex items-center justify-between">
         <EditorTitle title={note.title ?? ''} readOnly />
-        <EllipsisButton
-          items={[
-            { label: '수정', value: 'edit' },
-            { label: '삭제', value: 'delete' },
-          ]}
-          noteId={noteId}
-        />
       </div>
       <EditorMeta
         goal={{ title: goal?.title ?? '' }}

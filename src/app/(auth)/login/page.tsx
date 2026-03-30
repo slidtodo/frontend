@@ -36,6 +36,10 @@ export default function LoginPage() {
     if (loginUrl) window.location.href = loginUrl;
   };
 
+  const handleGoogleLogin = async () => {
+    const data = await fetchAuth.getGoogleAuthorizeUrl();
+    if (data.loginUrl) window.location.href = data.loginUrl;
+  };
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#F5F5F5] py-20">
       <div className="flex w-full max-w-[331px] flex-col items-start md:max-w-[400px]">
@@ -87,7 +91,7 @@ export default function LoginPage() {
         <div className="flex w-full justify-center gap-4">
           <button
             type="button"
-            onClick={() => alert('구글 로그인')}
+            onClick={handleGoogleLogin}
             aria-label="구글 로그인"
             className="flex h-14 w-14 items-center justify-center rounded-full border border-[#DDDDDD] bg-white p-4 hover:bg-gray-50"
           >

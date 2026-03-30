@@ -24,5 +24,5 @@ export function mapNoteTagsFromSource({
     ];
   }
 
-  return (tags ?? []).map((t) => ({ id: String(t.id), string: t.name ?? '' }));
+  return (tags ?? []).map((t, i) => ({ id: t.id != null ? String(t.id) : 'manual-tag-' + i, string: t.name ?? '' }));
 }

@@ -1,37 +1,42 @@
+'use client';
+
 import { formatDate } from '@/shared/utils/utils';
 import EllipsisButton from '../EllipsisButton';
 import Image from 'next/image';
 import { Note } from '@/shared/types/types';
 import noteIcon from '@/features/note/assets/icons/icon-note.png';
 import TodoTitle from '@/features/note/components/TodoTitle';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function NoteItem({ note, goalId }: { note: Note; goalId: string }) {
+  const router = useRouter();
   const createDate = formatDate(new Date(note.createdAt));
 
   return (
-    <Link href={`/goal/${goalId}/note/${note.id}`}>
-      <article className="flex flex-col gap-3 rounded-[20px] bg-[#FFF] p-4 md:gap-4 md:rounded-3xl md:px-[38px] md:pt-7 md:pb-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 md:gap-4">
-            <Image src={noteIcon} sizes="32" alt="노트 아이콘" className="md:h-10 md:w-10" />
-            <h1 className="line-clamp-1 text-sm font-semibold text-[#1E293B] md:text-xl">{note.title}</h1>
-          </div>
-          <EllipsisButton
-            items={[
-              { label: '수정하기', value: 'edit' },
-              { label: '삭제하기', value: 'delete' },
-            ]}
-            noteId={note.id}
-          />
+    <article
+      onClick={() => router.push(`/goal/${goalId}/note/${note.id}`)}
+      className="flex cursor-pointer flex-col gap-3 rounded-[20px] bg-[#FFF] p-4 md:gap-4 md:rounded-3xl md:px-[38px] md:pt-7 md:pb-8"
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 md:gap-4">
+          <Image src={noteIcon} sizes="32" alt="노트 아이콘" className="md:h-10 md:w-10" />
+          <h1 className="line-clamp-1 text-sm font-semibold text-[#1E293B] md:text-xl">{note.title}</h1>
         </div>
-        <div className="flex items-center justify-between">
-          <TodoTitle todoId={note.todoId} />
-          <div>
-            <p className="line-clamp-1 text-xs font-normal text-[#A4A4A4]">{createDate}</p>
-          </div>
+        <EllipsisButton
+          items={[
+            { label: '수정하기', value: 'edit' },
+            { label: '삭제하기', value: 'delete' },
+          ]}
+          noteId={note.id}
+          goalId={Number(goalId)}
+        />
+      </div>
+      <div className="flex items-center justify-between">
+        <TodoTitle todoId={note.todoId} />
+        <div>
+          <p className="line-clamp-1 text-xs font-normal text-[#A4A4A4]">{createDate}</p>
         </div>
-      </article>
-    </Link>
+      </div>
+    </article>
   );
 }

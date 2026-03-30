@@ -1,22 +1,22 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
 import { usePathname } from 'next/navigation';
 import { createContext, useContext, useState, ReactNode, useMemo } from 'react';
-import { LayoutGridIcon, FlagIcon, CalendarDaysIcon, MessageSquareIcon, StarIcon } from 'lucide-react';
+import { LayoutGridIcon, FlagIcon, CalendarDaysIcon, ListCheckIcon } from 'lucide-react';
 
+import { goalQueries } from '@/lib/queryKeys';
 interface MenuBase {
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   name: string;
 }
-interface LeafMenu extends MenuBase {
+interface SubMenu extends MenuBase {
   href: string;
-  subMenus?: string[];
 }
-interface ParentMenu extends MenuBase {
+export interface MenuItem extends MenuBase {
   href: string;
-  subMenus: MenuItem[];
+  subMenus?: SubMenu[];
 }
-type MenuItem = LeafMenu | ParentMenu;
 
 interface SidebarContextType {
   toggle: () => void;
@@ -33,7 +33,9 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(true);
   const pathname = usePathname();
 
-  // TODO: 서브메뉴 목표랑 연결하도록 구현 필요
+  const { data: goal } = useQuery(goalQueries.list());
+  const goalData = useMemo(() => goal?.goals ?? [], [goal]);
+
   const allMenus = useMemo<MenuItem[]>(() => {
     return [
       {
@@ -45,24 +47,34 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
         icon: <FlagIcon />,
         name: '목표',
         href: '/goal',
+        subMenus: goalData.map((goal) => ({
+          name: goal.title ?? '',
+          href: `/goal/${goal.id}`,
+        })),
       },
       {
-        icon: <CalendarDaysIcon />,
-        name: '캘린더',
-        href: '/calendar',
+        icon: <ListCheckIcon />,
+        name: '할 일',
+        href: '/dashboard/all-todo',
       },
-      {
-        icon: <MessageSquareIcon />,
-        name: '소통게시판',
-        href: '/community',
-      },
-      {
-        icon: <StarIcon />,
-        name: '찜한 할일',
-        href: '/favorite-todo',
-      },
+      // {
+      //   icon: <CalendarDaysIcon />,
+      //   name: '캘린더',
+      //   href: '/calendar',
+      // },
+      // TODO: 소통게시판, 찜한 할일은 중간 이후에 활성화
+      // {
+      //   icon: <MessageSquareIcon />,
+      //   name: '소통게시판',
+      //   href: '/community',
+      // },
+      // {
+      //   icon: <StarIcon />,
+      //   name: '찜한 할일',
+      //   href: '/favorite-todo',
+      // },
     ];
-  }, []);
+  }, [goalData]);
 
   const sidebar = useMemo<SidebarContextType>(() => {
     const toggle = () => setIsOpen((prev) => !prev);
@@ -72,7 +84,10 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
   }, [allMenus]);
 
   const currentMenu = useMemo(() => {
-    return allMenus.find((menu) => 'href' in menu && menu.href === pathname) || null;
+    return (
+      allMenus.find((menu) => menu.href === pathname || menu.subMenus?.some((subMenu) => subMenu.href === pathname)) ||
+      null
+    );
   }, [allMenus, pathname]);
 
   return (

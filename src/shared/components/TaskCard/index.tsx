@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 import Image from 'next/image';
+import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { CheckIcon, EllipsisVertical, GithubIcon, Star } from 'lucide-react';
@@ -11,6 +12,7 @@ import EditDeleteDropdown from '@/features/dashboard/components/EditDeleteDropdo
 import { useTodoEditModal } from '@/features/todo/hooks/useTodoEditModal';
 import type { TodoResponse } from '@/lib/api';
 import { useDeleteTodo, usePatchTodoFavorite } from '@/lib/mutations';
+import { todoQueries } from '@/lib/queryKeys';
 
 interface TaskCardProps {
   todo: NonNullable<TodoResponse>;
@@ -62,7 +64,7 @@ interface TaskCheckboxProps {
 }
 
 function TaskCheckbox({ todo, isOrange, onToggle, onTitleClick }: TaskCheckboxProps) {
-  const [checked, setChecked] = useState(todo.done);
+  const [checked, setChecked] = useState(todo.done ?? false);
 
   function handleToggle() {
     setChecked((prev) => !prev);
@@ -113,9 +115,15 @@ interface TaskLinkNoteCreateProps {
 }
 
 function TaskLinkNoteCreate({ isOrange, todo }: TaskLinkNoteCreateProps) {
+  const { data: goal } = useQuery({
+    ...todoQueries.detail(todo.id as number),
+    enabled: !!todo.id,
+  });
+
+  if (!goal?.goal?.id || !todo.id) return null;
   return (
     <Link
-      href={`/goal/${todo.goal?.id}/note/create`}
+      href={`/goal/${goal.goal.id}/note/create?todoId=${todo.id}`}
       className={clsx(
         'relative flex h-6 w-6 cursor-pointer items-center justify-center rounded-full p-1 group-hover:bg-white',
         isOrange ? 'bg-[#FFFFFF]/40' : 'bg-[#FF9E59]/20',
@@ -183,7 +191,7 @@ function TaskEditTodo({ isOrange, todo }: TaskLinkDetailProps) {
 
             openTodoEditModal({
               goalDetailId: todo.goal?.id,
-              todo: { id: todo.id, title: todo.title, done: todo.done },
+              todo: { id: todo.id, title: todo.title, done: todo.done ?? false },
             });
             setOpen(false);
           }}

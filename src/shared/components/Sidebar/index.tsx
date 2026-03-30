@@ -1,7 +1,19 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronsRightIcon, SettingsIcon, LogOutIcon, FlagIcon, CopyCheckIcon, BellIcon, MenuIcon } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import {
+  ChevronsRightIcon,
+  SettingsIcon,
+  LogOutIcon,
+  FlagIcon,
+  CopyCheckIcon,
+  BellIcon,
+  MenuIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+} from 'lucide-react';
+import { Accordion } from 'radix-ui';
 
 import SidebarMobileCase from './SidebarMobileCase';
 import { SinglePostModal } from '../Modal/SinglePostModal';
@@ -12,6 +24,7 @@ import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { usePostGoal } from '@/lib/mutations';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
+import { MenuItem } from '@/contexts/SidebarContext';
 
 export default function Sidebar() {
   const breakpoint = useBreakpoint();
@@ -35,12 +48,12 @@ function SidebarDesktopTablet() {
   const { openModal } = useModalStore();
   const { toggle, getMenus } = useSidebarContext();
   const isOpen = useSidebarOpen();
+  const pathname = usePathname();
 
   const { mutate } = usePostGoal();
 
   const menus = getMenus();
   const projectName = 'Bearlog';
-
   const { openTodoCreateModal } = useTodoCreateModal();
 
   return (
@@ -88,20 +101,15 @@ function SidebarDesktopTablet() {
         </Link>
 
         <div className={`flex w-full flex-col gap-6 transition-all duration-300 ${isOpen ? 'block' : 'hidden'}`}>
-          <div className="flex flex-col gap-3">
+          <Accordion.Root
+            type="multiple"
+            defaultValue={menus.filter((menu) => isMenuActive(menu, pathname)).map((menu) => menu.name)}
+            className="flex flex-col gap-3"
+          >
             {menus.map((menu) => (
-              <Link
-                key={menu.name}
-                href={menu.href}
-                className="group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 hover:bg-[#FEF2E3] lg:px-[16px] lg:py-[14px]"
-              >
-                <span className="text-[#CCCCCC] group-hover:text-[#EF6C00]">{menu.icon}</span>
-                <span className="text-lg font-semibold text-[#333333] group-hover:font-bold group-hover:text-[#DC5203]">
-                  {menu.name}
-                </span>
-              </Link>
+              <SidebarMenuEntry key={menu.name} menu={menu} pathname={pathname} />
             ))}
-          </div>
+          </Accordion.Root>
 
           <div className="flex w-full flex-col">
             <button className="flex items-center justify-start gap-[10px] rounded-[20px] px-[14px] py-[10px] transition-all duration-100 hover:bg-gray-100">
@@ -138,7 +146,6 @@ function SidebarDesktopTablet() {
               새 목표
             </span>
           </button>
-          {/** TODO:   goalId: undefined as unknown as number 수정 필요 사이드바 전체적으로 연결할 때 해야함 */}
           <button
             onClick={() =>
               openTodoCreateModal({
@@ -189,5 +196,92 @@ function SidebarDesktopTablet() {
         </div>
       </div>
     </div>
+  );
+}
+
+function isMenuActive(menu: MenuItem, pathname: string) {
+  return menu.href === pathname || menu.subMenus?.some((subMenu) => subMenu.href === pathname);
+}
+
+function SidebarMenuEntry({ menu, pathname }: { menu: MenuItem; pathname: string }) {
+  const isActive = isMenuActive(menu, pathname);
+
+  if (!menu.subMenus?.length) {
+    return (
+      <Link
+        href={menu.href}
+        className={`group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px] ${
+          isActive ? 'bg-[#FEF2E3]' : 'hover:bg-[#FEF2E3]'
+        }`}
+      >
+        <span className={isActive ? 'text-[#EF6C00]' : 'text-[#CCCCCC] group-hover:text-[#EF6C00]'}>{menu.icon}</span>
+        <span
+          className={`text-lg font-semibold transition-all ${isActive ? 'font-bold text-[#DC5203]' : 'text-[#333333] group-hover:font-bold group-hover:text-[#DC5203]'}`}
+        >
+          {menu.name}
+        </span>
+      </Link>
+    );
+  }
+
+  return (
+    <Accordion.Item value={menu.name} className="flex w-full flex-col gap-2">
+      <AccordionTrigger menu={menu} isActive={isActive} />
+      <Accordion.Content className="w-full">
+        {menu.subMenus.map((subMenu) => {
+          const isSubMenuActive = subMenu.href === pathname;
+          return (
+            <Link
+              key={subMenu.href}
+              href={subMenu.href}
+              className={`group flex w-[calc(100%-1rem)] items-center justify-start gap-2 rounded-[20px] px-4 py-1 transition-all duration-200 lg:px-6 lg:py-2`}
+            >
+              <span
+                className={`text-base transition-all ${
+                  isSubMenuActive
+                    ? 'font-bold text-[#DC5203]'
+                    : 'font-semibold text-[#666666] group-hover:text-[#DC5203]'
+                }`}
+              >
+                {subMenu.name}
+              </span>
+            </Link>
+          );
+        })}
+      </Accordion.Content>
+    </Accordion.Item>
+  );
+}
+
+interface AccordionTriggerProps extends React.ComponentPropsWithoutRef<'button'> {
+  menu: MenuItem;
+  isActive: boolean | undefined;
+}
+function AccordionTrigger({ children, menu, isActive, ...props }: AccordionTriggerProps) {
+  return (
+    <Accordion.Trigger
+      {...props}
+      className={`group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px] ${
+        isActive ? 'bg-[#FEF2E3]' : 'hover:bg-[#FEF2E3]'
+      }`}
+    >
+      <span className={isActive ? 'text-[#EF6C00]' : 'text-[#CCCCCC] group-hover:text-[#EF6C00]'}>{menu.icon}</span>
+      <span
+        className={`text-lg font-semibold transition-all ${isActive ? 'font-bold text-[#DC5203]' : 'text-[#333333] group-hover:font-bold group-hover:text-[#DC5203]'}`}
+      >
+        {menu.name}
+      </span>
+      {children}
+      <span className="relative ml-auto flex h-5 w-5 items-center justify-center text-[#A0A0A0]">
+        <ChevronDownIcon
+          className="accordion-chevron-down absolute h-5 w-5 transition-all duration-200 ease-out group-data-[state=open]:-rotate-180 group-data-[state=open]:opacity-0"
+          aria-hidden
+        />
+        <ChevronUpIcon
+          className="accordion-chevron-up absolute h-5 w-5 rotate-180 opacity-0 transition-all duration-200 ease-out group-data-[state=open]:rotate-0 group-data-[state=open]:opacity-100"
+          aria-hidden
+        />
+      </span>
+    </Accordion.Trigger>
   );
 }

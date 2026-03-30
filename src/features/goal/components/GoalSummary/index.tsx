@@ -1,19 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronRightIcon, EllipsisVerticalIcon } from 'lucide-react';
 
+import EditDeleteDropdown from '@/features/dashboard/components/EditDeleteDropdown';
 import { GoalDetailResponse } from '@/lib/api';
+import { useDeleteGoal, usePatchGoal } from '@/lib/mutations';
 import { goalQueries, userQueries } from '@/lib/queryKeys';
+import { PopupModal } from '@/shared/components/Modal/PopupModal';
+import { SinglePostModal } from '@/shared/components/Modal/SinglePostModal';
 import PageHeader from '@/shared/components/PageHeader';
 import ProgressCircle from '@/shared/components/ProgressCircle';
-import { SinglePostModal } from '@/shared/components/Modal/SinglePostModal';
-import { PopupModal } from '@/shared/components/Modal/PopupModal';
-
-import { useDeleteGoal, usePatchGoal } from '@/lib/mutations';
 import { useModalStore } from '@/shared/stores/useModalStore';
 
 interface GoalSummaryProps {
@@ -48,6 +48,7 @@ interface GoalInfoProps {
 
 function GoalInfo({ goalDetail }: GoalInfoProps) {
   const [open, setOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const { openModal } = useModalStore();
   const { mutate: deleteGoal } = useDeleteGoal(goalDetail?.id);
   const { mutateAsync: patchGoal } = usePatchGoal(goalDetail?.id);
@@ -83,38 +84,27 @@ function GoalInfo({ goalDetail }: GoalInfoProps) {
     );
   };
 
-  if (!goalDetail) return null;
   return (
     <div className="flex items-center justify-between rounded-2xl bg-white xl:flex-1">
       <div className="flex items-center justify-center gap-4 py-5 pl-5 md:py-6 md:pl-6 lg:py-15 lg:pl-10">
         <Image src="/image/task.png" alt="Task Icon" width={40} height={40} />
         <span className="overflow-hidden text-lg font-semibold text-ellipsis whitespace-nowrap lg:text-2xl">
-          {goalDetail?.title}
+          {goalDetail.title}
         </span>
       </div>
 
       <div className="relative mr-5 shrink-0 md:mr-6 lg:mr-10">
-        <button type="button" className="cursor-pointer" onClick={() => setOpen((prev) => !prev)}>
+        <button ref={buttonRef} type="button" className="cursor-pointer" onClick={() => setOpen((prev) => !prev)}>
           <EllipsisVerticalIcon size={24} color="#A4A4A4" className="cursor-pointer" />
         </button>
 
         {open && (
-          <div className="absolute top-full right-0 z-10 mt-2 min-w-[140px] rounded-xl border border-orange-100 bg-white p-1 shadow-lg">
-            <button
-              type="button"
-              className="block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-orange-50"
-              onClick={handleEdit}
-            >
-              수정
-            </button>
-            <button
-              type="button"
-              className="block w-full rounded-lg px-3 py-2 text-left text-sm text-red-500 hover:bg-red-50"
-              onClick={handleDelete}
-            >
-              삭제
-            </button>
-          </div>
+          <EditDeleteDropdown
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+            onClose={() => setOpen(false)}
+            anchorRef={buttonRef}
+          />
         )}
       </div>
     </div>

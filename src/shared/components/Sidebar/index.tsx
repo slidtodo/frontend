@@ -205,28 +205,23 @@ function isMenuActive(menu: MenuItem, pathname: string) {
   return menu.href === pathname || menu.subMenus?.some((subMenu) => subMenu.href === pathname);
 }
 
-function getMenuButtonClassName(isActive: boolean | undefined) {
-  return `group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px] ${
-    isActive ? 'bg-[#FEF2E3]' : 'hover:bg-[#FEF2E3]'
-  }`;
-}
-
-function getMenuLabelClassName(isActive: boolean | undefined) {
-  return `text-lg font-semibold transition-all ${isActive ? 'font-bold text-[#DC5203]' : 'text-[#333333] group-hover:font-bold group-hover:text-[#DC5203]'}`;
-}
-
-function getMenuIconClassName(isActive: boolean | undefined) {
-  return isActive ? 'text-[#EF6C00]' : 'text-[#CCCCCC] group-hover:text-[#EF6C00]';
-}
-
 function SidebarMenuEntry({ menu, pathname }: { menu: MenuItem; pathname: string }) {
   const isActive = isMenuActive(menu, pathname);
 
   if (!menu.subMenus?.length) {
     return (
-      <Link href={menu.href} className={getMenuButtonClassName(isActive)}>
-        <span className={getMenuIconClassName(isActive)}>{menu.icon}</span>
-        <span className={getMenuLabelClassName(isActive)}>{menu.name}</span>
+      <Link
+        href={menu.href}
+        className={`group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px] ${
+          isActive ? 'bg-[#FEF2E3]' : 'hover:bg-[#FEF2E3]'
+        }`}
+      >
+        <span className={isActive ? 'text-[#EF6C00]' : 'text-[#CCCCCC] group-hover:text-[#EF6C00]'}>{menu.icon}</span>
+        <span
+          className={`text-lg font-semibold transition-all ${isActive ? 'font-bold text-[#DC5203]' : 'text-[#333333] group-hover:font-bold group-hover:text-[#DC5203]'}`}
+        >
+          {menu.name}
+        </span>
       </Link>
     );
   }
@@ -268,10 +263,16 @@ function AccordionTrigger({ children, menu, isActive, ...props }: AccordionTrigg
   return (
     <Accordion.Trigger
       {...props}
-      className={`${getMenuButtonClassName(isActive)} [&[data-state=closed]_.accordion-chevron-up]:hidden [&[data-state=open]_.accordion-chevron-down]:hidden`}
+      className={`group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px] ${
+        isActive ? 'bg-[#FEF2E3]' : 'hover:bg-[#FEF2E3]'
+      } [&[data-state=closed]_.accordion-chevron-up]:hidden [&[data-state=open]_.accordion-chevron-down]:hidden`}
     >
-      <span className={getMenuIconClassName(isActive)}>{menu.icon}</span>
-      <span className={getMenuLabelClassName(isActive)}>{menu.name}</span>
+      <span className={isActive ? 'text-[#EF6C00]' : 'text-[#CCCCCC] group-hover:text-[#EF6C00]'}>{menu.icon}</span>
+      <span
+        className={`text-lg font-semibold transition-all ${isActive ? 'font-bold text-[#DC5203]' : 'text-[#333333] group-hover:font-bold group-hover:text-[#DC5203]'}`}
+      >
+        {menu.name}
+      </span>
       {children}
       <span className="ml-auto flex items-center text-[#A0A0A0]">
         <ChevronDownIcon className="accordion-chevron-down h-5 w-5" aria-hidden />

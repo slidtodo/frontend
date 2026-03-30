@@ -57,11 +57,11 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
         name: '할 일',
         href: '/dashboard/all-todo',
       },
-      {
-        icon: <CalendarDaysIcon />,
-        name: '캘린더',
-        href: '/calendar',
-      },
+      // {
+      //   icon: <CalendarDaysIcon />,
+      //   name: '캘린더',
+      //   href: '/calendar',
+      // },
       // TODO: 소통게시판, 찜한 할일은 중간 이후에 활성화
       // {
       //   icon: <MessageSquareIcon />,

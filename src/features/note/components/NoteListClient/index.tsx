@@ -17,7 +17,7 @@ export default function NoteListClient({ goalId }: NoteListClientProps) {
   const [page, setPage] = useState(1);
 
   const { data: goal } = useQuery(goalQueries.detail(goalId));
-  const { data: noteList } = useQuery(noteQueries.list({ goalId, page: page - 1 }));
+  const { data: noteList, isFetching } = useQuery(noteQueries.list({ goalId, page: page - 1 }));
 
   const notes = noteList?.notes ?? [];
   const currentPage = (noteList?.pageInfo?.page ?? 0) + 1;
@@ -29,7 +29,7 @@ export default function NoteListClient({ goalId }: NoteListClientProps) {
         <GoalItem title={goal?.title ?? ''} />
       </section>
 
-      {notes.length === 0 ? (
+      {!isFetching && notes.length === 0 ? (
         <Empty>아직 등록된 노트가 없어요</Empty>
       ) : (
         <section className={clsx('flex flex-col gap-3', 'md:gap-4', 'lg:grid lg:grid-cols-2 lg:gap-[20px]')}>

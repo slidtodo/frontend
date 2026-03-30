@@ -19,7 +19,7 @@ export default function NoteListClient({ goalId }: NoteListClientProps) {
   const { data: goal } = useQuery(goalQueries.detail(goalId));
   const { data: noteList, isFetching } = useQuery(noteQueries.list({ goalId, page: page - 1 }));
 
-  const notes = noteList?.notes ?? [];
+  const notes = (noteList?.notes ?? []).filter((note) => note.id != null);
   const currentPage = (noteList?.pageInfo?.page ?? 0) + 1;
   const totalPages = noteList?.pageInfo?.totalPages ?? 1;
 
@@ -34,7 +34,16 @@ export default function NoteListClient({ goalId }: NoteListClientProps) {
       ) : (
         <section className={clsx('flex flex-col gap-3', 'md:gap-4', 'lg:grid lg:grid-cols-2 lg:gap-[20px]')}>
           {notes.map((note) => (
-            <NoteItem key={note.id} note={{ id: note.id ?? 0, title: note.title ?? '', todoId: note.todoId ?? 0, createdAt: note.createdAt ?? '' }} goalId={String(goalId)} />
+            <NoteItem
+              key={note.id}
+              note={{
+                id: note.id!,
+                title: note.title ?? '',
+                todoId: note.todoId ?? 0,
+                createdAt: note.createdAt ?? '',
+              }}
+              goalId={String(goalId)}
+            />
           ))}
         </section>
       )}

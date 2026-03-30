@@ -1,9 +1,9 @@
-import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
+import { dehydrate, QueryClient, HydrationBoundary } from '@tanstack/react-query';
 import { noteQueries, goalQueries } from '@/lib/queryKeys';
 import NoteDetailClient from '@/features/note/components/NoteDetailClient';
 import { notFound } from 'next/navigation';
 
+export const dynamic = 'force-dynamic';
 interface NoteDetailPageProps {
   params: Promise<{ goalId: string; noteId: string }>;
 }
@@ -23,8 +23,8 @@ export default async function NoteDetailPage({ params }: NoteDetailPageProps) {
   const dehydratedState = dehydrate(queryClient);
 
   return (
-    <ReactQueryProvider state={dehydratedState}>
+    <HydrationBoundary state={dehydratedState}>
       <NoteDetailClient noteId={Number(noteId)} goalId={Number(goalId)} />
-    </ReactQueryProvider>
+    </HydrationBoundary>
   );
 }

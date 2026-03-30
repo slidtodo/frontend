@@ -1,10 +1,7 @@
 'use client';
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { noteQueries, goalQueries } from '@/lib/queryKeys';
-import { fetchNotes } from '@/lib/api/fetchNotes';
-import { useRouter } from 'next/navigation';
-import { useToastStore } from '@/shared/stores/useToastStore';
 import EditorTitle from '@/features/note/components/NoteEditor/EditorTitle';
 import EditorMeta from '@/features/note/components/NoteEditor/EditorMeta';
 import EditorContent from '@/features/note/components/NoteEditor/EditorContent';
@@ -17,21 +14,8 @@ interface NoteDetailClientProps {
 }
 
 export default function NoteDetailClient({ noteId, goalId }: NoteDetailClientProps) {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-  const { showToast } = useToastStore();
-
   const { data: note } = useQuery(noteQueries.detail(noteId));
   const { data: goal } = useQuery(goalQueries.detail(goalId));
-
-  const { mutate: handleDelete } = useMutation({
-    mutationFn: () => fetchNotes.deleteNote(noteId),
-    onSuccess: () => {
-      queryClient.invalidateQueries(noteQueries.detail(noteId));
-      router.back();
-    },
-    onError: () => showToast('노트 삭제에 실패했습니다', 'fail'),
-  });
 
   if (!note) return null;
 
@@ -51,7 +35,7 @@ export default function NoteDetailClient({ noteId, goalId }: NoteDetailClientPro
             { label: '수정', value: 'edit' },
             { label: '삭제', value: 'delete' },
           ]}
-          onDelete={handleDelete}
+          noteId={noteId}
         />
       </div>
       <EditorMeta

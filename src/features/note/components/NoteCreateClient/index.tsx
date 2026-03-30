@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { useDraftNote } from '@/features/note/hooks/useDraftNote';
 import { usePostNote } from '@/features/note/hooks/usePostNote';
 import { useToastStore } from '@/shared/stores/useToastStore';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import DraftNoteToast from '@/features/note/components/DraftNoteToast';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import { useEditor } from '@tiptap/react';

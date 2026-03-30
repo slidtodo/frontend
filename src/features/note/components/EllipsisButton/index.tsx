@@ -5,23 +5,34 @@ import { EllipsisVertical } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { DropdownList } from '@/shared/components/Dropdown';
 import { DropdownItemType } from '@/shared/types/types';
+import { useModalStore } from '@/shared/stores/useModalStore';
+import { PopupModal } from '@/shared/components/Modal/PopupModal';
+import { useDeleteNote } from '@/features/note/hooks/useDeleteNote';
+import { useToastStore } from '@/shared/stores/useToastStore';
 
 interface EllipsisButtonProps {
   items: DropdownItemType[];
+  noteId: number;
 }
 
-export default function EllipsisButton({ items }: EllipsisButtonProps) {
+export default function EllipsisButton({ items, noteId }: EllipsisButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const { openModal } = useModalStore();
+  const { showToast } = useToastStore();
+
+  const { mutate: handleDelete } = useDeleteNote(noteId, {
+    onError: () => showToast('노트 삭제에 실패했습니다', 'fail'),
+  });
 
   useOnClickOutside(ref, () => setIsOpen(false));
 
-  const handleSelectItem = async (value: string) => {
+  const handleSelectItem = (value: string) => {
     if (value === 'edit') {
-      // 수정 API 호출 or 모달 열기
+      // 수정 모달 열기
     }
     if (value === 'delete') {
-      // 삭제 API 호출
+      openModal(<PopupModal variant={{ type: 'noteDelete' }} onConfirm={() => handleDelete()} />);
     }
   };
 
@@ -29,7 +40,7 @@ export default function EllipsisButton({ items }: EllipsisButtonProps) {
     <div ref={ref} className="relative flex">
       <button
         onClick={(e) => {
-          e.stopPropagation(); 
+          e.stopPropagation();
           e.preventDefault();
           setIsOpen(!isOpen);
         }}

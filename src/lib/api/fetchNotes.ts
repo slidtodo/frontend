@@ -7,10 +7,14 @@ export type NoteResponse = operations['getDetail_1']['responses'][200]['content'
 export type PostNoteRequest = operations['create_1']['requestBody']['content']['application/json'];
 export type PatchNoteRequest = operations['update_1']['requestBody']['content']['application/json'];
 
+// 서버 컴포넌트 전용 - Next.js fetch 캐시 사용 (React Query와 공유 X)
 class FetchNotes {
   getNotes = (params?: GetNotesParams) => apiRequest<NoteListResponse>('/api/v1/notes', { params });
 
-  getNote = (noteId: number) => apiRequest<NoteResponse>(`/api/v1/notes/${noteId}`);
+  getNote = (noteId: number) =>
+    apiRequest<NoteResponse>(`/api/v1/notes/${noteId}`, {
+      next: { revalidate: 60, tags: [`note-${noteId}`] },
+    });
 
   postNote = (body: PostNoteRequest) =>
     apiRequest<NoteResponse, PostNoteRequest>('/api/v1/notes', {

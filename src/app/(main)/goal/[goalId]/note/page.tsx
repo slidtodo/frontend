@@ -12,7 +12,7 @@ export default async function Page({ params }: { params: Promise<{ goalId: strin
 
   await Promise.all([
     queryClient.prefetchQuery(goalQueries.detail(Number(goalId))),
-    queryClient.prefetchQuery(noteQueries.list({ goalId: Number(goalId) })),
+    queryClient.prefetchQuery(noteQueries.list({ goalId: Number(goalId), page: 0 })),
   ]);
 
   const dehydratedState = dehydrate(queryClient);

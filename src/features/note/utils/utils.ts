@@ -17,11 +17,14 @@ export function mapNoteTagsFromSource({
   const githubSourceLabel = source === 'GITHUB_ISSUE' ? 'ISSUES' : source === 'GITHUB_PR' ? 'PR' : null;
 
   if (githubSourceLabel) {
-    return [
-      { id: 'source', string: githubSourceLabel },
-      ...(sourceItemId != null ? [{ id: 'itemId', string: `#${sourceItemId}` }] : []),
-      ...(status != null ? [{ id: 'status', string: status }] : []),
-    ];
+    const result = [{ id: 'source', string: githubSourceLabel }];
+    if (sourceItemId != null) {
+      result.push({ id: 'itemId', string: '#' + sourceItemId });
+    }
+    if (status != null) {
+      result.push({ id: 'status', string: status });
+    }
+    return result;
   }
 
   return (tags ?? []).map((t, i) => ({ id: t.id != null ? String(t.id) : 'manual-tag-' + i, string: t.name ?? '' }));

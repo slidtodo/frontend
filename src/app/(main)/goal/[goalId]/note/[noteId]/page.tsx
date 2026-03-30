@@ -4,6 +4,7 @@ import EditorContent from '@/features/note/components/NoteEditor/EditorContent';
 import { notFound } from 'next/navigation';
 import { fetchNotes } from '@/lib/api/fetchNotes';
 import { fetchGoals } from '@/lib/api/fetchGoals';
+import { mapNoteTagsFromSource } from '@/features/note/utils/utils';
 
 export default async function NoteDetailPage({ params }: { params: Promise<{ goalId: string; noteId: string }> }) {
   const { goalId, noteId } = await params;
@@ -15,7 +16,7 @@ export default async function NoteDetailPage({ params }: { params: Promise<{ goa
 
   if (!note) notFound();
 
-  const tags = (note.todo?.tags ?? []).map((t) => ({ id: String(t.id), string: t.name ?? '' }));
+  const tags = mapNoteTagsFromSource(note.source, note.todo?.tags);
 
   return (
     <div className="p-5 md:p-10">

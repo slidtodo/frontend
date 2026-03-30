@@ -225,7 +225,7 @@ function SidebarMenuEntry({ menu, pathname }: { menu: MenuItem; pathname: string
   }
 
   return (
-    <Accordion.Item value={menu.name} className="w-full">
+    <Accordion.Item value={menu.name} className="flex w-full flex-col gap-2">
       <AccordionTrigger menu={menu} isActive={isActive} />
       <Accordion.Content className="w-full">
         {menu.subMenus.map((subMenu) => {

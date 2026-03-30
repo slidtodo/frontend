@@ -13,15 +13,16 @@ import { useToastStore } from '@/shared/stores/useToastStore';
 interface EllipsisButtonProps {
   items: DropdownItemType[];
   noteId: number;
+  goalId: number;
 }
 
-export default function EllipsisButton({ items, noteId }: EllipsisButtonProps) {
+export default function EllipsisButton({ items, noteId, goalId }: EllipsisButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const { openModal } = useModalStore();
   const { showToast } = useToastStore();
 
-  const { mutate: handleDelete } = useDeleteNote(noteId, {
+  const { mutate: handleDelete } = useDeleteNote(noteId, goalId, {
     onError: () => showToast('노트 삭제에 실패했습니다', 'fail'),
   });
 
@@ -50,7 +51,7 @@ export default function EllipsisButton({ items, noteId }: EllipsisButtonProps) {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 z-10 text-nowrap">
+        <div className="absolute top-full right-0 z-10 text-nowrap" onClick={(e) => e.stopPropagation()}>
           <DropdownList
             items={items}
             onSelectItem={(item) => {

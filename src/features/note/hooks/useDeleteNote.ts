@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { fetchNotes } from '@/lib/api/fetchNotes';
 import { noteQueries } from '@/lib/queryKeys';
 
-export const useDeleteNote = (noteId: number, callbacks?: { onError?: (error: Error) => void }) => {
+export const useDeleteNote = (noteId: number, goalId: number, callbacks?: { onError?: (error: Error) => void }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -20,7 +20,7 @@ export const useDeleteNote = (noteId: number, callbacks?: { onError?: (error: Er
         queryKey: noteQueries.lists(),
       });
 
-      router.back();
+      router.push(`/goal/${goalId}/note`);
     },
     onError: (error) => {
       callbacks?.onError?.(error);

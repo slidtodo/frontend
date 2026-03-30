@@ -2,6 +2,9 @@ import { TodoResponse } from '@/lib/api/fetchTodos';
 import { GoalDetailResponse } from '@/lib/api/fetchGoals';
 import { Editor } from '@tiptap/react';
 
+/**
+ * @TODO 노트 수정 기능 만든 후 수정
+ */
 export interface NoteEditorProps {
   editor: Editor | null;
   title: string;

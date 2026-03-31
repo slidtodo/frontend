@@ -36,7 +36,9 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
   const [createdAt, setCreatedAt] = useState('');
   const [linkUrl, setLinkUrl] = useState<string | null>(null);
 
-  const { saveDraft } = useDraftNote();
+  const draftKey = todoId != null ? `note_draft_todo_${todoId}` : `note_draft_goal_${goal.id}`;
+
+  const { saveDraft } = useDraftNote(draftKey);
   const { showToast } = useToastStore();
 
   const { mutate: createNote, isPending } = usePostNote({
@@ -48,6 +50,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
   const breakpoint = useBreakpoint();
 
   const { showDraftToast, handleCloseToast, handleToastLoad } = useDraftNoteRestore({
+    key: draftKey,
     onRestore: (saved) => {
       setTitle(saved.title);
       editor?.commands.setContent(saved.content);

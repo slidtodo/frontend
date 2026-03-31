@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { noteQueries, goalQueries, todoQueries } from '@/lib/queryKeys';
 import { usePatchNote } from '@/features/note/hooks/usePatchNote';
+import { useDraftNote } from '@/features/note/hooks/useDraftNote';
 import { useToastStore } from '@/shared/stores/useToastStore';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import { useEditor } from '@tiptap/react';
@@ -35,6 +36,7 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
   const [linkUrl, setLinkUrl] = useState<string | null>(note?.linkUrl ?? null);
 
   const { showToast } = useToastStore();
+  const { saveDraft } = useDraftNote(`note_draft_edit_${noteId}`);
 
   const { mutate: patchNote, isPending } = usePatchNote(noteId, goalId, {
     onError: () => showToast('노트 수정에 실패했습니다', 'fail'),
@@ -56,6 +58,16 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
     },
   });
 
+  const handleSaveDraft = useCallback(() => {
+    try {
+      saveDraft({ title, content, ...(linkUrl ? { linkUrl } : {}) });
+      showToast('임시 저장이 완료되었습니다 ・ 1초전', 'success');
+    } catch (error) {
+      showToast('임시 저장이 실패했습니다', 'fail');
+      console.error('임시 저장 실패:', error);
+    }
+  }, [title, content, linkUrl, saveDraft, showToast]);
+
   const handleSubmit = useCallback(() => {
     patchNote({
       title,
@@ -65,11 +77,13 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
   }, [patchNote, title, content, linkUrl]);
 
   useEffect(() => {
+    window.addEventListener('mobile:save-draft', handleSaveDraft);
     window.addEventListener('mobile:submit', handleSubmit);
     return () => {
+      window.removeEventListener('mobile:save-draft', handleSaveDraft);
       window.removeEventListener('mobile:submit', handleSubmit);
     };
-  }, [handleSubmit]);
+  }, [handleSaveDraft, handleSubmit]);
 
   if (isNoteReadError)
     return <p className="p-10 text-center text-sm text-gray-500">노트를 불러오는 데 실패했습니다.</p>;

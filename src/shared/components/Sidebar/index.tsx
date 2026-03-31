@@ -177,7 +177,7 @@ function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
                 },
               })
             }
-            className="group border-bearlog-500 bearlog-500 flex w-full flex-col items-center justify-center gap-2 rounded-[32px] border bg-[#ffffff] px-2 py-4 transition-all duration-200 hover:shadow-lg lg:px-[22.5px] lg:py-8"
+            className="group border-bearlog-500 flex w-full flex-col items-center justify-center gap-2 rounded-[32px] border bg-[#ffffff] px-2 py-4 transition-all duration-200 hover:shadow-lg lg:px-[22.5px] lg:py-8"
           >
             <CopyCheckIcon
               color="#00C87F"
@@ -191,7 +191,8 @@ function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
         </div>
 
         <div className="flex w-full justify-between gap-2">
-          <button
+          <Link
+            href="/mypage"
             className={`w-full items-center justify-start gap-[8px] rounded-[999px] border border-gray-200 px-[20px] py-[12px] lg:pr-[42px] lg:pl-[12px] ${isOpen ? 'flex' : 'hidden'}`}
           >
             <Image src={user?.profileImageUrl || '/image/default-profile.png'} alt="Character" width={38} height={38} />
@@ -199,7 +200,7 @@ function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
               <span className="w-fit text-sm font-medium lg:w-full">{user?.nickname}</span>
               <span className="hidden text-sm font-medium text-[#A0A0A0] lg:block">{user?.email}</span>
             </div>
-          </button>
+          </Link>
 
           <button
             className={`group hover:text-bearlog-600 relative text-gray-500 transition-all duration-200 hover:bg-gray-100 ${
@@ -228,7 +229,7 @@ function SidebarMenuEntry({ menu, pathname }: { menu: MenuItem; pathname: string
     return (
       <Link
         href={menu.href}
-        className={`group } flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px]`}
+        className="group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px]"
       >
         <span
           className={`transition-all duration-200 ${

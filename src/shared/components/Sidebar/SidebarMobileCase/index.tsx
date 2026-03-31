@@ -65,7 +65,7 @@ function BellButton() {
   return (
     <button
       type="button"
-      className="group duration-200group hover:text-bearlog-600 hover:bg-gray-100hover:text-[#FF8442] relative text-gray-500 transition-all duration-200"
+      className="group hover:text-bearlog-600 relative text-gray-500 transition-all duration-200"
       aria-label="알림"
     >
       <BellIcon color="#737373" size={24} className="transition-transform group-hover:scale-110" />

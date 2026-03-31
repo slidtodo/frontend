@@ -20,7 +20,11 @@ export default function NoteListContainer({ goalId }: NoteListContainerProps) {
         onSearchChange={setSearchInput}
         onSearch={() => setSubmittedSearch(searchInput)}
         sort={sort}
-        onSortChange={(v) => setSort(v as 'LATEST' | 'OLDEST')}
+        onSortChange={(v) => {
+          if (v === 'LATEST' || v === 'OLDEST') {
+            setSort(v);
+          }
+        }}
       />
       <NoteListClient goalId={goalId} search={submittedSearch} sort={sort} />
     </>

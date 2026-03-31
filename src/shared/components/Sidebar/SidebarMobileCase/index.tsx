@@ -25,10 +25,18 @@ export default function SidebarMobileCase() {
     title = '노트 작성하기';
     actions = (
       <div className="flex gap-1">
-        <button type="button" className="px-[6px] text-[#737373] transition-all duration-200 hover:text-[#FF8442]">
+        <button
+          type="button"
+          className="px-[6px] text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
+          onClick={() => window.dispatchEvent(new CustomEvent('mobile:save-draft'))}
+        >
           임시저장
         </button>
-        <button type="button" className="px-[6px] text-[#737373] transition-all duration-200 hover:text-[#FF8442]">
+        <button
+          type="button"
+          className="px-[6px] text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
+          onClick={() => window.dispatchEvent(new CustomEvent('mobile:submit'))}
+        >
           등록
         </button>
       </div>
@@ -37,10 +45,18 @@ export default function SidebarMobileCase() {
     title = '노트 수정하기';
     actions = (
       <div className="flex gap-1">
-        <button type="button" className="px-[6px] text-[#737373] transition-all duration-200 hover:text-[#FF8442]">
+        <button
+          type="button"
+          className="px-[6px] text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
+          onClick={() => window.dispatchEvent(new CustomEvent('mobile:save-draft'))}
+        >
           임시저장
         </button>
-        <button type="button" className="px-[6px] text-[#737373] transition-all duration-200 hover:text-[#FF8442]">
+        <button
+          type="button"
+          className="px-[6px] text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
+          onClick={() => window.dispatchEvent(new CustomEvent('mobile:submit'))}
+        >
           수정
         </button>
       </div>

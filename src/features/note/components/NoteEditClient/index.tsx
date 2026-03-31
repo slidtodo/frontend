@@ -3,7 +3,7 @@
 import PageHeader from '@/shared/components/PageHeader';
 import NoteEditor from '@/features/note/components/NoteEditor';
 import Button from '@/shared/components/Button';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { noteQueries, goalQueries, todoQueries } from '@/lib/queryKeys';
 import { usePatchNote } from '@/features/note/hooks/usePatchNote';
@@ -56,13 +56,20 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
     },
   });
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     patchNote({
       title,
       content,
       ...(linkUrl ? { linkUrl } : {}),
     });
-  };
+  }, [patchNote, title, content, linkUrl]);
+
+  useEffect(() => {
+    window.addEventListener('mobile:submit', handleSubmit);
+    return () => {
+      window.removeEventListener('mobile:submit', handleSubmit);
+    };
+  }, [handleSubmit]);
 
   if (isNoteReadError)
     return <p className="p-10 text-center text-sm text-gray-500">노트를 불러오는 데 실패했습니다.</p>;

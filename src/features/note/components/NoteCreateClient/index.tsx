@@ -4,7 +4,7 @@ import PageHeader from '@/shared/components/PageHeader';
 import NoteEditor from '@/features/note/components/NoteEditor';
 import Button from '@/shared/components/Button';
 import { useDraftNoteRestore } from '@/features/note/hooks/useDraftNoteRestore';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDraftNote } from '@/features/note/hooks/useDraftNote';
 import { usePostNote } from '@/features/note/hooks/usePostNote';
 import { useToastStore } from '@/shared/stores/useToastStore';
@@ -56,7 +56,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
     },
   });
 
-  const handleSaveDraft = () => {
+  const handleSaveDraft = useCallback(() => {
     try {
       const body = {
         todoId,
@@ -70,9 +70,9 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
       showToast('임시 저장이 실패했습니다', 'fail');
       console.error('임시 저장 실패:', error);
     }
-  };
+  }, [todoId, title, content, linkUrl, saveDraft, showToast]);
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     if (!todoId) {
       showToast('먼저 할 일을 등록해주세요', 'fail');
       router.push('/dashboard/all-todo');
@@ -86,7 +86,16 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
       ...(linkUrl ? { linkUrl } : {}),
     };
     createNote(body);
-  };
+  }, [todoId, title, content, linkUrl, createNote, showToast, router]);
+
+  useEffect(() => {
+    window.addEventListener('mobile:save-draft', handleSaveDraft);
+    window.addEventListener('mobile:submit', handleSubmit);
+    return () => {
+      window.removeEventListener('mobile:save-draft', handleSaveDraft);
+      window.removeEventListener('mobile:submit', handleSubmit);
+    };
+  }, [handleSaveDraft, handleSubmit]);
 
   const editor = useEditor({
     extensions: [

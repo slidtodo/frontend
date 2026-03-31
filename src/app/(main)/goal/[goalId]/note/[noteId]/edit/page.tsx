@@ -10,7 +10,10 @@ export default async function NoteEditPage({ params }: { params: Promise<{ goalI
 
   const queryClient = new QueryClient();
 
-  const note = await queryClient.fetchQuery(noteQueries.detail(Number(noteId))).catch(() => null);
+  const note = await queryClient.fetchQuery(noteQueries.detail(Number(noteId))).catch((error) => {
+    console.error(`[NoteEditPage] noteId=${noteId} fetch failed:`, error);
+    return null;
+  });
   if (!note) notFound();
 
   await Promise.all([

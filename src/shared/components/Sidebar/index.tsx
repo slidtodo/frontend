@@ -94,6 +94,7 @@ function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
           <div
             className={`relative shrink-0 ${isOpen ? 'h-12 w-12' : 'h-8 w-8'} rounded-2xl shadow-[0_3px_20px_rgba(0,200,127,0.35)]`}
           >
+            {/* TODO: 해당 로고 바뀌면 교체 필요 */}
             <Image
               priority
               src={'/image/main-logo.svg'}

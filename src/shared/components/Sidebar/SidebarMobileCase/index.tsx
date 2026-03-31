@@ -2,17 +2,20 @@ import { usePathname } from 'next/navigation';
 import { BellIcon } from 'lucide-react';
 
 import PageHeader from '@/shared/components/PageHeader';
+import { useMobileHeaderStore } from '@/shared/stores/useMobileHeaderStore';
 
 export default function SidebarMobileCase() {
   // TODO: 전역관리가 좋아보임. 해당 데이터 받아오기
   const pathname = usePathname();
+  const slot = useMobileHeaderStore((s) => s.slot);
+
   const userName = '체다치즈';
   const allTodoCount = 5;
   const favoriteCount = 3;
 
   let title: string | undefined;
   let count: number | undefined;
-  let actions: React.ReactNode = <BellButton />;
+  const actions: React.ReactNode = <BellButton />;
 
   if (pathname === '/dashboard' || /^\/goal\/[^/]+$/.test(pathname)) {
     title = `${userName}님의 대시보드`;
@@ -23,44 +26,8 @@ export default function SidebarMobileCase() {
     title = '노트 모아보기';
   } else if (/^\/goal\/[^/]+\/note\/create$/.test(pathname)) {
     title = '노트 작성하기';
-    actions = (
-      <div className="flex gap-1">
-        <button
-          type="button"
-          className="px-[6px] text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
-          onClick={() => window.dispatchEvent(new CustomEvent('mobile:save-draft'))}
-        >
-          임시저장
-        </button>
-        <button
-          type="button"
-          className="px-[6px] text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
-          onClick={() => window.dispatchEvent(new CustomEvent('mobile:submit'))}
-        >
-          등록
-        </button>
-      </div>
-    );
   } else if (/^\/goal\/[^/]+\/note\/[^/]+\/edit$/.test(pathname)) {
     title = '노트 수정하기';
-    actions = (
-      <div className="flex gap-1">
-        <button
-          type="button"
-          className="px-[6px] text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
-          onClick={() => window.dispatchEvent(new CustomEvent('mobile:save-draft'))}
-        >
-          임시저장
-        </button>
-        <button
-          type="button"
-          className="px-[6px] text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
-          onClick={() => window.dispatchEvent(new CustomEvent('mobile:submit'))}
-        >
-          수정
-        </button>
-      </div>
-    );
   } else if (pathname === '/favorite-todo') {
     title = '찜한 할 일';
     count = favoriteCount;
@@ -68,6 +35,15 @@ export default function SidebarMobileCase() {
     title = `${userName}님의 캘린더`;
   } else if (pathname === '/mypage') {
     title = '내 정보 관리';
+  }
+
+  if (slot) {
+    return (
+      <div className="flex w-full items-center justify-between">
+        {title && <PageHeader title={title} count={count} />}
+        {slot}
+      </div>
+    );
   }
 
   if (!title) {

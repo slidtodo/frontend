@@ -20,6 +20,7 @@ import EditorToolbar from '@/features/note/components/NoteEditor/EditorToolbar';
 import { createPortal } from 'react-dom';
 import { TodoResponse } from '@/lib/api/fetchTodos';
 import { GoalDetailResponse } from '@/lib/api/fetchGoals';
+import { useMobileHeaderStore } from '@/shared/stores/useMobileHeaderStore';
 
 interface NoteCreateClientProps {
   goal: GoalDetailResponse;
@@ -40,6 +41,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
 
   const { saveDraft } = useDraftNote(draftKey);
   const { showToast } = useToastStore();
+  const setSlot = useMobileHeaderStore((s) => s.setSlot);
 
   const { mutate: createNote, isPending } = usePostNote({
     onError: () => {
@@ -92,13 +94,30 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
   }, [todoId, title, content, linkUrl, createNote, showToast, router]);
 
   useEffect(() => {
-    window.addEventListener('mobile:save-draft', handleSaveDraft);
-    window.addEventListener('mobile:submit', handleSubmit);
-    return () => {
-      window.removeEventListener('mobile:save-draft', handleSaveDraft);
-      window.removeEventListener('mobile:submit', handleSubmit);
-    };
-  }, [handleSaveDraft, handleSubmit]);
+    if (breakpoint !== 'mobile') return;
+    setSlot(
+      <div className="flex items-center gap-1">
+        <div className="relative">
+          <button
+            type="button"
+            className="px-1.5 text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
+            onClick={handleSaveDraft}
+          >
+            임시저장
+          </button>
+          {showDraftToast && <DraftNoteToast onLoad={handleToastLoad} onClose={handleCloseToast} />}
+        </div>
+        <button
+          type="button"
+          className="px-1.5 text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
+          onClick={handleSubmit}
+        >
+          등록
+        </button>
+      </div>,
+    );
+    return () => setSlot(null);
+  }, [breakpoint, handleSaveDraft, handleSubmit, showDraftToast, handleToastLoad, handleCloseToast, setSlot]);
 
   const editor = useEditor({
     extensions: [

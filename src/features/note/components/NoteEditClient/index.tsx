@@ -9,6 +9,7 @@ import { noteQueries, goalQueries, todoQueries } from '@/lib/queryKeys';
 import { usePatchNote } from '@/features/note/hooks/usePatchNote';
 import { useDraftNote } from '@/features/note/hooks/useDraftNote';
 import { useToastStore } from '@/shared/stores/useToastStore';
+import { useMobileHeaderStore } from '@/shared/stores/useMobileHeaderStore';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -37,6 +38,7 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
 
   const { showToast } = useToastStore();
   const { saveDraft } = useDraftNote(`note_draft_edit_${noteId}`);
+  const setSlot = useMobileHeaderStore((s) => s.setSlot);
 
   const { mutate: patchNote, isPending } = usePatchNote(noteId, goalId, {
     onError: () => showToast('노트 수정에 실패했습니다', 'fail'),
@@ -77,13 +79,27 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
   }, [patchNote, title, content, linkUrl]);
 
   useEffect(() => {
-    window.addEventListener('mobile:save-draft', handleSaveDraft);
-    window.addEventListener('mobile:submit', handleSubmit);
-    return () => {
-      window.removeEventListener('mobile:save-draft', handleSaveDraft);
-      window.removeEventListener('mobile:submit', handleSubmit);
-    };
-  }, [handleSaveDraft, handleSubmit]);
+    if (breakpoint !== 'mobile') return;
+    setSlot(
+      <div className="flex items-center gap-1">
+        <button
+          type="button"
+          className="px-1.5 text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
+          onClick={handleSaveDraft}
+        >
+          임시저장
+        </button>
+        <button
+          type="button"
+          className="px-1.5 text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
+          onClick={handleSubmit}
+        >
+          수정
+        </button>
+      </div>,
+    );
+    return () => setSlot(null);
+  }, [breakpoint, handleSaveDraft, handleSubmit, setSlot]);
 
   if (isNoteReadError)
     return <p className="p-10 text-center text-sm text-gray-500">노트를 불러오는 데 실패했습니다.</p>;

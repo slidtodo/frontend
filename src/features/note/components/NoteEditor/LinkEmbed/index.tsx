@@ -34,7 +34,7 @@ export default function LinkEmbed({ url, onRemove }: LinkEmbedProps) {
 
   return (
     <>
-      {showPreview && <LinkEmbedPreview url={url} />}
+      {showPreview && <LinkEmbedPreview url={url} onClose={() => setShowPreview(false)} />}
       <div
         className="flex w-full cursor-pointer flex-col gap-1 rounded-[14px] bg-[#FAFAFA] px-4 py-[14px]"
         onClick={() => setShowPreview((prev) => !prev)}

@@ -11,14 +11,16 @@ import clsx from 'clsx';
 
 interface NoteListClientProps {
   goalId: number;
+  search?: string;
+  sort?: 'LATEST' | 'OLDEST';
 }
 
-export default function NoteListClient({ goalId }: NoteListClientProps) {
+export default function NoteListClient({ goalId, search, sort }: NoteListClientProps) {
   const [page, setPage] = useState(1);
 
   const { data: goal } = useQuery(goalQueries.detail(goalId));
   const { data: noteList } = useQuery({
-    ...noteQueries.list({ goalId, page: page - 1 }),
+    ...noteQueries.list({ goalId, page: page - 1, search, sort }),
     placeholderData: keepPreviousData,
   });
 

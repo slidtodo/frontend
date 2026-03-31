@@ -3,7 +3,7 @@
 import PageHeader from '@/shared/components/PageHeader';
 import NoteEditor from '@/features/note/components/NoteEditor';
 import Button from '@/shared/components/Button';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { noteQueries, goalQueries, todoQueries } from '@/lib/queryKeys';
 import { usePatchNote } from '@/features/note/hooks/usePatchNote';
@@ -55,14 +55,6 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
       setContent(editor.getHTML());
     },
   });
-
-  useEffect(() => {
-    if (editor && note?.content) {
-      editor.commands.setContent(note.content);
-      setTitle(note.title ?? '');
-      setLinkUrl(note.linkUrl ?? null);
-    }
-  }, [editor, note?.content]);
 
   const handleSubmit = () => {
     patchNote({

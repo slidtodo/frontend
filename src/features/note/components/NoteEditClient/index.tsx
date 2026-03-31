@@ -8,6 +8,8 @@ import { useQuery } from '@tanstack/react-query';
 import { noteQueries, goalQueries, todoQueries } from '@/lib/queryKeys';
 import { usePatchNote } from '@/features/note/hooks/usePatchNote';
 import { useDraftNote } from '@/features/note/hooks/useDraftNote';
+import { useDraftNoteRestore } from '@/features/note/hooks/useDraftNoteRestore';
+import DraftNoteToast from '@/features/note/components/DraftNoteToast';
 import { useToastStore } from '@/shared/stores/useToastStore';
 import { useMobileHeaderStore } from '@/shared/stores/useMobileHeaderStore';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
@@ -39,6 +41,15 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
   const { showToast } = useToastStore();
   const { saveDraft } = useDraftNote(`note_draft_edit_${noteId}`);
   const setSlot = useMobileHeaderStore((s) => s.setSlot);
+
+  const { showDraftToast, handleCloseToast, handleToastLoad } = useDraftNoteRestore({
+    key: `note_draft_edit_${noteId}`,
+    onRestore: (saved) => {
+      setTitle(saved.title);
+      editor?.commands.setContent(saved.content);
+      setLinkUrl(saved.linkUrl ?? null);
+    },
+  });
 
   const { mutate: patchNote, isPending } = usePatchNote(noteId, goalId, {
     onError: () => showToast('노트 수정에 실패했습니다', 'fail'),
@@ -82,13 +93,16 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
     if (breakpoint !== 'mobile') return;
     setSlot(
       <div className="flex items-center gap-1">
-        <button
-          type="button"
-          className="px-1.5 text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
-          onClick={handleSaveDraft}
-        >
-          임시저장
-        </button>
+        <div className="relative">
+          <button
+            type="button"
+            className="px-1.5 text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
+            onClick={handleSaveDraft}
+          >
+            임시저장
+          </button>
+          {showDraftToast && <DraftNoteToast onLoad={handleToastLoad} onClose={handleCloseToast} />}
+        </div>
         <button
           type="button"
           className="px-1.5 text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
@@ -99,7 +113,7 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
       </div>,
     );
     return () => setSlot(null);
-  }, [breakpoint, handleSaveDraft, handleSubmit, setSlot]);
+  }, [breakpoint, handleSaveDraft, handleSubmit, showDraftToast, handleToastLoad, handleCloseToast, setSlot]);
 
   if (isNoteReadError)
     return <p className="p-10 text-center text-sm text-gray-500">노트를 불러오는 데 실패했습니다.</p>;
@@ -115,6 +129,16 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
         <section className="mb-0 flex shrink-0 items-center justify-between md:mb-3 md:gap-4 lg:mb-[22px]">
           <PageHeader title="노트 수정하기" />
           <div className="flex gap-2">
+            <div className="relative">
+              <Button
+                onClick={handleSaveDraft}
+                variant="secondary"
+                className="cursor-pointer text-sm md:h-10 md:px-[27px]"
+              >
+                임시저장
+              </Button>
+              {showDraftToast && <DraftNoteToast onLoad={handleToastLoad} onClose={handleCloseToast} />}
+            </div>
             <Button
               onClick={handleSubmit}
               disabled={isPending}

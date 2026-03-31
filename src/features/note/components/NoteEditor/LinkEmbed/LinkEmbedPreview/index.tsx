@@ -12,6 +12,8 @@ interface LinkEmbedPreviewProps {
 export default function LinkEmbedPreview({ url }: LinkEmbedPreviewProps) {
   const [isOpen, setIsOpen] = useState(true);
 
+  const proxyUrl = `/api/link-proxy?url=${encodeURIComponent(url)}`;
+
   return (
     <>
       {/* ── lg 이상 — 오른쪽 고정 패널 ── */}
@@ -26,16 +28,12 @@ export default function LinkEmbedPreview({ url }: LinkEmbedPreviewProps) {
         )}
       >
         {isOpen && (
-          <div className="relative w-full">
-            {/* iframe */}
-            <div className="relative h-[376px] w-full overflow-hidden border border-[#CCC]">
-              <iframe
-                src={url}
-                className="h-full w-full border-0"
-                sandbox="allow-scripts allow-same-origin"
-                title="링크 미리보기"
-              />
-            </div>
+          <div className="relative h-[376px] w-full overflow-hidden border border-[#CCC]">
+            <iframe
+              src={proxyUrl}
+              className="h-full w-full border-0"
+              title="링크 미리보기"
+            />
           </div>
         )}
       </div>
@@ -69,9 +67,7 @@ export default function LinkEmbedPreview({ url }: LinkEmbedPreviewProps) {
           className={clsx(
             'absolute -top-[38px] left-1/2 -translate-x-1/2',
             'flex items-center justify-center',
-            // md
             'md:h-[38px] md:w-[60px] md:rotate-90 md:rounded-tl-2xl md:rounded-bl-2xl',
-            // base
             'h-[28px] w-[38px] rotate-90 rounded-tl-[12px] rounded-bl-[12px]',
             'border border-[#DDD] bg-[#FAFAFA]',
           )}
@@ -83,13 +79,11 @@ export default function LinkEmbedPreview({ url }: LinkEmbedPreviewProps) {
           )}
         </button>
 
-        {/* iframe */}
         {isOpen && (
           <div className="h-[280px] w-full overflow-hidden md:h-[337px]">
             <iframe
-              src={url}
+              src={proxyUrl}
               className="h-full w-full border-0"
-              sandbox="allow-scripts allow-same-origin"
               title="링크 미리보기"
             />
           </div>

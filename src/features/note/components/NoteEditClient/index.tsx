@@ -23,7 +23,7 @@ interface NoteEditClientProps {
 }
 
 export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) {
-  const { data: note } = useQuery(noteQueries.detail(noteId));
+  const { data: note, isError: isNoteReadError } = useQuery(noteQueries.detail(noteId));
   const { data: goal } = useQuery(goalQueries.detail(goalId));
   const { data: todo } = useQuery({
     ...todoQueries.detail(note?.todoId ?? 0),
@@ -63,6 +63,9 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
       ...(linkUrl ? { linkUrl } : {}),
     });
   };
+
+  if (isNoteReadError)
+    return <p className="p-10 text-center text-sm text-gray-500">노트를 불러오는 데 실패했습니다.</p>;
 
   return (
     <div className="mx-auto flex h-full w-full max-w-[768px] flex-col">

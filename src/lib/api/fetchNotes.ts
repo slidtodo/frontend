@@ -11,10 +11,7 @@ export type PatchNoteRequest = operations['update_1']['requestBody']['content'][
 class FetchNotes {
   getNotes = (params?: GetNotesParams) => apiRequest<NoteListResponse>('/api/v1/notes', { params });
 
-  getNote = (noteId: number) =>
-    apiRequest<NoteResponse>(`/api/v1/notes/${noteId}`, {
-      next: { revalidate: 60, tags: [`note-${noteId}`] },
-    });
+  getNote = (noteId: number) => apiRequest<NoteResponse>(`/api/v1/notes/${noteId}`);
 
   postNote = (body: PostNoteRequest) =>
     apiRequest<NoteResponse, PostNoteRequest>('/api/v1/notes', {

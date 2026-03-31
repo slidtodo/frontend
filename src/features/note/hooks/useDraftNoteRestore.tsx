@@ -6,11 +6,12 @@ import { useModalStore } from '@/shared/stores/useModalStore';
 import { PopupModal } from '@/shared/components/Modal/PopupModal';
 
 interface UseDraftNoteRestoreOptions {
+  key?: string;
   onRestore: (draft: DraftNote) => void;
 }
 
-export function useDraftNoteRestore({ onRestore }: UseDraftNoteRestoreOptions) {
-  const { getDraft, clearDraft } = useDraftNote();
+export function useDraftNoteRestore({ key, onRestore }: UseDraftNoteRestoreOptions) {
+  const { getDraft, clearDraft } = useDraftNote(key);
   const { openModal, closeModal } = useModalStore();
 
   const [draftState, setDraftState] = useState<{

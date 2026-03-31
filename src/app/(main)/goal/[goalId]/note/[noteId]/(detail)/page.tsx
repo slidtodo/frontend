@@ -14,7 +14,10 @@ export default async function NoteDetailPage({ params }: NoteDetailPageProps) {
   const queryClient = new QueryClient();
 
   const [note] = await Promise.all([
-    queryClient.fetchQuery(noteQueries.detail(Number(noteId))).catch(() => null),
+    queryClient.fetchQuery(noteQueries.detail(Number(noteId))).catch((error) => {
+      console.error(`[NoteDetailPage] noteId=${noteId} fetch failed:`, error);
+      return null;
+    }),
     queryClient.prefetchQuery(goalQueries.detail(Number(goalId))),
   ]);
 

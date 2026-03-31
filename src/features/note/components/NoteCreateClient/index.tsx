@@ -4,7 +4,7 @@ import PageHeader from '@/shared/components/PageHeader';
 import NoteEditor from '@/features/note/components/NoteEditor';
 import Button from '@/shared/components/Button';
 import { useDraftNoteRestore } from '@/features/note/hooks/useDraftNoteRestore';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDraftNote } from '@/features/note/hooks/useDraftNote';
 import { usePostNote } from '@/features/note/hooks/usePostNote';
 import { useToastStore } from '@/shared/stores/useToastStore';
@@ -20,6 +20,7 @@ import EditorToolbar from '@/features/note/components/NoteEditor/EditorToolbar';
 import { createPortal } from 'react-dom';
 import { TodoResponse } from '@/lib/api/fetchTodos';
 import { GoalDetailResponse } from '@/lib/api/fetchGoals';
+import { useMobileHeaderStore } from '@/shared/stores/useMobileHeaderStore';
 
 interface NoteCreateClientProps {
   goal: GoalDetailResponse;
@@ -36,8 +37,11 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
   const [createdAt, setCreatedAt] = useState('');
   const [linkUrl, setLinkUrl] = useState<string | null>(null);
 
-  const { saveDraft } = useDraftNote();
+  const draftKey = todoId != null ? `note_draft_todo_${todoId}` : `note_draft_goal_${goal.id}`;
+
+  const { saveDraft } = useDraftNote(draftKey);
   const { showToast } = useToastStore();
+  const setSlot = useMobileHeaderStore((s) => s.setSlot);
 
   const { mutate: createNote, isPending } = usePostNote({
     onError: () => {
@@ -48,6 +52,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
   const breakpoint = useBreakpoint();
 
   const { showDraftToast, handleCloseToast, handleToastLoad } = useDraftNoteRestore({
+    key: draftKey,
     onRestore: (saved) => {
       setTitle(saved.title);
       editor?.commands.setContent(saved.content);
@@ -56,7 +61,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
     },
   });
 
-  const handleSaveDraft = () => {
+  const handleSaveDraft = useCallback(() => {
     try {
       const body = {
         todoId,
@@ -70,9 +75,9 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
       showToast('임시 저장이 실패했습니다', 'fail');
       console.error('임시 저장 실패:', error);
     }
-  };
+  }, [todoId, title, content, linkUrl, saveDraft, showToast]);
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     if (!todoId) {
       showToast('먼저 할 일을 등록해주세요', 'fail');
       router.push('/dashboard/all-todo');
@@ -86,7 +91,33 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
       ...(linkUrl ? { linkUrl } : {}),
     };
     createNote(body);
-  };
+  }, [todoId, title, content, linkUrl, createNote, showToast, router]);
+
+  useEffect(() => {
+    if (breakpoint !== 'mobile') return;
+    setSlot(
+      <div className="flex items-center gap-1">
+        <div className="relative">
+          <button
+            type="button"
+            className="px-1.5 text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
+            onClick={handleSaveDraft}
+          >
+            임시저장
+          </button>
+          {showDraftToast && <DraftNoteToast onLoad={handleToastLoad} onClose={handleCloseToast} />}
+        </div>
+        <button
+          type="button"
+          className="px-1.5 text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
+          onClick={handleSubmit}
+        >
+          등록
+        </button>
+      </div>,
+    );
+    return () => setSlot(null);
+  }, [breakpoint, handleSaveDraft, handleSubmit, showDraftToast, handleToastLoad, handleCloseToast, setSlot]);
 
   const editor = useEditor({
     extensions: [

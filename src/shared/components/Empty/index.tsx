@@ -7,7 +7,7 @@ export default function Empty({ children }: { children: React.ReactNode }) {
       <Image
         src={emptyIcon}
         alt="데이터 없이 빈 화면일 때, 서비스 시그니처 캐릭터"
-        className="h-[85px] w-[79px] md:h-[140px] md:w-[130px]"
+        className="aspect-[2/3] w-[79px] md:w-[130px]"
       />
       {children}
     </div>

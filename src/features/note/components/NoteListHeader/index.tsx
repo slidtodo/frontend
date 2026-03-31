@@ -25,9 +25,7 @@ export default function NoteListHeader({ search, onSearchChange, onSearch, sort,
   const isMobile = breakpoint === 'mobile';
 
   return (
-    <section
-      className={clsx('mb-12 flex items-center justify-between', 'md:mt-4 md:mb-8 md:gap-4', 'lg:mt-10 lg:mb-12')}
-    >
+    <section className={clsx('mb-12 flex items-center justify-between md:mb-8 md:gap-4 lg:mb-12')}>
       {!isMobile && <PageHeader title="노트 모아보기" />}
       <div className="flex w-full flex-1 justify-between gap-0 md:justify-end md:gap-2 lg:gap-[14px]">
         <SearchInput

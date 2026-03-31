@@ -112,7 +112,7 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
           document.getElementById('mobile-toolbar-slot') ?? document.body,
         )}
       {breakpoint !== 'mobile' && (
-        <section className="mb-0 flex shrink-0 items-center justify-between md:mt-4 md:mb-3 md:gap-4 lg:mt-10 lg:mb-[22px]">
+        <section className="mb-0 flex shrink-0 items-center justify-between md:mb-3 md:gap-4 lg:mb-[22px]">
           <PageHeader title="노트 수정하기" />
           <div className="flex gap-2">
             <Button

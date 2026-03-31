@@ -71,16 +71,19 @@ function SidebarDesktopTablet() {
         >
           <ChevronsRightIcon
             size={32}
-            color="#CCCCCC"
+            color="#cccccc"
             className={`${isOpen ? 'rotate-180' : ''} transition-transform duration-300`}
           />
         </button>
 
         <Link
           href="/dashboard"
-          className={`flex items-center overflow-hidden ${isOpen ? 'w-full gap-4 pr-[22px] pl-2' : 'w-fit gap-0 p-0'}`}
+          className={`flex items-center ${isOpen ? 'w-full gap-4 pr-[22px] pl-2' : 'w-fit gap-0 p-0'}`}
         >
-          <div className={`relative shrink-0 ${isOpen ? 'h-12 w-12' : 'h-8 w-8'}`}>
+          {/** TODO: 해당 로고 바뀌면 교체 필요 */}
+          <div
+            className={`relative shrink-0 ${isOpen ? 'h-12 w-12' : 'h-8 w-8'} rounded-2xl shadow-[0_3px_20px_rgba(0,200,127,0.35)]`}
+          >
             <Image
               priority
               src={'/image/main-logo.svg'}
@@ -96,7 +99,9 @@ function SidebarDesktopTablet() {
             }`}
             aria-hidden={!isOpen}
           >
-            <h2 className="pl-1 text-2xl font-semibold whitespace-nowrap text-gray-800 lg:text-3xl">{projectName}</h2>
+            <h2 className="pl-1 text-2xl leading-[42px] font-semibold whitespace-nowrap text-gray-800 lg:text-3xl">
+              {projectName}
+            </h2>
           </div>
         </Link>
 
@@ -176,7 +181,7 @@ function SidebarDesktopTablet() {
           <button
             className={`w-full items-center justify-start gap-[8px] rounded-[999px] border border-[#DDDDDD] px-[20px] py-[12px] lg:pr-[42px] lg:pl-[12px] ${isOpen ? 'flex' : 'hidden'}`}
           >
-            <Image src={'/image/temp-character.svg'} alt="Character" width={38} height={38} />
+            <Image src={'/image/default-profile.png'} alt="Character" width={38} height={38} />
             <div className="flex flex-col items-start">
               <span className="w-fit text-sm font-medium lg:w-full">닉네임</span>
               <span className="hidden text-sm font-medium text-[#A0A0A0] lg:block">이메일</span>
@@ -210,13 +215,17 @@ function SidebarMenuEntry({ menu, pathname }: { menu: MenuItem; pathname: string
     return (
       <Link
         href={menu.href}
-        className={`group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px] ${
-          isActive ? 'bg-[#FEF2E3]' : 'hover:bg-[#FEF2E3]'
-        }`}
+        className={`group } flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px]`}
       >
-        <span className={isActive ? 'text-[#EF6C00]' : 'text-[#CCCCCC] group-hover:text-[#EF6C00]'}>{menu.icon}</span>
         <span
-          className={`text-lg font-semibold transition-all ${isActive ? 'font-bold text-[#DC5203]' : 'text-[#333333] group-hover:font-bold group-hover:text-[#DC5203]'}`}
+          className={`transition-all duration-200 ${
+            isActive ? 'text-[#008354] transition-all' : 'text-gray-300 transition-all group-hover:text-[#339C76]'
+          }`}
+        >
+          {menu.icon}
+        </span>
+        <span
+          className={`text-lg transition-all ${isActive ? 'font-bold text-[#339C76]' : 'font-semibold text-gray-700 group-hover:font-bold group-hover:text-[#339C76]'}`}
         >
           {menu.name}
         </span>
@@ -237,10 +246,10 @@ function SidebarMenuEntry({ menu, pathname }: { menu: MenuItem; pathname: string
               className={`group flex w-[calc(100%-1rem)] items-center justify-start gap-2 rounded-[20px] px-4 py-1 transition-all duration-200 lg:px-6 lg:py-2`}
             >
               <span
-                className={`text-base transition-all ${
+                className={`text-sm transition-all ${
                   isSubMenuActive
-                    ? 'font-bold text-[#DC5203]'
-                    : 'font-semibold text-[#666666] group-hover:text-[#DC5203]'
+                    ? 'font-bold text-[#339C76]'
+                    : 'font-semibold text-gray-700 group-hover:text-[#339C76]'
                 }`}
               >
                 {subMenu.name}
@@ -261,24 +270,24 @@ function AccordionTrigger({ children, menu, isActive, ...props }: AccordionTrigg
   return (
     <Accordion.Trigger
       {...props}
-      className={`group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px] ${
-        isActive ? 'bg-[#FEF2E3]' : 'hover:bg-[#FEF2E3]'
-      }`}
+      className={`group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px]`}
     >
-      <span className={isActive ? 'text-[#EF6C00]' : 'text-[#CCCCCC] group-hover:text-[#EF6C00]'}>{menu.icon}</span>
+      <span className={isActive ? 'text-[#339C76]' : 'text-gray-300 group-hover:text-[#339C76]'}>{menu.icon}</span>
       <span
-        className={`text-lg font-semibold transition-all ${isActive ? 'font-bold text-[#DC5203]' : 'text-[#333333] group-hover:font-bold group-hover:text-[#DC5203]'}`}
+        className={`text-lg font-semibold transition-all ${isActive ? 'font-bold text-[#339C76]' : 'text-gray-700 group-hover:font-bold group-hover:text-[#339C76]'}`}
       >
         {menu.name}
       </span>
       {children}
-      <span className="relative ml-auto flex h-5 w-5 items-center justify-center text-[#A0A0A0]">
+      <span className="relative ml-auto flex items-center justify-center text-[#A0A0A0]">
         <ChevronDownIcon
-          className="accordion-chevron-down absolute h-5 w-5 transition-all duration-200 ease-out group-data-[state=open]:-rotate-180 group-data-[state=open]:opacity-0"
+          size={24}
+          className="accordion-chevron-down absolute transition-all duration-200 ease-out group-data-[state=open]:-rotate-180 group-data-[state=open]:opacity-0"
           aria-hidden
         />
         <ChevronUpIcon
-          className="accordion-chevron-up absolute h-5 w-5 rotate-180 opacity-0 transition-all duration-200 ease-out group-data-[state=open]:rotate-0 group-data-[state=open]:opacity-100"
+          size={24}
+          className="accordion-chevron-up absolute rotate-180 opacity-0 transition-all duration-200 ease-out group-data-[state=open]:rotate-0 group-data-[state=open]:opacity-100"
           aria-hidden
         />
       </span>

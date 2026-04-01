@@ -6,6 +6,8 @@ import { createContext, useContext, useState, ReactNode, useMemo } from 'react';
 import { LayoutGridIcon, FlagIcon, CalendarDaysIcon, ListCheckIcon } from 'lucide-react';
 
 import { goalQueries } from '@/lib/queryKeys';
+
+const sidebarMenuIconClassName = 'h-6 w-6 transition-all [&_*]:fill-current [&_*]:stroke-current';
 interface MenuBase {
   icon?: React.ReactNode;
   name: string;
@@ -39,12 +41,12 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
   const allMenus = useMemo<MenuItem[]>(() => {
     return [
       {
-        icon: <LayoutGridIcon />,
+        icon: <LayoutGridIcon className={sidebarMenuIconClassName} />,
         name: '대시보드',
         href: '/dashboard',
       },
       {
-        icon: <FlagIcon />,
+        icon: <FlagIcon className={sidebarMenuIconClassName} />,
         name: '목표',
         href: '/goal',
         subMenus: goalData.map((goal) => ({
@@ -53,12 +55,12 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
         })),
       },
       {
-        icon: <ListCheckIcon />,
+        icon: <ListCheckIcon className={sidebarMenuIconClassName} />,
         name: '할 일',
         href: '/dashboard/all-todo',
       },
       // {
-      //   icon: <CalendarDaysIcon />,
+      //   icon: <CalendarDaysIcon className={sidebarMenuIconClassName} />,
       //   name: '캘린더',
       //   href: '/calendar',
       // },

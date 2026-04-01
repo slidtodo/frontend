@@ -14,37 +14,48 @@ import {
   ChevronUpIcon,
 } from 'lucide-react';
 import { Accordion } from 'radix-ui';
+import { useQuery } from '@tanstack/react-query';
 
 import SidebarMobileCase from './SidebarMobileCase';
 import SinglePostModal from '../Modal/SinglePostModal';
 
-import { useSidebarContext } from '@/contexts/SidebarContext';
-import { useSidebarOpen } from '@/contexts/SidebarContext';
+import { useSidebarContext, useSidebarOpen, MenuItem } from '@/contexts/SidebarContext';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { usePostGoal } from '@/lib/mutations';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
-import { MenuItem } from '@/contexts/SidebarContext';
+import { userQueries } from '@/lib/queryKeys';
+import { CurrentUserResponse } from '@/lib/api';
 
 export default function Sidebar() {
   const breakpoint = useBreakpoint();
+
+  const { data: user } = useQuery(userQueries.current());
+
   if (breakpoint === null) return null;
-  if (breakpoint === 'mobile') return <SidebarMobile />;
-  else return <SidebarDesktopTablet />;
+
+  if (breakpoint === 'mobile') return <SidebarMobile user={user} />;
+  else return <SidebarDesktopTablet user={user} />;
 }
 
 // 모바일일 때 렌더링 되는 사이드바 컴포넌트
-function SidebarMobile() {
+interface SidebarMobileProps {
+  user: CurrentUserResponse | undefined;
+}
+function SidebarMobile({ user }: SidebarMobileProps) {
   return (
-    <div className="flex items-center border-b-2 border-[#DDDDDD] bg-white px-5 py-4">
-      <MenuIcon size={24} className="pr-3 text-[#737373] hover:cursor-pointer" />
-      <SidebarMobileCase />
+    <div className="flex items-center border-b-2 border-gray-200 bg-white px-5 py-4">
+      <MenuIcon size={24} className="pr-3 text-gray-500 hover:cursor-pointer" />
+      <SidebarMobileCase user={user} />
     </div>
   );
 }
 
 // 데스크탑과 태블릿에서 렌더링 되는 사이드바 컴포넌트
-function SidebarDesktopTablet() {
+interface SidebarDesktopTabletProps {
+  user: CurrentUserResponse | undefined;
+}
+function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
   const { openModal } = useModalStore();
   const { toggle, getMenus } = useSidebarContext();
   const isOpen = useSidebarOpen();
@@ -71,16 +82,19 @@ function SidebarDesktopTablet() {
         >
           <ChevronsRightIcon
             size={32}
-            color="#CCCCCC"
+            color="#cccccc"
             className={`${isOpen ? 'rotate-180' : ''} transition-transform duration-300`}
           />
         </button>
 
         <Link
           href="/dashboard"
-          className={`flex items-center overflow-hidden ${isOpen ? 'w-full gap-4 pr-[22px] pl-2' : 'w-fit gap-0 p-0'}`}
+          className={`flex items-center ${isOpen ? 'w-full gap-4 pr-[22px] pl-2' : 'w-fit gap-0 p-0'}`}
         >
-          <div className={`relative shrink-0 ${isOpen ? 'h-12 w-12' : 'h-8 w-8'}`}>
+          <div
+            className={`relative shrink-0 ${isOpen ? 'h-12 w-12' : 'h-8 w-8'} rounded-2xl shadow-[0_3px_20px_rgba(0,200,127,0.35)]`}
+          >
+            {/* TODO: 해당 로고 바뀌면 교체 필요 */}
             <Image
               priority
               src={'/image/main-logo.svg'}
@@ -96,7 +110,9 @@ function SidebarDesktopTablet() {
             }`}
             aria-hidden={!isOpen}
           >
-            <h2 className="pl-1 text-2xl font-semibold whitespace-nowrap text-gray-800 lg:text-3xl">{projectName}</h2>
+            <h2 className="pl-1 text-2xl leading-[42px] font-semibold whitespace-nowrap text-gray-800 lg:text-3xl">
+              {projectName}
+            </h2>
           </div>
         </Link>
 
@@ -113,12 +129,12 @@ function SidebarDesktopTablet() {
 
           <div className="flex w-full flex-col">
             <button className="flex items-center justify-start gap-[10px] rounded-[20px] px-[14px] py-[10px] transition-all duration-100 hover:bg-gray-100">
-              <SettingsIcon className="text-[#BBBBBB]" size={24} />
-              <span className="text-lg font-semibold text-[#737373]">설정</span>
+              <SettingsIcon color="#BBBBBB" size={24} />
+              <span className="text-lg font-semibold text-gray-500">설정</span>
             </button>
             <button className="flex items-center justify-start gap-[10px] rounded-[20px] px-[14px] py-[10px] transition-all duration-100 hover:bg-gray-100">
-              <LogOutIcon className="text-[#BBBBBB]" size={24} />
-              <span className="text-lg font-semibold text-[#737373]">로그아웃</span>
+              <LogOutIcon color="#BBBBBB" size={24} />
+              <span className="text-lg font-semibold text-gray-500">로그아웃</span>
             </button>
           </div>
         </div>
@@ -136,10 +152,11 @@ function SidebarDesktopTablet() {
                 />,
               )
             }
-            className="group flex w-full flex-col items-center justify-center gap-2 rounded-[32px] bg-[#FF8442] px-2 py-4 transition-all duration-200 hover:bg-[#F07533] hover:shadow-lg lg:px-[22.5px] lg:py-8"
+            className="group bg-bearlog-500 flex w-full flex-col items-center justify-center gap-2 rounded-[32px] px-2 py-4 transition-all duration-200 hover:shadow-lg lg:px-[22.5px] lg:py-8"
           >
             <FlagIcon
-              className="h-8 w-8 text-[#ffffff] transition-transform group-hover:scale-110 lg:h-10 lg:w-10"
+              color="#FFFFFF"
+              className="h-8 w-8 transition-transform group-hover:scale-110 lg:h-10 lg:w-10"
               size={40}
             />
             <span className="text-md cursor-pointer font-semibold text-[#ffffff] transition-all group-hover:font-bold lg:text-lg">
@@ -160,38 +177,40 @@ function SidebarDesktopTablet() {
                 },
               })
             }
-            className="group flex w-full flex-col items-center justify-center gap-2 rounded-[32px] border border-[#FF8442] bg-[#ffffff] px-2 py-4 transition-all duration-200 hover:bg-[#FEF2E3] hover:shadow-lg lg:px-[22.5px] lg:py-8"
+            className="group border-bearlog-500 flex w-full flex-col items-center justify-center gap-2 rounded-[32px] border bg-[#ffffff] px-2 py-4 transition-all duration-200 hover:shadow-lg lg:px-[22.5px] lg:py-8"
           >
             <CopyCheckIcon
-              className="h-8 w-8 text-[#FF8442] transition-transform group-hover:scale-110 lg:h-10 lg:w-10"
+              color="#00C87F"
+              className="h-8 w-8 transition-transform group-hover:scale-110 lg:h-10 lg:w-10"
               size={40}
             />
-            <span className="text-md cursor-pointer font-semibold text-[#FF8442] transition-all group-hover:font-bold lg:text-lg">
+            <span className="text-md text-bearlog-600 cursor-pointer font-semibold transition-all group-hover:font-bold lg:text-lg">
               새 할일
             </span>
           </button>
         </div>
 
         <div className="flex w-full justify-between gap-2">
-          <button
-            className={`w-full items-center justify-start gap-[8px] rounded-[999px] border border-[#DDDDDD] px-[20px] py-[12px] lg:pr-[42px] lg:pl-[12px] ${isOpen ? 'flex' : 'hidden'}`}
+          <Link
+            href="/mypage"
+            className={`w-full items-center justify-start gap-[8px] rounded-[999px] border border-gray-200 px-[20px] py-[12px] lg:pr-[42px] lg:pl-[12px] ${isOpen ? 'flex' : 'hidden'}`}
           >
-            <Image src={'/image/temp-character.svg'} alt="Character" width={38} height={38} />
+            <Image src={user?.profileImageUrl || '/image/default-profile.png'} alt="Character" width={38} height={38} />
             <div className="flex flex-col items-start">
-              <span className="w-fit text-sm font-medium lg:w-full">닉네임</span>
-              <span className="hidden text-sm font-medium text-[#A0A0A0] lg:block">이메일</span>
+              <span className="w-fit text-sm font-medium lg:w-full">{user?.nickname}</span>
+              <span className="hidden text-sm font-medium text-[#A0A0A0] lg:block">{user?.email}</span>
             </div>
-          </button>
+          </Link>
 
           <button
-            className={`group relative text-[#737373] transition-all duration-200 hover:bg-gray-100 hover:text-[#FF8442] ${
-              isOpen ? 'rounded-[999px] border border-[#DDDDDD] p-[20px]' : 'p-0'
+            className={`group hover:text-bearlog-600 relative text-gray-500 transition-all duration-200 ${
+              isOpen ? 'rounded-[999px] border border-gray-200 p-[20px]' : 'p-0'
             }`}
           >
             <BellIcon size={24} className="transition-transform group-hover:scale-110" />
             <div
-              className={`absolute top-0.5 right-0.5 rounded-full bg-[#FF8442] ${isOpen ? 'h-3 w-3' : 'h-2 w-2'}`}
-            ></div>
+              className={`bg-bearlog-500 absolute top-[2px] right-[5px] rounded-full ${isOpen ? 'h-3 w-3' : 'h-2 w-2'}`}
+            />
           </button>
         </div>
       </div>
@@ -210,13 +229,17 @@ function SidebarMenuEntry({ menu, pathname }: { menu: MenuItem; pathname: string
     return (
       <Link
         href={menu.href}
-        className={`group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px] ${
-          isActive ? 'bg-[#FEF2E3]' : 'hover:bg-[#FEF2E3]'
-        }`}
+        className="group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px]"
       >
-        <span className={isActive ? 'text-[#EF6C00]' : 'text-[#CCCCCC] group-hover:text-[#EF6C00]'}>{menu.icon}</span>
         <span
-          className={`text-lg font-semibold transition-all ${isActive ? 'font-bold text-[#DC5203]' : 'text-[#333333] group-hover:font-bold group-hover:text-[#DC5203]'}`}
+          className={`transition-all duration-200 ${
+            isActive ? 'text-[#008354] transition-all' : 'text-gray-300 transition-all group-hover:text-[#339C76]'
+          }`}
+        >
+          {menu.icon}
+        </span>
+        <span
+          className={`text-lg transition-all ${isActive ? 'font-bold text-[#339C76]' : 'font-semibold text-gray-700 group-hover:font-bold group-hover:text-[#339C76]'}`}
         >
           {menu.name}
         </span>
@@ -237,10 +260,10 @@ function SidebarMenuEntry({ menu, pathname }: { menu: MenuItem; pathname: string
               className={`group flex w-[calc(100%-1rem)] items-center justify-start gap-2 rounded-[20px] px-4 py-1 transition-all duration-200 lg:px-6 lg:py-2`}
             >
               <span
-                className={`text-base transition-all ${
+                className={`text-sm transition-all ${
                   isSubMenuActive
-                    ? 'font-bold text-[#DC5203]'
-                    : 'font-semibold text-[#666666] group-hover:text-[#DC5203]'
+                    ? 'font-bold text-[#339C76]'
+                    : 'font-semibold text-gray-700 group-hover:text-[#339C76]'
                 }`}
               >
                 {subMenu.name}
@@ -261,24 +284,24 @@ function AccordionTrigger({ children, menu, isActive, ...props }: AccordionTrigg
   return (
     <Accordion.Trigger
       {...props}
-      className={`group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px] ${
-        isActive ? 'bg-[#FEF2E3]' : 'hover:bg-[#FEF2E3]'
-      }`}
+      className={`group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px]`}
     >
-      <span className={isActive ? 'text-[#EF6C00]' : 'text-[#CCCCCC] group-hover:text-[#EF6C00]'}>{menu.icon}</span>
+      <span className={isActive ? 'text-[#339C76]' : 'text-gray-300 group-hover:text-[#339C76]'}>{menu.icon}</span>
       <span
-        className={`text-lg font-semibold transition-all ${isActive ? 'font-bold text-[#DC5203]' : 'text-[#333333] group-hover:font-bold group-hover:text-[#DC5203]'}`}
+        className={`text-lg font-semibold transition-all ${isActive ? 'font-bold text-[#339C76]' : 'text-gray-700 group-hover:font-bold group-hover:text-[#339C76]'}`}
       >
         {menu.name}
       </span>
       {children}
-      <span className="relative ml-auto flex h-5 w-5 items-center justify-center text-[#A0A0A0]">
+      <span className="relative ml-auto flex items-center justify-center text-[#A0A0A0]">
         <ChevronDownIcon
-          className="accordion-chevron-down absolute h-5 w-5 transition-all duration-200 ease-out group-data-[state=open]:-rotate-180 group-data-[state=open]:opacity-0"
+          size={24}
+          className="accordion-chevron-down absolute transition-all duration-200 ease-out group-data-[state=open]:-rotate-180 group-data-[state=open]:opacity-0"
           aria-hidden
         />
         <ChevronUpIcon
-          className="accordion-chevron-up absolute h-5 w-5 rotate-180 opacity-0 transition-all duration-200 ease-out group-data-[state=open]:rotate-0 group-data-[state=open]:opacity-100"
+          size={24}
+          className="accordion-chevron-up absolute rotate-180 opacity-0 transition-all duration-200 ease-out group-data-[state=open]:rotate-0 group-data-[state=open]:opacity-100"
           aria-hidden
         />
       </span>

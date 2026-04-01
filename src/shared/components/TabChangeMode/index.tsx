@@ -1,33 +1,40 @@
 'use client';
 
 import clsx from 'clsx';
-import { memo, useCallback, useState } from 'react';
+import { motion } from 'framer-motion';
+import { memo, useCallback, useEffect, useState } from 'react';
 
 type TabMode = 'MANUAL' | 'GITHUB';
+
 interface TabChangeModeProps {
   mode: TabMode;
   onModeChange?: (mode: TabMode) => void;
 }
+
+const MODE_OPTIONS: { label: string; value: TabMode }[] = [
+  { label: '일반 모드', value: 'MANUAL' },
+  { label: '개발자 모드', value: 'GITHUB' },
+];
+
 function TabChangeMode({ mode, onModeChange }: TabChangeModeProps) {
-  const MODE_OPTIONS: { label: string; value: TabMode }[] = [
-    { label: '일반 모드', value: 'MANUAL' },
-    { label: '개발자 모드', value: 'GITHUB' },
-  ];
   const [selectedMode, setSelectedMode] = useState<TabMode>(mode);
 
+  useEffect(() => {
+    setSelectedMode(mode);
+  }, [mode]);
+
   const handleSelectMode = useCallback(
-    (mode: TabMode) => {
-      setSelectedMode(mode);
-      if (onModeChange) {
-        onModeChange(mode);
-      }
+    (nextMode: TabMode) => {
+      setSelectedMode(nextMode);
+      onModeChange?.(nextMode);
     },
     [onModeChange],
   );
+
   return (
     <div
       role="tablist"
-      aria-label="모드 선택"
+      aria-label="\uBAA8\uB4DC \uC120\uD0DD"
       className="inline-flex h-fit items-center rounded-full bg-[#D9D9D9] px-2 py-[7px]"
     >
       {MODE_OPTIONS.map((option) => {
@@ -41,19 +48,29 @@ function TabChangeMode({ mode, onModeChange }: TabChangeModeProps) {
             aria-selected={isActive}
             onClick={() => handleSelectMode(option.value)}
             className={clsx(
-              'rounded-full px-[14.5px] py-[3px] text-lg text-[20px] leading-7 font-medium transition-all duration-200',
-              isActive
-                ? 'bg-bearlog-500 text-gray-100 shadow-[0_2px_8px_rgba(0,0,0,0.12)]'
-                : 'bg-transparent text-[#8A8A8A] hover:bg-white/40',
+              'relative rounded-full px-[14.5px] py-[3px] text-lg text-[20px] leading-7 font-medium transition-colors duration-200',
+              isActive ? 'text-gray-100' : 'text-[#8A8A8A] hover:bg-white/40',
               option.value === 'GITHUB' && 'px-5 text-[18px]',
             )}
           >
+            {isActive && (
+              <motion.span
+                layoutId="tab-change-mode-indicator"
+                className="bg-bearlog-500 absolute inset-0 rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.12)]"
+                transition={{
+                  type: 'spring',
+                  stiffness: 380,
+                  damping: 32,
+                }}
+              />
+            )}
+
             {option.value === 'MANUAL' ? (
-              '일반 모드'
+              <span className="relative z-10">{option.label}</span>
             ) : (
-              <div className="flex items-center gap-2">
-                개발자 모드
-                {isActive && <ModeGithub />}
+              <div className="relative z-10 flex items-center gap-2">
+                {option.label}
+                <ModeGithub isActive={isActive} />
               </div>
             )}
           </button>
@@ -64,9 +81,17 @@ function TabChangeMode({ mode, onModeChange }: TabChangeModeProps) {
 }
 export default memo(TabChangeMode);
 
-function ModeGithub() {
+interface ModeGithubProps {
+  isActive: boolean;
+}
+function ModeGithub({ isActive }: ModeGithubProps) {
   return (
-    <div className="flex h-[19px] items-center rounded-lg bg-[rgba(103,255,200,0.3)] px-[8px] py-[4px] text-[10px] font-medium text-gray-100">
+    <div
+      className={clsx(
+        'flex h-[19px] items-center rounded-lg px-[8px] py-[4px] text-[10px] font-medium',
+        isActive ? 'bg-[rgba(103,255,200,0.3)] text-gray-100' : 'bg-[rgba(103,255,200,0.1)] text-gray-400',
+      )}
+    >
       Github
     </div>
   );

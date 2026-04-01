@@ -203,7 +203,7 @@ function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
           </Link>
 
           <button
-            className={`group hover:text-bearlog-600 relative text-gray-500 transition-all duration-200 hover:bg-gray-100 ${
+            className={`group hover:text-bearlog-600 relative text-gray-500 transition-all duration-200 ${
               isOpen ? 'rounded-[999px] border border-gray-200 p-[20px]' : 'p-0'
             }`}
           >

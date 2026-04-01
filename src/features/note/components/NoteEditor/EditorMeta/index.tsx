@@ -19,17 +19,11 @@ import { CalendarIcon, FlagIcon, Hash, SquareCheck } from 'lucide-react';
       ]}
     />
  */
-const VARIANTS = ['green', 'orange', 'purple'] as const;
-
-function getVariantByString(str: string): 'green' | 'orange' | 'purple' {
-  const hash = [...str].reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  return VARIANTS[hash % VARIANTS.length];
-}
 
 interface MetaTag {
   id: string;
   string: string;
-  variant?: 'green' | 'orange' | 'purple';
+  variant?: 'green';
 }
 
 interface EditorMetaProps {
@@ -77,7 +71,7 @@ export default function EditorMeta({ goal, todos, createdAt, tags }: EditorMetaP
               <Tag
                 key={tag.id}
                 string={tag.string}
-                variant={tag.variant ?? getVariantByString(tag.string)}
+                variant="green"
                 className="rounded-full border px-2 py-1 text-xs font-medium whitespace-nowrap"
               />
             ))}

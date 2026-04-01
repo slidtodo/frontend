@@ -8,13 +8,13 @@ export default function TodoTitle({ todoId }: { todoId: number }) {
   const { data: todo } = useQuery(todoQueries.detail(todoId));
 
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex items-center gap-2">
       <Tag
         string={todo?.done ? 'DONE' : 'TODO'}
-        variant="orange"
-        className="semibold rounded-lg px-[5.5px] py-0.75 text-xs h-[22px]"
+        variant="green"
+        className="semibold h-[22px] rounded-lg px-[5.5px] py-0.75 text-xs"
       />
-      <p className="text-sm font-normal text-[#333] line-clamp-1">{todo?.title}</p>
+      <p className="line-clamp-1 text-sm font-normal text-[#333]">{todo?.title}</p>
     </div>
   );
 }

@@ -35,8 +35,9 @@ export default function LinkEmbed({ url, onRemove }: LinkEmbedProps) {
   return (
     <>
       {showPreview && <LinkEmbedPreview url={url} onClose={() => setShowPreview(false)} />}
-      <div
-        className="flex w-full cursor-pointer flex-col gap-1 rounded-[14px] bg-[#FAFAFA] px-4 py-[14px]"
+      <button
+        type="button"
+        className="flex w-full cursor-pointer flex-col gap-1 rounded-[14px] bg-[#FAFAFA] px-4 py-[14px] text-left"
         onClick={() => setShowPreview((prev) => !prev)}
       >
       {/* 상단 — 파비콘 + 사이트명 + 삭제 */}
@@ -68,7 +69,7 @@ export default function LinkEmbed({ url, onRemove }: LinkEmbedProps) {
 
       {/* 하단 — URL */}
       <p className="ml-[5px] truncate text-xs font-normal text-[#A4A4A4]">{url}</p>
-    </div>
+    </button>
     </>
   );
 }

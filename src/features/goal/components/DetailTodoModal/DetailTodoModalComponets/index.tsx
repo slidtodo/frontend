@@ -14,7 +14,7 @@ import { formatDate } from '@/shared/utils/utils';
 interface DetailTodoModalComponentsProps {
   todo: TodoResponse | undefined;
 }
-export default function DetailTodoModalComponents({ todo }: DetailTodoModalComponentsProps) {
+const DetailTodoModalComponents = memo(function DetailTodoModalComponents({ todo }: DetailTodoModalComponentsProps) {
   const { closeModal } = useModalStore();
 
   if (!todo) return null;
@@ -74,8 +74,9 @@ export default function DetailTodoModalComponents({ todo }: DetailTodoModalCompo
       )}
     </div>
   );
-}
-memo(DetailTodoModalComponents);
+});
+export default DetailTodoModalComponents;
+
 interface DetailItemSummaryProps {
   icon: React.ReactNode;
   label: string;

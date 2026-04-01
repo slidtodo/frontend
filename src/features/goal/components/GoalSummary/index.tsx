@@ -21,7 +21,7 @@ interface GoalSummaryProps {
   goalId: number;
 }
 
-const GoalSummary = memo(function GoalSummary({ goalId }: GoalSummaryProps) {
+function GoalSummary({ goalId }: GoalSummaryProps) {
   const { data: user } = useQuery(userQueries.current());
   const { data: goalDetail } = useQuery({
     ...goalQueries.detail(goalId),
@@ -41,7 +41,7 @@ const GoalSummary = memo(function GoalSummary({ goalId }: GoalSummaryProps) {
       </section>
     </div>
   );
-});
+}
 export default memo(GoalSummary);
 
 interface GoalInfoProps {

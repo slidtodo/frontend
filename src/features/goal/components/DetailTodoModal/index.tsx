@@ -9,7 +9,7 @@ import { memo } from 'react';
 interface DetailTodoModalProps {
   todoId: number;
 }
-export default function DetailTodoModal({ todoId }: DetailTodoModalProps) {
+function DetailTodoModal({ todoId }: DetailTodoModalProps) {
   const { data: todo } = useQuery({
     ...todoQueries.detail(todoId),
     enabled: !!todoId,
@@ -18,4 +18,4 @@ export default function DetailTodoModal({ todoId }: DetailTodoModalProps) {
   return <DetailTodoModalComponents todo={todo} />;
 }
 
-memo(DetailTodoModal);
+export default memo(DetailTodoModal);

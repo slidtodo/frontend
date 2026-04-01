@@ -30,7 +30,6 @@ export interface TaskCardTodo {
 interface TaskCardProps {
   todo: TaskCardTodo;
   starred?: boolean;
-  onTitleClick?: () => void;
   onCheckboxClick?: (id: number, done: boolean) => void;
   variant?: 'default' | 'orange';
 }
@@ -38,7 +37,6 @@ export default function TaskCard({
   todo,
   starred: initialStarred = false,
   onCheckboxClick,
-  onTitleClick,
   variant = 'default',
 }: TaskCardProps) {
   const isOrange = variant === 'orange';
@@ -54,7 +52,7 @@ export default function TaskCard({
         'hover:bg-[rgba(255,158,89,0.2)]',
       )}
     >
-      <TaskCheckbox isOrange={isOrange} onCheckboxClick={onCheckboxClick} todo={todo} onTitleClick={onTitleClick} />
+      <TaskCheckbox isOrange={isOrange} onCheckboxClick={onCheckboxClick} todo={todo} />
 
       <div className="flex shrink-0 items-center gap-2" role="toolbar" aria-label={`${todo.title} 작업 도구`}>
         <TaskLinkNoteCreate isOrange={isOrange} todo={todo} />
@@ -70,9 +68,8 @@ interface TaskCheckboxProps {
   todo: TaskCardTodo;
   onCheckboxClick?: (id: number, done: boolean) => void;
   isOrange: boolean;
-  onTitleClick?: () => void;
 }
-function TaskCheckbox({ todo, isOrange, onCheckboxClick, onTitleClick }: TaskCheckboxProps) {
+function TaskCheckbox({ todo, isOrange, onCheckboxClick }: TaskCheckboxProps) {
   const { showToast } = useToastStore();
   const { openModal } = useModalStore();
 
@@ -240,19 +237,18 @@ function TaskFavorite({ isOrange, initialStarred, todo }: TaskFavoriteProps) {
   const { mutate: patchTodoFavorite } = usePatchTodoFavorite(todo.id);
 
   function handleStarToggle() {
-    setStarred((prev) => !prev);
+    const nextStarred = !starred;
+    setStarred(nextStarred);
 
-    try {
-      patchTodoFavorite(undefined, {
-        onError: () => {
-          setStarred((prev) => !prev);
-        },
-      });
-      showToast(`즐겨찾기 ${starred ? '해제' : '추가'}가 되었습니다.`);
-    } catch (error) {
-      console.error('즐겨찾기 설정 업데이트 실패:', error);
-      setStarred((prev) => !prev);
-    }
+    patchTodoFavorite(undefined, {
+      onSuccess: () => {
+        showToast(`즐겨찾기 ${nextStarred ? '추가' : '해제'}가 되었습니다.`);
+      },
+      onError: (error) => {
+        console.error(error);
+        setStarred(!nextStarred);
+      },
+    });
   }
 
   return (

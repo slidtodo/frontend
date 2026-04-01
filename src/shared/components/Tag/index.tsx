@@ -6,14 +6,12 @@ import { twMerge } from 'tailwind-merge';
 interface TagProps {
   string: string;
   onClose?: () => void;
-  variant?: 'green' | 'orange' | 'purple';
+  variant?: 'green';
   className?: string;
 }
 
 const variantStyles = {
-  green: 'bg-green-100 text-green-600',
-  orange: 'bg-orange-100 text-orange-500',
-  purple: 'bg-purple-100 text-purple-500',
+  green: 'bg-bearlog-500 text-[#FFF]',
 };
 
 const Tag = forwardRef<HTMLDivElement, TagProps>(({ string, onClose, variant = 'green', className }, ref) => {

@@ -22,7 +22,7 @@ export default function DashBoardSummary() {
         {breakpoint !== 'mobile' && <PageHeader title={`${user?.nickname}님의 대시보드`} className="text-black" />}
 
         <div className="flex w-full justify-end md:w-fit">
-          <TabChangeMode mode="MANUAL" onModeChange={() => {}} />
+          <TabChangeMode mode="MANUAL" />
         </div>
       </div>
       <section className="flex w-full flex-col gap-[40px] pb-[40px] md:flex-row md:gap-[12px] lg:gap-[32px] lg:pb-[34px]">
@@ -68,7 +68,7 @@ function RecentPostCard() {
         recentTodos.map((task) => <TaskCard key={task.id} todo={task} />)
       ) : (
         <div className="flex h-full items-center justify-center">
-          <span className="text-white">최근 등록한 할 일이 없습니다.</span>
+          <span className="text-gray-500">최근 등록한 할 일이 없습니다.</span>
         </div>
       )}
     </article>

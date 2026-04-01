@@ -3,12 +3,12 @@
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { memo, useCallback, useEffect, useState } from 'react';
+// TODO: 개발자 모드가 추가되면 mode 상태를 상위 컴포넌트로 올리고, onModeChange 콜백을 통해 모드 변경을 알릴 수 있도록 수정 필요
 
 type TabMode = 'MANUAL' | 'GITHUB';
 
 interface TabChangeModeProps {
   mode: TabMode;
-  onModeChange?: (mode: TabMode) => void;
 }
 
 const MODE_OPTIONS: { label: string; value: TabMode }[] = [
@@ -16,20 +16,16 @@ const MODE_OPTIONS: { label: string; value: TabMode }[] = [
   { label: '개발자 모드', value: 'GITHUB' },
 ];
 
-function TabChangeMode({ mode, onModeChange }: TabChangeModeProps) {
+function TabChangeMode({ mode }: TabChangeModeProps) {
   const [selectedMode, setSelectedMode] = useState<TabMode>(mode);
 
   useEffect(() => {
     setSelectedMode(mode);
   }, [mode]);
 
-  const handleSelectMode = useCallback(
-    (nextMode: TabMode) => {
-      setSelectedMode(nextMode);
-      onModeChange?.(nextMode);
-    },
-    [onModeChange],
-  );
+  const handleSelectMode = useCallback((nextMode: TabMode) => {
+    setSelectedMode(nextMode);
+  }, []);
 
   return (
     <div
@@ -48,7 +44,7 @@ function TabChangeMode({ mode, onModeChange }: TabChangeModeProps) {
             aria-selected={isActive}
             onClick={() => handleSelectMode(option.value)}
             className={clsx(
-              'relative rounded-full px-[14.5px] py-[3px] text-lg text-[20px] leading-7 font-medium transition-colors duration-200',
+              'relative rounded-full px-[14.5px] py-[3px] text-[20px] leading-7 font-medium transition-colors duration-200',
               isActive ? 'text-gray-100' : 'text-[#8A8A8A] hover:bg-white/40',
               option.value === 'GITHUB' && 'px-5 text-[18px]',
             )}

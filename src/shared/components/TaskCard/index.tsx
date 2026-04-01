@@ -84,7 +84,7 @@ function TaskCheckbox({ todo, isOrange, onCheckboxClick }: TaskCheckboxProps) {
         done: !checked,
       });
       onCheckboxClick?.(todo.id, !checked);
-      showToast(`할 일 상태가 ${!checked ? '완료' : '미완료'} 되었습니다.`);
+      showToast(`할 일을${!checked ? ' 완료했습니다.' : ' 미완료 처리했습니다.'}`);
     } catch (error) {
       console.error('할 일 상태 업데이트 실패:', error);
     }
@@ -242,7 +242,7 @@ function TaskFavorite({ isOrange, initialStarred, todo }: TaskFavoriteProps) {
 
     patchTodoFavorite(undefined, {
       onSuccess: () => {
-        showToast(`즐겨찾기 ${nextStarred ? '추가' : '해제'}가 되었습니다.`);
+        showToast(`즐겨찾기에 ${nextStarred ? '추가되었습니다.' : '해제되었습니다.'}`);
       },
       onError: (error) => {
         console.error(error);

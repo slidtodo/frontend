@@ -40,7 +40,7 @@ interface EditorMetaProps {
 }
 
 export default function EditorMeta({ goal, todos, createdAt, tags }: EditorMetaProps) {
-  const todosTagLabel = todos.done ? 'DONE' : 'TODO';
+  const todosTagLabel = todos.done ? 'DONE' : 'TO DO';
   const today = formatDate(new Date());
   const formattedCreatedAt = createdAt ? formatDate(new Date(createdAt)) : null;
 

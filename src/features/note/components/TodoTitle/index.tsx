@@ -11,7 +11,7 @@ export default function TodoTitle({ todoId }: { todoId: number }) {
   return (
     <div className="flex items-center gap-2">
       <Tag
-        string={todo?.done ? 'DONE' : 'TODO'}
+        string={todo?.done ? 'DONE' : 'TO DO'}
         variant="green"
         className={clsx(
           'rounded-md px-[5.5px] py-[3px] text-xs font-semibold',

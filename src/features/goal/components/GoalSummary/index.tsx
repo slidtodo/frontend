@@ -11,7 +11,7 @@ import { GoalDetailResponse } from '@/lib/api';
 import { useDeleteGoal, usePatchGoal } from '@/lib/mutations';
 import { goalQueries, userQueries } from '@/lib/queryKeys';
 import { PopupModal } from '@/shared/components/Modal/PopupModal';
-import { SinglePostModal } from '@/shared/components/Modal/SinglePostModal';
+import SinglePostModal from '@/shared/components/Modal/SinglePostModal';
 import PageHeader from '@/shared/components/PageHeader';
 import ProgressCircle from '@/shared/components/ProgressCircle';
 import { useModalStore } from '@/shared/stores/useModalStore';

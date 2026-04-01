@@ -18,15 +18,14 @@ interface TaskCardProps {
   todo: NonNullable<TodoResponse>;
   starred?: boolean;
   onTitleClick?: () => void;
-  onToggle?: (id: number) => void;
+  onCheckboxClick?: (id: number) => void;
   variant?: 'default' | 'orange';
 }
-
-export function TaskCard({
+export default function TaskCard({
   todo,
   starred: initialStarred = false,
+  onCheckboxClick,
   onTitleClick,
-  onToggle,
   variant = 'default',
 }: TaskCardProps) {
   const isOrange = variant === 'orange';
@@ -42,7 +41,7 @@ export function TaskCard({
         'hover:bg-[rgba(255,158,89,0.2)]',
       )}
     >
-      <TaskCheckbox isOrange={isOrange} onToggle={onToggle} todo={todo} onTitleClick={onTitleClick} />
+      <TaskCheckbox isOrange={isOrange} onCheckboxClick={onCheckboxClick} todo={todo} onTitleClick={onTitleClick} />
 
       <div className="flex shrink-0 items-center gap-2" role="toolbar" aria-label={`${todo.title} 작업 도구`}>
         <TaskLinkNoteCreate isOrange={isOrange} todo={todo} />
@@ -54,22 +53,19 @@ export function TaskCard({
   );
 }
 
-export default TaskCard;
-
 interface TaskCheckboxProps {
   todo: NonNullable<TodoResponse>;
-  onToggle?: (id: number) => void;
+  onCheckboxClick?: (id: number) => void;
   isOrange: boolean;
   onTitleClick?: () => void;
 }
-
-function TaskCheckbox({ todo, isOrange, onToggle, onTitleClick }: TaskCheckboxProps) {
+function TaskCheckbox({ todo, isOrange, onCheckboxClick, onTitleClick }: TaskCheckboxProps) {
   const [checked, setChecked] = useState(todo.done ?? false);
 
-  function handleToggle() {
+  function handleCheckboxClick() {
     setChecked((prev) => !prev);
     if (todo.id !== undefined) {
-      onToggle?.(todo.id);
+      onCheckboxClick?.(todo.id);
     }
   }
 
@@ -80,7 +76,7 @@ function TaskCheckbox({ todo, isOrange, onToggle, onTitleClick }: TaskCheckboxPr
         role="checkbox"
         aria-checked={checked}
         aria-label={`${todo.title} ${checked ? '완료 취소' : '완료 처리'}`}
-        onClick={handleToggle}
+        onClick={handleCheckboxClick}
         className={twMerge(
           clsx(
             'relative flex cursor-pointer items-center justify-center',
@@ -93,7 +89,8 @@ function TaskCheckbox({ todo, isOrange, onToggle, onTitleClick }: TaskCheckboxPr
       >
         {checked && <CheckIcon className={clsx(isOrange ? 'text-orange-500' : 'text-white')} />}
       </button>
-      <div
+      <button
+        type="button"
         onClick={onTitleClick}
         className={clsx(
           'min-w-0 flex-1 cursor-pointer truncate',
@@ -104,7 +101,7 @@ function TaskCheckbox({ todo, isOrange, onToggle, onTitleClick }: TaskCheckboxPr
         )}
       >
         {todo.title}
-      </div>
+      </button>
     </>
   );
 }

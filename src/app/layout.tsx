@@ -1,5 +1,5 @@
 import type { Viewport } from 'next';
-import './globals.css';
+import '@/styles/globals.css';
 import Providers from './providers';
 
 export const viewport: Viewport = {

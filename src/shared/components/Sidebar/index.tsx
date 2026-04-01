@@ -16,7 +16,7 @@ import {
 import { Accordion } from 'radix-ui';
 
 import SidebarMobileCase from './SidebarMobileCase';
-import { SinglePostModal } from '../Modal/SinglePostModal';
+import SinglePostModal from '../Modal/SinglePostModal';
 
 import { useSidebarContext } from '@/contexts/SidebarContext';
 import { useSidebarOpen } from '@/contexts/SidebarContext';

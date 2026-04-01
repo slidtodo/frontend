@@ -2,7 +2,7 @@ name: Auto sync develop to main
 
 on:
   schedule:
-    - cron: '20 14 * * *'
+    - cron: '30 14 * * *'
       timezone: 'Asia/Seoul'
   workflow_dispatch:
 

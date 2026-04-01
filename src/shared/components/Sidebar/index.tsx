@@ -17,7 +17,7 @@ import { Accordion } from 'radix-ui';
 import { useQuery } from '@tanstack/react-query';
 
 import SidebarMobileCase from './SidebarMobileCase';
-import { SinglePostModal } from '../Modal/SinglePostModal';
+import SinglePostModal from '../Modal/SinglePostModal';
 
 import { useSidebarContext, useSidebarOpen, MenuItem } from '@/contexts/SidebarContext';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';

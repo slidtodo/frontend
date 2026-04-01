@@ -1,26 +1,27 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronRightIcon, EllipsisVerticalIcon } from 'lucide-react';
 
 import EditDeleteDropdown from '@/features/dashboard/components/EditDeleteDropdown';
+import ProgressCircle from '@/shared/components/ProgressCircle';
+import { PopupModal } from '@/shared/components/Modal/PopupModal';
+import SinglePostModal from '@/shared/components/Modal/SinglePostModal';
+import PageHeader from '@/shared/components/PageHeader';
+
 import { GoalDetailResponse } from '@/lib/api';
 import { useDeleteGoal, usePatchGoal } from '@/lib/mutations';
 import { goalQueries, userQueries } from '@/lib/queryKeys';
-import { PopupModal } from '@/shared/components/Modal/PopupModal';
-import { SinglePostModal } from '@/shared/components/Modal/SinglePostModal';
-import PageHeader from '@/shared/components/PageHeader';
-import ProgressCircle from '@/shared/components/ProgressCircle';
 import { useModalStore } from '@/shared/stores/useModalStore';
 
 interface GoalSummaryProps {
   goalId: number;
 }
 
-export default function GoalSummary({ goalId }: GoalSummaryProps) {
+function GoalSummary({ goalId }: GoalSummaryProps) {
   const { data: user } = useQuery(userQueries.current());
   const { data: goalDetail } = useQuery({
     ...goalQueries.detail(goalId),
@@ -41,6 +42,7 @@ export default function GoalSummary({ goalId }: GoalSummaryProps) {
     </div>
   );
 }
+export default memo(GoalSummary);
 
 interface GoalInfoProps {
   goalDetail: GoalDetailResponse | undefined;

@@ -52,6 +52,7 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
     { id: 3, label: 'DONE' },
   ];
   const { openTodoCreateModal } = useTodoCreateModal();
+  console.log('todos', todos);
 
   return (
     <div className="flex justify-between px-2">
@@ -73,19 +74,20 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
       <Button
         variant="cancel"
         className="flex items-center gap-1 bg-[#F2F2F2] px-3 py-[10px] hover:bg-[#E0E0E0] md:px-[20px]"
-        onClick={() =>
+        onClick={() => {
+          if (todos?.[0]?.goal?.id === undefined) return;
           openTodoCreateModal({
             goalDetailId: undefined,
             todo: {
               title: '',
-              goalId: 1,
+              goalId: todos?.[0]?.goal?.id,
               dueDate: undefined,
               linkUrl: undefined,
               imageUrl: undefined,
               tags: [],
             },
-          })
-        }
+          });
+        }}
       >
         <PlusIcon size={20} color="#737373" />
         <span className="overflow-hidden text-sm font-semibold text-ellipsis whitespace-nowrap text-[#737373]">

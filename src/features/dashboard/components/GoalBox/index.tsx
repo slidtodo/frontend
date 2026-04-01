@@ -1,18 +1,21 @@
 'use client';
+
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { PlusIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import Progressbar from '@/shared/components/Progressbar';
-import TaskCard from '@/shared/components/TaskCard';
+import TaskCard, { type TaskCardTodo } from '@/shared/components/TaskCard';
 import SearchInput from '@/shared/components/SearchInput';
 import Button from '@/shared/components/Button';
+import Empty from '@/shared/components/Empty';
 
 import type { GoalDetailResponse } from '@/lib/api';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
+import { todoQueries } from '@/lib/queryKeys';
 
 type GoalItem = GoalDetailResponse;
-type GoalTodoItem = NonNullable<GoalDetailResponse['todoList']>[number];
-type GoalDoneItem = NonNullable<GoalDetailResponse['doneList']>[number];
 
 interface GoalBoxProps {
   data: GoalItem;
@@ -27,6 +30,18 @@ export default function GoalBox({ data }: GoalBoxProps) {
   const canCreateTodo = goalId !== undefined;
 
   const { openTodoCreateModal } = useTodoCreateModal();
+  const [search, setSearch] = useState('');
+  const trimmedSearch = search.trim();
+  const isSearching = trimmedSearch.length > 0;
+
+  const { data: searchedTodoList } = useQuery({
+    ...todoQueries.list({ goalId, search: trimmedSearch }),
+    enabled: !!goalId && isSearching,
+  });
+
+  const searchedTodos = searchedTodoList?.todos ?? [];
+  const visibleTodoList = isSearching ? searchedTodos.filter((todo) => !(todo.done ?? false)) : todoList;
+  const visibleDoneList = isSearching ? searchedTodos.filter((todo) => todo.done ?? false) : doneList;
 
   return (
     <article className="flex flex-col gap-4 rounded-[40px] bg-white p-6 lg:px-8 lg:py-6">
@@ -47,7 +62,7 @@ export default function GoalBox({ data }: GoalBoxProps) {
         </div>
 
         <div className="flex w-full flex-1 justify-between gap-0 md:justify-end md:gap-2 lg:gap-[14px]">
-          <SearchInput placeholder="할 일을 검색해주세요" />
+          <SearchInput placeholder="할 일을 검색해주세요" value={search} onChange={(e) => setSearch(e.target.value)} />
           <Button
             variant="secondary"
             className="rounded-full p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
@@ -75,14 +90,14 @@ export default function GoalBox({ data }: GoalBoxProps) {
       </div>
 
       <div className="flex w-full flex-col justify-around gap-2 md:flex-row lg:gap-8">
-        {todoList.length === 0 && doneList.length === 0 ? (
-          <div className="flex h-full w-full items-center justify-center">
-            <span className="py-10 text-[#A4A4A4]">현재 등록된 할 일이 없습니다.</span>
+        {visibleTodoList.length === 0 && visibleDoneList.length === 0 ? (
+          <div className="h-40 md:h-80">
+            <Empty>{isSearching ? '검색 결과가 없습니다.' : '현재 등록된 할 일이 없습니다.'}</Empty>
           </div>
         ) : (
           <>
-            <ListBox title="TODO" variant="todo" items={todoList} />
-            <ListBox title="DONE" variant="done" items={doneList} />
+            <ListBox title="TODO" variant="todo" items={visibleTodoList} />
+            <ListBox title="DONE" variant="done" items={visibleDoneList} />
           </>
         )}
       </div>
@@ -93,7 +108,7 @@ export default function GoalBox({ data }: GoalBoxProps) {
 interface ListBoxProps {
   title: string;
   variant: 'todo' | 'done';
-  items: GoalTodoItem[] | GoalDoneItem[];
+  items: TaskCardTodo[];
 }
 
 function ListBox({ title, variant, items }: ListBoxProps) {
@@ -105,7 +120,14 @@ function ListBox({ title, variant, items }: ListBoxProps) {
       <span className={`text-sm font-bold ${textColor} lg:text-base`}>{title}</span>
       <div className="flex max-h-[236px] flex-col gap-1 overflow-y-auto">
         {items.map((item) => (
-          <TaskCard key={item.id} todo={item} starred={item.favorite} />
+          <TaskCard
+            key={item.id}
+            todo={{
+              ...item,
+              done: item.done ?? (variant === 'done'),
+            }}
+            starred={item.favorite}
+          />
         ))}
       </div>
     </div>

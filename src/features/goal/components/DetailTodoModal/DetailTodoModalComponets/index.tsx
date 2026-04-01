@@ -1,6 +1,6 @@
 'use client';
-import React from 'react';
-import Link from 'next/link';
+import React, { memo } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { FlagIcon, CalendarIcon, HashIcon, XIcon, LinkIcon } from 'lucide-react';
@@ -14,7 +14,7 @@ import { formatDate } from '@/shared/utils/utils';
 interface DetailTodoModalComponentsProps {
   todo: TodoResponse | undefined;
 }
-export default function DetailTodoModalComponents({ todo }: DetailTodoModalComponentsProps) {
+const DetailTodoModalComponents = memo(function DetailTodoModalComponents({ todo }: DetailTodoModalComponentsProps) {
   const { closeModal } = useModalStore();
 
   if (!todo) return null;
@@ -74,7 +74,8 @@ export default function DetailTodoModalComponents({ todo }: DetailTodoModalCompo
       )}
     </div>
   );
-}
+});
+export default DetailTodoModalComponents;
 
 interface DetailItemSummaryProps {
   icon: React.ReactNode;
@@ -94,6 +95,9 @@ function DetailItemSummary({ icon, label, value }: DetailItemSummaryProps) {
 }
 
 function NoteItem({ noteId }: { noteId: number }) {
+  const { closeModal } = useModalStore();
+  const router = useRouter();
+
   const { data: note } = useQuery({
     ...noteQueries.detail(noteId),
     enabled: Boolean(noteId) && noteId !== undefined,
@@ -102,12 +106,15 @@ function NoteItem({ noteId }: { noteId: number }) {
   if (!note) return null;
 
   return (
-    <Link
-      href={`/goal/${note?.goalId}/note/${noteId}`}
+    <button
+      onClick={() => {
+        closeModal();
+        router.push(`/goal/${note?.goalId}/note/${noteId}`);
+      }}
       className="flex gap-2 rounded-2xl border border-[#DDDDDD] bg-white p-2"
     >
       <Image src={'/image/todo-note.svg'} alt="노트 이미지" width={32} height={32} />
       <span className="flex items-center text-base font-medium text-[#333333]">{note?.title}</span>
-    </Link>
+    </button>
   );
 }

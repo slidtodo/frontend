@@ -9,24 +9,34 @@ import { CheckIcon, EllipsisVertical, GithubIcon, Star } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
 import EditDeleteDropdown from '@/features/dashboard/components/EditDeleteDropdown';
-import { useTodoEditModal } from '@/features/todo/hooks/useTodoEditModal';
-import type { TodoResponse } from '@/lib/api';
-import { useDeleteTodo, usePatchTodoFavorite } from '@/lib/mutations';
-import { todoQueries } from '@/lib/queryKeys';
+import DetailTodoModal from '@/features/goal/components/DetailTodoModal';
 
-interface TaskCardProps {
-  todo: NonNullable<TodoResponse>;
-  starred?: boolean;
-  onTitleClick?: () => void;
-  onToggle?: (id: number) => void;
-  variant?: 'default' | 'orange';
+import { useTodoEditModal } from '@/features/todo/hooks/useTodoEditModal';
+import { useDeleteTodo, usePatchTodo, usePatchTodoFavorite } from '@/lib/mutations';
+import { todoQueries } from '@/lib/queryKeys';
+import { useToastStore } from '@/shared/stores/useToastStore';
+import { useModalStore } from '@/shared/stores/useModalStore';
+
+export interface TaskCardTodo {
+  id?: number;
+  title?: string;
+  done?: boolean;
+  favorite?: boolean;
+  goal?: {
+    id?: number;
+  };
 }
 
-export function TaskCard({
+interface TaskCardProps {
+  todo: TaskCardTodo;
+  starred?: boolean;
+  onCheckboxClick?: (id: number, done: boolean) => void;
+  variant?: 'default' | 'orange';
+}
+export default function TaskCard({
   todo,
   starred: initialStarred = false,
-  onTitleClick,
-  onToggle,
+  onCheckboxClick,
   variant = 'default',
 }: TaskCardProps) {
   const isOrange = variant === 'orange';
@@ -42,7 +52,7 @@ export function TaskCard({
         'hover:bg-[rgba(255,158,89,0.2)]',
       )}
     >
-      <TaskCheckbox isOrange={isOrange} onToggle={onToggle} todo={todo} onTitleClick={onTitleClick} />
+      <TaskCheckbox isOrange={isOrange} onCheckboxClick={onCheckboxClick} todo={todo} />
 
       <div className="flex shrink-0 items-center gap-2" role="toolbar" aria-label={`${todo.title} 작업 도구`}>
         <TaskLinkNoteCreate isOrange={isOrange} todo={todo} />
@@ -54,24 +64,31 @@ export function TaskCard({
   );
 }
 
-export default TaskCard;
-
 interface TaskCheckboxProps {
-  todo: NonNullable<TodoResponse>;
-  onToggle?: (id: number) => void;
+  todo: TaskCardTodo;
+  onCheckboxClick?: (id: number, done: boolean) => void;
   isOrange: boolean;
-  onTitleClick?: () => void;
 }
+function TaskCheckbox({ todo, isOrange, onCheckboxClick }: TaskCheckboxProps) {
+  const { showToast } = useToastStore();
+  const { openModal } = useModalStore();
 
-function TaskCheckbox({ todo, isOrange, onToggle, onTitleClick }: TaskCheckboxProps) {
-  const [checked, setChecked] = useState(todo.done ?? false);
+  const patchTodo = usePatchTodo(todo.id);
+  const checked = todo.done ?? false;
 
-  function handleToggle() {
-    setChecked((prev) => !prev);
-    if (todo.id !== undefined) {
-      onToggle?.(todo.id);
+  const handleCheckboxClick = async () => {
+    if (todo.id === undefined) return;
+
+    try {
+      await patchTodo.mutateAsync({
+        done: !checked,
+      });
+      onCheckboxClick?.(todo.id, !checked);
+      showToast(`할 일을${!checked ? ' 완료했습니다.' : ' 미완료 처리했습니다.'}`);
+    } catch (error) {
+      console.error('할 일 상태 업데이트 실패:', error);
     }
-  }
+  };
 
   return (
     <>
@@ -80,7 +97,7 @@ function TaskCheckbox({ todo, isOrange, onToggle, onTitleClick }: TaskCheckboxPr
         role="checkbox"
         aria-checked={checked}
         aria-label={`${todo.title} ${checked ? '완료 취소' : '완료 처리'}`}
-        onClick={handleToggle}
+        onClick={handleCheckboxClick}
         className={twMerge(
           clsx(
             'relative flex cursor-pointer items-center justify-center',
@@ -93,10 +110,13 @@ function TaskCheckbox({ todo, isOrange, onToggle, onTitleClick }: TaskCheckboxPr
       >
         {checked && <CheckIcon className={clsx(isOrange ? 'text-orange-500' : 'text-white')} />}
       </button>
-      <div
-        onClick={onTitleClick}
+      <button
+        type="button"
+        onClick={() => {
+          if (todo.id) openModal(<DetailTodoModal todoId={todo.id} />);
+        }}
         className={clsx(
-          'min-w-0 flex-1 cursor-pointer truncate',
+          'min-w-0 flex-1 cursor-pointer truncate text-left',
           'text-base leading-6 tracking-[-0.03em]',
           'transition-colors duration-150',
           checked ? 'font-medium text-[#737373] group-hover:font-semibold group-hover:text-[#EF6C00]' : 'font-medium',
@@ -104,14 +124,14 @@ function TaskCheckbox({ todo, isOrange, onToggle, onTitleClick }: TaskCheckboxPr
         )}
       >
         {todo.title}
-      </div>
+      </button>
     </>
   );
 }
 
 interface TaskLinkNoteCreateProps {
   isOrange: boolean;
-  todo: NonNullable<TodoResponse>;
+  todo: TaskCardTodo;
 }
 
 function TaskLinkNoteCreate({ isOrange, todo }: TaskLinkNoteCreateProps) {
@@ -155,7 +175,7 @@ function TaskLinkGithub({ isOrange }: TaskLinkGithubProps) {
 
 interface TaskLinkDetailProps {
   isOrange: boolean;
-  todo: NonNullable<TodoResponse>;
+  todo: TaskCardTodo;
 }
 
 function TaskEditTodo({ isOrange, todo }: TaskLinkDetailProps) {
@@ -207,19 +227,26 @@ function TaskEditTodo({ isOrange, todo }: TaskLinkDetailProps) {
 interface TaskFavoriteProps {
   isOrange: boolean;
   initialStarred?: boolean;
-  todo: NonNullable<TodoResponse>;
+  todo: TaskCardTodo;
 }
 
 function TaskFavorite({ isOrange, initialStarred, todo }: TaskFavoriteProps) {
+  const { showToast } = useToastStore();
+
   const [starred, setStarred] = useState(initialStarred);
   const { mutate: patchTodoFavorite } = usePatchTodoFavorite(todo.id);
 
   function handleStarToggle() {
-    setStarred((prev) => !prev);
+    const nextStarred = !starred;
+    setStarred(nextStarred);
 
     patchTodoFavorite(undefined, {
-      onError: () => {
-        setStarred((prev) => !prev);
+      onSuccess: () => {
+        showToast(`즐겨찾기에 ${nextStarred ? '추가되었습니다.' : '해제되었습니다.'}`);
+      },
+      onError: (error) => {
+        console.error(error);
+        setStarred(!nextStarred);
       },
     });
   }

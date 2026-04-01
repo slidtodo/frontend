@@ -1,6 +1,6 @@
 'use client';
 
-import { SinglePostModal } from '@/shared/components/Modal/SinglePostModal';
+import SinglePostModal from '@/shared/components/Modal/SinglePostModal';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import clsx from 'clsx';
 import { AlignCenter, AlignLeft, AlignRight, Bold, Italic, Link2, List, Underline } from 'lucide-react';

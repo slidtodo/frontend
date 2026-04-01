@@ -4,11 +4,12 @@ import { useQuery } from '@tanstack/react-query';
 import DetailTodoModalComponents from './DetailTodoModalComponets';
 
 import { todoQueries } from '@/lib/queryKeys';
+import { memo } from 'react';
 
 interface DetailTodoModalProps {
   todoId: number;
 }
-export default function DetailTodoModal({ todoId }: DetailTodoModalProps) {
+function DetailTodoModal({ todoId }: DetailTodoModalProps) {
   const { data: todo } = useQuery({
     ...todoQueries.detail(todoId),
     enabled: !!todoId,
@@ -16,3 +17,5 @@ export default function DetailTodoModal({ todoId }: DetailTodoModalProps) {
 
   return <DetailTodoModalComponents todo={todo} />;
 }
+
+export default memo(DetailTodoModal);

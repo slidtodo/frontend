@@ -22,7 +22,7 @@ export function mapNoteTagsFromSource({
       result.push({ id: 'itemId', string: '#' + sourceItemId });
     }
     if (status != null) {
-      result.push({ id: 'status', string: status });
+      result.push({ id: 'status', string: '•' + status });
     }
     return result;
   }

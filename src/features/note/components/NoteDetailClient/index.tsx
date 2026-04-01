@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { noteQueries, goalQueries } from '@/lib/queryKeys';
+import { noteQueries, goalQueries, todoQueries } from '@/lib/queryKeys';
 import EditorTitle from '@/features/note/components/NoteEditor/EditorTitle';
 import EditorMeta from '@/features/note/components/NoteEditor/EditorMeta';
 import EditorContent from '@/features/note/components/NoteEditor/EditorContent';
@@ -15,12 +15,16 @@ interface NoteDetailClientProps {
 export default function NoteDetailClient({ noteId, goalId }: NoteDetailClientProps) {
   const { data: note } = useQuery(noteQueries.detail(noteId));
   const { data: goal } = useQuery(goalQueries.detail(goalId));
+  const { data: todo } = useQuery({
+    ...todoQueries.detail(note?.todoId ?? 0),
+    enabled: note?.todoId != null,
+  });
 
   if (!note) return null;
 
   const tags = mapNoteTagsFromSource({
     source: note.source,
-    tags: note.todo?.tags,
+    tags: todo?.tags,
     sourceItemId: note.sourceItemId,
     status: note.status,
   });

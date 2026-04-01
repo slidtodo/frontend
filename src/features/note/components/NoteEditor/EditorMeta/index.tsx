@@ -1,5 +1,6 @@
 import Tag from '@/shared/components/Tag';
 import { formatDate } from '@/shared/utils/utils';
+import clsx from 'clsx';
 import { CalendarIcon, FlagIcon, Hash, SquareCheck } from 'lucide-react';
 
 /**
@@ -19,17 +20,11 @@ import { CalendarIcon, FlagIcon, Hash, SquareCheck } from 'lucide-react';
       ]}
     />
  */
-const VARIANTS = ['green', 'orange', 'purple'] as const;
-
-function getVariantByString(str: string): 'green' | 'orange' | 'purple' {
-  const hash = [...str].reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  return VARIANTS[hash % VARIANTS.length];
-}
 
 interface MetaTag {
   id: string;
   string: string;
-  variant?: 'green' | 'orange' | 'purple';
+  variant?: 'green';
 }
 
 interface EditorMetaProps {
@@ -45,7 +40,7 @@ interface EditorMetaProps {
 }
 
 export default function EditorMeta({ goal, todos, createdAt, tags }: EditorMetaProps) {
-  const todosTagLabel = todos.done ? 'DONE' : 'TODO';
+  const todosTagLabel = todos.done ? 'DONE' : 'TO DO';
   const today = formatDate(new Date());
   const formattedCreatedAt = createdAt ? formatDate(new Date(createdAt)) : null;
 
@@ -60,7 +55,14 @@ export default function EditorMeta({ goal, todos, createdAt, tags }: EditorMetaP
           <div className="flex items-center gap-2">
             <span className="line-clamp-1 text-sm font-normal text-[#333333]">{todos.title}</span>
 
-            <Tag string={todosTagLabel} className="rounded-md px-[5.5px] py-[3px] text-xs font-semibold" />
+            <Tag
+              string={todosTagLabel}
+              className={clsx(
+                'rounded-md px-[5.5px] py-[3px] text-xs font-semibold',
+                !todos.done && 'text-bearlog-600 bg-[rgba(0,183,117,0.10)]',
+                todos.done && 'bg-[#BBB] text-[#FFF]',
+              )}
+            />
           </div>
         </MetaRow>
       </div>
@@ -77,7 +79,7 @@ export default function EditorMeta({ goal, todos, createdAt, tags }: EditorMetaP
               <Tag
                 key={tag.id}
                 string={tag.string}
-                variant={tag.variant ?? getVariantByString(tag.string)}
+                variant="green"
                 className="rounded-full border px-2 py-1 text-xs font-medium whitespace-nowrap"
               />
             ))}

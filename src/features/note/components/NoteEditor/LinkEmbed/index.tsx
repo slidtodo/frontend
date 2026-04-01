@@ -1,6 +1,9 @@
 'use client';
 
 import { XIcon } from 'lucide-react';
+import Image from 'next/image';
+import { useState } from 'react';
+import LinkEmbedPreview from './LinkEmbedPreview';
 
 interface LinkEmbedProps {
   url: string;
@@ -28,16 +31,26 @@ function getFaviconUrl(url: string): string {
 }
 
 export default function LinkEmbed({ url, onRemove }: LinkEmbedProps) {
+  const [showPreview, setShowPreview] = useState(false);
+
   return (
-    <div className="flex w-full flex-col gap-1 rounded-[14px] bg-[#FAFAFA] px-4 py-[14px]">
+    <>
+      {showPreview && <LinkEmbedPreview url={url} onClose={() => setShowPreview(false)} />}
+      <button
+        type="button"
+        className="flex w-full cursor-pointer flex-col gap-1 rounded-[14px] bg-[#FAFAFA] px-4 py-[14px] text-left"
+        onClick={() => setShowPreview((prev) => !prev)}
+      >
       {/* 상단 — 파비콘 + 사이트명 + 삭제 */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
           {/* 파비콘 */}
           <div className="flex size-6 items-center justify-center overflow-hidden">
-            <img
+            <Image
               src={getFaviconUrl(url)}
               alt="favicon"
+              width={16}
+              height={16}
               className="size-4"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = 'none';
@@ -50,7 +63,7 @@ export default function LinkEmbed({ url, onRemove }: LinkEmbedProps) {
         {/* 삭제 버튼 */}
         <button
           type="button"
-          onClick={onRemove}
+          onClick={(e) => { e.stopPropagation(); onRemove(); }}
           className="cursor-pointer text-[#A4A4A4] transition-colors hover:text-[#333]"
         >
           <XIcon size={20} />
@@ -59,6 +72,7 @@ export default function LinkEmbed({ url, onRemove }: LinkEmbedProps) {
 
       {/* 하단 — URL */}
       <p className="ml-[5px] truncate text-xs font-normal text-[#A4A4A4]">{url}</p>
-    </div>
+    </button>
+    </>
   );
 }

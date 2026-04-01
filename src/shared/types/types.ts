@@ -10,13 +10,6 @@ export type Todo = {
   star: boolean;
 };
 
-export interface TagProps {
-  string: string;
-  onClose?: () => void;
-  variant?: 'green' | 'orange' | 'purple';
-  className?: string;
-}
-
 export interface Note {
   id: number;
   title: string;

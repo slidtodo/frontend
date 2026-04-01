@@ -23,16 +23,17 @@ export default function AllTodoContent() {
     }),
   );
 
+  if (!todoList) return null;
   return (
     <div className="mx-auto mb-[76px] flex max-w-[720px] flex-col gap-6">
       <PageHeader title="모든 할 일" count={todoList?.totalCount ?? todoList?.todos?.length ?? 0} className="pl-2" />
       <section className="flex flex-col gap-3">
-        <AllTodoFilter todos={todoList?.todos} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
+        <AllTodoFilter todos={todoList.todos} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
         {todoList && (todoList.todos?.length ?? 0) === 0 ? (
           <Empty>등록된 할 일이 없습니다.</Empty>
         ) : (
           <DataBoundary>
-            <AllTodoFetcher todos={todoList?.todos} />
+            <AllTodoFetcher todos={todoList.todos} />
           </DataBoundary>
         )}
       </section>

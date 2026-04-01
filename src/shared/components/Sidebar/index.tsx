@@ -197,8 +197,8 @@ function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
           >
             <Image src={user?.profileImageUrl || '/image/default-profile.png'} alt="Character" width={38} height={38} />
             <div className="flex flex-col items-start">
-              <span className="w-fit text-sm font-medium lg:w-full">{user?.nickname}</span>
-              <span className="hidden text-sm font-medium text-[#A0A0A0] lg:block">{user?.email}</span>
+              <span className="w-15 truncate text-sm font-medium lg:w-full">{user?.nickname}</span>
+              <span className="hidden truncate text-sm font-medium text-[#A0A0A0] lg:block">{user?.email}</span>
             </div>
           </Link>
 

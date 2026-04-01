@@ -508,294 +508,614 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** @description 할일 생성 요청 */
         CreateTodoRequest: {
+            /** @description 할일 제목 */
             title: string;
-            /** Format: int64 */
+            /**
+             * Format: int64
+             * @description 목표 ID
+             */
             goalId: number;
-            /** Format: date-time */
+            /**
+             * Format: date-time
+             * @description 마감일
+             */
             dueDate?: string;
+            /** @description 링크 URL */
             linkUrl?: string;
+            /** @description 이미지 URL */
             imageUrl?: string;
-            /** @enum {string} */
+            /**
+             * @description 할일 출처 (MANUAL, GITHUB_ISSUE, GITHUB_PR)
+             * @enum {string}
+             */
             source?: "MANUAL" | "GITHUB_ISSUE" | "GITHUB_PR";
-            /** Format: int64 */
+            /**
+             * Format: int64
+             * @description 외부 소스 항목 ID
+             */
             sourceItemId?: number;
+            /** @description 상태 */
             status?: string;
+            /** @description 태그 이름 목록 */
             tags?: string[];
         };
+        /** @description 목표 요약 정보 */
         GoalInfo: {
-            /** Format: int64 */
-            id?: number;
-            title?: string;
+            /**
+             * Format: int64
+             * @description 목표 ID
+             */
+            id: number;
+            /** @description 목표 제목 */
+            title: string;
         };
+        /** @description 태그 정보 */
         TagInfo: {
-            /** Format: int64 */
-            id?: number;
-            name?: string;
+            /**
+             * Format: int64
+             * @description 태그 ID
+             */
+            id: number;
+            /** @description 태그 이름 */
+            name: string;
         };
+        /** @description 할일 응답 */
         TodoResponse: {
-            /** Format: int64 */
-            id?: number;
-            title?: string;
-            done?: boolean;
-            /** Format: date-time */
+            /**
+             * Format: int64
+             * @description 할일 ID
+             */
+            id: number;
+            /** @description 제목 */
+            title: string;
+            /** @description 완료 여부 */
+            done: boolean;
+            /**
+             * Format: date-time
+             * @description 마감일
+             */
             dueDate?: string;
+            /** @description 이미지 URL */
             imageUrl?: string;
+            /** @description 링크 URL */
             linkUrl?: string;
-            /** @enum {string} */
-            source?: "MANUAL" | "GITHUB_ISSUE" | "GITHUB_PR";
-            /** Format: int64 */
+            /**
+             * @description 할일 출처 (MANUAL, GITHUB_ISSUE, GITHUB_PR)
+             * @enum {string}
+             */
+            source: "MANUAL" | "GITHUB_ISSUE" | "GITHUB_PR";
+            /**
+             * Format: int64
+             * @description 외부 소스 항목 ID (GitHub issue/PR 번호)
+             */
             sourceItemId?: number;
+            /** @description 상태 */
             status?: string;
-            favorite?: boolean;
-            goal?: components["schemas"]["GoalInfo"];
-            /** Format: int64 */
-            userId?: number;
-            noteIds?: number[];
-            tags?: components["schemas"]["TagInfo"][];
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            updatedAt?: string;
+            /** @description 즐겨찾기 여부 */
+            favorite: boolean;
+            /** @description 연결된 목표 정보 */
+            goal: components["schemas"]["GoalInfo"];
+            /**
+             * Format: int64
+             * @description 사용자 ID
+             */
+            userId: number;
+            /** @description 연결된 노트 ID 목록 */
+            noteIds: number[];
+            /** @description 태그 목록 */
+            tags: components["schemas"]["TagInfo"][];
+            /**
+             * Format: date-time
+             * @description 생성일시
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description 수정일시
+             */
+            updatedAt: string;
         };
+        /** @description 에러 응답 */
         ErrorResponse: {
-            message?: string;
-            code?: string;
-        };
-        CreateNoteRequest: {
-            /** Format: int64 */
-            todoId: number;
-            title: string;
-            content?: string;
-            linkUrl?: string;
-        };
-        NoteResponse: {
-            /** Format: int64 */
-            id?: number;
-            /** Format: int64 */
-            todoId?: number;
-            /** Format: int64 */
-            goalId?: number;
-            /** Format: int64 */
-            userId?: number;
-            title?: string;
-            content?: string;
-            linkUrl?: string;
-            /** @enum {string} */
-            source?: "MANUAL" | "GITHUB_ISSUE" | "GITHUB_PR";
-            /** Format: int64 */
-            sourceItemId?: number;
-            status?: string;
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            updatedAt?: string;
-            todo?: components["schemas"]["TodoInfo"];
-        };
-        TodoInfo: {
-            /** Format: int64 */
-            id?: number;
-            title?: string;
-            done?: boolean;
-            tags?: components["schemas"]["TagInfo"][];
-        };
-        CreateGoalRequest: {
-            title: string;
-        };
-        GoalResponse: {
-            /** Format: int64 */
-            id?: number;
-            title?: string;
-            /** @enum {string} */
-            source?: "MANUAL" | "GITHUB";
-            /** Format: int64 */
-            repositoryId?: number;
-            repositoryFullName?: string;
-            /** Format: int64 */
-            userId?: number;
-            /** Format: int32 */
-            todoCount?: number;
-            /** Format: int32 */
-            completedCount?: number;
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            updatedAt?: string;
-        };
-        SignupRequest: {
-            email: string;
-            password: string;
-            nickname: string;
-        };
-        AuthTokenResponse: {
-            /** Format: int64 */
-            id?: number;
-            email?: string;
-            nickname?: string;
-            profileImageUrl?: string;
-            /** @enum {string} */
-            loginProvider?: "LOCAL" | "GITHUB" | "GOOGLE";
-            githubConnected?: boolean;
-            accessToken?: string;
-            refreshToken?: string;
-        };
-        RefreshRequest: {
-            refreshToken?: string;
-        };
-        RefreshResponse: {
-            accessToken?: string;
-            refreshToken?: string;
-        };
-        OAuthLoginRequest: {
+            /** @description 에러 메시지 */
+            message: string;
+            /** @description 에러 코드 */
             code: string;
         };
-        LoginRequest: {
-            email: string;
-            password: string;
-        };
-        UpdateUserRequest: {
-            nickname?: string;
-            profileImageUrl?: string;
-        };
-        UserResponse: {
-            /** Format: int64 */
-            id?: number;
-            email?: string;
-            nickname?: string;
-            profileImageUrl?: string;
-            /** @enum {string} */
-            loginProvider?: "LOCAL" | "GITHUB" | "GOOGLE";
-            githubConnected?: boolean;
-        };
-        ChangePasswordRequest: {
-            currentPassword: string;
-            newPassword: string;
-            newPasswordConfirm: string;
-        };
-        UpdateTodoRequest: {
-            title?: string;
-            done?: boolean;
-            /** Format: date-time */
-            dueDate?: string;
-            linkUrl?: string;
-            imageUrl?: string;
-            tags?: string[];
-        };
-        NotificationResponse: {
-            /** Format: int64 */
-            id?: number;
-            /** @enum {string} */
-            type?: "COMMENT" | "TODO";
-            message?: string;
-            isRead?: boolean;
-            /** Format: date-time */
-            createdAt?: string;
-        };
-        UpdateNoteRequest: {
-            title?: string;
+        /** @description 노트 생성 요청 */
+        CreateNoteRequest: {
+            /**
+             * Format: int64
+             * @description 할일 ID
+             */
+            todoId: number;
+            /** @description 노트 제목 */
+            title: string;
+            /** @description 노트 내용 */
             content?: string;
+            /** @description 링크 URL */
             linkUrl?: string;
         };
-        UpdateGoalRequest: {
+        /** @description 노트 응답 */
+        NoteResponse: {
+            /**
+             * Format: int64
+             * @description 노트 ID
+             */
+            id: number;
+            /**
+             * Format: int64
+             * @description 할일 ID
+             */
+            todoId: number;
+            /**
+             * Format: int64
+             * @description 목표 ID
+             */
+            goalId: number;
+            /**
+             * Format: int64
+             * @description 사용자 ID
+             */
+            userId: number;
+            /** @description 노트 제목 */
+            title: string;
+            /** @description 노트 내용 */
+            content?: string;
+            /** @description 링크 URL */
+            linkUrl?: string;
+            /**
+             * @description 할일 출처 (MANUAL, GITHUB_ISSUE, GITHUB_PR)
+             * @enum {string}
+             */
+            source: "MANUAL" | "GITHUB_ISSUE" | "GITHUB_PR";
+            /**
+             * Format: int64
+             * @description 외부 소스 항목 ID
+             */
+            sourceItemId?: number;
+            /** @description 상태 */
+            status?: string;
+            /**
+             * Format: date-time
+             * @description 생성일시
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description 수정일시
+             */
+            updatedAt: string;
+            /** @description 연결된 할일 정보 */
+            todo: components["schemas"]["TodoInfo"];
+        };
+        /** @description 할일 정보 */
+        TodoInfo: {
+            /**
+             * Format: int64
+             * @description 할일 ID
+             */
+            id: number;
+            /** @description 할일 제목 */
+            title: string;
+            /** @description 완료 여부 */
+            done: boolean;
+            /** @description 태그 목록 */
+            tags: components["schemas"]["TagInfo"][];
+        };
+        /** @description 목표 생성 요청 */
+        CreateGoalRequest: {
+            /** @description 목표 제목 */
             title: string;
         };
-        GoalProgress: {
-            /** Format: int64 */
-            goalId?: number;
-            title?: string;
-            /** Format: int32 */
-            totalTodos?: number;
-            /** Format: int32 */
-            doneTodos?: number;
-            /** Format: int32 */
-            progressPercent?: number;
-        };
-        UserProgressResponse: {
-            /** Format: int32 */
-            totalProgress?: number;
-            goals?: components["schemas"]["GoalProgress"][];
-        };
-        TodoListResponse: {
-            todos?: components["schemas"]["TodoResponse"][];
-            /** Format: int64 */
-            nextCursor?: number;
-            hasMore?: boolean;
-            /** Format: int64 */
-            totalCount?: number;
-        };
-        CalendarResponse: {
-            todos?: components["schemas"]["TodoResponse"][];
-        };
-        TagResponse: {
-            /** Format: int64 */
-            id?: number;
-            name?: string;
-        };
-        NoteListItem: {
-            /** Format: int64 */
-            id?: number;
-            title?: string;
-            /** Format: int64 */
-            todoId?: number;
-            /** Format: date-time */
-            createdAt?: string;
-        };
-        NoteListResponse: {
-            notes?: components["schemas"]["NoteListItem"][];
-            pageInfo?: components["schemas"]["PageInfo"];
-        };
-        PageInfo: {
-            /** Format: int32 */
-            page?: number;
-            /** Format: int32 */
-            size?: number;
-            /** Format: int64 */
-            totalElements?: number;
-            /** Format: int32 */
-            totalPages?: number;
-        };
-        GoalListResponse: {
-            goals?: components["schemas"]["GoalResponse"][];
-            /** Format: int64 */
-            nextCursor?: number;
-            hasMore?: boolean;
-            /** Format: int64 */
-            totalCount?: number;
-        };
-        GoalDetailResponse: {
-            /** Format: int64 */
-            id?: number;
-            title?: string;
-            /** @enum {string} */
-            source?: "MANUAL" | "GITHUB";
-            /** Format: int64 */
+        /** @description 목표 응답 */
+        GoalResponse: {
+            /**
+             * Format: int64
+             * @description 목표 ID
+             */
+            id: number;
+            /** @description 목표 제목 */
+            title: string;
+            /**
+             * @description 목표 출처 (MANUAL, GITHUB)
+             * @enum {string}
+             */
+            source: "MANUAL" | "GITHUB";
+            /**
+             * Format: int64
+             * @description GitHub 리포지토리 ID
+             */
             repositoryId?: number;
+            /** @description GitHub 리포지토리 전체 이름 (owner/repo) */
             repositoryFullName?: string;
-            /** Format: int64 */
-            userId?: number;
-            /** Format: int32 */
-            todoCount?: number;
-            /** Format: int32 */
-            completedCount?: number;
-            /** Format: int32 */
-            progress?: number;
-            todoList?: components["schemas"]["TodoSummary"][];
-            doneList?: components["schemas"]["TodoSummary"][];
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            updatedAt?: string;
+            /**
+             * Format: int64
+             * @description 사용자 ID
+             */
+            userId: number;
+            /**
+             * Format: int32
+             * @description 전체 할일 수
+             */
+            todoCount: number;
+            /**
+             * Format: int32
+             * @description 완료된 할일 수
+             */
+            completedCount: number;
+            /**
+             * Format: date-time
+             * @description 생성일시
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description 수정일시
+             */
+            updatedAt: string;
         };
-        TodoSummary: {
-            /** Format: int64 */
-            id?: number;
+        /** @description 회원가입 요청 */
+        SignupRequest: {
+            /** @description 이메일 */
+            email: string;
+            /** @description 비밀번호 (8~72자) */
+            password: string;
+            /** @description 닉네임 */
+            nickname: string;
+        };
+        /** @description 인증 토큰 응답 (사용자 정보 + 토큰) */
+        AuthTokenResponse: {
+            /**
+             * Format: int64
+             * @description 사용자 ID
+             */
+            id: number;
+            /** @description 이메일 */
+            email: string;
+            /** @description 닉네임 */
+            nickname: string;
+            /** @description 프로필 이미지 URL */
+            profileImageUrl?: string;
+            /**
+             * @description 로그인 제공자 (LOCAL, GOOGLE, GITHUB)
+             * @enum {string}
+             */
+            loginProvider: "LOCAL" | "GITHUB" | "GOOGLE";
+            /** @description GitHub 연동 여부 */
+            githubConnected: boolean;
+            /** @description 액세스 토큰 */
+            accessToken: string;
+            /** @description 리프레시 토큰 */
+            refreshToken: string;
+        };
+        /** @description 토큰 갱신 요청 */
+        RefreshRequest: {
+            /** @description 리프레시 토큰 */
+            refreshToken?: string;
+        };
+        /** @description 토큰 갱신 응답 */
+        RefreshResponse: {
+            /** @description 새 액세스 토큰 */
+            accessToken: string;
+            /** @description 새 리프레시 토큰 */
+            refreshToken: string;
+        };
+        /** @description OAuth 로그인 요청 */
+        OAuthLoginRequest: {
+            /** @description OAuth 인증 코드 */
+            code: string;
+        };
+        /** @description 로그인 요청 */
+        LoginRequest: {
+            /** @description 이메일 */
+            email: string;
+            /** @description 비밀번호 */
+            password: string;
+        };
+        /** @description 사용자 정보 수정 요청 */
+        UpdateUserRequest: {
+            /** @description 닉네임 */
+            nickname?: string;
+            /** @description 프로필 이미지 URL */
+            profileImageUrl?: string;
+        };
+        /** @description 사용자 정보 응답 */
+        UserResponse: {
+            /**
+             * Format: int64
+             * @description 사용자 ID
+             */
+            id: number;
+            /** @description 이메일 */
+            email: string;
+            /** @description 닉네임 */
+            nickname: string;
+            /** @description 프로필 이미지 URL */
+            profileImageUrl?: string;
+            /**
+             * @description 로그인 제공자 (LOCAL, GOOGLE, GITHUB)
+             * @enum {string}
+             */
+            loginProvider: "LOCAL" | "GITHUB" | "GOOGLE";
+            /** @description GitHub 연동 여부 */
+            githubConnected: boolean;
+        };
+        /** @description 비밀번호 변경 요청 */
+        ChangePasswordRequest: {
+            /** @description 현재 비밀번호 */
+            currentPassword: string;
+            /** @description 새 비밀번호 (8~72자) */
+            newPassword: string;
+            /** @description 새 비밀번호 확인 */
+            newPasswordConfirm: string;
+        };
+        /** @description 할일 수정 요청 */
+        UpdateTodoRequest: {
+            /** @description 할일 제목 */
             title?: string;
-            favorite?: boolean;
+            /** @description 완료 여부 */
+            done?: boolean;
+            /**
+             * Format: date-time
+             * @description 마감일
+             */
+            dueDate?: string;
+            /** @description 링크 URL */
+            linkUrl?: string;
+            /** @description 이미지 URL */
+            imageUrl?: string;
+            /** @description 태그 이름 목록 */
+            tags?: string[];
         };
+        /** @description 알림 응답 */
+        NotificationResponse: {
+            /**
+             * Format: int64
+             * @description 알림 ID
+             */
+            id: number;
+            /**
+             * @description 알림 유형
+             * @enum {string}
+             */
+            type: "COMMENT" | "TODO";
+            /** @description 알림 메시지 */
+            message: string;
+            /** @description 읽음 여부 */
+            isRead: boolean;
+            /**
+             * Format: date-time
+             * @description 생성일시
+             */
+            createdAt: string;
+        };
+        /** @description 노트 수정 요청 */
+        UpdateNoteRequest: {
+            /** @description 노트 제목 */
+            title?: string;
+            /** @description 노트 내용 */
+            content?: string;
+            /** @description 링크 URL */
+            linkUrl?: string;
+        };
+        /** @description 목표 수정 요청 */
+        UpdateGoalRequest: {
+            /** @description 목표 제목 */
+            title: string;
+        };
+        /** @description 목표별 진행률 */
+        GoalProgress: {
+            /**
+             * Format: int64
+             * @description 목표 ID
+             */
+            goalId: number;
+            /** @description 목표 제목 */
+            title: string;
+            /**
+             * Format: int32
+             * @description 전체 할일 수
+             */
+            totalTodos: number;
+            /**
+             * Format: int32
+             * @description 완료된 할일 수
+             */
+            doneTodos: number;
+            /**
+             * Format: int32
+             * @description 진행률 (0-100%)
+             */
+            progressPercent: number;
+        };
+        /** @description 사용자 진행률 응답 */
+        UserProgressResponse: {
+            /**
+             * Format: int32
+             * @description 전체 진행률 (0-100%)
+             */
+            totalProgress: number;
+            /** @description 목표별 진행률 목록 */
+            goals: components["schemas"]["GoalProgress"][];
+        };
+        /** @description 할일 목록 응답 */
+        TodoListResponse: {
+            /** @description 할일 목록 */
+            todos: components["schemas"]["TodoResponse"][];
+            /**
+             * Format: int64
+             * @description 다음 페이지 커서 (마지막 페이지면 null)
+             */
+            nextCursor?: number;
+            /** @description 다음 페이지 존재 여부 */
+            hasMore: boolean;
+            /**
+             * Format: int64
+             * @description 전체 할일 수
+             */
+            totalCount: number;
+        };
+        /** @description 캘린더 할일 응답 */
+        CalendarResponse: {
+            /** @description 할일 목록 */
+            todos: components["schemas"]["TodoResponse"][];
+        };
+        /** @description 태그 응답 */
+        TagResponse: {
+            /**
+             * Format: int64
+             * @description 태그 ID
+             */
+            id: number;
+            /** @description 태그 이름 */
+            name: string;
+        };
+        /** @description 노트 목록 항목 */
+        NoteListItem: {
+            /**
+             * Format: int64
+             * @description 노트 ID
+             */
+            id: number;
+            /** @description 노트 제목 */
+            title: string;
+            /**
+             * Format: int64
+             * @description 할일 ID
+             */
+            todoId: number;
+            /**
+             * Format: date-time
+             * @description 생성일시
+             */
+            createdAt: string;
+        };
+        /** @description 노트 목록 응답 */
+        NoteListResponse: {
+            /** @description 노트 목록 */
+            notes: components["schemas"]["NoteListItem"][];
+            /** @description 페이지 정보 */
+            pageInfo: components["schemas"]["PageInfo"];
+        };
+        /** @description 페이지 정보 */
+        PageInfo: {
+            /**
+             * Format: int32
+             * @description 현재 페이지 번호
+             */
+            page: number;
+            /**
+             * Format: int32
+             * @description 페이지 크기
+             */
+            size: number;
+            /**
+             * Format: int64
+             * @description 전체 요소 수
+             */
+            totalElements: number;
+            /**
+             * Format: int32
+             * @description 전체 페이지 수
+             */
+            totalPages: number;
+        };
+        /** @description 목표 목록 응답 */
+        GoalListResponse: {
+            /** @description 목표 목록 */
+            goals: components["schemas"]["GoalResponse"][];
+            /**
+             * Format: int64
+             * @description 다음 페이지 커서 (마지막 페이지면 null)
+             */
+            nextCursor?: number;
+            /** @description 다음 페이지 존재 여부 */
+            hasMore: boolean;
+            /**
+             * Format: int64
+             * @description 전체 목표 수
+             */
+            totalCount: number;
+        };
+        /** @description 목표 상세 응답 */
+        GoalDetailResponse: {
+            /**
+             * Format: int64
+             * @description 목표 ID
+             */
+            id: number;
+            /** @description 목표 제목 */
+            title: string;
+            /**
+             * @description 목표 출처 (MANUAL, GITHUB)
+             * @enum {string}
+             */
+            source: "MANUAL" | "GITHUB";
+            /**
+             * Format: int64
+             * @description GitHub 리포지토리 ID
+             */
+            repositoryId?: number;
+            /** @description GitHub 리포지토리 전체 이름 (owner/repo) */
+            repositoryFullName?: string;
+            /**
+             * Format: int64
+             * @description 사용자 ID
+             */
+            userId: number;
+            /**
+             * Format: int32
+             * @description 전체 할일 수
+             */
+            todoCount: number;
+            /**
+             * Format: int32
+             * @description 완료된 할일 수
+             */
+            completedCount: number;
+            /**
+             * Format: int32
+             * @description 진행률 (0-100%)
+             */
+            progress: number;
+            /** @description 미완료 할일 목록 */
+            todoList: components["schemas"]["TodoSummary"][];
+            /** @description 완료된 할일 목록 */
+            doneList: components["schemas"]["TodoSummary"][];
+            /**
+             * Format: date-time
+             * @description 생성일시
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description 수정일시
+             */
+            updatedAt: string;
+        };
+        /** @description 할일 요약 정보 */
+        TodoSummary: {
+            /**
+             * Format: int64
+             * @description 할일 ID
+             */
+            id: number;
+            /** @description 할일 제목 */
+            title: string;
+            /** @description 즐겨찾기 여부 */
+            favorite: boolean;
+        };
+        /** @description OAuth 인증 URL 응답 */
         OAuthAuthorizeUrlResponse: {
-            loginUrl?: string;
+            /** @description OAuth 로그인 URL */
+            loginUrl: string;
         };
+        /** @description 회원 탈퇴 요청 */
         DeleteUserRequest: {
+            /** @description 비밀번호 (로컬 로그인 사용자만 필수) */
             password?: string;
         };
     };

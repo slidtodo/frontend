@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import DetailTodoModalComponents from './DetailTodoModalComponets';
 
 import { todoQueries } from '@/lib/queryKeys';
+import { memo } from 'react';
 
 interface DetailTodoModalProps {
   todoId: number;
@@ -16,3 +17,5 @@ export default function DetailTodoModal({ todoId }: DetailTodoModalProps) {
 
   return <DetailTodoModalComponents todo={todo} />;
 }
+
+memo(DetailTodoModal);

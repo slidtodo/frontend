@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { memo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
@@ -75,7 +75,7 @@ export default function DetailTodoModalComponents({ todo }: DetailTodoModalCompo
     </div>
   );
 }
-
+memo(DetailTodoModalComponents);
 interface DetailItemSummaryProps {
   icon: React.ReactNode;
   label: string;

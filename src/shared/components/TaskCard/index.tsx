@@ -9,16 +9,29 @@ import { CheckIcon, EllipsisVertical, GithubIcon, Star } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
 import EditDeleteDropdown from '@/features/dashboard/components/EditDeleteDropdown';
+import DetailTodoModal from '@/features/goal/components/DetailTodoModal';
+
 import { useTodoEditModal } from '@/features/todo/hooks/useTodoEditModal';
-import type { TodoResponse } from '@/lib/api';
-import { useDeleteTodo, usePatchTodoFavorite } from '@/lib/mutations';
+import { useDeleteTodo, usePatchTodo, usePatchTodoFavorite } from '@/lib/mutations';
 import { todoQueries } from '@/lib/queryKeys';
+import { useToastStore } from '@/shared/stores/useToastStore';
+import { useModalStore } from '@/shared/stores/useModalStore';
+
+export interface TaskCardTodo {
+  id?: number;
+  title?: string;
+  done?: boolean;
+  favorite?: boolean;
+  goal?: {
+    id?: number;
+  };
+}
 
 interface TaskCardProps {
-  todo: NonNullable<TodoResponse>;
+  todo: TaskCardTodo;
   starred?: boolean;
   onTitleClick?: () => void;
-  onCheckboxClick?: (id: number) => void;
+  onCheckboxClick?: (id: number, done: boolean) => void;
   variant?: 'default' | 'orange';
 }
 export default function TaskCard({
@@ -54,20 +67,31 @@ export default function TaskCard({
 }
 
 interface TaskCheckboxProps {
-  todo: NonNullable<TodoResponse>;
-  onCheckboxClick?: (id: number) => void;
+  todo: TaskCardTodo;
+  onCheckboxClick?: (id: number, done: boolean) => void;
   isOrange: boolean;
   onTitleClick?: () => void;
 }
 function TaskCheckbox({ todo, isOrange, onCheckboxClick, onTitleClick }: TaskCheckboxProps) {
-  const [checked, setChecked] = useState(todo.done ?? false);
+  const { showToast } = useToastStore();
+  const { openModal } = useModalStore();
 
-  function handleCheckboxClick() {
-    setChecked((prev) => !prev);
-    if (todo.id !== undefined) {
-      onCheckboxClick?.(todo.id);
+  const patchTodo = usePatchTodo(todo.id);
+  const checked = todo.done ?? false;
+
+  const handleCheckboxClick = async () => {
+    if (todo.id === undefined) return;
+
+    try {
+      await patchTodo.mutateAsync({
+        done: !checked,
+      });
+      onCheckboxClick?.(todo.id, !checked);
+      showToast(`할 일 상태가 ${!checked ? '완료' : '미완료'} 되었습니다.`);
+    } catch (error) {
+      console.error('할 일 상태 업데이트 실패:', error);
     }
-  }
+  };
 
   return (
     <>
@@ -91,9 +115,11 @@ function TaskCheckbox({ todo, isOrange, onCheckboxClick, onTitleClick }: TaskChe
       </button>
       <button
         type="button"
-        onClick={onTitleClick}
+        onClick={() => {
+          if (todo.id) openModal(<DetailTodoModal todoId={todo.id} />);
+        }}
         className={clsx(
-          'min-w-0 flex-1 cursor-pointer truncate',
+          'min-w-0 flex-1 cursor-pointer truncate text-left',
           'text-base leading-6 tracking-[-0.03em]',
           'transition-colors duration-150',
           checked ? 'font-medium text-[#737373] group-hover:font-semibold group-hover:text-[#EF6C00]' : 'font-medium',
@@ -108,7 +134,7 @@ function TaskCheckbox({ todo, isOrange, onCheckboxClick, onTitleClick }: TaskChe
 
 interface TaskLinkNoteCreateProps {
   isOrange: boolean;
-  todo: NonNullable<TodoResponse>;
+  todo: TaskCardTodo;
 }
 
 function TaskLinkNoteCreate({ isOrange, todo }: TaskLinkNoteCreateProps) {
@@ -152,7 +178,7 @@ function TaskLinkGithub({ isOrange }: TaskLinkGithubProps) {
 
 interface TaskLinkDetailProps {
   isOrange: boolean;
-  todo: NonNullable<TodoResponse>;
+  todo: TaskCardTodo;
 }
 
 function TaskEditTodo({ isOrange, todo }: TaskLinkDetailProps) {
@@ -204,21 +230,29 @@ function TaskEditTodo({ isOrange, todo }: TaskLinkDetailProps) {
 interface TaskFavoriteProps {
   isOrange: boolean;
   initialStarred?: boolean;
-  todo: NonNullable<TodoResponse>;
+  todo: TaskCardTodo;
 }
 
 function TaskFavorite({ isOrange, initialStarred, todo }: TaskFavoriteProps) {
+  const { showToast } = useToastStore();
+
   const [starred, setStarred] = useState(initialStarred);
   const { mutate: patchTodoFavorite } = usePatchTodoFavorite(todo.id);
 
   function handleStarToggle() {
     setStarred((prev) => !prev);
 
-    patchTodoFavorite(undefined, {
-      onError: () => {
-        setStarred((prev) => !prev);
-      },
-    });
+    try {
+      patchTodoFavorite(undefined, {
+        onError: () => {
+          setStarred((prev) => !prev);
+        },
+      });
+      showToast(`즐겨찾기 ${starred ? '해제' : '추가'}가 되었습니다.`);
+    } catch (error) {
+      console.error('즐겨찾기 설정 업데이트 실패:', error);
+      setStarred((prev) => !prev);
+    }
   }
 
   return (

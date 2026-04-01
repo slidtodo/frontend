@@ -87,6 +87,7 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
           })
         }
       >
+        {/**TODO: 현재 목표가 하드코딩 되어있음 수정 필요 */}
         <PlusIcon size={20} color="#737373" />
         <span className="overflow-hidden text-sm font-semibold text-ellipsis whitespace-nowrap text-[#737373]">
           할 일 추가

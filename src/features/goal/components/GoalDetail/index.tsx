@@ -7,10 +7,8 @@ import PageSubTitle from '@/shared/components/PageSubTitle';
 import Button from '@/shared/components/Button';
 import TaskCard from '@/shared/components/TaskCard';
 import Empty from '@/shared/components/Empty';
-import DetailTodoModal from '../DetailTodoModal';
 
 import { goalQueries } from '@/lib/queryKeys';
-import { useModalStore } from '@/shared/stores/useModalStore';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 
 interface GoalDetailProps {
@@ -18,7 +16,6 @@ interface GoalDetailProps {
 }
 export default function GoalDetail({ goalId }: GoalDetailProps) {
   const { openTodoCreateModal } = useTodoCreateModal();
-  const { openModal } = useModalStore();
 
   const { data: goalDetail } = useQuery({
     ...goalQueries.detail(goalId),
@@ -69,15 +66,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
         <section className="rounded-2xl bg-[#FFF8E4] px-[28px] py-[32px]">
           <div className="flex max-h-[512px] flex-col gap-4 overflow-y-auto">
             {goalDetail?.todoList && goalDetail?.todoList.length > 0 ? (
-              goalDetail.todoList.map((todo) => (
-                <TaskCard
-                  key={todo.id}
-                  todo={todo}
-                  onTitleClick={() => {
-                    if (todo.id) openModal(<DetailTodoModal todoId={todo.id} />);
-                  }}
-                />
-              ))
+              goalDetail.todoList.map((todo) => <TaskCard key={todo.id} todo={{ ...todo, done: false }} />)
             ) : (
               <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>
             )}
@@ -89,15 +78,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
         <section className="rounded-2xl bg-[#ffffff] px-[28px] py-[32px]">
           <div className="flex max-h-[512px] flex-col gap-4 overflow-y-auto">
             {goalDetail?.doneList && goalDetail?.doneList.length > 0 ? (
-              goalDetail.doneList.map((todo) => (
-                <TaskCard
-                  key={todo.id}
-                  todo={todo}
-                  onTitleClick={() => {
-                    if (todo.id) openModal(<DetailTodoModal todoId={todo.id} />);
-                  }}
-                />
-              ))
+              goalDetail.doneList.map((todo) => <TaskCard key={todo.id} todo={{ ...todo, done: true }} />)
             ) : (
               <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>
             )}

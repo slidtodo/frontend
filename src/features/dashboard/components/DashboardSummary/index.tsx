@@ -11,22 +11,26 @@ import TaskCard from '@/shared/components/TaskCard';
 
 import { todoQueries, userQueries } from '@/lib/queryKeys';
 import { CurrentUserResponse } from '@/lib/api';
+import TabChangeMode from '@/shared/components/TabChangeMode';
 
 export default function DashBoardSummary() {
   const { data: user } = useQuery(userQueries.current());
 
   return (
     <>
-      <PageHeader title={`${user?.nickname}님의 대시보드`} className="pb-[30px] text-black lg:pb-[34px]" />
+      <div className="flex justify-between pb-[30px] lg:pb-[34px]">
+        <PageHeader title={`${user?.nickname}님의 대시보드`} className="text-black" />
+        <TabChangeMode mode="MANUAL" onModeChange={() => {}} />
+      </div>
       <section className="flex w-full flex-col gap-[40px] pb-[40px] md:flex-row md:gap-[12px] lg:gap-[32px] lg:pb-[34px]">
         <div className="flex w-full flex-col justify-between gap-[10px]">
           <PageSubTitle
             subTitle="최근 등록한 할 일"
-            icons={<Image src={'/image/task.png'} alt="Task Icon" width={40} height={40} />}
+            icons={<Image src={'/image/task-green.png'} alt="Task Icon" width={40} height={40} />}
             actions={
               <Link
                 href="/dashboard/all-todo"
-                className="w-full cursor-pointer text-sm font-semibold text-[#ef6c08] md:text-base"
+                className="text-bearlog-500 w-full cursor-pointer text-sm font-semibold md:text-base"
               >
                 모두 보기 <ChevronRightIcon className="inline-block cursor-pointer" />
               </Link>
@@ -37,7 +41,7 @@ export default function DashBoardSummary() {
         <div className="flex w-full flex-col justify-between gap-[10px]">
           <PageSubTitle
             subTitle="내 진행 상황"
-            icons={<Image src={'/image/progress.png'} alt="Progress Icon" width={40} height={40} />}
+            icons={<Image src={'/image/progress-green.png'} alt="Progress Icon" width={40} height={40} />}
           />
           <CurrentProgressCard user={user} />
         </div>

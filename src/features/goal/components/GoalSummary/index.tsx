@@ -89,7 +89,7 @@ function GoalInfo({ goalDetail }: GoalInfoProps) {
   return (
     <div className="flex items-center justify-between rounded-2xl bg-white xl:flex-1">
       <div className="flex items-center justify-center gap-4 py-5 pl-5 md:py-6 md:pl-6 lg:py-15 lg:pl-10">
-        <Image src="/image/task.png" alt="Task Icon" width={40} height={40} />
+        <Image src="/image/task-green.png" alt="Task Icon" width={40} height={40} />
         <span className="overflow-hidden text-lg font-semibold text-ellipsis whitespace-nowrap lg:text-2xl">
           {goalDetail.title}
         </span>

@@ -17,14 +17,14 @@ export default function LinkEmbedPreview({ url, onClose }: LinkEmbedPreviewProps
       {/* ── lg 이상 — 오른쪽 고정 패널 ── */}
       <div
         className={clsx(
-          'hidden lg:flex z-10',
+          'z-10 hidden lg:flex',
           'fixed top-0 right-0 h-full w-[734px] flex-col items-start justify-center',
           'border-l border-[#DDD] bg-[#FAFAFA]',
           'px-10',
         )}
       >
         <div className="relative h-[376px] w-full overflow-hidden border border-[#CCC]">
-          <iframe src={proxyUrl} className="h-full w-full border-0" title="링크 미리보기" />
+          <iframe src={proxyUrl} className="h-full w-full border-0" title="링크 미리보기" sandbox="allow-scripts" />
         </div>
       </div>
 
@@ -35,7 +35,7 @@ export default function LinkEmbedPreview({ url, onClose }: LinkEmbedPreviewProps
         className={clsx(
           'hidden lg:flex',
           'fixed top-1/6 right-[734px] z-10 -translate-y-1/2',
-          'md:h-[60px] md:w-[38px] items-center justify-center',
+          'items-center justify-center md:h-[60px] md:w-[38px]',
           'rounded-tl-2xl rounded-bl-2xl',
           'border border-[#DDD] bg-[#FAFAFA]',
         )}
@@ -60,7 +60,7 @@ export default function LinkEmbedPreview({ url, onClose }: LinkEmbedPreviewProps
         </button>
 
         <div className="h-[280px] w-full overflow-hidden md:h-[337px]">
-          <iframe src={proxyUrl} className="h-full w-full border-0" title="링크 미리보기" />
+          <iframe src={proxyUrl} className="h-full w-full border-0" title="링크 미리보기" sandbox="allow-scripts" />
         </div>
       </div>
     </>

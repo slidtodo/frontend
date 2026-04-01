@@ -24,7 +24,7 @@ export default function DashboardDetail() {
     <section>
       <PageSubTitle
         subTitle="목표 별 할일"
-        icons={<Image src={'/image/goal.png'} alt="Goal Icon" width={40} height={40} />}
+        icons={<Image src={'/image/goal-todo.png'} alt="Goal Icon" width={40} height={40} />}
       />
       <div className="flex flex-col gap-[32px] pt-[10px]">
         {goals?.goals?.map((goal) =>

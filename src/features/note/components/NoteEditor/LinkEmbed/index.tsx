@@ -1,6 +1,7 @@
 'use client';
 
 import { XIcon } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
 import LinkEmbedPreview from './LinkEmbedPreview';
 
@@ -45,9 +46,11 @@ export default function LinkEmbed({ url, onRemove }: LinkEmbedProps) {
         <div className="flex items-center gap-1">
           {/* 파비콘 */}
           <div className="flex size-6 items-center justify-center overflow-hidden">
-            <img
+            <Image
               src={getFaviconUrl(url)}
               alt="favicon"
+              width={16}
+              height={16}
               className="size-4"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = 'none';

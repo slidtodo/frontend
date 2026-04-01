@@ -28,6 +28,7 @@ const features = [
 export default async function LandingPage() {
   const cookieStore = await cookies();
   const isLoggedIn = !!cookieStore.get('accessToken');
+  const startPath = isLoggedIn ? '/dashboard' : '/login';
 
   return (
     <main className="w-full overflow-x-hidden">
@@ -36,7 +37,7 @@ export default async function LandingPage() {
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center px-6 text-center">
           <p className="text-sm font-semibold text-[#EF6C00] md:text-lg">베어로그 하나로 일상부터 개발까지</p>
           <h1 className="mt-2 text-2xl font-bold text-gray-900 md:text-4xl">개발자 할 일, 베어로그로 계획해요</h1>
-          <Link href={isLoggedIn ? '/dashboard' : '/login'} className="mt-8 h-fit w-fit md:mt-[56px]">
+          <Link href={startPath} className="mt-8 h-fit w-fit md:mt-[56px]">
             <Button
               variant="primary"
               className="h-[48px] w-[160px] text-sm font-semibold md:h-[56px] md:w-[223px] md:text-base"
@@ -175,7 +176,7 @@ export default async function LandingPage() {
 
             <h2 className="z-10 mt-3 text-xl font-bold text-gray-900 md:text-2xl">개발자 할 일, 베어로그로 계획해요</h2>
 
-            <Link href={isLoggedIn ? '/dashboard' : '/login'} className="z-10">
+            <Link href={startPath} className="z-10">
               <Button className="mt-6 h-[48px] w-[140px] text-sm font-semibold">시작하기</Button>
             </Link>
           </div>

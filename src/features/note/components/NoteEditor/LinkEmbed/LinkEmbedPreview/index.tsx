@@ -1,4 +1,3 @@
-// features/goal/note/components/NoteEditor/LinkEmbedPreview/index.tsx
 'use client';
 
 import { ChevronLeftIcon, ChevronUpIcon } from 'lucide-react';

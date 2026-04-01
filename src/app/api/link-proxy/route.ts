@@ -76,10 +76,15 @@ export async function GET(request: NextRequest) {
   const origin = targetUrl.origin;
 
   // <base href> 주입으로 상대경로 리소스 해결
-  const patched = html.replace(
-    /(<head[^>]*>)/i,
-    `$1<base href="${origin}/">`,
-  );
+  const baseTag = `<base href="${origin}/">`;
+  let patched: string;
+  if (/<head[\s>]/i.test(html)) {
+    patched = html.replace(/(<head[^>]*>)/i, `$1${baseTag}`);
+  } else if (/<body[\s>]/i.test(html)) {
+    patched = html.replace(/(<body[^>]*>)/i, `${baseTag}$1`);
+  } else {
+    patched = baseTag + html;
+  }
 
   const headers = new Headers({
     'content-type': 'text/html; charset=utf-8',

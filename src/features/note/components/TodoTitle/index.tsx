@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { todoQueries } from '@/lib/queryKeys';
 import Tag from '@/shared/components/Tag';
+import clsx from 'clsx';
 
 export default function TodoTitle({ todoId }: { todoId: number }) {
   const { data: todo } = useQuery(todoQueries.detail(todoId));
@@ -12,7 +13,11 @@ export default function TodoTitle({ todoId }: { todoId: number }) {
       <Tag
         string={todo?.done ? 'DONE' : 'TODO'}
         variant="green"
-        className="semibold h-[22px] rounded-lg px-[5.5px] py-0.75 text-xs"
+        className={clsx(
+          'rounded-md px-[5.5px] py-[3px] text-xs font-semibold',
+          !todo?.done && 'text-bearlog-600 bg-[rgba(0,183,117,0.10)]',
+          todo?.done && 'bg-[#BBB] text-[#FFF]',
+        )}
       />
       <p className="line-clamp-1 text-sm font-normal text-[#333]">{todo?.title}</p>
     </div>

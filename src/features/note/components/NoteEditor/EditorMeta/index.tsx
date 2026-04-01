@@ -1,5 +1,6 @@
 import Tag from '@/shared/components/Tag';
 import { formatDate } from '@/shared/utils/utils';
+import clsx from 'clsx';
 import { CalendarIcon, FlagIcon, Hash, SquareCheck } from 'lucide-react';
 
 /**
@@ -54,7 +55,14 @@ export default function EditorMeta({ goal, todos, createdAt, tags }: EditorMetaP
           <div className="flex items-center gap-2">
             <span className="line-clamp-1 text-sm font-normal text-[#333333]">{todos.title}</span>
 
-            <Tag string={todosTagLabel} className="rounded-md px-[5.5px] py-[3px] text-xs font-semibold" />
+            <Tag
+              string={todosTagLabel}
+              className={clsx(
+                'rounded-md px-[5.5px] py-[3px] text-xs font-semibold',
+                !todos.done && 'text-bearlog-600 bg-[rgba(0,183,117,0.10)]',
+                todos.done && 'bg-[#BBB] text-[#FFF]',
+              )}
+            />
           </div>
         </MetaRow>
       </div>

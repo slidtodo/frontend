@@ -6,9 +6,9 @@ import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 
-import { PatchTodoRequest, PostTodoRequest } from '@/lib/api';
-import { usePatchTodo, usePostTodo } from '@/lib/mutations';
-import { goalQueries, todoQueries } from '@/lib/queryKeys';
+import { PatchTodoRequest, PostTodoRequest } from '@/shared/lib/api';
+import { usePatchTodo, usePostTodo } from '@/shared/lib/mutations';
+import { goalQueries, todoQueries } from '@/shared/lib/queryKeys';
 import Button from '@/shared/components/Button';
 import Dropdown from '@/shared/components/Dropdown';
 import FormField from '@/shared/components/FormField';
@@ -168,7 +168,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       )}
     >
       <div className="mb-1 flex items-center justify-between md:mb-4">
-        <h1 className="text-xl font-semibold text-[#262626]">{isEditMode ? '할 일 수정' : '할 일 생성'}</h1>
+        <h1 className="text-xl font-semibold text-gray-800">{isEditMode ? '할 일 수정' : '할 일 생성'}</h1>
         <button type="button" className="cursor-pointer" onClick={closeModal}>
           <XIcon size={24} className="stroke-[#A4A4A4]" />
         </button>
@@ -188,7 +188,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
           autoFocus
           {...register('title', { required: '제목은 필수입니다.' })}
           placeholder="할 일의 제목을 적어주세요"
-          className="h-11 rounded-xl border-[#CCC] p-3 text-sm font-normal text-[#333] placeholder:text-[#737373] md:h-14 md:rounded-2xl md:p-4 md:text-base"
+          className="h-11 rounded-xl border-gray-300 p-3 text-sm font-normal text-[#333] placeholder:text-gray-500 md:h-14 md:rounded-2xl md:p-4 md:text-base"
         />
         {errors.title && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.title.message}</p>}
       </FormField>
@@ -201,7 +201,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
           selectedValue={goalId ? String(goalId) : ''}
           onSelectItem={(item) => setValue('goalId', Number(item.value), { shouldDirty: true })}
           isDisabled={isEditMode}
-          className="h-11 rounded-xl p-3 placeholder:text-[#737373] md:h-14 md:rounded-2xl md:p-4"
+          className="h-11 rounded-xl p-3 placeholder:text-gray-500 md:h-14 md:rounded-2xl md:p-4"
         />
         {errors.goalId && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.goalId.message}</p>}
       </FormField>
@@ -252,13 +252,13 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       <div className="mt-1 flex items-center gap-2 md:mt-[34px] md:gap-3">
         <Button
           type="button"
-          variant="secondary"
-          className="h-12 w-full border border-[#CCC] text-[#737373] md:h-14"
+          variant="tertiary"
+          className="h-12 w-full border border-gray-300 text-gray-500 md:h-14"
           onClick={closeModal}
         >
           취소
         </Button>
-        <Button type="submit" variant="confirm" className="h-12 w-full md:h-14">
+        <Button type="submit" variant="primary" className="h-12 w-full md:h-14">
           확인
         </Button>
       </div>

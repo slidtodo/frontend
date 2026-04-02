@@ -7,8 +7,8 @@ import Link from 'next/link';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
-import { validateEmail, validatePassword, validatePasswordConfirm } from '@/lib/validation';
-import { fetchAuth } from '@/lib/api/fetchAuth';
+import { validateEmail, validatePassword, validatePasswordConfirm } from '@/shared/lib/validation';
+import { fetchAuth } from '@/shared/lib/api/fetchAuth';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -54,12 +54,12 @@ export default function SignupPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#F5F5F5] py-20">
+    <main className="flex min-h-screen items-center justify-center py-20">
       <div className="flex w-full max-w-[331px] flex-col items-start md:max-w-[400px]">
         {/* 로고 */}
         <div className="mb-10 flex h-12 w-full items-center gap-4">
-          <Image src="/image/symbol.png" alt="logo" width={48} height={48} />
-          <span className="text-2xl font-bold">Slid to-do</span>
+          <Image src="/icons/todo.png" alt="logo" width={48} height={48} />
+          <span className="text-2xl font-bold">Bearlog</span>
         </div>
         <form className="flex w-full flex-col gap-4" onSubmit={handleSubmit}>
           <FormField label="이름">

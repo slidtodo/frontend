@@ -1,7 +1,7 @@
 'use client';
 
-import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
-import { MSWProvider } from '@/mocks/MSWProvider';
+import { ReactQueryProvider } from '@/shared/providers/ReactQueryProvider';
+import { MSWProvider } from '@/shared/mocks/MSWProvider';
 import ToastContainer from '@/shared/components/Toast/ToastContainer';
 import { Modal } from '@/shared/components/Modal';
 

@@ -8,20 +8,19 @@ const features = [
     index: 1,
     icon: 'goal1.png',
     title: '목표 설정부터 기록까지',
-    description:
-      '달성하고 싶은 목표를 만들고 이름을 정하세요\n(개발자 모드: 목표를 설정하고 Github repository를 \n연결하세요.)',
+    description: '목표를 설정하고 Github repository를 \n연결하세요.',
   },
   {
     index: 2,
     icon: 'list.png',
     title: '할 일 추가하기',
-    description: '목표에 맞는 할 일을 추가하고 자료를 첨부하세요\n(개발자 모드: 목표에 추가할 issue/PR을 등록하세요.)',
+    description: '목표에 추가할 issue/PR을 등록하세요.',
   },
   {
     index: 3,
     icon: 'note1.png',
     title: '학습하고 기록하기',
-    description: '할 일을 완료하며 학습하고, 노트를 기록하세요\n(개발자 모드: 상세 issue/PR을 확인하세요.)',
+    description: 'Issue/PR에 관련된 노트를 기록하세요.',
   },
 ];
 
@@ -35,12 +34,12 @@ export default async function LandingPage() {
       {/* ── Section 01 · Hero ── */}
       <section className="w-full bg-gradient-to-r from-[#C7EDE6] to-[#FBE7C6] pt-16 pb-0 md:pt-20">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center px-6 text-center">
-          <p className="text-sm font-semibold text-[#EF6C00] md:text-lg">베어로그 하나로 일상부터 개발까지</p>
+          <p className="text-bearlog-600 text-sm font-semibold md:text-lg">베어로그 하나로 일상부터 개발까지</p>
           <h1 className="mt-2 text-2xl font-bold text-gray-900 md:text-4xl">개발자 할 일, 베어로그로 계획해요</h1>
           <Link href={startPath} className="mt-8 h-fit w-fit md:mt-[56px]">
             <Button
               variant="primary"
-              className="h-[48px] w-[160px] text-sm font-semibold md:h-[56px] md:w-[223px] md:text-base"
+              className="h-[48px] w-[160px] bg-bearlog-500 text-sm font-semibold hover:bg-bearlog-500/90 md:h-[56px] md:w-[223px] md:text-base"
             >
               시작하기
             </Button>
@@ -62,10 +61,10 @@ export default async function LandingPage() {
       </section>
 
       {/* ── Section 02 · 특별한 이유 ── */}
-      <section className="relative z-10 w-full bg-[#FF8442] py-14 md:py-20">
+      <section className="relative z-10 w-full bg-[#00C87F] py-14 md:py-20">
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 md:flex-row md:items-center md:justify-between xl:justify-normal xl:gap-[216px]">
           <div className="flex flex-col text-white md:shrink-0">
-            <p className="text-sm font-semibold text-[#FFD19B] md:text-lg">자동화로 더 똑똑한 노트 관리</p>
+            <p className="text-sm font-semibold text-[#7EFFD0] md:text-lg">자동화로 더 똑똑한 노트 관리</p>
             <h2 className="mt-3 text-2xl leading-tight font-bold md:text-4xl">베어로그가 특별한 이유</h2>
             <ul className="mt-8 flex flex-col gap-5 md:mt-[59px] md:gap-6">
               {[
@@ -91,7 +90,7 @@ export default async function LandingPage() {
       <section className="w-full bg-[#F8F8F8] pt-14 pb-20 md:pt-[120px]">
         <div className="mx-auto flex max-w-[1300px] flex-col items-center gap-10 px-6 md:gap-[88px]">
           <div className="text-center">
-            <p className="text-sm font-medium text-[#FF8442]">목표 설정부터 기록까지</p>
+            <p className="text-bearlog-600 text-sm font-medium">목표 설정부터 기록까지</p>
             <h2 className="mt-3 text-2xl font-bold text-gray-900 md:text-3xl">쉽고 빠르게 할 일을 시작해요</h2>
           </div>
 
@@ -120,7 +119,7 @@ export default async function LandingPage() {
         <div className="mx-auto flex max-w-[1300px] flex-col items-center px-6 lg:flex-row-reverse lg:justify-center lg:gap-16">
           {/* 텍스트 */}
           <div className="flex h-[96px] w-[316px] flex-col items-end text-right lg:ml-auto lg:h-auto lg:w-auto lg:max-w-[422px] lg:items-end lg:text-right">
-            <span className="text-sm text-[#EF6C00] lg:text-base">활발한 소통 게시판</span>
+            <span className="text-bearlog-600 text-sm lg:text-base">활발한 소통 게시판</span>
             <h2 className="mt-3 text-2xl font-bold text-gray-900 lg:text-4xl">
               다양한 사람들과
               <br />
@@ -144,10 +143,10 @@ export default async function LandingPage() {
       {/* ── Section 05 · CTA ── */}
       <section className="w-full bg-white py-10">
         <div className="mx-auto max-w-[1840px] px-4">
-          <div className="relative flex min-h-[280px] w-full flex-col items-center justify-center overflow-hidden rounded-3xl bg-[#FFF8E4] px-6 py-16 text-center md:min-h-[518px]">
+          <div className="relative flex min-h-[280px] w-full flex-col items-center justify-center overflow-hidden rounded-3xl bg-[#D5FFF0] px-6 py-16 text-center md:min-h-[518px]">
             {/* ⭐ 별 */}
             <Image
-              src="/image/star.png"
+              src="/image/Star.png"
               alt="star"
               width={80}
               height={80}
@@ -165,19 +164,21 @@ export default async function LandingPage() {
 
             {/* 체크 */}
             <Image
-              src="/image/check.png"
+              src="/image/checkbox.png"
               alt="check"
               width={53}
               height={58}
               className="absolute right-[10%] bottom-[18%] z-0 h-[28px] w-[28px] md:top-[100px] md:right-[120px] md:bottom-auto md:h-[58px] md:w-[53px] lg:top-[223px] lg:right-[264px]"
             />
 
-            <p className="z-10 text-sm font-semibold text-[#FF8442]">베어로그 하나로 일상부터 개발까지</p>
+            <p className="text-bearlog-600 z-10 text-sm font-semibold">베어로그 하나로 일상부터 개발까지</p>
 
             <h2 className="z-10 mt-3 text-xl font-bold text-gray-900 md:text-2xl">개발자 할 일, 베어로그로 계획해요</h2>
 
             <Link href={startPath} className="z-10">
-              <Button className="mt-6 h-[48px] w-[140px] text-sm font-semibold">시작하기</Button>
+              <Button className="mt-6 h-[56px] w-[223px] bg-[#00C87F] text-sm font-semibold hover:bg-[#00C87F]/90">
+                시작하기
+              </Button>
             </Link>
           </div>
         </div>

@@ -2,7 +2,7 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 
 import AllTodoContent from '@/features/dashboard/allTodo/components/AllTodoContent';
 
-import { todoQueries } from '@/lib/queryKeys';
+import { todoQueries } from '@/shared/lib/queryKeys';
 
 export const dynamic = 'force-dynamic';
 

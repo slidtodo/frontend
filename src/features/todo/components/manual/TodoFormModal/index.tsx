@@ -37,7 +37,7 @@ interface EditMode extends BaseProps {
 }
 
 type TodoFormModalProps = CreateMode | EditMode;
-type FormValues = Omit<PostTodoRequest & PatchTodoRequest, 'imageUrl'> & { imageUrl?: string | null };
+type FormValues = PostTodoRequest & PatchTodoRequest;
 
 export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModalProps) {
   const { closeModal } = useModalStore();

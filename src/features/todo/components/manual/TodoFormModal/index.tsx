@@ -252,13 +252,13 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       <div className="mt-1 flex items-center gap-2 md:mt-[34px] md:gap-3">
         <Button
           type="button"
-          variant="secondary"
+          variant="tertiary"
           className="h-12 w-full border border-gray-300 text-gray-500 md:h-14"
           onClick={closeModal}
         >
           취소
         </Button>
-        <Button type="submit" variant="confirm" className="h-12 w-full md:h-14">
+        <Button type="submit" variant="primary" className="h-12 w-full md:h-14">
           확인
         </Button>
       </div>

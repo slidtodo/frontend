@@ -152,7 +152,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
             </div>
             <Button
               onClick={handleSubmit}
-              disabled={isPending || title.trim() === '' || content.trim() === ''}
+              disabled={isPending || title.trim() === '' || !editor || editor.isEmpty}
               variant="primary"
               className="px-[27px] py-[10px] text-sm"
             >

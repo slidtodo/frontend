@@ -1,5 +1,5 @@
 'use client';
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { PlusIcon } from 'lucide-react';
 
@@ -66,8 +66,8 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
             key={button.id}
             className={`cursor-pointer overflow-hidden rounded-2xl px-4 py-2 text-base font-bold text-ellipsis whitespace-nowrap transition-all duration-200 ${
               selectedFilter === button.label
-                ? 'text-bearlog-600 bg-[rgba(0,200,127,0.2)]'
-                : 'hover:text-bearlog-600 text-gray-400 hover:bg-[rgba(0,200,127,0.2)]'
+                ? 'text-bearlog-600 bg-bearlog-500/20'
+                : 'hover:text-bearlog-600 hover:bg-bearlog-500/20 text-gray-400'
             }`}
             onClick={() => setSelectedFilter(button.label)}
           >

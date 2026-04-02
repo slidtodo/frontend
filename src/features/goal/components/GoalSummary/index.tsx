@@ -124,7 +124,7 @@ function GoalProgress({ goalDetail }: GoalProgressProps) {
   if (!goalDetail) return null;
 
   return (
-    <div className="bg-bearlog-500 relative flex min-h-[160px] w-full gap-[31px] rounded-[32px] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)]">
+    <div className="bg-bearlog-500 relative flex min-h-[160px] w-full gap-[31px] rounded-[32px] shadow-[0_10px_40px_0_rgba(0,200,127,0.40)]">
       <div className="absolute flex h-full w-full items-center gap-1 p-[34px]">
         <div className="w-[92px]">
           <ProgressCircle percent={goalDetail.progress} className="h-auto w-full" color="#008354" />

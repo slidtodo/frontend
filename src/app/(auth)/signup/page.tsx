@@ -110,7 +110,7 @@ export default function SignupPage() {
 
           <Button
             type="submit"
-            className="mt-8 h-14 w-full bg-[#00C87F] hover:bg-[#00C87F]/90"
+            className="mt-8 h-14 w-full bg-bearlog-500 hover:bg-bearlog-500/90"
             disabled={!name || !email || !password || !passwordConfirm}
           >
             회원가입하기

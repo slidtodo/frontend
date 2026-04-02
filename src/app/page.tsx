@@ -61,10 +61,10 @@ export default async function LandingPage() {
       </section>
 
       {/* ── Section 02 · 특별한 이유 ── */}
-      <section className="relative z-10 w-full bg-[#00C87F] py-14 md:py-20">
+      <section className="relative z-10 w-full bg-bearlog-500 py-14 md:py-20">
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 md:flex-row md:items-center md:justify-between xl:justify-normal xl:gap-[216px]">
           <div className="flex flex-col text-white md:shrink-0">
-            <p className="text-sm font-semibold text-[#7EFFD0] md:text-lg">자동화로 더 똑똑한 노트 관리</p>
+            <p className="text-sm font-semibold text-bearlog-300 md:text-lg">자동화로 더 똑똑한 노트 관리</p>
             <h2 className="mt-3 text-2xl leading-tight font-bold md:text-4xl">베어로그가 특별한 이유</h2>
             <ul className="mt-8 flex flex-col gap-5 md:mt-[59px] md:gap-6">
               {[
@@ -176,7 +176,7 @@ export default async function LandingPage() {
             <h2 className="z-10 mt-3 text-xl font-bold text-gray-900 md:text-2xl">개발자 할 일, 베어로그로 계획해요</h2>
 
             <Link href={startPath} className="z-10">
-              <Button className="mt-6 h-[56px] w-[223px] bg-[#00C87F] text-sm font-semibold hover:bg-[#00C87F]/90">
+              <Button className="mt-6 h-[56px] w-[223px] bg-bearlog-500 text-sm font-semibold hover:bg-bearlog-500/90">
                 시작하기
               </Button>
             </Link>

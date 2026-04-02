@@ -1,4 +1,5 @@
 export * from './fetchAuth';
+export * from './fetchImages';
 export * from './fetchGoals';
 export * from './fetchNotes';
 export * from './fetchNotifications';

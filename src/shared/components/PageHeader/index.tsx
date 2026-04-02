@@ -51,9 +51,9 @@ export function PageHeader({ id, title, count, className = '' }: PageHeaderProps
       {/* 제목 — slate-700 */}
       {title}
 
-      {/* 카운트 — orange-600, aria-label로 이미 읽히므로 aria-hidden 처리 */}
+      {/* 카운트 — bearlog-500, aria-label로 이미 읽히므로 aria-hidden 처리 */}
       {hasCount && (
-        <span className="text-orange-600" aria-hidden="true">
+        <span className="text-bearlog-500" aria-hidden="true">
           {count}
         </span>
       )}

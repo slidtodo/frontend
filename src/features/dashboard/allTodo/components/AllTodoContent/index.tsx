@@ -53,7 +53,6 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
     { id: 3, label: 'DONE' },
   ];
   const { openTodoCreateModal } = useTodoCreateModal();
-  console.log('todos', todos);
 
   return (
     <div className="flex justify-between px-2">
@@ -63,8 +62,8 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
             key={button.id}
             className={`cursor-pointer overflow-hidden rounded-2xl px-4 py-2 text-base font-bold text-ellipsis whitespace-nowrap transition-all duration-200 ${
               selectedFilter === button.label
-                ? 'bg-[#FFA565]/20 text-[#EF6C00]'
-                : 'text-[#A4A4A4] hover:bg-[#FFA565]/20 hover:text-[#EF6C00]'
+                ? 'text-bearlog-600 bg-[rgba(0,200,127,0.2)]'
+                : 'hover:text-bearlog-600 text-gray-400 hover:bg-[rgba(0,200,127,0.2)]'
             }`}
             onClick={() => setSelectedFilter(button.label)}
           >
@@ -74,7 +73,7 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
       </div>
       <Button
         variant="cancel"
-        className="flex items-center gap-1 bg-[#F2F2F2] px-3 py-[10px] hover:bg-[#E0E0E0] md:px-[20px]"
+        className="group hover:bg-bearlog-500 flex items-center gap-1 bg-[#F2F2F2] px-3 py-[10px] md:px-[20px]"
         onClick={() => {
           if (todos?.[0]?.goal?.id === undefined) return;
           openTodoCreateModal({
@@ -90,8 +89,8 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
           });
         }}
       >
-        <PlusIcon size={20} color="#737373" />
-        <span className="overflow-hidden text-sm font-semibold text-ellipsis whitespace-nowrap text-[#737373]">
+        <PlusIcon size={20} className="text-gray-500 group-hover:text-white" />
+        <span className="overflow-hidden text-sm font-semibold text-ellipsis whitespace-nowrap text-gray-500 group-hover:text-white">
           할 일 추가
         </span>
       </Button>

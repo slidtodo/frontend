@@ -18,8 +18,8 @@ import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
 import EditorToolbar from '@/features/note/components/NoteEditor/EditorToolbar';
 import { createPortal } from 'react-dom';
-import { TodoResponse } from '@/lib/api/fetchTodos';
-import { GoalDetailResponse } from '@/lib/api/fetchGoals';
+import { TodoResponse } from '@/shared/lib/api/fetchTodos';
+import { GoalDetailResponse } from '@/shared/lib/api/fetchGoals';
 import { useMobileHeaderStore } from '@/shared/stores/useMobileHeaderStore';
 
 interface NoteCreateClientProps {

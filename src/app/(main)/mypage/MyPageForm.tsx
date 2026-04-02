@@ -8,9 +8,9 @@ import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
 
-import { userQueries } from '@/lib/queryKeys';
-import { usePatchCurrentUser, usePatchCurrentUserPassword } from '@/lib/mutations';
-import { validatePassword, validatePasswordConfirm } from '@/lib/validation';
+import { userQueries } from '@/shared/lib/queryKeys';
+import { usePatchCurrentUser, usePatchCurrentUserPassword } from '@/shared/lib/mutations';
+import { validatePassword, validatePasswordConfirm } from '@/shared/lib/validation';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 
 // TODO: 리액트 훅 폼 적용 필요

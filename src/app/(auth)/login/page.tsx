@@ -8,7 +8,7 @@ import FormField from '@/shared/components/FormField';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import Image from 'next/image';
-import { fetchAuth } from '@/lib/api/fetchAuth'; // 추가
+import { fetchAuth } from '@/shared/lib/api/fetchAuth'; // 추가
 
 export default function LoginPage() {
   const router = useRouter();

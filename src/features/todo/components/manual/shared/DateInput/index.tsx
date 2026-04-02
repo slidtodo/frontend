@@ -8,7 +8,7 @@ import { formatDate } from '@/shared/utils/utils';
 import { useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
 import Button from '@/shared/components/Button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/lib/utils';
 
 interface DateInputProps {
   date: Date | undefined;

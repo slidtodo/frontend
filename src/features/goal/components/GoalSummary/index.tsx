@@ -12,9 +12,9 @@ import { PopupModal } from '@/shared/components/Modal/PopupModal';
 import SinglePostModal from '@/shared/components/Modal/SinglePostModal';
 import PageHeader from '@/shared/components/PageHeader';
 
-import { GoalDetailResponse } from '@/lib/api';
-import { useDeleteGoal, usePatchGoal } from '@/lib/mutations';
-import { goalQueries, userQueries } from '@/lib/queryKeys';
+import { GoalDetailResponse } from '@/shared/lib/api';
+import { useDeleteGoal, usePatchGoal } from '@/shared/lib/mutations';
+import { goalQueries, userQueries } from '@/shared/lib/queryKeys';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 

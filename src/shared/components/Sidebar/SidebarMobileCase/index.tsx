@@ -3,7 +3,7 @@ import { BellIcon } from 'lucide-react';
 
 import PageHeader from '@/shared/components/PageHeader';
 import { useMobileHeaderStore } from '@/shared/stores/useMobileHeaderStore';
-import { CurrentUserResponse } from '@/lib/api/fetchUsers';
+import { CurrentUserResponse } from '@/shared/lib/api/fetchUsers';
 
 interface SidebarMobileCaseProps {
   user: CurrentUserResponse | undefined;

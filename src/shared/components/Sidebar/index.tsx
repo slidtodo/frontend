@@ -19,13 +19,13 @@ import { useQuery } from '@tanstack/react-query';
 import SidebarMobileCase from './SidebarMobileCase';
 import SinglePostModal from '../Modal/SinglePostModal';
 
-import { useSidebarContext, useSidebarOpen, MenuItem } from '@/contexts/SidebarContext';
+import { useSidebarContext, useSidebarOpen, MenuItem } from '@/shared/contexts/SidebarContext';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import { useModalStore } from '@/shared/stores/useModalStore';
-import { usePostGoal, usePostLogout } from '@/lib/mutations';
+import { usePostGoal, usePostLogout } from '@/shared/lib/mutations';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
-import { userQueries } from '@/lib/queryKeys';
-import { CurrentUserResponse } from '@/lib/api';
+import { userQueries } from '@/shared/lib/queryKeys';
+import { CurrentUserResponse } from '@/shared/lib/api';
 
 export default function Sidebar() {
   const breakpoint = useBreakpoint();

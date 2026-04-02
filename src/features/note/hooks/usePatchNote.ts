@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { fetchNotes, PatchNoteRequest } from '@/lib/api/fetchNotes';
-import { noteQueries } from '@/lib/queryKeys';
+import { fetchNotes, PatchNoteRequest } from '@/shared/lib/api/fetchNotes';
+import { noteQueries } from '@/shared/lib/queryKeys';
 
 export const usePatchNote = (noteId: number, goalId: number, callbacks?: { onError?: (error: Error) => void }) => {
   const router = useRouter();
@@ -17,4 +17,3 @@ export const usePatchNote = (noteId: number, goalId: number, callbacks?: { onErr
     onError: (error) => callbacks?.onError?.(error),
   });
 };
-

@@ -6,9 +6,9 @@ import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 
-import { PatchTodoRequest, PostTodoRequest } from '@/lib/api';
-import { usePatchTodo, usePostTodo } from '@/lib/mutations';
-import { goalQueries, todoQueries } from '@/lib/queryKeys';
+import { PatchTodoRequest, PostTodoRequest } from '@/shared/lib/api';
+import { usePatchTodo, usePostTodo } from '@/shared/lib/mutations';
+import { goalQueries, todoQueries } from '@/shared/lib/queryKeys';
 import Button from '@/shared/components/Button';
 import Dropdown from '@/shared/components/Dropdown';
 import FormField from '@/shared/components/FormField';

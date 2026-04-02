@@ -1,5 +1,5 @@
-import { TodoResponse } from '@/lib/api/fetchTodos';
-import { GoalDetailResponse } from '@/lib/api/fetchGoals';
+import { TodoResponse } from '@/shared/lib/api/fetchTodos';
+import { GoalDetailResponse } from '@/shared/lib/api/fetchGoals';
 import { Editor } from '@tiptap/react';
 
 /**

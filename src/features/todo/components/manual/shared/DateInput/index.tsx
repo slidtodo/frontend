@@ -31,18 +31,18 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
         <button
           type="button"
           className={clsx(
-            'flex w-full cursor-pointer items-center gap-2 rounded-xl border border-[#CCC] p-3',
+            'flex w-full cursor-pointer items-center gap-2 rounded-xl border border-gray-300 p-3',
             'text-sm font-normal',
             'md:h-14 md:rounded-2xl md:p-4 md:text-base',
-            open && 'border border-[#FF8442]',
+            open && 'border-bearlog-500 border',
           )}
           data-empty={!date}
         >
-          <CalendarIcon size={20} className="shrink-0 stroke-[#737373] md:size-6" />
+          <CalendarIcon size={20} className="shrink-0 stroke-gray-500 md:size-6" />
           {date ? (
-            <span className="text-[#333]">{formatDate(date)}</span>
+            <span className="text-gray-700">{formatDate(date)}</span>
           ) : (
-            <span className="text-[#737373]">날짜를 선택해주세요</span>
+            <span className="text-gray-500">날짜를 선택해주세요</span>
           )}
         </button>
       </PopoverTrigger>
@@ -62,14 +62,14 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
 
             // 요일
             weekdays: 'flex w-full mt-3',
-            weekday: 'w-10 h-10 flex items-center justify-center text-sm font-medium text-[#333] tracking-[-0.42px]',
+            weekday: 'w-10 h-10 flex items-center justify-center text-sm font-medium text-gray-700 tracking-[-0.42px]',
 
             // 날짜 행
             weeks: 'pb-4',
             week: 'flex w-full mt-1',
             day: 'w-10 h-10 p-0 flex items-center justify-center',
 
-            today: 'rounded-full bg-[#FAFAFA]',
+            today: 'rounded-full bg-gray-50',
             outside: 'opacity-100',
             disabled: 'opacity-100',
             hidden: 'invisible',
@@ -80,16 +80,16 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
                 <Button
                   type="button"
                   onClick={onPreviousClick}
-                  className="flex size-8 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent hover:bg-[#FAFAFA]"
+                  className="flex size-8 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent hover:bg-gray-50"
                 >
-                  <ChevronLeftIcon size={20} className="stroke-[#A4A4A4] hover:stroke-[#333]" />
+                  <ChevronLeftIcon size={20} className="stroke-[#A4A4A4] hover:stroke-gray-700" />
                 </Button>
                 <Button
                   type="button"
                   onClick={onNextClick}
-                  className="flex size-8 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent hover:bg-[#FAFAFA]"
+                  className="flex size-8 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent hover:bg-gray-50"
                 >
-                  <ChevronRightIcon size={20} className="stroke-[#A4A4A4] hover:stroke-[#333]" />
+                  <ChevronRightIcon size={20} className="stroke-[#A4A4A4] hover:stroke-gray-700" />
                 </Button>
               </div>
             ),
@@ -97,11 +97,11 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
               <button
                 {...props}
                 className={cn(
-                  'flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent text-sm font-normal tracking-[-0.42px] transition-colors hover:bg-[#FAFAFA]',
-                  modifiers.outside ? 'text-[#A4A4A4]' : 'text-[#333]',
+                  'flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent text-sm font-normal tracking-[-0.42px] transition-colors hover:bg-gray-50',
+                  modifiers.outside ? 'text-[#A4A4A4]' : 'text-gray-700',
                   modifiers.disabled && 'cursor-not-allowed text-[#A4A4A4]',
-                  modifiers.today && !modifiers.selected && 'bg-[#FAFAFA] font-medium',
-                  modifiers.selected && 'bg-[#FF8442] font-medium text-white! hover:bg-[#FF8442]',
+                  modifiers.today && !modifiers.selected && 'bg-gray-50 font-medium',
+                  modifiers.selected && 'bg-bearlog-500 hover:bg-bearlog-500 font-medium text-white!',
                 )}
               />
             ),
@@ -117,7 +117,7 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
               if (onCancel) onCancel();
               setOpen(false);
             }}
-            className="flex flex-1 items-center justify-center rounded-full border border-[#CCC] py-[10px] text-sm font-semibold text-[#737373]"
+            className="flex flex-1 items-center justify-center rounded-full border border-gray-300 py-[10px] text-sm font-semibold text-gray-500"
           >
             취소
           </Button>
@@ -127,7 +127,7 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
               onConfirm(date);
               setOpen(false);
             }}
-            className="flex flex-1 items-center justify-center rounded-full bg-[#FF8442] py-[10px] text-sm font-semibold text-white"
+            className="bg-bearlog-500 flex flex-1 items-center justify-center rounded-full py-[10px] text-sm font-semibold text-white"
           >
             확인
           </Button>

@@ -900,10 +900,10 @@ export interface components {
             dueDate?: string;
             /** @description 링크 URL */
             linkUrl?: string;
-            /** @description 이미지 URL */
-            imageUrl?: string;
             /** @description 태그 이름 목록 */
             tags?: string[];
+            /** @description 이미지 URL */
+            imageUrl?: string;
         };
         /** @description 알림 응답 */
         NotificationResponse: {

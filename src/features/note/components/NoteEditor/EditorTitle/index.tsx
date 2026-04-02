@@ -29,7 +29,7 @@ export default function EditorTitle({ title, onChange, readOnly = false }: Edito
       {/* readOnly일 때 글자수 카운터 숨기고 x 표시 */}
       {!readOnly && (
         <p className="shrink-0 text-right text-xs font-medium text-slate-500">
-          {title.length}/<span className="text-[#EF6C00]">30</span>
+          {title.length}/<span className="text-bearlog-500">30</span>
         </p>
       )}
     </section>

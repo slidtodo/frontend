@@ -18,8 +18,8 @@ import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
 import EditorToolbar from '@/features/note/components/NoteEditor/EditorToolbar';
 import { createPortal } from 'react-dom';
-import { TodoResponse } from '@/lib/api/fetchTodos';
-import { GoalDetailResponse } from '@/lib/api/fetchGoals';
+import { TodoResponse } from '@/shared/lib/api/fetchTodos';
+import { GoalDetailResponse } from '@/shared/lib/api/fetchGoals';
 import { useMobileHeaderStore } from '@/shared/stores/useMobileHeaderStore';
 
 interface NoteCreateClientProps {
@@ -145,20 +145,16 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
           <PageHeader title={'노트 작성하기'} />
           <div className="flex gap-2">
             <div className="relative">
-              <Button
-                onClick={handleSaveDraft}
-                variant="secondary"
-                className="cursor-pointer text-sm md:h-10 md:px-[27px]"
-              >
+              <Button onClick={handleSaveDraft} variant="secondary" className="px-[27px] py-[10px] text-sm">
                 임시저장
               </Button>
               {showDraftToast && <DraftNoteToast onLoad={handleToastLoad} onClose={handleCloseToast} />}
             </div>
             <Button
               onClick={handleSubmit}
-              disabled={isPending}
+              disabled={isPending || title.trim() === '' || !editor || editor.isEmpty}
               variant="primary"
-              className="cursor-pointer text-sm md:h-10 md:px-[27px]"
+              className="px-[27px] py-[10px] text-sm"
             >
               {isPending ? '등록 중...' : '등록하기'}
             </Button>

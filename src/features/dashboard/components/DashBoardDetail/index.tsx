@@ -6,8 +6,8 @@ import { useQuery } from '@tanstack/react-query';
 import PageSubTitle from '@/shared/components/PageSubTitle';
 import GoalBox from '../GoalBox';
 
-import { goalQueries } from '@/lib/queryKeys';
-import { GoalListResponse } from '@/lib/api';
+import { goalQueries } from '@/shared/lib/queryKeys';
+import { GoalListResponse } from '@/shared/lib/api';
 import Empty from '@/shared/components/Empty';
 
 type GoalItem = NonNullable<GoalListResponse['goals']>[number];

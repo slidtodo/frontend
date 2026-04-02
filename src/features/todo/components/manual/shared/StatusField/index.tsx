@@ -35,12 +35,12 @@ function StatusFieldItem({ label, selected, onChange }: StatusFieldItemProps) {
       <div
         className={clsx(
           'flex size-[18px] shrink-0 items-center justify-center rounded-[6px] border',
-          selected ? 'border-transparent bg-[#FF8442]' : 'border-[#CCC] bg-white',
+          selected ? 'bg-bearlog-500 border-transparent' : 'border-gray-300 bg-white',
         )}
       >
         {selected && <CheckIcon size={12} className="stroke-white stroke-2" />}
       </div>
-      <span className="text-sm font-medium text-[#737373]">{label}</span>
+      <span className="text-sm font-medium text-gray-500">{label}</span>
     </button>
   );
 }

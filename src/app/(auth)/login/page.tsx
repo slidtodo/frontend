@@ -8,7 +8,7 @@ import FormField from '@/shared/components/FormField';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import Image from 'next/image';
-import { fetchAuth } from '@/lib/api/fetchAuth'; // 추가
+import { fetchAuth } from '@/shared/lib/api/fetchAuth'; // 추가
 
 export default function LoginPage() {
   const router = useRouter();
@@ -41,11 +41,11 @@ export default function LoginPage() {
     if (data.loginUrl) window.location.href = data.loginUrl;
   };
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#F5F5F5] py-20">
+    <main className="flex min-h-screen items-center justify-center py-20">
       <div className="flex w-full max-w-[331px] flex-col items-start md:max-w-[400px]">
         <div className="mb-10 flex h-12 w-full items-center gap-4">
           <Image src="/icons/todo.png" alt="logo" width={48} height={48} />
-          <span className="text-2xl font-bold">Slid to-do</span>
+          <span className="text-2xl font-bold">Bearlog</span>
         </div>
         <form
           className="flex w-full flex-col gap-4"
@@ -76,8 +76,8 @@ export default function LoginPage() {
         </form>
 
         <div className="mt-6 flex h-6 w-full items-center justify-center gap-2 text-sm">
-          <span className="text-base leading-6 font-medium text-[#333333]">슬리드투두가 처음이신가요?</span>
-          <Link href="/signup" className="text-base leading-6 font-semibold text-[#EF6C00]">
+          <span className="text-base leading-6 font-medium text-gray-700">슬리드투두가 처음이신가요?</span>
+          <Link href="/signup" className="text-bearlog-600 text-base leading-6 font-semibold">
             회원가입
           </Link>
         </div>

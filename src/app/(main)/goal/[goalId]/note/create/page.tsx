@@ -1,6 +1,6 @@
-import NoteCreateClient from '../../../../../../features/note/components/NoteCreateClient';
-import { fetchTodos } from '@/lib/api/fetchTodos';
-import { fetchGoals } from '@/lib/api/fetchGoals';
+import NoteCreateClient from '@/features/note/components/NoteCreateClient';
+import { fetchTodos } from '@/shared/lib/api/fetchTodos';
+import { fetchGoals } from '@/shared/lib/api/fetchGoals';
 
 export default async function Page({
   params,

@@ -44,7 +44,7 @@ function TabChangeMode({ mode }: TabChangeModeProps) {
             aria-selected={isActive}
             onClick={() => handleSelectMode(option.value)}
             className={clsx(
-              'relative rounded-full px-[14.5px] py-[3px] text-[20px] leading-7 font-medium transition-colors duration-200',
+              'relative rounded-full leading-7 font-medium transition-colors duration-200 md:text-[12px] lg:px-[14.5px] lg:py-[3px] lg:text-[20px]',
               isActive ? 'text-gray-100' : 'text-[#8A8A8A] hover:bg-white/40',
               option.value === 'GITHUB' && 'px-5 text-[18px]',
             )}

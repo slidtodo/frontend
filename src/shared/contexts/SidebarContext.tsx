@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { createContext, useContext, useState, ReactNode, useMemo } from 'react';
 import { LayoutGridIcon, FlagIcon, CalendarDaysIcon, ListCheckIcon } from 'lucide-react';
 
-import { goalQueries } from '@/lib/queryKeys';
+import { goalQueries } from '@/shared/lib/queryKeys';
 
 const sidebarMenuIconClassName = 'h-6 w-6 transition-all [&_*]:fill-current [&_*]:stroke-current';
 interface MenuBase {

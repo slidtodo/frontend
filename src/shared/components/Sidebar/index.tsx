@@ -19,13 +19,13 @@ import { useQuery } from '@tanstack/react-query';
 import SidebarMobileCase from './SidebarMobileCase';
 import SinglePostModal from '../Modal/SinglePostModal';
 
-import { useSidebarContext, useSidebarOpen, MenuItem } from '@/contexts/SidebarContext';
+import { useSidebarContext, useSidebarOpen, MenuItem } from '@/shared/contexts/SidebarContext';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import { useModalStore } from '@/shared/stores/useModalStore';
-import { usePostGoal } from '@/lib/mutations';
+import { usePostGoal, usePostLogout } from '@/shared/lib/mutations';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
-import { userQueries } from '@/lib/queryKeys';
-import { CurrentUserResponse } from '@/lib/api';
+import { userQueries } from '@/shared/lib/queryKeys';
+import { CurrentUserResponse } from '@/shared/lib/api';
 
 export default function Sidebar() {
   const breakpoint = useBreakpoint();
@@ -62,6 +62,7 @@ function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
   const pathname = usePathname();
 
   const { mutate } = usePostGoal();
+  const { mutate: logout } = usePostLogout();
 
   const menus = getMenus();
   const projectName = 'Bearlog';
@@ -132,7 +133,10 @@ function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
               <SettingsIcon color="#BBBBBB" size={24} />
               <span className="text-lg font-semibold text-gray-500">설정</span>
             </button>
-            <button className="flex items-center justify-start gap-[10px] rounded-[20px] px-[14px] py-[10px] transition-all duration-100 hover:bg-gray-100">
+            <button
+              onClick={() => logout()}
+              className="flex items-center justify-start gap-[10px] rounded-[20px] px-[14px] py-[10px] transition-all duration-100 hover:bg-gray-100"
+            >
               <LogOutIcon color="#BBBBBB" size={24} />
               <span className="text-lg font-semibold text-gray-500">로그아웃</span>
             </button>

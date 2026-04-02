@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 import { fetchGoals, PostGoalRequest } from './api/fetchGoals';
+import { fetchAuth } from './api';
 import { fetchTodos, PatchTodoRequest, PostTodoRequest } from './api/fetchTodos';
 import { fetchUsers, PatchCurrentUserRequest, PatchCurrentUserPasswordRequest } from './api/fetchUsers';
 import { useToastStore } from '@/shared/stores/useToastStore';
@@ -191,6 +192,22 @@ export const usePatchCurrentUserPassword = () => {
     mutationFn: (data: PatchCurrentUserPasswordRequest) => fetchUsers.patchCurrentUserPassword(data),
     onError: () => {
       showToast('비밀번호 변경에 실패했습니다.', 'fail');
+    },
+  });
+};
+
+// auth
+export const usePostLogout = () => {
+  const router = useRouter();
+  const { showToast } = useToastStore();
+  return useMutation({
+    mutationFn: () => fetchAuth.postLogout(),
+    onSuccess: () => {
+      showToast('로그아웃 되었습니다.');
+      router.push('/login');
+    },
+    onError: () => {
+      showToast('로그아웃에 실패했습니다.', 'fail');
     },
   });
 };

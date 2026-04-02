@@ -16,12 +16,15 @@ import { GoalDetailResponse } from '@/lib/api';
 import { useDeleteGoal, usePatchGoal } from '@/lib/mutations';
 import { goalQueries, userQueries } from '@/lib/queryKeys';
 import { useModalStore } from '@/shared/stores/useModalStore';
+import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 
 interface GoalSummaryProps {
   goalId: number;
 }
 
 function GoalSummary({ goalId }: GoalSummaryProps) {
+  const breakpoint = useBreakpoint();
+
   const { data: user } = useQuery(userQueries.current());
   const { data: goalDetail } = useQuery({
     ...goalQueries.detail(goalId),
@@ -30,7 +33,7 @@ function GoalSummary({ goalId }: GoalSummaryProps) {
 
   return (
     <div className="flex flex-col gap-10">
-      <PageHeader title={`${user?.nickname}의 목표`} className="pl-2" />
+      {breakpoint !== 'mobile' && <PageHeader title={`${user?.nickname}의 목표`} className="pl-2" />}
       <section className="flex flex-col gap-6 xl:flex-row xl:gap-8">
         <GoalInfo goalDetail={goalDetail} />
 

@@ -20,8 +20,10 @@ export default function SidebarMobileCase({ user }: SidebarMobileCaseProps) {
   let count: number | undefined;
   const actions: React.ReactNode = <BellButton />;
 
-  if (pathname === '/dashboard' || /^\/goal\/[^/]+$/.test(pathname)) {
+  if (pathname === '/dashboard') {
     title = `${user?.nickname ?? '체다치즈'}님의 대시보드`;
+  } else if (/^\/goal\/[^/]+$/.test(pathname)) {
+    title = `${user?.nickname ?? '체다치즈'}님의 목표`;
   } else if (pathname === '/dashboard/all-todo') {
     title = '모든 할 일';
     count = allTodoCount;

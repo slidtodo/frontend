@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { use, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { PlusIcon } from 'lucide-react';
 
@@ -13,10 +13,12 @@ import { todoQueries } from '@/lib/queryKeys';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 import type { TodoListResponse } from '@/lib/api';
 import { TodoOptions } from '@/shared/types/types';
+import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 
 export default function AllTodoContent() {
-  const [selectedFilter, setSelectedFilter] = useState<TodoOptions>('ALL');
+  const breakpoint = useBreakpoint();
 
+  const [selectedFilter, setSelectedFilter] = useState<TodoOptions>('ALL');
   const { data: todoList } = useQuery(
     todoQueries.list({
       done: selectedFilter === 'ALL' ? undefined : selectedFilter === 'DONE' ? true : false,
@@ -26,7 +28,9 @@ export default function AllTodoContent() {
   if (!todoList) return null;
   return (
     <div className="mx-auto mb-[76px] flex max-w-[720px] flex-col gap-6">
-      <PageHeader title="모든 할 일" count={todoList?.totalCount ?? todoList?.todos?.length ?? 0} className="pl-2" />
+      {breakpoint !== 'mobile' && (
+        <PageHeader title="모든 할 일" count={todoList?.totalCount ?? todoList?.todos?.length ?? 0} className="pl-2" />
+      )}
       <section className="flex flex-col gap-3">
         <AllTodoFilter todos={todoList.todos} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
         {todoList && (todoList.todos?.length ?? 0) === 0 ? (

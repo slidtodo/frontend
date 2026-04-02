@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import NoteListHeader from '@/features/note/components/NoteListHeader';
 import NoteListClient from '@/features/note/components/NoteListClient';
 
@@ -12,7 +13,7 @@ export default function NoteListContainer({ goalId }: NoteListContainerProps) {
   const [searchInput, setSearchInput] = useState('');
   const [submittedSearch, setSubmittedSearch] = useState('');
   const [sort, setSort] = useState<'LATEST' | 'OLDEST'>('LATEST');
-
+  const router = useRouter();
   return (
     <>
       <NoteListHeader
@@ -25,6 +26,7 @@ export default function NoteListContainer({ goalId }: NoteListContainerProps) {
             setSort(v);
           }
         }}
+        onCreateNote={() => router.push(`/goal/${goalId}/note/create`)}
       />
       <NoteListClient goalId={goalId} search={submittedSearch} sort={sort} />
     </>

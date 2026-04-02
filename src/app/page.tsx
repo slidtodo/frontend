@@ -39,7 +39,7 @@ export default async function LandingPage() {
           <Link href={startPath} className="mt-8 h-fit w-fit md:mt-[56px]">
             <Button
               variant="primary"
-              className="h-[48px] w-[160px] bg-[#00C87F] text-sm font-semibold hover:bg-[#00C87F]/90 md:h-[56px] md:w-[223px] md:text-base"
+              className="h-[48px] w-[160px] bg-bearlog-500 text-sm font-semibold hover:bg-bearlog-500/90 md:h-[56px] md:w-[223px] md:text-base"
             >
               시작하기
             </Button>

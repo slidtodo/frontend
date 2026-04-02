@@ -1,15 +1,14 @@
+import type { operations } from '@/shared/types/api/schemas/api.types';
 import { apiRequest } from './utils';
 
-type ImagePresignedResponse = {
-  uploadUrl: string;
-  url: string;
-};
+export type PostImageUploadUrlRequest = operations['createUploadUrl']['requestBody']['content']['application/json'];
+export type ImageUploadUrlResponse = operations['createUploadUrl']['responses'][200]['content']['application/json'];
 
 class FetchImages {
-  getPresignedUrl = (fileName: string) =>
-    apiRequest<ImagePresignedResponse, { fileName: string }>('/api/v1/images', {
+  postImageUploadUrl = (body: PostImageUploadUrlRequest) =>
+    apiRequest<ImageUploadUrlResponse, PostImageUploadUrlRequest>('/api/v1/images', {
       method: 'POST',
-      body: { fileName },
+      body,
     });
 }
 

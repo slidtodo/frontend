@@ -37,7 +37,7 @@ interface EditMode extends BaseProps {
 }
 
 type TodoFormModalProps = CreateMode | EditMode;
-type FormValues = PostTodoRequest & PatchTodoRequest;
+type FormValues = Omit<PostTodoRequest & PatchTodoRequest, 'imageUrl'> & { imageUrl?: string | null };
 
 export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModalProps) {
   const { closeModal } = useModalStore();
@@ -138,7 +138,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         title: data.title,
         dueDate: data.dueDate,
         linkUrl: data.linkUrl,
-        imageUrl: data.imageUrl as string | undefined,
+        imageUrl: data.imageUrl ?? undefined,
         tags: data.tags,
         done: data.done,
       });
@@ -149,7 +149,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         goalId: data.goalId,
         dueDate: data.dueDate,
         linkUrl: data.linkUrl,
-        imageUrl: data.imageUrl as string | undefined,
+        imageUrl: data.imageUrl ?? undefined,
         tags: data.tags,
       });
     }
@@ -244,7 +244,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         <ImageInput
           image={imageUrl}
           onChange={(nextImage) => {
-            setValue('imageUrl', nextImage ?? undefined, { shouldDirty: true });
+            setValue('imageUrl', nextImage ?? null, { shouldDirty: true });
           }}
         />
       </FormField>

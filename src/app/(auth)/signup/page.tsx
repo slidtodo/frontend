@@ -7,8 +7,8 @@ import Link from 'next/link';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
-import { validateEmail, validatePassword, validatePasswordConfirm } from '@/lib/validation';
-import { fetchAuth } from '@/lib/api/fetchAuth';
+import { validateEmail, validatePassword, validatePasswordConfirm } from '@/shared/lib/validation';
+import { fetchAuth } from '@/shared/lib/api/fetchAuth';
 
 export default function SignupPage() {
   const router = useRouter();

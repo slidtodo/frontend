@@ -39,7 +39,7 @@ export default async function LandingPage() {
           <Link href={startPath} className="mt-8 h-fit w-fit md:mt-[56px]">
             <Button
               variant="primary"
-              className="h-[48px] w-[160px] bg-bearlog-500 text-sm font-semibold hover:bg-bearlog-500/90 md:h-[56px] md:w-[223px] md:text-base"
+              className="hover:bg-bearlog-500/90 h-[48px] w-[160px] text-sm md:h-[56px] md:w-[223px] md:text-base"
             >
               시작하기
             </Button>
@@ -68,8 +68,8 @@ export default async function LandingPage() {
             <h2 className="mt-3 text-2xl leading-tight font-bold md:text-4xl">베어로그가 특별한 이유</h2>
             <ul className="mt-8 flex flex-col gap-5 md:mt-[59px] md:gap-6">
               {[
-                { icon: 'task.png', label: '편리한 모드 전환(일반/개발자)' },
-                { icon: 'progress.png', label: 'Github 연동으로 자동화' },
+                { icon: 'task-green.png', label: '편리한 모드 전환(일반/개발자)' },
+                { icon: 'progress-green.png', label: 'Github 연동으로 자동화' },
                 { icon: 'note.png', label: 'Github와 양방향 일정 등록' },
               ].map(({ icon, label }) => (
                 <li key={label} className="flex items-center gap-4 text-base font-bold md:text-xl">
@@ -146,7 +146,7 @@ export default async function LandingPage() {
           <div className="relative flex min-h-[280px] w-full flex-col items-center justify-center overflow-hidden rounded-3xl bg-[#D5FFF0] px-6 py-16 text-center md:min-h-[518px]">
             {/* ⭐ 별 */}
             <Image
-              src="/image/Star.png"
+              src="/image/star.png"
               alt="star"
               width={80}
               height={80}

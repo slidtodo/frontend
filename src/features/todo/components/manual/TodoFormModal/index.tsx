@@ -138,7 +138,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         title: data.title,
         dueDate: data.dueDate,
         linkUrl: data.linkUrl,
-        imageUrl: data.imageUrl as string | undefined,
+        imageUrl: data.imageUrl ?? undefined,
         tags: data.tags,
         done: data.done,
       });

@@ -46,7 +46,7 @@ export default function AllTodoContent() {
 }
 
 interface AllTodoFilterProps {
-  todos: TodoListResponse['todos'];
+  todos?: TodoListResponse['todos'];
   selectedFilter: TodoOptions;
   setSelectedFilter: React.Dispatch<React.SetStateAction<TodoOptions>>;
 }
@@ -103,7 +103,7 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
 }
 
 interface AllTodoFetcherProps {
-  todos: TodoListResponse['todos'];
+  todos?: TodoListResponse['todos'];
 }
 function AllTodoFetcher({ todos }: AllTodoFetcherProps) {
   return (

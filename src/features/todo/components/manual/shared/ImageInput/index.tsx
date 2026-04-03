@@ -23,7 +23,13 @@ export default function ImageInput({ image, onChange }: ImageInput) {
     setIsUploading(true);
     try {
       const { uploadUrl, url } = await fetchImages.postImageUploadUrl({ fileName: file.name });
-      const response = await fetch(uploadUrl, { method: 'PUT', body: file });
+      const response = await fetch(uploadUrl, {
+        method: 'PUT',
+        body: file,
+        headers: {
+          'Content-Type': file.type,
+        },
+      });
       if (!response.ok) throw new Error('이미지 업로드 실패');
       onChange(url);
     } catch (error) {

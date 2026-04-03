@@ -244,7 +244,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         <ImageInput
           image={imageUrl}
           onChange={(nextImage) => {
-            setValue('imageUrl', nextImage ?? null, { shouldDirty: true });
+            setValue('imageUrl', nextImage ?? undefined, { shouldDirty: true });
           }}
         />
       </FormField>

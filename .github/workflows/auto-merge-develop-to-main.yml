@@ -2,7 +2,7 @@ name: Auto sync develop to main
 
 on:
   schedule:
-    - cron: '20 14 * * *'
+    - cron: '0 21 * * *'
       timezone: 'Asia/Seoul'
   workflow_dispatch:
 
@@ -50,7 +50,7 @@ jobs:
             --base main \
             --head develop \
             --title "chore: sync develop into main" \
-            --body "Automated PR to sync develop into main every day at 14:20 KST."
+            --body "Automated PR to sync develop into main every day at 21:00 KST."
 
       - name: Enable auto merge
         env:

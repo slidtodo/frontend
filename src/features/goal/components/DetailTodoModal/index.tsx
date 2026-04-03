@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import DetailTodoModalComponents from './DetailTodoModalComponets';
 
-import { todoQueries } from '@/lib/queryKeys';
+import { todoQueries } from '@/shared/lib/queryKeys';
 import { memo } from 'react';
 
 interface DetailTodoModalProps {

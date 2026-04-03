@@ -52,7 +52,8 @@ export default function SinglePostModal({
         />
 
         <Button
-          className="flex flex-1 items-center justify-center rounded-full bg-[#ff8442] px-[18px] py-[10px] text-sm font-semibold text-white md:py-[14px] md:text-[18px]"
+          variant="primary"
+          className="px-[18px] py-[10px] text-sm font-semibold md:py-[14px] md:text-[18px]"
           onClick={() => {
             if (inputRef.current) {
               onConfirm(inputRef.current.value);

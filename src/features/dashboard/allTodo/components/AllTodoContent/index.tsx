@@ -9,30 +9,35 @@ import Empty from '@/shared/components/Empty';
 import { DataBoundary } from '@/shared/components/ErrorSuspenseBoundary';
 import PageHeader from '@/shared/components/PageHeader';
 
-import { todoQueries } from '@/lib/queryKeys';
+import { todoQueries } from '@/shared/lib/queryKeys';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
-import type { TodoListResponse } from '@/lib/api';
+import type { TodoListResponse } from '@/shared/lib/api';
 import { TodoOptions } from '@/shared/types/types';
+import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 
 export default function AllTodoContent() {
-  const [selectedFilter, setSelectedFilter] = useState<TodoOptions>('ALL');
+  const breakpoint = useBreakpoint();
 
+  const [selectedFilter, setSelectedFilter] = useState<TodoOptions>('ALL');
   const { data: todoList } = useQuery(
     todoQueries.list({
       done: selectedFilter === 'ALL' ? undefined : selectedFilter === 'DONE' ? true : false,
     }),
   );
 
+  if (!todoList) return null;
   return (
     <div className="mx-auto mb-[76px] flex max-w-[720px] flex-col gap-6">
-      <PageHeader title="모든 할 일" count={todoList?.totalCount ?? todoList?.todos?.length ?? 0} className="pl-2" />
+      {breakpoint !== 'mobile' && (
+        <PageHeader title="모든 할 일" count={todoList?.totalCount ?? todoList?.todos?.length ?? 0} className="pl-2" />
+      )}
       <section className="flex flex-col gap-3">
-        <AllTodoFilter todos={todoList?.todos} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
+        <AllTodoFilter todos={todoList.todos} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
         {todoList && (todoList.todos?.length ?? 0) === 0 ? (
           <Empty>등록된 할 일이 없습니다.</Empty>
         ) : (
           <DataBoundary>
-            <AllTodoFetcher todos={todoList?.todos} />
+            <AllTodoFetcher todos={todoList.todos} />
           </DataBoundary>
         )}
       </section>
@@ -52,7 +57,6 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
     { id: 3, label: 'DONE' },
   ];
   const { openTodoCreateModal } = useTodoCreateModal();
-  console.log('todos', todos);
 
   return (
     <div className="flex justify-between px-2">
@@ -62,8 +66,8 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
             key={button.id}
             className={`cursor-pointer overflow-hidden rounded-2xl px-4 py-2 text-base font-bold text-ellipsis whitespace-nowrap transition-all duration-200 ${
               selectedFilter === button.label
-                ? 'bg-[#FFA565]/20 text-[#EF6C00]'
-                : 'text-[#A4A4A4] hover:bg-[#FFA565]/20 hover:text-[#EF6C00]'
+                ? 'text-bearlog-600 bg-bearlog-500/20'
+                : 'hover:text-bearlog-600 hover:bg-bearlog-500/20 text-gray-400'
             }`}
             onClick={() => setSelectedFilter(button.label)}
           >
@@ -73,7 +77,7 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
       </div>
       <Button
         variant="cancel"
-        className="flex items-center gap-1 bg-[#F2F2F2] px-3 py-[10px] hover:bg-[#E0E0E0] md:px-[20px]"
+        className="group hover:bg-bearlog-500 flex items-center gap-1 bg-[#F2F2F2] px-3 py-[10px] md:px-[20px]"
         onClick={() => {
           if (todos?.[0]?.goal?.id === undefined) return;
           openTodoCreateModal({
@@ -89,8 +93,8 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
           });
         }}
       >
-        <PlusIcon size={20} color="#737373" />
-        <span className="overflow-hidden text-sm font-semibold text-ellipsis whitespace-nowrap text-[#737373]">
+        <PlusIcon size={20} className="text-gray-500 group-hover:text-white" />
+        <span className="overflow-hidden text-sm font-semibold text-ellipsis whitespace-nowrap text-gray-500 group-hover:text-white">
           할 일 추가
         </span>
       </Button>

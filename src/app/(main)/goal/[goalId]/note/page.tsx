@@ -1,5 +1,5 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { noteQueries, goalQueries } from '@/lib/queryKeys';
+import { noteQueries, goalQueries } from '@/shared/lib/queryKeys';
 import NoteListContainer from '@/features/note/components/NoteListContainer';
 
 export const dynamic = 'force-dynamic';

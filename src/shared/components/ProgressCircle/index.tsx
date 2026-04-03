@@ -1,11 +1,11 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/lib/utils';
 
 interface ProgressCircleProps {
   className?: string;
   color?: string;
   percent: number | undefined;
 }
-export default function ProgressCircle({ className, color = '#FDB07A', percent }: ProgressCircleProps) {
+export default function ProgressCircle({ className, color = '#008354', percent }: ProgressCircleProps) {
   const clampedPercent = Math.max(0, Math.min(100, percent ?? 0));
 
   const size = 160;

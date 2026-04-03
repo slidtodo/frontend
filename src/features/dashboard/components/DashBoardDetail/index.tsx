@@ -6,8 +6,8 @@ import { useQuery } from '@tanstack/react-query';
 import PageSubTitle from '@/shared/components/PageSubTitle';
 import GoalBox from '../GoalBox';
 
-import { goalQueries } from '@/lib/queryKeys';
-import { GoalListResponse } from '@/lib/api';
+import { goalQueries } from '@/shared/lib/queryKeys';
+import { GoalListResponse } from '@/shared/lib/api';
 import Empty from '@/shared/components/Empty';
 
 type GoalItem = NonNullable<GoalListResponse['goals']>[number];
@@ -24,7 +24,7 @@ export default function DashboardDetail() {
     <section>
       <PageSubTitle
         subTitle="목표 별 할일"
-        icons={<Image src={'/image/goal.png'} alt="Goal Icon" width={40} height={40} />}
+        icons={<Image src={'/image/goal-todo.png'} alt="Goal Icon" width={40} height={40} />}
       />
       <div className="flex flex-col gap-[32px] pt-[10px]">
         {goals?.goals?.map((goal) =>

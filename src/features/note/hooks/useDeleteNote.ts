@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { fetchNotes } from '@/lib/api/fetchNotes';
-import { noteQueries } from '@/lib/queryKeys';
+import { fetchNotes } from '@/shared/lib/api/fetchNotes';
+import { noteQueries } from '@/shared/lib/queryKeys';
 
 export const useDeleteNote = (noteId: number, goalId: number, callbacks?: { onError?: (error: Error) => void }) => {
   const router = useRouter();

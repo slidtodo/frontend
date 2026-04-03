@@ -2,6 +2,7 @@
 
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { OctagonAlert } from 'lucide-react';
+import Button from '../../Button';
 
 /**
  * PopupModal
@@ -128,31 +129,30 @@ export function PopupModal({ onConfirm, variant }: PopupModalProps) {
         </p>
         {warning && (
           <div className="flex items-center justify-center gap-1">
-            <OctagonAlert className="text-orange-600" size={15} />
-            <span className="text-xs leading-6 font-medium text-orange-600 md:text-base">{warning}</span>
+            <OctagonAlert className="text-bearlog-500" size={15} />
+            <span className="text-bearlog-600 text-xs leading-6 font-medium md:text-base">{warning}</span>
           </div>
         )}
       </div>
 
-      {/* @TODO Button -> 공통 컴포넌트로 교체 */}
       <div className="flex gap-3">
-        <button
-          type="button"
+        <Button
+          variant="cancel"
+          className="flex-1 bg-[#F2F2F2] px-[18px] py-[10px] text-sm text-gray-500 md:py-[14px] md:text-[18px]"
           onClick={closeModal}
-          className="flex flex-1 items-center justify-center rounded-full border border-[#ccc] px-[18px] py-[14px] text-[18px] leading-7 font-semibold tracking-[-0.03em] text-[#737373]"
         >
           취소
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
+          variant="primary"
+          className="flex-1 px-[18px] py-[10px] text-sm md:py-[14px] md:text-[18px]"
           onClick={() => {
             onConfirm();
             closeModal();
           }}
-          className="flex flex-1 items-center justify-center rounded-full bg-[#ff8442] px-[18px] py-[14px] text-[18px] leading-7 font-semibold tracking-[-0.03em] text-white"
         >
           {confirmLabel}
-        </button>
+        </Button>
       </div>
     </div>
   );

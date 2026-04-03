@@ -12,16 +12,19 @@ import { PopupModal } from '@/shared/components/Modal/PopupModal';
 import SinglePostModal from '@/shared/components/Modal/SinglePostModal';
 import PageHeader from '@/shared/components/PageHeader';
 
-import { GoalDetailResponse } from '@/lib/api';
-import { useDeleteGoal, usePatchGoal } from '@/lib/mutations';
-import { goalQueries, userQueries } from '@/lib/queryKeys';
+import { GoalDetailResponse } from '@/shared/lib/api';
+import { useDeleteGoal, usePatchGoal } from '@/shared/lib/mutations';
+import { goalQueries, userQueries } from '@/shared/lib/queryKeys';
 import { useModalStore } from '@/shared/stores/useModalStore';
+import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 
 interface GoalSummaryProps {
   goalId: number;
 }
 
 function GoalSummary({ goalId }: GoalSummaryProps) {
+  const breakpoint = useBreakpoint();
+
   const { data: user } = useQuery(userQueries.current());
   const { data: goalDetail } = useQuery({
     ...goalQueries.detail(goalId),
@@ -30,7 +33,7 @@ function GoalSummary({ goalId }: GoalSummaryProps) {
 
   return (
     <div className="flex flex-col gap-10">
-      <PageHeader title={`${user?.nickname}의 목표`} className="pl-2" />
+      {breakpoint !== 'mobile' && <PageHeader title={`${user?.nickname}의 목표`} className="pl-2" />}
       <section className="flex flex-col gap-6 xl:flex-row xl:gap-8">
         <GoalInfo goalDetail={goalDetail} />
 
@@ -89,7 +92,7 @@ function GoalInfo({ goalDetail }: GoalInfoProps) {
   return (
     <div className="flex items-center justify-between rounded-2xl bg-white xl:flex-1">
       <div className="flex items-center justify-center gap-4 py-5 pl-5 md:py-6 md:pl-6 lg:py-15 lg:pl-10">
-        <Image src="/image/task.png" alt="Task Icon" width={40} height={40} />
+        <Image src="/image/goal-todo.png" alt="Task Icon" width={40} height={40} />
         <span className="overflow-hidden text-lg font-semibold text-ellipsis whitespace-nowrap lg:text-2xl">
           {goalDetail.title}
         </span>
@@ -121,17 +124,27 @@ function GoalProgress({ goalDetail }: GoalProgressProps) {
   if (!goalDetail) return null;
 
   return (
-    <div className="relative flex min-h-[160px] w-full gap-[31px] rounded-[32px] bg-[#FF8442] shadow-[0_10px_40px_0_rgba(255,158,89,0.40)]">
-      <div className="absolute flex h-full w-full items-center justify-between gap-1 p-[34px]">
+    <div className="bg-bearlog-500 relative flex min-h-[160px] w-full gap-[31px] rounded-[32px] shadow-[0_10px_40px_0_rgba(0,200,127,0.40)]">
+      <div className="absolute flex h-full w-full items-center gap-1 p-[34px]">
         <div className="w-[92px]">
-          <ProgressCircle percent={goalDetail.progress} className="h-auto w-full" color="#FFA96C" />
+          <ProgressCircle percent={goalDetail.progress} className="h-auto w-full" color="#008354" />
         </div>
-        <div className="flex flex-col items-start gap-2">
+
+        <div className="relative flex flex-col items-start gap-2">
           <span className="text-[clamp(12px,2vw,20px)] font-semibold text-white">목표진행률</span>
           <div className="flex items-baseline gap-1">
             <span className="text-[clamp(20px,5vw,60px)] leading-[1] font-bold text-white">{goalDetail.progress}</span>
             <span className="text-[clamp(14px,2vw,30px)] text-white">%</span>
           </div>
+        </div>
+        <div className="absolute right-0 bottom-0">
+          <Image
+            src={'/image/teaching-bear-lg.png'}
+            alt="Progress card Tablet"
+            width={88}
+            height={72}
+            className="block"
+          />
         </div>
       </div>
     </div>
@@ -146,9 +159,9 @@ function LinkNote({ goalDetail }: LinkNoteProps) {
   const goalId = goalDetail?.id;
 
   return (
-    <div className="relative min-h-[160px] w-full rounded-[32px] bg-[#02CAB5] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)]">
-      <Link className="absolute bottom-1/5 left-1/7 flex items-center gap-[2px]" href={`/goal/${goalId}/note`}>
-        <span className="text-lg font-bold text-white">노트 모아보기</span>
+    <div className="relative min-h-[160px] w-full rounded-[32px] bg-[#63B6FF] shadow-[0_10px_40px_0_rgba(99,182,255,0.24)]">
+      <Link className="absolute top-1/5 left-1/7 flex items-center gap-[2px]" href={`/goal/${goalId}/note`}>
+        <span className="text-2xl font-bold text-white">노트 모아보기</span>
         <ChevronRightIcon size={24} color="#ffffff" className="cursor-pointer" />
       </Link>
 

@@ -5,15 +5,15 @@ import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
-import { CheckIcon, EllipsisVertical, GithubIcon, Star } from 'lucide-react';
+import { CheckIcon, EllipsisVertical, SquareMenuIcon, Star } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
 import EditDeleteDropdown from '@/features/dashboard/components/EditDeleteDropdown';
 import DetailTodoModal from '@/features/goal/components/DetailTodoModal';
 
 import { useTodoEditModal } from '@/features/todo/hooks/useTodoEditModal';
-import { useDeleteTodo, usePatchTodo, usePatchTodoFavorite } from '@/lib/mutations';
-import { todoQueries } from '@/lib/queryKeys';
+import { useDeleteTodo, usePatchTodo, usePatchTodoFavorite } from '@/shared/lib/mutations';
+import { todoQueries } from '@/shared/lib/queryKeys';
 import { useToastStore } from '@/shared/stores/useToastStore';
 import { useModalStore } from '@/shared/stores/useModalStore';
 
@@ -31,7 +31,7 @@ interface TaskCardProps {
   todo: TaskCardTodo;
   starred?: boolean;
   onCheckboxClick?: (id: number, done: boolean) => void;
-  variant?: 'default' | 'orange';
+  variant?: 'default' | 'green';
 }
 export default function TaskCard({
   todo,
@@ -39,7 +39,7 @@ export default function TaskCard({
   onCheckboxClick,
   variant = 'default',
 }: TaskCardProps) {
-  const isOrange = variant === 'orange';
+  const isGreen = variant === 'green';
 
   return (
     <li
@@ -48,17 +48,17 @@ export default function TaskCard({
         'cursor-pointer',
         'relative flex items-center gap-2',
         'rounded-2xl px-2 py-2.5',
-        'transition-colors duration-150',
-        'hover:bg-[rgba(255,158,89,0.2)]',
+        'transition-all duration-150',
+        'hover:bg-[rgba(0,200,127,0.1)]',
       )}
     >
-      <TaskCheckbox isOrange={isOrange} onCheckboxClick={onCheckboxClick} todo={todo} />
+      <TaskCheckbox isGreen={isGreen} onCheckboxClick={onCheckboxClick} todo={todo} />
 
       <div className="flex shrink-0 items-center gap-2" role="toolbar" aria-label={`${todo.title} 작업 도구`}>
-        <TaskLinkNoteCreate isOrange={isOrange} todo={todo} />
-        <TaskLinkGithub isOrange={isOrange} />
-        <TaskEditTodo isOrange={isOrange} todo={todo} />
-        <TaskFavorite isOrange={isOrange} initialStarred={initialStarred} todo={todo} />
+        <TaskLinkNoteCreate todo={todo} />
+        <TaskLinkGithub />
+        <TaskEditTodo todo={todo} />
+        <TaskFavorite initialStarred={initialStarred} todo={todo} />
       </div>
     </li>
   );
@@ -67,9 +67,9 @@ export default function TaskCard({
 interface TaskCheckboxProps {
   todo: TaskCardTodo;
   onCheckboxClick?: (id: number, done: boolean) => void;
-  isOrange: boolean;
+  isGreen: boolean;
 }
-function TaskCheckbox({ todo, isOrange, onCheckboxClick }: TaskCheckboxProps) {
+function TaskCheckbox({ todo, isGreen, onCheckboxClick }: TaskCheckboxProps) {
   const { showToast } = useToastStore();
   const { openModal } = useModalStore();
 
@@ -102,13 +102,13 @@ function TaskCheckbox({ todo, isOrange, onCheckboxClick }: TaskCheckboxProps) {
           clsx(
             'relative flex cursor-pointer items-center justify-center',
             'size-4.5 shrink-0 rounded-md',
-            'transition-colors duration-150',
-            checked ? 'border-transparent bg-[#FF8442]' : 'border border-[#CCCCCC] bg-white',
-            isOrange && 'border-none bg-orange-200',
+            'transition-all duration-150',
+            checked ? 'bg-bearlog-500 border-transparent' : 'border border-gray-300 bg-white',
+            isGreen && 'border-none',
           ),
         )}
       >
-        {checked && <CheckIcon className={clsx(isOrange ? 'text-orange-500' : 'text-white')} />}
+        {checked && <CheckIcon size={16} color="#ffffff" />}
       </button>
       <button
         type="button"
@@ -116,11 +116,11 @@ function TaskCheckbox({ todo, isOrange, onCheckboxClick }: TaskCheckboxProps) {
           if (todo.id) openModal(<DetailTodoModal todoId={todo.id} />);
         }}
         className={clsx(
-          'min-w-0 flex-1 cursor-pointer truncate text-left',
+          'group min-w-0 flex-1 cursor-pointer truncate text-left',
           'text-base leading-6 tracking-[-0.03em]',
-          'transition-colors duration-150',
-          checked ? 'font-medium text-[#737373] group-hover:font-semibold group-hover:text-[#EF6C00]' : 'font-medium',
-          isOrange ? 'text-[#ffffff] group-hover:text-white' : 'text-[#262626]',
+          'transition-all duration-150',
+          checked ? 'group-hover:text-bearlog-600 font-medium group-hover:font-semibold' : '',
+          isGreen ? 'text-gray-800' : 'group-hover:text-bearlog-600 text-gray-500 group-hover:font-semibold',
         )}
       >
         {todo.title}
@@ -130,11 +130,10 @@ function TaskCheckbox({ todo, isOrange, onCheckboxClick }: TaskCheckboxProps) {
 }
 
 interface TaskLinkNoteCreateProps {
-  isOrange: boolean;
   todo: TaskCardTodo;
 }
 
-function TaskLinkNoteCreate({ isOrange, todo }: TaskLinkNoteCreateProps) {
+function TaskLinkNoteCreate({ todo }: TaskLinkNoteCreateProps) {
   const { data: goal } = useQuery({
     ...todoQueries.detail(todo.id as number),
     enabled: !!todo.id,
@@ -144,41 +143,29 @@ function TaskLinkNoteCreate({ isOrange, todo }: TaskLinkNoteCreateProps) {
   return (
     <Link
       href={`/goal/${goal.goal.id}/note/create?todoId=${todo.id}`}
-      className={clsx(
-        'relative flex h-6 w-6 cursor-pointer items-center justify-center rounded-full p-1 group-hover:bg-white',
-        isOrange ? 'bg-[#FFFFFF]/40' : 'bg-[#FF9E59]/20',
-      )}
+      className={
+        'relative flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[rgba(0,200,127,0.1)] p-1'
+      }
     >
-      <Image src="/image/todo-list.svg" alt="todo-list menu" width={9} height={10} className="cursor-pointer" />
+      <SquareMenuIcon size={12} color="#008354" />
+      {/** TODO: 해당 위 SquareMenuIcon 디자인이 완성되지 않음  */}
     </Link>
   );
 }
 
-interface TaskLinkGithubProps {
-  isOrange: boolean;
-}
-
-function TaskLinkGithub({ isOrange }: TaskLinkGithubProps) {
+function TaskLinkGithub() {
   return (
-    <button
-      type="button"
-      aria-label="메모 보기"
-      className={clsx(
-        'relative h-6 w-6 cursor-pointer rounded-full p-1 group-hover:bg-white',
-        isOrange ? 'bg-[#FFFFFF]/40' : 'bg-[#FF9E59]/20',
-      )}
-    >
-      <GithubIcon className="absolute inset-0 p-1 text-orange-600" />
+    <button type="button" aria-label="GitHub 링크 이동">
+      <Image src="/image/github-icon.png" alt="GitHub menu" width={24} height={24} className="cursor-pointer" />
     </button>
   );
 }
 
 interface TaskLinkDetailProps {
-  isOrange: boolean;
   todo: TaskCardTodo;
 }
 
-function TaskEditTodo({ isOrange, todo }: TaskLinkDetailProps) {
+function TaskEditTodo({ todo }: TaskLinkDetailProps) {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const { openTodoEditModal } = useTodoEditModal();
@@ -194,14 +181,11 @@ function TaskEditTodo({ isOrange, todo }: TaskLinkDetailProps) {
       <button
         ref={buttonRef}
         type="button"
-        aria-label="수정 보기"
+        aria-label="편집 모달 보기"
         onClick={() => setOpen((prev) => !prev)}
-        className={clsx(
-          'relative h-6 w-6 cursor-pointer rounded-full p-1 group-hover:bg-white',
-          isOrange ? 'bg-[#FFFFFF]/40' : 'bg-[#FF9E59]/20',
-        )}
+        className={'relative h-6 w-6 cursor-pointer rounded-full bg-[rgba(0,200,127,0.1)] p-1'}
       >
-        <EllipsisVertical className="absolute inset-0 p-1 text-orange-600" />
+        <EllipsisVertical color="#008354" className="absolute inset-0 p-1" />
       </button>
 
       {open && (
@@ -225,12 +209,11 @@ function TaskEditTodo({ isOrange, todo }: TaskLinkDetailProps) {
 }
 
 interface TaskFavoriteProps {
-  isOrange: boolean;
   initialStarred?: boolean;
   todo: TaskCardTodo;
 }
 
-function TaskFavorite({ isOrange, initialStarred, todo }: TaskFavoriteProps) {
+function TaskFavorite({ initialStarred, todo }: TaskFavoriteProps) {
   const { showToast } = useToastStore();
 
   const [starred, setStarred] = useState(initialStarred);
@@ -259,10 +242,7 @@ function TaskFavorite({ isOrange, initialStarred, todo }: TaskFavoriteProps) {
       onClick={handleStarToggle}
       className="h-6 w-6 cursor-pointer rounded-full"
     >
-      <Star
-        className={clsx('h-6 w-6', isOrange ? 'stroke-[#FFD19B]' : 'stroke-orange-400')}
-        fill={starred ? (isOrange ? '#FFD19B' : '#FF8442') : 'none'}
-      />
+      <Star className={'h-6 w-6 stroke-[rgba(0,200,127,0.1)]'} fill={starred ? '#00c87f' : 'none'} />
     </button>
   );
 }

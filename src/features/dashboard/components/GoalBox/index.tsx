@@ -11,9 +11,9 @@ import SearchInput from '@/shared/components/SearchInput';
 import Button from '@/shared/components/Button';
 import Empty from '@/shared/components/Empty';
 
-import type { GoalDetailResponse } from '@/lib/api';
+import type { GoalDetailResponse } from '@/shared/lib/api';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
-import { todoQueries } from '@/lib/queryKeys';
+import { todoQueries } from '@/shared/lib/queryKeys';
 
 type GoalItem = GoalDetailResponse;
 
@@ -64,8 +64,8 @@ export default function GoalBox({ data }: GoalBoxProps) {
         <div className="flex w-full flex-1 justify-between gap-0 md:justify-end md:gap-2 lg:gap-[14px]">
           <SearchInput placeholder="할 일을 검색해주세요" value={search} onChange={(e) => setSearch(e.target.value)} />
           <Button
-            variant="secondary"
-            className="rounded-full p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
+            variant="primary"
+            className="p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
             disabled={!canCreateTodo}
             onClick={() => {
               if (goalId === undefined) return;
@@ -96,8 +96,8 @@ export default function GoalBox({ data }: GoalBoxProps) {
           </div>
         ) : (
           <>
-            <ListBox title="TODO" variant="todo" items={visibleTodoList} />
-            <ListBox title="DONE" variant="done" items={visibleDoneList} />
+            <ListBox title="TODO" mode="todo" items={visibleTodoList} />
+            <ListBox title="DONE" mode="done" items={visibleDoneList} />
           </>
         )}
       </div>
@@ -107,13 +107,13 @@ export default function GoalBox({ data }: GoalBoxProps) {
 
 interface ListBoxProps {
   title: string;
-  variant: 'todo' | 'done';
+  mode: 'todo' | 'done';
   items: TaskCardTodo[];
 }
 
-function ListBox({ title, variant, items }: ListBoxProps) {
-  const bgColor = variant === 'todo' ? 'bg-[#FFF8E4]' : 'bg-[#ffffff]';
-  const textColor = variant === 'todo' ? 'text-[#EE7016]' : 'text-[#A4A4A4]';
+function ListBox({ title, mode, items }: ListBoxProps) {
+  const bgColor = mode === 'todo' ? 'bg-[#E5F9F2]' : 'bg-[#ffffff]';
+  const textColor = mode === 'todo' ? 'text-[#00D185]' : 'text-[#A4A4A4]';
 
   return (
     <div className={`flex max-h-[324px] flex-1 flex-col gap-4 rounded-[16px] ${bgColor} p-4 lg:rounded-[24px] lg:p-6`}>
@@ -121,10 +121,11 @@ function ListBox({ title, variant, items }: ListBoxProps) {
       <div className="flex max-h-[236px] flex-col gap-1 overflow-y-auto">
         {items.map((item) => (
           <TaskCard
+            variant={mode === 'todo' ? 'green' : 'default'}
             key={item.id}
             todo={{
               ...item,
-              done: item.done ?? variant === 'done',
+              done: item.done ?? mode === 'done',
             }}
             starred={item.favorite}
           />

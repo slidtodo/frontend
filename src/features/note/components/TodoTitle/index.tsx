@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { todoQueries } from '@/lib/queryKeys';
+import { todoQueries } from '@/shared/lib/queryKeys';
 import Tag from '@/shared/components/Tag';
 import clsx from 'clsx';
 

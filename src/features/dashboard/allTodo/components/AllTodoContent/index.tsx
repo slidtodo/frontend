@@ -11,7 +11,7 @@ import PageHeader from '@/shared/components/PageHeader';
 
 import { todoQueries } from '@/lib/queryKeys';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
-import type { TodoListResponse } from '@/shared/lib/api';
+import type { TodoListResponse } from '@/lib/api';
 import { TodoOptions } from '@/shared/types/types';
 
 export default function AllTodoContent() {

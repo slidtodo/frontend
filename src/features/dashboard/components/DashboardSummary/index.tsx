@@ -10,7 +10,7 @@ import ProgressCircle from '@/shared/components/ProgressCircle';
 import TaskCard from '@/shared/components/TaskCard';
 
 import { todoQueries, userQueries } from '@/lib/queryKeys';
-import { CurrentUserResponse } from '@/shared/lib/api';
+import { CurrentUserResponse } from '@/lib/api';
 
 export default function DashBoardSummary() {
   const { data: user } = useQuery(userQueries.current());

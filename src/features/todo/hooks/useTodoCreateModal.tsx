@@ -5,7 +5,7 @@
 import TodoFormModal from '../components/manual/TodoFormModal';
 
 import { useModalStore } from '@/shared/stores/useModalStore';
-import { PostTodoRequest } from '@/shared/lib/api';
+import { PostTodoRequest } from '@/lib/api';
 
 interface UseTodoCreateModalResult {
   goalDetailId?: number;

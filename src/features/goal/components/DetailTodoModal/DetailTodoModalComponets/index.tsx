@@ -8,7 +8,7 @@ import { FlagIcon, CalendarIcon, HashIcon, XIcon, LinkIcon } from 'lucide-react'
 import Tag from '@/shared/components/Tag';
 
 import { useModalStore } from '@/shared/stores/useModalStore';
-import { TodoResponse } from '@/shared/lib/api';
+import { TodoResponse } from '@/lib/api';
 import { noteQueries } from '@/lib/queryKeys';
 import { formatDate } from '@/shared/utils/utils';
 interface DetailTodoModalComponentsProps {

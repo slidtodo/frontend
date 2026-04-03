@@ -25,7 +25,7 @@ import { useModalStore } from '@/shared/stores/useModalStore';
 import { usePostGoal } from '@/lib/mutations';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 import { userQueries } from '@/lib/queryKeys';
-import { CurrentUserResponse } from '@/shared/lib/api';
+import { CurrentUserResponse } from '@/lib/api';
 
 export default function Sidebar() {
   const breakpoint = useBreakpoint();

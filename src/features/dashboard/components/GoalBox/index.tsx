@@ -11,7 +11,7 @@ import SearchInput from '@/shared/components/SearchInput';
 import Button from '@/shared/components/Button';
 import Empty from '@/shared/components/Empty';
 
-import type { GoalDetailResponse } from '@/lib/api';
+import type { GoalDetailResponse } from '@/shared/lib/api';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 import { todoQueries } from '@/lib/queryKeys';
 
@@ -124,7 +124,7 @@ function ListBox({ title, variant, items }: ListBoxProps) {
             key={item.id}
             todo={{
               ...item,
-              done: item.done ?? (variant === 'done'),
+              done: item.done ?? variant === 'done',
             }}
             starred={item.favorite}
           />

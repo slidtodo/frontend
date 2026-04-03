@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRef, useState } from 'react';
 import { ImageUpIcon, LoaderIcon, XIcon } from 'lucide-react';
 
-import { fetchImages } from '@/lib/api';
+import { fetchImages } from '@/shared/lib/api';
 
 interface ImageInput {
   image: string | null;

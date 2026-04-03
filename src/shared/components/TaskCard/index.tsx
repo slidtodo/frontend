@@ -12,8 +12,8 @@ import EditDeleteDropdown from '@/features/dashboard/components/EditDeleteDropdo
 import DetailTodoModal from '@/features/goal/components/DetailTodoModal';
 
 import { useTodoEditModal } from '@/features/todo/hooks/useTodoEditModal';
-import { useDeleteTodo, usePatchTodo, usePatchTodoFavorite } from '@/lib/mutations';
-import { todoQueries } from '@/lib/queryKeys';
+import { useDeleteTodo, usePatchTodo, usePatchTodoFavorite } from '@/shared/lib/mutations';
+import { todoQueries } from '@/shared/lib/queryKeys';
 import { useToastStore } from '@/shared/stores/useToastStore';
 import { useModalStore } from '@/shared/stores/useModalStore';
 

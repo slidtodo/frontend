@@ -4,7 +4,7 @@
  */
 import { useModalStore } from '@/shared/stores/useModalStore';
 import TodoFormModal from '../components/manual/TodoFormModal';
-import { PatchTodoRequest } from '@/lib/api';
+import { PatchTodoRequest } from '@/shared/lib/api';
 
 interface UseTodoEditModalResult {
   goalDetailId?: number;

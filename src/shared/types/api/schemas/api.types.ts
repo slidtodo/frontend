@@ -52,6 +52,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/images": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 이미지 업로드 URL 발급
+         * @description 클라이언트가 S3에 직접 업로드할 수 있도록 presigned URL을 발급합니다
+         */
+        post: operations["createUploadUrl"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/goals": {
         parameters: {
             query?: never;
@@ -705,6 +725,21 @@ export interface components {
             /** @description 태그 목록 */
             tags: components["schemas"]["TagInfo"][];
         };
+        /** @description 이미지 업로드 URL 발급 요청 */
+        ImageUploadRequest: {
+            /**
+             * @description 업로드할 파일명
+             * @example profile.png
+             */
+            fileName: string;
+        };
+        /** @description 이미지 업로드 URL 발급 응답 */
+        ImageUploadResponse: {
+            /** @description S3에 직접 업로드할 presigned URL */
+            uploadUrl: string;
+            /** @description 업로드 완료 후 저장될 공개 URL */
+            url: string;
+        };
         /** @description 목표 생성 요청 */
         CreateGoalRequest: {
             /** @description 목표 제목 */
@@ -865,10 +900,10 @@ export interface components {
             dueDate?: string;
             /** @description 링크 URL */
             linkUrl?: string;
-            /** @description 이미지 URL */
-            imageUrl?: string;
             /** @description 태그 이름 목록 */
             tags?: string[];
+            /** @description 이미지 URL */
+            imageUrl?: string;
         };
         /** @description 알림 응답 */
         NotificationResponse: {
@@ -1248,6 +1283,48 @@ export interface operations {
             };
             /** @description 필수값 누락 / 존재하지 않는 할일 */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    createUploadUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ImageUploadRequest"];
+            };
+        };
+        responses: {
+            /** @description 발급 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImageUploadResponse"];
+                };
+            };
+            /** @description 잘못된 파일명 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 인증 실패 */
+            401: {
                 headers: {
                     [name: string]: unknown;
                 };

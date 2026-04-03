@@ -11,9 +11,9 @@ import SearchInput from '@/shared/components/SearchInput';
 import Button from '@/shared/components/Button';
 import Empty from '@/shared/components/Empty';
 
-import type { GoalDetailResponse } from '@/lib/api';
+import type { GoalDetailResponse } from '@/shared/lib/api';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
-import { todoQueries } from '@/lib/queryKeys';
+import { todoQueries } from '@/shared/lib/queryKeys';
 
 type GoalItem = GoalDetailResponse;
 
@@ -64,8 +64,8 @@ export default function GoalBox({ data }: GoalBoxProps) {
         <div className="flex w-full flex-1 justify-between gap-0 md:justify-end md:gap-2 lg:gap-[14px]">
           <SearchInput placeholder="할 일을 검색해주세요" value={search} onChange={(e) => setSearch(e.target.value)} />
           <Button
-            variant="secondary"
-            className="bg-bearlog-500 border-bearlog-500 rounded-full p-[10px] text-white md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
+            variant="primary"
+            className="p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
             disabled={!canCreateTodo}
             onClick={() => {
               if (goalId === undefined) return;

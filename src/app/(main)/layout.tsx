@@ -1,4 +1,4 @@
-import { SidebarProvider } from '@/contexts/SidebarContext';
+import { SidebarProvider } from '@/shared/contexts/SidebarContext';
 import Sidebar from '@/shared/components/Sidebar';
 import Main from '@/shared/components/Main';
 

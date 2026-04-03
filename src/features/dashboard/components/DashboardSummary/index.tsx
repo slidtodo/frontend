@@ -11,7 +11,7 @@ import TaskCard from '@/shared/components/TaskCard';
 import TabChangeMode from '@/shared/components/TabChangeMode';
 
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
-import { todoQueries, userQueries } from '@/lib/queryKeys';
+import { todoQueries, userQueries } from '@/shared/lib/queryKeys';
 
 export default function DashBoardSummary() {
   const { data: user } = useQuery(userQueries.current());

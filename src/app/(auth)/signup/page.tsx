@@ -7,8 +7,8 @@ import Link from 'next/link';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
-import { validateEmail, validatePassword, validatePasswordConfirm } from '@/lib/validation';
-import { fetchAuth } from '@/lib/api/fetchAuth';
+import { validateEmail, validatePassword, validatePasswordConfirm } from '@/shared/lib/validation';
+import { fetchAuth } from '@/shared/lib/api/fetchAuth';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -54,12 +54,12 @@ export default function SignupPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#F5F5F5] py-20">
+    <main className="flex min-h-screen items-center justify-center py-20">
       <div className="flex w-full max-w-[331px] flex-col items-start md:max-w-[400px]">
         {/* 로고 */}
         <div className="mb-10 flex h-12 w-full items-center gap-4">
           <Image src="/icons/todo.png" alt="logo" width={48} height={48} />
-          <span className="text-2xl font-bold">Slid to-do</span>
+          <span className="text-2xl font-bold">Bearlog</span>
         </div>
         <form className="flex w-full flex-col gap-4" onSubmit={handleSubmit}>
           <FormField label="이름">
@@ -110,7 +110,7 @@ export default function SignupPage() {
 
           <Button
             type="submit"
-            className="mt-8 h-14 w-full"
+            className="mt-8 h-14 w-full bg-[#00C87F] hover:bg-[#00C87F]/90"
             disabled={!name || !email || !password || !passwordConfirm}
           >
             회원가입하기
@@ -121,7 +121,7 @@ export default function SignupPage() {
         {/* 로그인 링크 */}
         <div className="mt-6 flex h-6 w-full items-center justify-center gap-2 text-sm">
           <span className="text-base leading-6 font-medium text-[#333333]">이미 회원이신가요?</span>
-          <Link href="/login" className="text-base leading-6 font-semibold text-[#EF6C00]">
+          <Link href="/login" className="text-base leading-6 font-semibold text-bearlog-600">
             로그인
           </Link>
         </div>
@@ -147,9 +147,9 @@ export default function SignupPage() {
             type="button"
             onClick={handleGithubLogin}
             aria-label="깃허브 로그인"
-            className="flex h-14 w-14 items-center justify-center rounded-full border border-[#DDDDDD] bg-white p-4 hover:bg-gray-50"
+            className="flex h-14 w-14 items-center justify-center rounded-full border border-[#DDDDDD] bg-white p-2 hover:bg-gray-50"
           >
-            <Image src="/icons/GitHub.png" alt="깃허브 아이콘" width={24} height={24} />
+            <Image src="/icons/GitHub.png" alt="깃허브 아이콘" width={40} height={40} />
           </button>
         </div>
       </div>

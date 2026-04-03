@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
-import { noteQueries, goalQueries } from '@/lib/queryKeys';
+import { noteQueries, goalQueries } from '@/shared/lib/queryKeys';
 import NoteItem from '@/features/note/components/NoteItem';
 import GoalItem from '@/features/note/components/GoalItem';
 import Pagination from '@/features/note/components/Pagination';

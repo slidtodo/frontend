@@ -1,8 +1,10 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useRef } from 'react';
-import { ImageUpIcon, XIcon } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { ImageUpIcon, LoaderIcon, XIcon } from 'lucide-react';
+
+import { fetchImages } from '@/shared/lib/api';
 
 interface ImageInput {
   image: string | null;
@@ -11,31 +13,37 @@ interface ImageInput {
 
 export default function ImageInput({ image, onChange }: ImageInput) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleSelectImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const file = e.target.files[0];
+  const handleSelectImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
 
-      onChange(URL.createObjectURL(file));
-
-      e.target.value = '';
+    setIsUploading(true);
+    try {
+      const { uploadUrl, url } = await fetchImages.postImageUploadUrl({ fileName: file.name });
+      const response = await fetch(uploadUrl, {
+        method: 'PUT',
+        body: file,
+        headers: {
+          'Content-Type': file.type,
+        },
+      });
+      if (!response.ok) throw new Error('이미지 업로드 실패');
+      onChange(url);
+    } catch (error) {
+      console.error('이미지 업로드 중 오류 발생:', error);
+    } finally {
+      setIsUploading(false);
     }
   };
 
-  useEffect(() => {
-    return () => {
-      if (image) {
-        URL.revokeObjectURL(image);
-      }
-    };
-  }, [image]);
   return (
     <>
       {image ? (
         <div className="relative h-[101px] w-[160px] overflow-hidden rounded-2xl">
-          {/* 이미지 */}
-          <Image src={image} alt="이미지 미리보기" fill className="object-cover" />
-          {/* 삭제 버튼 */}
+          <Image src={image} alt="이미지 미리보기" fill unoptimized className="object-cover" />
           <button
             type="button"
             onClick={() => {
@@ -48,14 +56,20 @@ export default function ImageInput({ image, onChange }: ImageInput) {
           </button>
         </div>
       ) : (
-        /* 이미지 없을 때 업로드 버튼 */
         <button
           type="button"
+          disabled={isUploading}
           onClick={() => fileInputRef.current?.click()}
-          className="flex h-[101px] w-full cursor-pointer flex-col items-center justify-center gap-[2px] rounded-2xl border border-dashed border-[#CCC] bg-[#FAFAFA]"
+          className="flex h-[101px] w-full cursor-pointer flex-col items-center justify-center gap-[2px] rounded-2xl border border-dashed border-[#CCC] bg-[#FAFAFA] disabled:cursor-not-allowed"
         >
-          <ImageUpIcon size={24} className="stroke-[#A4A4A4]" />
-          <p className="text-base font-medium text-[#A4A4A4]">이미지 첨부</p>
+          {isUploading ? (
+            <LoaderIcon size={24} className="animate-spin stroke-[#A4A4A4]" />
+          ) : (
+            <>
+              <ImageUpIcon size={24} className="stroke-[#A4A4A4]" />
+              <p className="text-base font-medium text-[#A4A4A4]">이미지 첨부</p>
+            </>
+          )}
         </button>
       )}
       <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleSelectImage} />

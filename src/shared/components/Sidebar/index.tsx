@@ -67,7 +67,7 @@ function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
   const menus = getMenus();
   const projectName = 'Bearlog';
   const { openTodoCreateModal } = useTodoCreateModal();
-  console.log(menus);
+
   return (
     <div
       className={`flex flex-col overflow-hidden rounded-tr-[32px] rounded-br-[32px] bg-white transition-all duration-300 ${

@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import DashBoardSummary from '@/features/dashboard/components/DashboardSummary';
-import DashboardDetail from '@/features/dashboard/components/DashboardDetail';
+import DashboardDetail from '@/features/dashboard/components/DashBoardDetail';
 
 import { todoQueries, userQueries, goalQueries } from '@/shared/lib/queryKeys';
 

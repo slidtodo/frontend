@@ -13,7 +13,7 @@ import Empty from '@/shared/components/Empty';
 type GoalItem = NonNullable<GoalListResponse['goals']>[number];
 type GoalItemWithId = GoalItem & { id: number };
 
-export default function DashboardDetail() {
+export default function DashBoardDetail() {
   const { data: goals } = useQuery(goalQueries.list());
 
   if (!goals || goals?.goals?.length === 0) {

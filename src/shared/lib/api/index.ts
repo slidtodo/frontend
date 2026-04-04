@@ -1,6 +1,7 @@
 export * from './fetchAuth';
 export * from './fetchImages';
 export * from './fetchGoals';
+export * from './fetchHealth';
 export * from './fetchNotes';
 export * from './fetchNotifications';
 export * from './fetchTags';

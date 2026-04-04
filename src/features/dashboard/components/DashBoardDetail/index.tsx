@@ -17,7 +17,7 @@ export default function DashboardDetail() {
   const { data: goals } = useQuery(goalQueries.list());
 
   if (!goals || goals?.goals?.length === 0) {
-    return <Empty>현재 등록된 목표가 없어요...</Empty>;
+    return <Empty>최근에 등록한 목표가 없어요</Empty>;
   }
 
   return (

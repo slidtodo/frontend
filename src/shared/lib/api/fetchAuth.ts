@@ -1,41 +1,94 @@
 import type { operations } from '@/shared/types/api/schemas/api.types';
 import { apiRequest } from './utils';
 
-export type SignupRequest = operations['signup']['requestBody']['content']['application/json'];
-export type LoginRequest = operations['login']['requestBody']['content']['application/json'];
-export type OAuthLoginRequest = operations['googleLogin']['requestBody']['content']['application/json'];
-export type AuthResponse = operations['login']['responses'][200]['content']['application/json'];
-export type OAuthAuthorizeUrlResponse =
+export type SignupRequest = operations['signup_1']['requestBody']['content']['application/json'];
+export type SignupResponse = operations['signup_1']['responses'][201]['content']['application/json'];
+export type LoginRequest = operations['login_1']['requestBody']['content']['application/json'];
+export type LoginResponse = operations['login_1']['responses'][200]['content']['application/json'];
+export type GoogleLoginRequest = operations['googleLogin_1']['requestBody']['content']['application/json'];
+export type GoogleLoginResponse = operations['googleLogin_1']['responses'][200]['content']['application/json'];
+export type GithubLoginRequest = operations['githubLogin_1']['requestBody']['content']['application/json'];
+export type GithubLoginResponse = operations['githubLogin_1']['responses'][200]['content']['application/json'];
+export type RefreshRequest = NonNullable<operations['refresh_1']['requestBody']>['content']['application/json'];
+export type RefreshResponse = operations['refresh_1']['responses'][200]['content']['application/json'];
+export type DevSignupRequest = operations['signup']['requestBody']['content']['application/json'];
+export type DevSignupResponse = operations['signup']['responses'][200]['content']['application/json'];
+export type DevLoginRequest = operations['login']['requestBody']['content']['application/json'];
+export type DevLoginResponse = operations['login']['responses'][200]['content']['application/json'];
+export type DevGoogleLoginRequest = operations['googleLogin']['requestBody']['content']['application/json'];
+export type DevGoogleLoginResponse = operations['googleLogin']['responses'][200]['content']['application/json'];
+export type DevGithubLoginRequest = operations['githubLogin']['requestBody']['content']['application/json'];
+export type DevGithubLoginResponse = operations['githubLogin']['responses'][200]['content']['application/json'];
+export type DevRefreshRequest = NonNullable<operations['refresh']['requestBody']>['content']['application/json'];
+export type DevRefreshResponse = operations['refresh']['responses'][200]['content']['application/json'];
+export type GoogleAuthorizeUrlResponse =
+  operations['getGoogleAuthorizeUrl_1']['responses'][200]['content']['application/json'];
+export type GithubAuthorizeUrlResponse =
+  operations['getGithubAuthorizeUrl_1']['responses'][200]['content']['application/json'];
+export type DevGoogleAuthorizeUrlResponse =
   operations['getGoogleAuthorizeUrl']['responses'][200]['content']['application/json'];
+export type DevGithubAuthorizeUrlResponse =
+  operations['getGithubAuthorizeUrl']['responses'][200]['content']['application/json'];
 
 class FetchAuth {
   postSignup = (body: SignupRequest) =>
-    apiRequest<AuthResponse, SignupRequest>('/api/v1/auth/signup', {
+    apiRequest<SignupResponse, SignupRequest>('/api/v1/auth/signup', {
+      method: 'POST',
+      body,
+    });
+
+  postDevSignup = (body: DevSignupRequest) =>
+    apiRequest<DevSignupResponse, DevSignupRequest>('/api/v1/dev/auth/signup', {
       method: 'POST',
       body,
     });
 
   postLogin = (body: LoginRequest) =>
-    apiRequest<AuthResponse, LoginRequest>('/api/v1/auth/login', {
+    apiRequest<LoginResponse, LoginRequest>('/api/v1/auth/login', {
       method: 'POST',
       body,
     });
 
-  postGoogleLogin = (body: OAuthLoginRequest) =>
-    apiRequest<AuthResponse, OAuthLoginRequest>('/api/v1/auth/login/google', {
+  postDevLogin = (body: DevLoginRequest) =>
+    apiRequest<DevLoginResponse, DevLoginRequest>('/api/v1/dev/auth/login', {
       method: 'POST',
       body,
     });
 
-  postGithubLogin = (body: OAuthLoginRequest) =>
-    apiRequest<AuthResponse, OAuthLoginRequest>('/api/v1/auth/oauth/github', {
+  postGoogleLogin = (body: GoogleLoginRequest) =>
+    apiRequest<GoogleLoginResponse, GoogleLoginRequest>('/api/v1/auth/login/google', {
       method: 'POST',
       body,
     });
 
-  postRefreshAccessToken = () =>
-    apiRequest<void>('/api/v1/auth/refresh', {
+  postDevGoogleLogin = (body: DevGoogleLoginRequest) =>
+    apiRequest<DevGoogleLoginResponse, DevGoogleLoginRequest>('/api/v1/dev/auth/login/google', {
       method: 'POST',
+      body,
+    });
+
+  postGithubLogin = (body: GithubLoginRequest) =>
+    apiRequest<GithubLoginResponse, GithubLoginRequest>('/api/v1/auth/oauth/github', {
+      method: 'POST',
+      body,
+    });
+
+  postDevGithubLogin = (body: DevGithubLoginRequest) =>
+    apiRequest<DevGithubLoginResponse, DevGithubLoginRequest>('/api/v1/dev/auth/oauth/github', {
+      method: 'POST',
+      body,
+    });
+
+  postRefreshAccessToken = (body?: RefreshRequest) =>
+    apiRequest<RefreshResponse, RefreshRequest | undefined>('/api/v1/auth/refresh', {
+      method: 'POST',
+      body,
+    });
+
+  postDevRefreshAccessToken = (body?: DevRefreshRequest) =>
+    apiRequest<DevRefreshResponse, DevRefreshRequest | undefined>('/api/v1/dev/auth/refresh', {
+      method: 'POST',
+      body,
     });
 
   postLogout = () =>
@@ -43,9 +96,22 @@ class FetchAuth {
       method: 'POST',
     });
 
-  getGoogleAuthorizeUrl = () => apiRequest<OAuthAuthorizeUrlResponse>('/api/v1/auth/oauth/google/url');
+  postDevLogout = () =>
+    apiRequest<void>('/api/v1/dev/auth/logout', {
+      method: 'POST',
+    });
 
-  getGithubAuthorizeUrl = () => apiRequest<OAuthAuthorizeUrlResponse>('/api/v1/auth/oauth/github/url');
+  getGoogleAuthorizeUrl = () =>
+    apiRequest<GoogleAuthorizeUrlResponse>('/api/v1/auth/oauth/google/url');
+
+  getGithubAuthorizeUrl = () =>
+    apiRequest<GithubAuthorizeUrlResponse>('/api/v1/auth/oauth/github/url');
+
+  getDevGoogleAuthorizeUrl = () =>
+    apiRequest<DevGoogleAuthorizeUrlResponse>('/api/v1/dev/auth/oauth/google/url');
+
+  getDevGithubAuthorizeUrl = () =>
+    apiRequest<DevGithubAuthorizeUrlResponse>('/api/v1/dev/auth/oauth/github/url');
 }
 
 const fetchAuth = new FetchAuth();

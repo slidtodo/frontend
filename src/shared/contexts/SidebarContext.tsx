@@ -3,9 +3,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { usePathname } from 'next/navigation';
 import { createContext, useContext, useState, ReactNode, useMemo } from 'react';
-import { LayoutGridIcon, FlagIcon, CalendarDaysIcon, ListCheckIcon } from 'lucide-react';
+import { LayoutGridIcon, FlagIcon, CalendarDaysIcon, ListCheckIcon, StarIcon } from 'lucide-react';
 
 import { goalQueries } from '@/shared/lib/queryKeys';
+import Image from 'next/image';
 
 const sidebarMenuIconClassName = 'h-6 w-6 transition-all [&_*]:fill-current [&_*]:stroke-current';
 interface MenuBase {
@@ -59,22 +60,24 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
         name: '할 일',
         href: '/dashboard/all-todo',
       },
-      // {
-      //   icon: <CalendarDaysIcon className={sidebarMenuIconClassName} />,
-      //   name: '캘린더',
-      //   href: '/calendar',
-      // },
-      // TODO: 소통게시판, 찜한 할일은 중간 이후에 활성화
-      // {
-      //   icon: <MessageSquareIcon />,
-      //   name: '소통게시판',
-      //   href: '/community',
-      // },
-      // {
-      //   icon: <StarIcon />,
-      //   name: '찜한 할일',
-      //   href: '/favorite-todo',
-      // },
+      {
+        icon: (
+          <Image
+            src={'/image/calendar.png'}
+            alt="Calendar Icon"
+            width={18}
+            height={18}
+            className={sidebarMenuIconClassName}
+          />
+        ),
+        name: '캘린더',
+        href: '/calendar',
+      },
+      {
+        icon: <StarIcon className={sidebarMenuIconClassName} />,
+        name: '찜한 할일',
+        href: '/favorite-todo',
+      },
     ];
   }, [goalData]);
 

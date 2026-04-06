@@ -36,7 +36,7 @@ interface EditMode extends BaseProps {
 }
 
 type TodoFormModalProps = CreateMode | EditMode;
-type TodoFormValues = PostTodoRequest & PatchTodoRequest;
+type TodoFormValues = Omit<PostTodoRequest & PatchTodoRequest, 'imageUrl'> & { imageUrl?: string | null };
 
 export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModalProps) {
   const { closeModal } = useModalStore();
@@ -56,7 +56,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
           title: todo.title ?? '',
           dueDate: todo.dueDate ?? undefined,
           linkUrl: todo.linkUrl ?? undefined,
-          imageUrl: todo.imageUrl ?? undefined,
+          imageUrl: todo.imageUrl as string | undefined,
           tags: todo.tags ?? [],
           done: todo.done ?? false,
         }
@@ -136,7 +136,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       await patchTodoMutation.mutateAsync({
         title: data.title,
         dueDate: data.dueDate,
-        linkUrl: data.linkUrl,
+        linkUrl: data.linkUrl ?? undefined,
         imageUrl: data.imageUrl ?? undefined,
         tags: data.tags,
         done: data.done,
@@ -147,7 +147,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         title: data.title,
         goalId: data.goalId,
         dueDate: data.dueDate,
-        linkUrl: data.linkUrl,
+        linkUrl: data.linkUrl ?? undefined,
         imageUrl: data.imageUrl ?? undefined,
         tags: data.tags,
       });

@@ -40,8 +40,8 @@ export default function TaskCardWrapper({
   };
 
   // 할 일 즐겨찾기 토글을 위한 mutation 훅
-  const [starred, setStarred] = useState(todoDetail?.favorite ?? false);
-  const { mutate: patchTodoFavorite } = usePatchTodoFavorite(todoDetail?.id);
+  const [starred, setStarred] = useState(item?.favorite ?? false);
+  const { mutate: patchTodoFavorite } = usePatchTodoFavorite(item?.id);
 
   const handleStarToggle = () => {
     const nextStarred = !starred;

@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -8,7 +9,6 @@ import {
   LogOutIcon,
   FlagIcon,
   CopyCheckIcon,
-  BellIcon,
   MenuIcon,
   ChevronDownIcon,
   ChevronUpIcon,
@@ -18,6 +18,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import SidebarMobileCase from './SidebarMobileCase';
 import SinglePostModal from '../Modal/SinglePostModal';
+import NotificationDropdown from './NotificationDropdown';
 
 import { useSidebarContext, useSidebarOpen, MenuItem } from '@/shared/contexts/SidebarContext';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
@@ -60,6 +61,7 @@ function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
   const { toggle, getMenus } = useSidebarContext();
   const isOpen = useSidebarOpen();
   const pathname = usePathname();
+  const [notificationOpen, setNotificationOpen] = useState(false);
 
   const { mutate } = usePostGoal();
   const { mutate: logout } = usePostLogout();
@@ -70,7 +72,7 @@ function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
 
   return (
     <div
-      className={`flex flex-col overflow-hidden rounded-tr-[32px] rounded-br-[32px] bg-white transition-all duration-300 ${
+      className={`flex flex-col rounded-tr-[32px] rounded-br-[32px] bg-white transition-all duration-300 ${
         isOpen ? 'min-w-[250px] gap-[80px] p-4 lg:min-w-[362px] lg:gap-[140px] lg:p-8' : 'min-w-[80px] gap-8 px-6 py-8'
       }`}
     >
@@ -206,16 +208,12 @@ function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
             </div>
           </Link>
 
-          <button
-            className={`group hover:text-bearlog-600 relative text-gray-500 transition-all duration-200 ${
-              isOpen ? 'rounded-[999px] border border-gray-200 p-[20px]' : 'p-0'
-            }`}
-          >
-            <BellIcon size={24} className="transition-transform group-hover:scale-110" />
-            <div
-              className={`bg-bearlog-500 absolute top-[2px] right-[5px] rounded-full ${isOpen ? 'h-3 w-3' : 'h-2 w-2'}`}
-            />
-          </button>
+          <NotificationDropdown
+            isOpen={notificationOpen}
+            onClose={() => setNotificationOpen(false)}
+            isSidebarOpen={isOpen}
+            onOpen={() => setNotificationOpen(true)}
+          />
         </div>
       </div>
     </div>

@@ -138,7 +138,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         title: data.title,
         dueDate: data.dueDate,
         linkUrl: data.linkUrl,
-        imageUrl: data.imageUrl ?? undefined,
+        imageUrl: data.imageUrl as string | undefined,
         tags: data.tags,
         done: data.done,
       });
@@ -149,7 +149,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         goalId: data.goalId,
         dueDate: data.dueDate,
         linkUrl: data.linkUrl,
-        imageUrl: data.imageUrl ?? undefined,
+        imageUrl: data.imageUrl as string | undefined,
         tags: data.tags,
       });
     }

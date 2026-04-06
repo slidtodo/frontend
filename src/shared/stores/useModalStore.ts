@@ -5,7 +5,7 @@ interface ModalStore {
   isOpen: boolean;
   content: ReactNode | null;
   onClose?: () => void;
-  variant: 'center' | 'bottom'; // ← 추가
+  variant: 'center' | 'bottom';
   openModal: (content: ReactNode, onClose?: () => void, variant?: 'center' | 'bottom') => void;
   closeModal: () => void;
 }

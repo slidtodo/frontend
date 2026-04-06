@@ -57,16 +57,17 @@ interface SidebarDesktopTabletProps {
 }
 function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
   const { openModal } = useModalStore();
-  const { toggle, getMenus } = useSidebarContext();
+  const { toggle, menus, goals } = useSidebarContext();
   const isOpen = useSidebarOpen();
   const pathname = usePathname();
 
   const { mutate } = usePostGoal();
   const { mutate: logout } = usePostLogout();
 
-  const menus = getMenus();
   const projectName = 'Bearlog';
   const { openTodoCreateModal } = useTodoCreateModal();
+  const pathnameGoalId = pathname.startsWith('/goal/') ? Number(pathname.split('/')[2]) : undefined;
+  const selectedGoalId = goals.find((goal) => goal.id === pathnameGoalId)?.id ?? goals[0]?.id;
 
   return (
     <div
@@ -168,19 +169,22 @@ function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
             </span>
           </button>
           <button
-            onClick={() =>
+            onClick={() => {
+              if (!selectedGoalId) return;
+
               openTodoCreateModal({
-                goalDetailId: undefined,
+                goalDetailId: selectedGoalId,
                 todo: {
                   title: '',
-                  goalId: undefined as unknown as number,
+                  goalId: selectedGoalId,
                   dueDate: undefined,
                   linkUrl: undefined,
                   imageUrl: undefined,
                   tags: [],
                 },
-              })
-            }
+              });
+            }}
+            disabled={!selectedGoalId}
             className="group border-bearlog-500 flex w-full flex-col items-center justify-center gap-2 rounded-[32px] border bg-[#ffffff] px-2 py-4 transition-all duration-200 hover:shadow-lg lg:px-[22.5px] lg:py-8"
           >
             <CopyCheckIcon

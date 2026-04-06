@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
+import Toast from '@/shared/components/Toast';
 import { validateEmail, validatePassword, validatePasswordConfirm } from '@/shared/lib/validation';
 import { fetchAuth } from '@/shared/lib/api/fetchAuth';
 
@@ -19,6 +20,11 @@ export default function SignupPage() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [passwordConfirmError, setPasswordConfirmError] = useState('');
+  const [toast, setToast] = useState<{ show: boolean; message: string; variant: 'success' | 'fail' }>({
+    show: false,
+    message: '',
+    variant: 'success',
+  });
 
   // TODO: 리액트쿼리로 변경 필요, 리액트 훅 폼 적용 필요
   const handleSubmit = async (e: React.FormEvent) => {
@@ -35,11 +41,12 @@ export default function SignupPage() {
     try {
       await fetchAuth.postSignup({ nickname: name, email, password });
 
-      alert('회원가입 성공!');
+      setToast({ show: true, message: '회원가입 성공!', variant: 'success' });
       router.push('/login');
     } catch (error) {
       console.error(error);
-      alert('회원가입 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      const message = error instanceof Error ? error.message : '회원가입 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+      setToast({ show: true, message, variant: 'fail' });
     }
   };
 
@@ -54,6 +61,10 @@ export default function SignupPage() {
   };
 
   return (
+    <>
+      <Toast show={toast.show} variant={toast.variant} onClose={() => setToast((prev) => ({ ...prev, show: false }))}>
+        {toast.message}
+      </Toast>
     <main className="flex min-h-screen items-center justify-center py-20">
       <div className="flex w-full max-w-[331px] flex-col items-start md:max-w-[400px]">
         {/* 로고 */}
@@ -154,5 +165,6 @@ export default function SignupPage() {
         </div>
       </div>
     </main>
+    </>
   );
 }

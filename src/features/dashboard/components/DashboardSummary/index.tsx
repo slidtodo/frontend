@@ -16,6 +16,7 @@ import { todoQueries, userQueries } from '@/shared/lib/queryKeys';
 export default function DashBoardSummary() {
   const { data: user } = useQuery(userQueries.current());
   const breakpoint = useBreakpoint();
+
   return (
     <>
       <div className="flex justify-between pb-[30px] lg:pb-[34px]">

@@ -1026,10 +1026,10 @@ export interface components {
              * @description 마감일
              */
             dueDate?: string;
-            /** @description 링크 URL */
-            linkUrl?: string;
             /** @description 태그 이름 목록 */
             tags?: string[];
+            /** @description 링크 URL */
+            linkUrl?: string;
             /** @description 이미지 URL */
             imageUrl?: string;
         };

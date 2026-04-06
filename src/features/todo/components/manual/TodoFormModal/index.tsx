@@ -16,7 +16,7 @@ import LinkInput from '../shared/LinkInput';
 import StatusField from '../shared/StatusField';
 import TagInput from '../shared/TagInput';
 
-import { PatchTodoRequest, PostTodoRequest } from '@/shared/lib/api';
+import { PatchTodoRequest, PatchTodoRequestWithNull, PostTodoRequest } from '@/shared/lib/api';
 import { usePatchTodo, usePostTodo } from '@/shared/lib/mutations';
 import { goalQueries, todoQueries } from '@/shared/lib/queryKeys';
 import { useModalStore } from '@/shared/stores/useModalStore';
@@ -32,11 +32,11 @@ interface CreateMode extends BaseProps {
 
 interface EditMode extends BaseProps {
   mode: 'edit';
-  todo: PatchTodoRequest & { id: number };
+  todo: PatchTodoRequestWithNull & { id: number };
 }
 
 type TodoFormModalProps = CreateMode | EditMode;
-type TodoFormValues = Omit<PostTodoRequest & PatchTodoRequest, 'imageUrl'> & { imageUrl?: string | null };
+type TodoFormValues = PostTodoRequest & PatchTodoRequestWithNull;
 
 export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModalProps) {
   const { closeModal } = useModalStore();
@@ -55,9 +55,8 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       ? {
           title: todo.title ?? '',
           dueDate: todo.dueDate ?? undefined,
-          linkUrl: todo.linkUrl as string | undefined,
-          imageUrl: todo.imageUrl as string | undefined,
-          // TODO: imageUrl 타입 재정의 후 수정 필요
+          linkUrl: todo.linkUrl ?? undefined,
+          imageUrl: todo.imageUrl ?? undefined,
           tags: todo.tags ?? [],
           done: todo.done ?? false,
         }
@@ -137,8 +136,8 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       await patchTodoMutation.mutateAsync({
         title: data.title,
         dueDate: data.dueDate,
-        linkUrl: data.linkUrl ?? undefined,
-        imageUrl: data.imageUrl ?? undefined,
+        linkUrl: data.linkUrl ?? null,
+        imageUrl: data.imageUrl ?? null,
         tags: data.tags,
         done: data.done,
       });

@@ -55,8 +55,9 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       ? {
           title: todo.title ?? '',
           dueDate: todo.dueDate ?? undefined,
-          linkUrl: todo.linkUrl ?? undefined,
+          linkUrl: todo.linkUrl as string | undefined,
           imageUrl: todo.imageUrl as string | undefined,
+          // TODO: imageUrl 타입 재정의 후 수정 필요
           tags: todo.tags ?? [],
           done: todo.done ?? false,
         }

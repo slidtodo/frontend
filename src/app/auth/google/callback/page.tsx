@@ -15,13 +15,9 @@ export default function GoogleCallbackPage() {
       return;
     }
 
-    const isDev = process.env.NEXT_PUBLIC_USE_DEV_API === 'true';
-
     const login = async () => {
       try {
-        isDev
-          ? await fetchAuth.postDevGoogleLogin({ code })
-          : await fetchAuth.postGoogleLogin({ code });
+        await fetchAuth.postGoogleLoginByEnv({ code });
         router.push('/dashboard');
       } catch (error) {
         console.error('구글 로그인 콜백 실패:', error);

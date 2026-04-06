@@ -15,13 +15,9 @@ export default function GithubCallbackPage() {
       return;
     }
 
-    const isDev = process.env.NEXT_PUBLIC_USE_DEV_API === 'true';
-
     const login = async () => {
       try {
-        isDev
-          ? await fetchAuth.postDevGithubLogin({ code })
-          : await fetchAuth.postGithubLogin({ code });
+        await fetchAuth.postGithubLoginByEnv({ code });
         router.push('/dashboard');
       } catch (error) {
         console.error('GitHub login callback failed:', error);

@@ -31,19 +31,13 @@ export default function LoginPage() {
       console.error(error);
     }
   };
-  const isDev = process.env.NEXT_PUBLIC_USE_DEV_API === 'true';
-
   const handleGithubLogin = async () => {
-    const { loginUrl } = isDev
-      ? await fetchAuth.getDevGithubAuthorizeUrl()
-      : await fetchAuth.getGithubAuthorizeUrl();
+    const { loginUrl } = await fetchAuth.getGithubAuthorizeUrlByEnv();
     if (loginUrl) window.location.href = loginUrl;
   };
 
   const handleGoogleLogin = async () => {
-    const data = isDev
-      ? await fetchAuth.getDevGoogleAuthorizeUrl()
-      : await fetchAuth.getGoogleAuthorizeUrl();
+    const data = await fetchAuth.getGoogleAuthorizeUrlByEnv();
     if (data.loginUrl) window.location.href = data.loginUrl;
   };
   return (

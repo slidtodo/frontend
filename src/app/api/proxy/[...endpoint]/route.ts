@@ -1,14 +1,9 @@
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
-const apiBaseUrl = (process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL ?? '').replace(/\/+$/, '');
+import { refreshTokens, clearAuthCookies, applyAuthCookies, type AuthTokens } from '@/shared/lib/auth/token';
 
-const AUTH_COOKIE_OPTIONS = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'lax' as const,
-  path: '/',
-};
+const apiBaseUrl = (process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL ?? '').replace(/\/+$/, '');
 
 const FORWARDED_REQUEST_HEADERS = ['accept', 'content-type'] as const;
 const FORWARDED_RESPONSE_HEADERS = ['content-type', 'location'] as const;
@@ -23,8 +18,7 @@ const syncAuthCookies = async (pathname: string, response: Response, nextRespons
   }
 
   if (pathname === 'auth/logout') {
-    nextResponse.cookies.delete('accessToken');
-    nextResponse.cookies.delete('refreshToken');
+    clearAuthCookies(nextResponse);
     return;
   }
 
@@ -34,27 +28,56 @@ const syncAuthCookies = async (pathname: string, response: Response, nextRespons
   }
 
   try {
-    const data = (await response.json()) as {
-      accessToken?: string;
-      refreshToken?: string;
-    };
-
-    if (data.accessToken) {
-      nextResponse.cookies.set('accessToken', data.accessToken, {
-        ...AUTH_COOKIE_OPTIONS,
-        maxAge: 60 * 30,
-      });
-    }
-
-    if (data.refreshToken) {
-      nextResponse.cookies.set('refreshToken', data.refreshToken, {
-        ...AUTH_COOKIE_OPTIONS,
-        maxAge: 60 * 60 * 24 * 7,
-      });
-    }
+    const data = (await response.json()) as AuthTokens;
+    applyAuthCookies(nextResponse, data);
   } catch {
     // Ignore unexpected non-JSON auth responses.
   }
+};
+
+const buildUpstreamHeaders = (request: NextRequest, accessToken?: string) => {
+  const upstreamHeaders = new Headers();
+
+  for (const headerName of FORWARDED_REQUEST_HEADERS) {
+    const headerValue = request.headers.get(headerName);
+    if (headerValue) {
+      upstreamHeaders.set(headerName, headerValue);
+    }
+  }
+
+  if (accessToken) {
+    upstreamHeaders.set('Authorization', `Bearer ${accessToken}`);
+  }
+
+  return upstreamHeaders;
+};
+
+const fetchUpstream = async (
+  targetUrl: string,
+  request: NextRequest,
+  requestBody: string | undefined,
+  accessToken?: string,
+) =>
+  fetch(targetUrl, {
+    method: request.method,
+    headers: buildUpstreamHeaders(request, accessToken),
+    body: requestBody,
+    cache: 'no-store',
+  });
+
+const createProxyResponse = async (response: Response) => {
+  const responseHeaders = new Headers();
+  for (const headerName of FORWARDED_RESPONSE_HEADERS) {
+    const headerValue = response.headers.get(headerName);
+    if (headerValue) {
+      responseHeaders.set(headerName, headerValue);
+    }
+  }
+
+  return new NextResponse(response.status === 204 ? null : await response.arrayBuffer(), {
+    status: response.status,
+    headers: responseHeaders,
+  });
 };
 
 const handler = async (request: NextRequest, context: ProxyRouteContext) => {
@@ -68,39 +91,32 @@ const handler = async (request: NextRequest, context: ProxyRouteContext) => {
 
   const cookieStore = await cookies();
   const accessToken = cookieStore.get('accessToken')?.value;
+  const refreshToken = cookieStore.get('refreshToken')?.value;
+  const requestBody = ['GET', 'HEAD'].includes(request.method) ? undefined : await request.text();
 
-  const upstreamHeaders = new Headers();
-  for (const headerName of FORWARDED_REQUEST_HEADERS) {
-    const headerValue = request.headers.get(headerName);
-    if (headerValue) {
-      upstreamHeaders.set(headerName, headerValue);
+  let response = await fetchUpstream(targetUrl, request, requestBody, accessToken);
+  let authResponse = response.clone();
+
+  const shouldRefresh = response.status === 401 && pathname !== 'auth/refresh' && !!refreshToken;
+  if (shouldRefresh && refreshToken) {
+    const refreshedTokens = await refreshTokens(refreshToken);
+
+    if (!refreshedTokens?.accessToken) {
+      const unauthorizedResponse = await createProxyResponse(response);
+      clearAuthCookies(unauthorizedResponse);
+      return unauthorizedResponse;
     }
+
+    response = await fetchUpstream(targetUrl, request, requestBody, refreshedTokens.accessToken);
+    authResponse = response.clone();
+
+    const retryResponse = await createProxyResponse(response);
+    applyAuthCookies(retryResponse, refreshedTokens);
+    await syncAuthCookies(pathname, authResponse, retryResponse);
+    return retryResponse;
   }
 
-  if (accessToken) {
-    upstreamHeaders.set('Authorization', `Bearer ${accessToken}`);
-  }
-
-  const response = await fetch(targetUrl, {
-    method: request.method,
-    headers: upstreamHeaders,
-    body: ['GET', 'HEAD'].includes(request.method) ? undefined : await request.text(),
-    cache: 'no-store',
-  });
-  const authResponse = response.clone();
-
-  const responseHeaders = new Headers();
-  for (const headerName of FORWARDED_RESPONSE_HEADERS) {
-    const headerValue = response.headers.get(headerName);
-    if (headerValue) {
-      responseHeaders.set(headerName, headerValue);
-    }
-  }
-
-  const nextResponse = new NextResponse(response.status === 204 ? null : await response.arrayBuffer(), {
-    status: response.status,
-    headers: responseHeaders,
-  });
+  const nextResponse = await createProxyResponse(response);
 
   await syncAuthCookies(pathname, authResponse, nextResponse);
 

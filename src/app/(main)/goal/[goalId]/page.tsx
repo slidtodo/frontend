@@ -1,5 +1,6 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
+import { DataBoundary } from '@/shared/components/ErrorSuspenseBoundary';
 import GoalSummary from '@/features/goal/components/GoalSummary';
 import GoalDetail from '@/features/goal/components/GoalDetail';
 
@@ -29,8 +30,10 @@ export default async function GoalDetailPage({ params }: GoalDetailPageProps) {
   return (
     <HydrationBoundary state={dehydratedState}>
       <div className="flex flex-col gap-16">
-        <GoalSummary goalId={numericGoalId} />
-        <GoalDetail goalId={numericGoalId} />
+        <DataBoundary>
+          <GoalSummary goalId={numericGoalId} />
+          <GoalDetail goalId={numericGoalId} />
+        </DataBoundary>
       </div>
     </HydrationBoundary>
   );

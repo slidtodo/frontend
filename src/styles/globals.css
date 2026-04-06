@@ -61,3 +61,11 @@
 @utility animate-slide-out-right {
   animation: slide-out-right 0.3s ease-in forwards;
 }
+
+.note-panel-enter {
+  animation: slide-in-right 0.3s ease-out;
+}
+
+.note-panel-exit {
+  animation: slide-out-right 0.3s ease-in forwards;
+}

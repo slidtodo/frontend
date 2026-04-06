@@ -28,7 +28,8 @@ export async function refreshTokens(refreshToken: string): Promise<AuthTokens | 
 
   try {
     return (await response.json()) as AuthTokens;
-  } catch {
+  } catch (error) {
+    console.error('Failed to parse refresh token response:', error);
     return null;
   }
 }
@@ -37,6 +38,9 @@ export function clearAuthCookies(response: NextResponse) {
   response.cookies.delete('accessToken');
   response.cookies.delete('refreshToken');
 }
+
+const ACCESS_TOKEN_MAX_AGE = 60 * 30; // 30 minutes
+const REFRESH_TOKEN_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
 const AUTH_COOKIE_OPTIONS = {
   httpOnly: true,
@@ -48,14 +52,14 @@ export function applyAuthCookies(response: NextResponse, tokens: AuthTokens) {
   if (tokens.accessToken) {
     response.cookies.set('accessToken', tokens.accessToken, {
       ...AUTH_COOKIE_OPTIONS,
-      maxAge: 60 * 30,
+      maxAge: ACCESS_TOKEN_MAX_AGE,
     });
   }
 
   if (tokens.refreshToken) {
     response.cookies.set('refreshToken', tokens.refreshToken, {
       ...AUTH_COOKIE_OPTIONS,
-      maxAge: 60 * 60 * 24 * 7,
+      maxAge: REFRESH_TOKEN_MAX_AGE,
     });
   }
 }

@@ -51,11 +51,19 @@ export const config = {
 };
 
 function isValidToken(tokens: { accessToken?: string; refreshToken?: string }) {
-  const { accessToken, refreshToken } = tokens;
-
-  const isAccessTokenValid = !!accessToken;
-  const isRefreshTokenValid = !!refreshToken;
-
+  const isTokenExpired = (token?: string) => {
+    if (!token) {
+      return true;
+    }
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return Date.now() >= payload.exp * 1000;
+    } catch {
+      return true;
+    }
+  };
+  const isAccessTokenValid = !isTokenExpired(tokens.accessToken);
+  const isRefreshTokenValid = !isTokenExpired(tokens.refreshToken);
   return { isAccessTokenValid, isRefreshTokenValid };
 }
 

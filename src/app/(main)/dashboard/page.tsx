@@ -4,6 +4,7 @@ import DashBoardSummary from '@/features/dashboard/components/DashboardSummary';
 import DashboardDetail from '@/features/dashboard/components/DashboardDetail';
 
 import { todoQueries, userQueries, goalQueries } from '@/shared/lib/queryKeys';
+import { DataBoundary } from '@/shared/components/ErrorSuspenseBoundary';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,8 +35,10 @@ export default async function DashboardPage() {
   return (
     <HydrationBoundary state={dehydratedState}>
       <div className="flex w-full flex-col">
-        <DashBoardSummary />
-        <DashboardDetail />
+        <DataBoundary>
+          <DashBoardSummary />
+          <DashboardDetail />
+        </DataBoundary>
       </div>
     </HydrationBoundary>
   );

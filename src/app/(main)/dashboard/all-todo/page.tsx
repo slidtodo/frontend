@@ -1,6 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import AllTodoContent from '@/features/dashboard/allTodo/components/AllTodoContent';
+import { DataBoundary } from '@/shared/components/ErrorSuspenseBoundary';
 
 import { todoQueries } from '@/shared/lib/queryKeys';
 
@@ -17,7 +18,9 @@ export default async function AllTodoPage() {
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <AllTodoContent />
+      <DataBoundary>
+        <AllTodoContent />
+      </DataBoundary>
     </HydrationBoundary>
   );
 }

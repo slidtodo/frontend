@@ -79,18 +79,6 @@ class FetchAuth {
       body,
     });
 
-  postRefreshAccessToken = (body?: RefreshRequest) =>
-    apiRequest<RefreshResponse, RefreshRequest | undefined>('/api/v1/auth/refresh', {
-      method: 'POST',
-      body,
-    });
-
-  postDevRefreshAccessToken = (body?: DevRefreshRequest) =>
-    apiRequest<DevRefreshResponse, DevRefreshRequest | undefined>('/api/v1/dev/auth/refresh', {
-      method: 'POST',
-      body,
-    });
-
   postLogout = () =>
     apiRequest<void>('/api/v1/auth/logout', {
       method: 'POST',
@@ -101,17 +89,27 @@ class FetchAuth {
       method: 'POST',
     });
 
-  getGoogleAuthorizeUrl = () =>
-    apiRequest<GoogleAuthorizeUrlResponse>('/api/v1/auth/oauth/google/url');
+  getGoogleAuthorizeUrl = () => apiRequest<GoogleAuthorizeUrlResponse>('/api/v1/auth/oauth/google/url');
 
-  getGithubAuthorizeUrl = () =>
-    apiRequest<GithubAuthorizeUrlResponse>('/api/v1/auth/oauth/github/url');
+  getGithubAuthorizeUrl = () => apiRequest<GithubAuthorizeUrlResponse>('/api/v1/auth/oauth/github/url');
 
-  getDevGoogleAuthorizeUrl = () =>
-    apiRequest<DevGoogleAuthorizeUrlResponse>('/api/v1/dev/auth/oauth/google/url');
+  getDevGoogleAuthorizeUrl = () => apiRequest<DevGoogleAuthorizeUrlResponse>('/api/v1/dev/auth/oauth/google/url');
 
-  getDevGithubAuthorizeUrl = () =>
-    apiRequest<DevGithubAuthorizeUrlResponse>('/api/v1/dev/auth/oauth/github/url');
+  getDevGithubAuthorizeUrl = () => apiRequest<DevGithubAuthorizeUrlResponse>('/api/v1/dev/auth/oauth/github/url');
+
+  private isDev = process.env.NEXT_PUBLIC_USE_DEV_API === 'true';
+
+  getGithubAuthorizeUrlByEnv = () =>
+    this.isDev ? this.getDevGithubAuthorizeUrl() : this.getGithubAuthorizeUrl();
+
+  getGoogleAuthorizeUrlByEnv = () =>
+    this.isDev ? this.getDevGoogleAuthorizeUrl() : this.getGoogleAuthorizeUrl();
+
+  postGithubLoginByEnv = (body: GithubLoginRequest) =>
+    this.isDev ? this.postDevGithubLogin(body) : this.postGithubLogin(body);
+
+  postGoogleLoginByEnv = (body: GoogleLoginRequest) =>
+    this.isDev ? this.postDevGoogleLogin(body) : this.postGoogleLogin(body);
 }
 
 const fetchAuth = new FetchAuth();

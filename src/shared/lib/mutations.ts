@@ -317,7 +317,6 @@ export const usePostNote = (callbacks?: { onError: (error: Error) => void }) => 
       });
 
       router.push(`/goal/${response.goalId}/note`);
-      router.refresh();
     },
     onError: (error) => {
       if (callbacks?.onError) callbacks.onError(error);
@@ -356,7 +355,6 @@ export const useDeleteNote = (noteId: number, goalId: number, callbacks?: { onEr
       });
 
       router.push(`/goal/${goalId}/note`);
-      router.refresh();
     },
     onError: (error) => {
       callbacks?.onError?.(error);

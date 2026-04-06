@@ -13,7 +13,7 @@ export default function DraftNoteToast({ onLoad, onClose }: DraftNoteToastProps)
       <div className="relative">
         {/* 말풍선 꼬리 (우측 상단) */}
         <div
-          className="absolute md:-top-[8px] right-5 h-0 w-0"
+          className="absolute right-5 hidden h-0 w-0 md:-top-2 md:block"
           style={{
             borderLeft: '10px solid transparent',
             borderRight: '0px solid transparent',

@@ -10,8 +10,8 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <MSWProvider>
       <ReactQueryProvider>
         {children}
-        <ToastContainer />
         <Modal />
+        <ToastContainer />
       </ReactQueryProvider>
     </MSWProvider>
   );

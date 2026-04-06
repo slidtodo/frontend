@@ -8,7 +8,7 @@ import { useModalStore } from '@/shared/stores/useModalStore';
 import { PostTodoRequest } from '@/shared/lib/api';
 
 interface UseTodoCreateModalResult {
-  goalDetailId?: number;
+  goalDetailId: number;
   todo: PostTodoRequest;
 }
 export function useTodoCreateModal() {

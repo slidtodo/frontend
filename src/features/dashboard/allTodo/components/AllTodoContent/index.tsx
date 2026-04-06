@@ -4,10 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import { PlusIcon } from 'lucide-react';
 
 import Button from '@/shared/components/Button';
-import TaskCard from '@/shared/components/TaskCard';
 import Empty from '@/shared/components/Empty';
 import { DataBoundary } from '@/shared/components/ErrorSuspenseBoundary';
 import PageHeader from '@/shared/components/PageHeader';
+import TaskCardWrapper from '@/features/dashboard/components/TaskCardWrapper';
 
 import { todoQueries } from '@/shared/lib/queryKeys';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
@@ -32,12 +32,12 @@ export default function AllTodoContent() {
         <PageHeader title="모든 할 일" count={todoList?.totalCount ?? todoList?.todos?.length ?? 0} className="pl-2" />
       )}
       <section className="flex flex-col gap-3">
-        <AllTodoFilter todos={todoList.todos} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
+        <AllTodoFilter todos={todoList} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
         {todoList && (todoList.todos?.length ?? 0) === 0 ? (
           <Empty>등록된 할 일이 없습니다.</Empty>
         ) : (
           <DataBoundary>
-            <AllTodoFetcher todos={todoList.todos} />
+            <AllTodoFetcher todos={todoList} />
           </DataBoundary>
         )}
       </section>
@@ -46,7 +46,7 @@ export default function AllTodoContent() {
 }
 
 interface AllTodoFilterProps {
-  todos?: TodoListResponse['todos'];
+  todos: TodoListResponse;
   selectedFilter: TodoOptions;
   setSelectedFilter: React.Dispatch<React.SetStateAction<TodoOptions>>;
 }
@@ -79,12 +79,11 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
         variant="cancel"
         className="group hover:bg-bearlog-500 flex items-center gap-1 bg-[#F2F2F2] px-3 py-[10px] md:px-[20px]"
         onClick={() => {
-          if (todos?.[0]?.goal?.id === undefined) return;
           openTodoCreateModal({
-            goalDetailId: undefined,
+            goalDetailId: todos.todos?.[0]?.goal?.id,
             todo: {
               title: '',
-              goalId: todos?.[0]?.goal?.id,
+              goalId: todos.todos?.[0]?.goal?.id,
               dueDate: undefined,
               linkUrl: undefined,
               imageUrl: undefined,
@@ -103,14 +102,14 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
 }
 
 interface AllTodoFetcherProps {
-  todos?: TodoListResponse['todos'];
+  todos: TodoListResponse;
 }
 function AllTodoFetcher({ todos }: AllTodoFetcherProps) {
   return (
     <section className="rounded-4xl bg-white p-4 md:p-8">
       <div className="flex max-h-[680px] flex-col gap-4 overflow-y-auto">
-        {todos?.map((todo) => (
-          <TaskCard key={todo.id} todo={todo} />
+        {todos.todos?.map((todo) => (
+          <TaskCardWrapper key={todo.id} item={todo} mode="todo" />
         ))}
       </div>
     </section>

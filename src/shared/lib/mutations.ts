@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 
 import { fetchGoals, PostGoalRequest } from './api/fetchGoals';
 import { fetchAuth } from './api';
-import { fetchTodos, PatchTodoRequest, PostTodoRequest } from './api/fetchTodos';
+import { fetchTodos, PatchTodoRequest, PatchTodoRequestWithNull, PostTodoRequest } from './api/fetchTodos';
 import { fetchUsers, PatchCurrentUserRequest, PatchCurrentUserPasswordRequest } from './api/fetchUsers';
 import { useToastStore } from '@/shared/stores/useToastStore';
 
@@ -124,7 +124,7 @@ export const usePatchTodo = (todoId?: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: PatchTodoRequest) => {
+    mutationFn: async (data: PatchTodoRequestWithNull) => {
       if (todoId === undefined) {
         throw new Error('Todo id is required');
       }

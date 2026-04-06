@@ -32,12 +32,12 @@ export default function LoginPage() {
     }
   };
   const handleGithubLogin = async () => {
-    const { loginUrl } = await fetchAuth.getGithubAuthorizeUrl();
+    const { loginUrl } = await fetchAuth.getGithubAuthorizeUrlByEnv();
     if (loginUrl) window.location.href = loginUrl;
   };
 
   const handleGoogleLogin = async () => {
-    const data = await fetchAuth.getGoogleAuthorizeUrl();
+    const data = await fetchAuth.getGoogleAuthorizeUrlByEnv();
     if (data.loginUrl) window.location.href = data.loginUrl;
   };
   return (

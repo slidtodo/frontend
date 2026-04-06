@@ -41,25 +41,25 @@ export default function Toast({ show, children, subText, onClose, variant = 'suc
           <div
             className={cn(
               'flex h-10 items-center gap-1 rounded-[28px] px-4 whitespace-nowrap shadow-[0_4px_16px_rgba(0,0,0,0.08)]',
-              variant === 'success' && 'bg-orange-100',
-              variant === 'fail' && 'bg-error-200',
+              variant === 'success' && 'bg-bearlog-300/40',
+              variant === 'fail' && 'bg-bearlog-300/40',
               '',
             )}
           >
             {/* 체크 아이콘 */}
             <span className="flex size-6 shrink-0 items-center justify-center">
               {variant === 'success' ? (
-                <Check className="aria-hidden h-[10px] w-[14px] stroke-orange-600" />
+                <Check className="aria-hidden stroke-bearlog-600 h-[10px] w-[14px]" />
               ) : (
-                <XIcon className="aria-hidden stroke-error-700 h-[10px] w-[14px]" />
+                <XIcon className="aria-hidden stroke-bearlog-600 h-[10px] w-[14px]" />
               )}
             </span>
             {/* 텍스트 영역 */}
             <div
               className={cn(
                 'flex items-center gap-1',
-                variant === 'success' && 'text-orange-600',
-                variant === 'fail' && 'text-error-700',
+                variant === 'success' && 'text-bearlog-500',
+                variant === 'fail' && 'text-bearlog-600',
               )}
             >
               <p className="text-[14px] leading-5 font-semibold tracking-[-0.42px]">{children}</p>

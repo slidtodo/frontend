@@ -10,10 +10,10 @@ interface LinkInputPros {
 
 export default function LinkInput({ value, onChange }: LinkInputPros) {
   const urlInputRef = useRef<HTMLInputElement>(null);
-
+  
   return (
     <div className="flex h-11 w-full items-center justify-between rounded-xl border border-dashed border-[#CCC] bg-[#FAFAFA] p-3 md:h-14 md:rounded-2xl md:p-4">
-      <div className="flex flex-1 items-center gap-2">
+      <div className="flex items-center gap-2">
         <Link2 size={20} className="shrink-0 -rotate-45 stroke-[#737373] md:h-6 md:w-6" />
         <input
           ref={urlInputRef}

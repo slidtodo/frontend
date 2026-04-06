@@ -96,6 +96,20 @@ class FetchAuth {
   getDevGoogleAuthorizeUrl = () => apiRequest<DevGoogleAuthorizeUrlResponse>('/api/v1/dev/auth/oauth/google/url');
 
   getDevGithubAuthorizeUrl = () => apiRequest<DevGithubAuthorizeUrlResponse>('/api/v1/dev/auth/oauth/github/url');
+
+  private isDev = process.env.NEXT_PUBLIC_USE_DEV_API === 'true';
+
+  getGithubAuthorizeUrlByEnv = () =>
+    this.isDev ? this.getDevGithubAuthorizeUrl() : this.getGithubAuthorizeUrl();
+
+  getGoogleAuthorizeUrlByEnv = () =>
+    this.isDev ? this.getDevGoogleAuthorizeUrl() : this.getGoogleAuthorizeUrl();
+
+  postGithubLoginByEnv = (body: GithubLoginRequest) =>
+    this.isDev ? this.postDevGithubLogin(body) : this.postGithubLogin(body);
+
+  postGoogleLoginByEnv = (body: GoogleLoginRequest) =>
+    this.isDev ? this.postDevGoogleLogin(body) : this.postGoogleLogin(body);
 }
 
 const fetchAuth = new FetchAuth();

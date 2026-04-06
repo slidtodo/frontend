@@ -100,7 +100,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
         <div className="relative">
           <button
             type="button"
-            className="text-bearlog-500 hover:text-bearlog-600 cursor-pointer px-1.5 transition-all duration-200 font-semibold text-sm"
+            className="px-1.5 text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
             onClick={handleSaveDraft}
           >
             임시저장
@@ -109,7 +109,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
         </div>
         <button
           type="button"
-          className="cursor-pointer px-1.5 text-gray-500 transition-all duration-200 hover:text-gray-600 font-semibold text-sm"
+          className="px-1.5 text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
           onClick={handleSubmit}
         >
           등록

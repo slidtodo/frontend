@@ -1,4 +1,5 @@
 'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronRightIcon } from 'lucide-react';
@@ -7,8 +8,8 @@ import { useQuery } from '@tanstack/react-query';
 import PageHeader from '@/shared/components/PageHeader';
 import PageSubTitle from '@/shared/components/PageSubTitle';
 import ProgressCircle from '@/shared/components/ProgressCircle';
-import TaskCard from '@/shared/components/TaskCard';
 import TabChangeMode from '@/shared/components/TabChangeMode';
+import TaskCardWrapper from '../TaskCardWrapper';
 
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import { todoQueries, userQueries } from '@/shared/lib/queryKeys';
@@ -66,7 +67,7 @@ function RecentPostCard() {
   return (
     <article className="flex h-[256px] flex-col gap-[6px] rounded-[40px] bg-white p-4 lg:p-8">
       {recentTodos.length > 0 ? (
-        recentTodos.map((task) => <TaskCard key={task.id} todo={task} />)
+        recentTodos.map((item) => <TaskCardWrapper key={item.id} item={item} mode="todo" />)
       ) : (
         <div className="flex h-full items-center justify-center">
           <span className="text-gray-500">최근 등록한 할 일이 없습니다.</span>

@@ -5,10 +5,10 @@ import { PlusIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import Progressbar from '@/shared/components/Progressbar';
-import TaskCard, { type TaskCardTodo } from '@/shared/components/TaskCard';
 import SearchInput from '@/shared/components/SearchInput';
 import Button from '@/shared/components/Button';
 import Empty from '@/shared/components/Empty';
+import TaskCardWrapper from '../TaskCardWrapper';
 
 import type { GoalDetailResponse } from '@/shared/lib/api';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
@@ -21,25 +21,21 @@ export default function GoalBox({ data }: GoalBoxProps) {
   const router = useRouter();
   const { openTodoCreateModal } = useTodoCreateModal();
 
-  const todoList = data.todoList ?? [];
-  const doneList = data.doneList ?? [];
-  const goalId = data.id;
-
   const [search, setSearch] = useState('');
   const normalizedSearch = search.trim().toLowerCase();
   const isSearching = normalizedSearch.length > 0;
 
   const filterTodos = useCallback(
-    (todos: TaskCardTodo[]) => {
+    (todos: GoalDetailResponse['todoList']) => {
       if (!isSearching) return todos;
 
-      return todos.filter((todo) => todo.title && todo.title.toLowerCase().includes(normalizedSearch));
+      return todos.filter((todo) => todo.title.toLowerCase().includes(normalizedSearch));
     },
     [isSearching, normalizedSearch],
   );
 
-  const visibleTodoList = filterTodos(todoList);
-  const visibleDoneList = filterTodos(doneList);
+  const visibleTodoList = filterTodos(data.todoList);
+  const visibleDoneList = filterTodos(data.doneList);
 
   return (
     <article className="flex flex-col gap-4 rounded-[40px] bg-white p-6 lg:px-8 lg:py-6">
@@ -48,8 +44,8 @@ export default function GoalBox({ data }: GoalBoxProps) {
           <div className="w-full max-w-[229px]">
             <button
               onClick={() => {
-                if (goalId === undefined) return;
-                router.push(`goal/${goalId}`);
+                if (data.id === undefined) return;
+                router.push(`goal/${data.id}`);
               }}
               className="font-base overflow-hidden text-left font-semibold text-ellipsis whitespace-nowrap text-gray-700"
             >
@@ -64,15 +60,13 @@ export default function GoalBox({ data }: GoalBoxProps) {
           <Button
             variant="primary"
             className="p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
-            disabled={goalId === undefined}
+            disabled={data.id === undefined}
             onClick={() => {
-              if (goalId === undefined) return;
-
               openTodoCreateModal({
-                goalDetailId: goalId,
+                goalDetailId: data.id,
                 todo: {
                   title: '',
-                  goalId,
+                  goalId: data.id,
                   dueDate: undefined,
                   linkUrl: undefined,
                   imageUrl: undefined,
@@ -106,7 +100,7 @@ export default function GoalBox({ data }: GoalBoxProps) {
 interface ListBoxProps {
   title: string;
   mode: 'todo' | 'done';
-  items: TaskCardTodo[];
+  items: GoalDetailResponse['todoList'];
 }
 
 function ListBox({ title, mode, items }: ListBoxProps) {
@@ -118,15 +112,7 @@ function ListBox({ title, mode, items }: ListBoxProps) {
       <span className={`text-sm font-bold ${textColor} lg:text-base`}>{title}</span>
       <div className="flex max-h-[236px] flex-col gap-1 overflow-y-auto">
         {items.map((item) => (
-          <TaskCard
-            variant={mode === 'todo' ? 'green' : 'default'}
-            key={item.id}
-            todo={{
-              ...item,
-              done: item.done ?? mode === 'done',
-            }}
-            starred={item.favorite}
-          />
+          <TaskCardWrapper key={item.id} item={item} mode={mode} />
         ))}
       </div>
     </div>

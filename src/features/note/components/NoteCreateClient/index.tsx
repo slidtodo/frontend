@@ -6,7 +6,6 @@ import Button from '@/shared/components/Button';
 import { useDraftNoteRestore } from '@/features/note/hooks/useDraftNoteRestore';
 import { useCallback, useEffect, useState } from 'react';
 import { useDraftNote } from '@/features/note/hooks/useDraftNote';
-import { usePostNote } from '@/features/note/hooks/usePostNote';
 import { useToastStore } from '@/shared/stores/useToastStore';
 import { useRouter } from 'next/navigation';
 import DraftNoteToast from '@/features/note/components/DraftNoteToast';
@@ -21,6 +20,7 @@ import { createPortal } from 'react-dom';
 import { TodoResponse } from '@/shared/lib/api/fetchTodos';
 import { GoalDetailResponse } from '@/shared/lib/api/fetchGoals';
 import { useMobileHeaderStore } from '@/shared/stores/useMobileHeaderStore';
+import { usePostNote } from '@/shared/lib/mutations';
 
 interface NoteCreateClientProps {
   goal: GoalDetailResponse;
@@ -44,8 +44,8 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
   const setSlot = useMobileHeaderStore((s) => s.setSlot);
 
   const { mutate: createNote, isPending } = usePostNote({
-    onError: () => {
-      showToast('노트 작성에 실패했습니다', 'fail');
+    onError: (error) => {
+      showToast(error.message || '노트 작성에 실패했습니다', 'fail');
     },
   });
 

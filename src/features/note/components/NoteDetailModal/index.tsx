@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
 import NoteCloseButton from '@/features/note/components/NoteEditor/EditorTitle/NoteCloseButton';
 
@@ -10,11 +10,10 @@ const ANIMATION_DURATION = 300;
 export default function NoteDetailModal({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [closing, setClosing] = useState(false);
-  const { goalId } = useParams();
 
   const handleClose = () => {
     setClosing(true);
-    setTimeout(() => router.push(`goal/${goalId}/note}`), ANIMATION_DURATION);
+    setTimeout(() => router.back(), ANIMATION_DURATION);
   };
 
   return (

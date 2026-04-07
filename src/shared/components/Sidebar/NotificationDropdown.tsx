@@ -56,7 +56,7 @@ export default function NotificationDropdown({ isOpen, onOpen, onClose, isSideba
       <button
         ref={buttonRef}
         onClick={() => (isOpen ? onClose() : onOpen())}
-        className={`group hover:text-bearlog-600 relative text-gray-500 transition-all duration-200 ${
+        className={`group hover:text-bearlog-600 relative text-gray-500 ${
           isSidebarOpen ? 'rounded-[999px] border border-gray-200 p-[20px]' : 'p-0'
         }`}
       >

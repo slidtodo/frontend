@@ -370,7 +370,6 @@ export const usePostNote = (callbacks?: { onError: (error: Error) => void }) => 
 };
 
 export const usePatchNote = (noteId: number, goalId: number, callbacks?: { onError?: (error: Error) => void }) => {
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -378,7 +377,7 @@ export const usePatchNote = (noteId: number, goalId: number, callbacks?: { onErr
     onSuccess: (response) => {
       queryClient.setQueryData(noteQueries.detail(noteId).queryKey, response);
       queryClient.invalidateQueries({ queryKey: noteKeys.lists() });
-      router.push(`/goal/${goalId}/note/${noteId}`);
+      window.location.href = `/goal/${goalId}/note/${noteId}`;
     },
     onError: (error) => callbacks?.onError?.(error),
   });

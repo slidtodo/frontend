@@ -19,16 +19,14 @@ export default function NoteItem({ note, goalId }: { note: Note; goalId: string 
             <Image src={noteIcon} sizes="32" alt="노트 아이콘" className="md:h-10 md:w-10" />
             <h1 className="line-clamp-1 text-sm font-semibold text-[#1E293B] md:text-xl">{note.title}</h1>
           </div>
-          <div onClick={(e) => e.preventDefault()}>
-            <EllipsisButton
-              items={[
-                { label: '수정하기', value: 'edit' },
-                { label: '삭제하기', value: 'delete' },
-              ]}
-              noteId={note.id}
-              goalId={Number(goalId)}
-            />
-          </div>
+          <EllipsisButton
+            items={[
+              { label: '수정하기', value: 'edit' },
+              { label: '삭제하기', value: 'delete' },
+            ]}
+            noteId={note.id}
+            goalId={Number(goalId)}
+          />
         </div>
         <div className="flex items-center justify-between">
           <TodoTitle todoId={note.todoId} />

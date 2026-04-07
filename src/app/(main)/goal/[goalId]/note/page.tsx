@@ -1,6 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { noteQueries, goalQueries } from '@/shared/lib/query/queryKeys';
 import NoteListContainer from '@/features/note/components/NoteListContainer';
+import { DataBoundary } from '@/shared/components/ErrorSuspenseBoundary';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,7 +20,9 @@ export default async function Page({ params }: { params: Promise<{ goalId: strin
   return (
     <HydrationBoundary state={dehydratedState}>
       <div className="mx-auto flex h-full min-h-screen w-full max-w-[1312px] flex-col">
-        <NoteListContainer goalId={Number(goalId)} />
+        <DataBoundary>
+          <NoteListContainer goalId={Number(goalId)} />
+        </DataBoundary>
       </div>
     </HydrationBoundary>
   );

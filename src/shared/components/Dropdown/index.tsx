@@ -128,7 +128,7 @@ interface DropdownItemProps {
 export function DropdownItem({ item, onSelectItem }: DropdownItemProps) {
   return (
     <div className="flex w-full bg-white p-1.5">
-      <button onClick={() => onSelectItem(item)} className={twMerge(clsx('flex w-full cursor-pointer'))}>
+      <button onClick={(e) => { e.stopPropagation(); e.preventDefault(); onSelectItem(item); }} className={twMerge(clsx('flex w-full cursor-pointer'))}>
         <div className={twMerge(clsx('w-full rounded-xl p-2 text-left hover:bg-[#FEEFDC]'))}>
           <span className="text-sm leading-6 font-medium tracking-[-0.48px] text-[#333] md:text-base">
             {item.label}

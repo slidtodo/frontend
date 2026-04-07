@@ -2,7 +2,7 @@ import { dehydrate, QueryClient, HydrationBoundary } from '@tanstack/react-query
 import { noteQueries, goalQueries } from '@/shared/lib/queryKeys';
 import NoteDetailClient from '@/features/note/components/NoteDetailClient';
 import { notFound } from 'next/navigation';
-import NoteDetailModal from './_components/NoteDetailModal';
+import NoteDetailModal from '@/features/note/components/NoteDetailModal';
 
 export const dynamic = 'force-dynamic';
 

@@ -7,7 +7,7 @@ import TodoFormModal from '../components/manual/TodoFormModal';
 import { PatchTodoRequest } from '@/shared/lib/api';
 
 interface UseTodoEditModalResult {
-  goalDetailId?: number;
+  goalDetailId: number;
   todo: PatchTodoRequest & { id: number };
 }
 export function useTodoEditModal() {

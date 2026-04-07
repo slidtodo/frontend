@@ -1,9 +1,16 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
-import { fetchGoals, PostGoalRequest } from './api/fetchGoals';
+import { fetchGoals, GoalListResponse, PatchGoalResponse, PostGoalRequest } from './api/fetchGoals';
 import { fetchAuth } from './api';
-import { fetchTodos, PatchTodoRequest, PostTodoRequest } from './api/fetchTodos';
+import {
+  fetchTodos,
+  PatchTodoFavoriteResponse,
+  PatchTodoRequest,
+  PatchTodoResponse,
+  PostTodoRequest,
+  TodoListResponse,
+} from './api/fetchTodos';
 import { fetchUsers, PatchCurrentUserRequest, PatchCurrentUserPasswordRequest } from './api/fetchUsers';
 import { useToastStore } from '@/shared/stores/useToastStore';
 
@@ -19,6 +26,22 @@ export const usePostGoal = () => {
       }
 
       return fetchGoals.postGoal(data);
+    },
+    onMutate: async (data: PostGoalRequest) => {
+      await queryClient.cancelQueries({ queryKey: ['goals', 'list'] });
+      const previousGoals = queryClient.getQueryData(['goals', 'list']);
+      queryClient.setQueryData(['goals', 'list'], (old: GoalListResponse) => ({
+        ...old,
+        items: [
+          {
+            id: Math.random(),
+            title: data.title,
+            todos: [],
+          },
+          ...(old?.goals ?? []),
+        ],
+      }));
+      return { previousGoals };
     },
     onSuccess: () => {
       showToast('목표가 생성되었습니다.');
@@ -38,6 +61,12 @@ export const useDeleteGoal = (goalId?: number) => {
         throw new Error('Goal id is required');
       }
       return fetchGoals.deleteGoal(goalId);
+    },
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['goals', 'detail', goalId] });
+      const previousGoal = queryClient.getQueryData(['goals', 'detail', goalId]);
+      queryClient.setQueryData(['goals', 'detail', goalId], undefined);
+      return { previousGoal };
     },
     onSuccess: () => {
       showToast('목표가 삭제되었습니다.');
@@ -60,6 +89,15 @@ export const usePatchGoal = (goalId?: number) => {
         throw new Error('Goal id is required');
       }
       return fetchGoals.patchGoal(goalId, data);
+    },
+    onMutate: async (data: { title: string }) => {
+      await queryClient.cancelQueries({ queryKey: ['goals', 'detail', goalId] });
+      const previousGoal = queryClient.getQueryData(['goals', 'detail', goalId]);
+      queryClient.setQueryData(['goals', 'detail', goalId], (old: PatchGoalResponse) => ({
+        ...old,
+        title: data.title,
+      }));
+      return { previousGoal };
     },
     onSuccess: () => {
       showToast('목표가 수정되었습니다.');
@@ -84,6 +122,26 @@ export const usePostTodo = () => {
       }
       return fetchTodos.postTodo(data);
     },
+    onMutate: async (data: PostTodoRequest) => {
+      await queryClient.cancelQueries({ queryKey: ['todos', 'list'] });
+      const previousTodos = queryClient.getQueryData(['todos', 'list']);
+      queryClient.setQueryData(['todos', 'list'], (old: TodoListResponse) => ({
+        ...old,
+        items: [
+          {
+            id: Math.random(),
+            title: data.title,
+            dueDate: data.dueDate,
+            tags: data.tags ?? [],
+            linkUrl: data.linkUrl ?? null,
+            imageUrl: data.imageUrl ?? null,
+            goalId: data.goalId,
+          },
+          ...(old?.todos ?? []),
+        ],
+      }));
+      return { previousTodos };
+    },
     onSuccess: () => {
       showToast('할 일이 생성되었습니다.');
       queryClient.invalidateQueries({ queryKey: ['todos', 'list'] });
@@ -107,6 +165,12 @@ export const useDeleteTodo = (todoId?: number) => {
       }
       return fetchTodos.deleteTodo(todoId);
     },
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['todos', 'detail', todoId] });
+      const previousTodo = queryClient.getQueryData(['todos', 'detail', todoId]);
+      queryClient.setQueryData(['todos', 'detail', todoId], undefined);
+      return { previousTodo };
+    },
     onSuccess: () => {
       showToast('할 일이 삭제되었습니다.');
       queryClient.invalidateQueries({ queryKey: ['todos', 'list', {}] });
@@ -129,6 +193,16 @@ export const usePatchTodo = (todoId?: number) => {
         throw new Error('Todo id is required');
       }
       return fetchTodos.patchTodo(todoId, data);
+    },
+
+    onMutate: async (data: PatchTodoRequest) => {
+      await queryClient.cancelQueries({ queryKey: ['todos', 'detail', todoId] });
+      const previousTodo = queryClient.getQueryData(['todos', 'detail', todoId]);
+      queryClient.setQueryData(['todos', 'detail', todoId], (old: PatchTodoResponse) => ({
+        ...old,
+        ...data,
+      }));
+      return { previousTodo };
     },
 
     onSuccess: () => {
@@ -156,6 +230,15 @@ export const usePatchTodoFavorite = (todoId?: number) => {
       }
 
       return fetchTodos.patchTodoFavorite(todoId);
+    },
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['todos', 'detail', todoId] });
+      const previousTodo = queryClient.getQueryData(['todos', 'detail', todoId]);
+      queryClient.setQueryData(['todos', 'detail', todoId], (old: PatchTodoFavoriteResponse) => ({
+        ...old,
+        favorite: !old?.favorite,
+      }));
+      return { previousTodo };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todos', 'detail', todoId] });

@@ -132,28 +132,32 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       : goalOptions[0]?.value;
 
   const onSubmit = async (data: TodoFormValues) => {
-    if (isEditMode && 'id' in todo) {
-      await patchTodoMutation.mutateAsync({
-        title: data.title,
-        dueDate: data.dueDate,
-        linkUrl: data.linkUrl ?? null,
-        imageUrl: data.imageUrl ?? null,
-        tags: data.tags,
-        done: data.done,
-      });
-    } else {
-      await postTodoMutation.mutateAsync({
-        source: 'MANUAL',
-        title: data.title,
-        goalId: data.goalId,
-        dueDate: data.dueDate,
-        linkUrl: data.linkUrl ?? undefined,
-        imageUrl: data.imageUrl ?? undefined,
-        tags: data.tags,
-      });
-    }
+    try {
+      if (isEditMode && 'id' in todo) {
+        await patchTodoMutation.mutateAsync({
+          title: data.title,
+          dueDate: data.dueDate,
+          linkUrl: data.linkUrl ?? null,
+          imageUrl: data.imageUrl ?? null,
+          tags: data.tags,
+          done: data.done,
+        });
+      } else {
+        await postTodoMutation.mutateAsync({
+          source: 'MANUAL',
+          title: data.title,
+          goalId: data.goalId,
+          dueDate: data.dueDate,
+          linkUrl: data.linkUrl ?? undefined,
+          imageUrl: data.imageUrl ?? undefined,
+          tags: data.tags,
+        });
+      }
 
-    closeModal();
+      closeModal();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

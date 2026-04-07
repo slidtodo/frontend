@@ -46,8 +46,9 @@ export default function NotificationDropdown({ isOpen, onOpen, onClose, isSideba
   useEffect(() => {
     if (isOpen && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
+      const DROPDOWN_WIDTH = 320;
       if (placement === 'bottom') {
-        setDropdownPos({ top: rect.bottom + 8, left: rect.right - 320 });
+        setDropdownPos({ top: rect.bottom + 8, left: Math.max(8, rect.right - DROPDOWN_WIDTH) });
       } else {
         setDropdownPos({ top: rect.top, left: rect.right + 8 });
       }

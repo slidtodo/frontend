@@ -76,15 +76,3 @@ export default function SidebarMobileCase({ user }: SidebarMobileCaseProps) {
   );
 }
 
-function BellButton() {
-  return (
-    <button
-      type="button"
-      className="group hover:text-bearlog-600 relative text-gray-500 transition-all duration-200"
-      aria-label="알림"
-    >
-      <BellIcon color="#737373" size={24} className="transition-transform group-hover:scale-110" />
-      <div className="bg-bearlog-500 absolute top-0.5 right-0.5 h-2 w-2 rounded-full" />
-    </button>
-  );
-}

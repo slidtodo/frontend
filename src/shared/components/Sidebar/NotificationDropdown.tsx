@@ -14,9 +14,10 @@ interface NotificationDropdownProps {
   onOpen: () => void;
   onClose: () => void;
   isSidebarOpen: boolean;
+  placement?: 'right' | 'bottom';
 }
 
-export default function NotificationDropdown({ isOpen, onOpen, onClose, isSidebarOpen }: NotificationDropdownProps) {
+export default function NotificationDropdown({ isOpen, onOpen, onClose, isSidebarOpen, placement = 'right' }: NotificationDropdownProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0 });
@@ -45,9 +46,14 @@ export default function NotificationDropdown({ isOpen, onOpen, onClose, isSideba
   useEffect(() => {
     if (isOpen && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
-      setDropdownPos({ top: rect.top, left: rect.right + 8 });
+      const DROPDOWN_WIDTH = 320;
+      if (placement === 'bottom') {
+        setDropdownPos({ top: rect.bottom + 8, left: Math.max(8, rect.right - DROPDOWN_WIDTH) });
+      } else {
+        setDropdownPos({ top: rect.top, left: rect.right + 8 });
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, placement]);
 
   useOnClickOutside([buttonRef, dropdownRef], onClose);
 

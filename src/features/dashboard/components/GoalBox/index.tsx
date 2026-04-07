@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { PlusIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -111,9 +112,11 @@ function ListBox({ title, mode, items }: ListBoxProps) {
     <div className={`flex max-h-[324px] flex-1 flex-col gap-4 rounded-[16px] ${bgColor} p-4 lg:rounded-[24px] lg:p-6`}>
       <span className={`text-sm font-bold ${textColor} lg:text-base`}>{title}</span>
       <div className="flex max-h-[236px] flex-col gap-1 overflow-y-auto">
-        {items.map((item) => (
-          <TaskCardWrapper key={item.id} item={item} mode={mode} />
-        ))}
+        <AnimatePresence initial={false} mode="popLayout">
+          {items.map((item) => (
+            <TaskCardWrapper key={item.id} item={item} mode={mode} />
+          ))}
+        </AnimatePresence>
       </div>
     </div>
   );

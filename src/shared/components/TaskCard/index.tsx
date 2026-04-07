@@ -31,7 +31,7 @@ export default function TaskCard({ todo, onCheckboxClick, onStareClick, variant 
         'cursor-pointer',
         'relative flex items-center gap-2',
         'rounded-2xl px-2 py-2.5',
-        'transition-all duration-150',
+        'transition-all duration-150 ease-in-out',
         'hover:bg-[rgba(0,200,127,0.1)]',
       )}
     >
@@ -67,9 +67,9 @@ function TaskCheckbox({ todo, isGreen, onCheckboxClick }: TaskCheckboxProps) {
           clsx(
             'relative flex cursor-pointer items-center justify-center',
             'size-4.5 shrink-0 rounded-md',
-            'transition-all duration-150',
-            todo.done ? 'bg-bearlog-500 border-transparent' : 'border border-gray-300 bg-white',
-            isGreen && 'border-none',
+            'transition-all duration-150 ease-in-out',
+            todo.done ? 'bg-bearlog-500 border-none' : 'border border-gray-300 bg-white',
+            isGreen ? '' : 'border-none',
           ),
         )}
       >
@@ -83,7 +83,7 @@ function TaskCheckbox({ todo, isGreen, onCheckboxClick }: TaskCheckboxProps) {
         className={clsx(
           'group min-w-0 flex-1 cursor-pointer truncate text-left',
           'text-base leading-6 tracking-[-0.03em]',
-          'transition-all duration-150',
+          'transition-all duration-150 ease-in-out',
           todo.done ? 'group-hover:text-bearlog-600 font-medium group-hover:font-semibold' : '',
           isGreen ? 'text-gray-800' : 'group-hover:text-bearlog-600 text-gray-500 group-hover:font-semibold',
         )}

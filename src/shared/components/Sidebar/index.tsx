@@ -101,7 +101,7 @@ function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
             {/* TODO: 해당 로고 바뀌면 교체 필요 */}
             <Image
               priority
-              src={'/image/main-logo.svg'}
+              src={'/image/bearlog-icon.png'}
               alt="Logo"
               fill
               className={`object-contain ${isOpen ? 'h-12 w-12' : 'h-8 w-8'}`}

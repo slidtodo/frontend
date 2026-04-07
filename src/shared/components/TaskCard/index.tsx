@@ -103,11 +103,9 @@ function TaskLinkNoteCreate({ todo }: TaskLinkNoteCreateProps) {
   return (
     <Link
       href={`/goal/${todo.goal.id}/note/create?todoId=${todo.id}`}
-      className={
-        'relative flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[rgba(0,200,127,0.1)] p-1'
-      }
+      className={'relative flex h-6 w-6 cursor-pointer items-center justify-center'}
     >
-      <SquareMenuIcon size={12} color="#008354" />
+      <Image src="/image/go-note.png" alt="Note menu" width={24} height={24} className="absolute inset-0" />
       {/** TODO: 해당 위 SquareMenuIcon 디자인이 완성되지 않음  */}
     </Link>
   );

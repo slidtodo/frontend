@@ -58,7 +58,7 @@ export default function SignupPage() {
       <div className="flex w-full max-w-[331px] flex-col items-start md:max-w-[400px]">
         {/* 로고 */}
         <div className="mb-10 flex h-12 w-full items-center gap-4">
-          <Image src="/icons/todo.png" alt="logo" width={48} height={48} />
+          <Image src="/image/bearlog-icon.png" alt="logo" width={48} height={48} />
           <span className="text-2xl font-bold">Bearlog</span>
         </div>
         <form className="flex w-full flex-col gap-4" onSubmit={handleSubmit}>
@@ -121,7 +121,7 @@ export default function SignupPage() {
         {/* 로그인 링크 */}
         <div className="mt-6 flex h-6 w-full items-center justify-center gap-2 text-sm">
           <span className="text-base leading-6 font-medium text-[#333333]">이미 회원이신가요?</span>
-          <Link href="/login" className="text-base leading-6 font-semibold text-bearlog-600">
+          <Link href="/login" className="text-bearlog-600 text-base leading-6 font-semibold">
             로그인
           </Link>
         </div>

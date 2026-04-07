@@ -9,7 +9,7 @@ import Tag from '@/shared/components/Tag';
 
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { TodoResponse } from '@/shared/lib/api';
-import { noteQueries } from '@/shared/lib/queryKeys';
+import { noteQueries } from '@/shared/lib/query/queryKeys';
 import { formatDate } from '@/shared/utils/utils';
 interface DetailTodoModalComponentsProps {
   todo: TodoResponse | undefined;

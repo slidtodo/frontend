@@ -4,14 +4,14 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
-import { CheckIcon, EllipsisVertical, SquareMenuIcon, Star } from 'lucide-react';
+import { CheckIcon, EllipsisVertical, Star } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
 import EditDeleteDropdown from '@/features/dashboard/components/EditDeleteDropdown';
 import DetailTodoModal from '@/features/goal/components/DetailTodoModal';
 
 import { useTodoEditModal } from '@/features/todo/hooks/useTodoEditModal';
-import { useDeleteTodo } from '@/shared/lib/mutations';
+import { useDeleteTodo } from '@/shared/lib/query/mutations';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { TodoResponse } from '@/shared/lib/api';
 
@@ -29,8 +29,8 @@ export default function TaskCard({ todo, onCheckboxClick, onStareClick, variant 
       className={clsx(
         'group',
         'cursor-pointer',
-        'relative flex items-center gap-2',
-        'rounded-2xl px-2 py-2.5',
+        'relative flex items-center gap-1 lg:gap-2',
+        'rounded-2xl md:px-1 md:py-2 lg:px-2 lg:py-2.5',
         'transition-all duration-150 ease-in-out',
         'hover:bg-[rgba(0,200,127,0.1)]',
       )}
@@ -103,11 +103,9 @@ function TaskLinkNoteCreate({ todo }: TaskLinkNoteCreateProps) {
   return (
     <Link
       href={`/goal/${todo.goal.id}/note/create?todoId=${todo.id}`}
-      className={
-        'relative flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[rgba(0,200,127,0.1)] p-1'
-      }
+      className={'relative flex h-6 w-6 cursor-pointer items-center justify-center'}
     >
-      <SquareMenuIcon size={12} color="#008354" />
+      <Image src="/image/go-note.png" alt="Note menu" width={24} height={24} className="absolute inset-0" />
       {/** TODO: 해당 위 SquareMenuIcon 디자인이 완성되지 않음  */}
     </Link>
   );

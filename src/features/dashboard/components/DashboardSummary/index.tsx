@@ -12,7 +12,7 @@ import TabChangeMode from '@/shared/components/TabChangeMode';
 import TaskCardWrapper from '../TaskCardWrapper';
 
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
-import { todoQueries, userQueries } from '@/shared/lib/queryKeys';
+import { todoQueries, userQueries } from '@/shared/lib/query/queryKeys';
 
 export default function DashBoardSummary() {
   const { data: user } = useQuery(userQueries.current());
@@ -20,10 +20,10 @@ export default function DashBoardSummary() {
 
   return (
     <>
-      <div className="flex justify-between pb-[30px] lg:pb-[34px]">
-        {breakpoint !== 'mobile' && <PageHeader title={`${user?.nickname}님의 대시보드`} className="text-black" />}
+      <div className="flex items-center justify-end pb-[30px] md:justify-between lg:pb-[34px]">
+        {breakpoint !== 'mobile' && <PageHeader title={`${user?.nickname}님의 대시보드`} />}
 
-        <div className="flex w-full justify-end md:w-fit">
+        <div className="flex shrink-0 justify-end md:w-fit">
           <TabChangeMode mode="MANUAL" />
         </div>
       </div>
@@ -65,7 +65,7 @@ function RecentPostCard() {
   const recentTodos = todos?.todos?.slice(0, 4) ?? [];
 
   return (
-    <article className="flex h-[256px] flex-col gap-[6px] rounded-[40px] bg-white p-4 lg:p-8">
+    <article className="flex h-[187px] h-fit flex-col gap-[6px] rounded-[40px] bg-white px-4 py-[18px] md:h-[229px] md:p-4 lg:h-[256px] lg:p-8">
       {recentTodos.length > 0 ? (
         recentTodos.map((item) => <TaskCardWrapper key={item.id} item={item} mode="todo" />)
       ) : (
@@ -81,7 +81,7 @@ function CurrentProgressCard() {
   const { data: percents } = useQuery(userQueries.progress());
 
   return (
-    <article className="bg-bearlog-500 relative h-[256px] rounded-[40px] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)]">
+    <article className="bg-bearlog-500 relative h-[187px] rounded-[40px] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)] md:h-[229px] lg:h-[256px]">
       <div className="absolute right-0 bottom-0">
         <Image
           src={'/image/teaching-bear-lg.png'}

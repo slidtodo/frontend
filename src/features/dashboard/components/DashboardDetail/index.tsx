@@ -7,7 +7,7 @@ import PageSubTitle from '@/shared/components/PageSubTitle';
 import GoalBox from '../GoalBox';
 import Empty from '@/shared/components/Empty';
 
-import { goalQueries } from '@/shared/lib/queryKeys';
+import { goalQueries } from '@/shared/lib/query/queryKeys';
 import { GoalListResponse } from '@/shared/lib/api';
 
 export default function DashboardDetail() {

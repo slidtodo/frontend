@@ -13,8 +13,8 @@ import SinglePostModal from '@/shared/components/Modal/SinglePostModal';
 import PageHeader from '@/shared/components/PageHeader';
 
 import { GoalDetailResponse } from '@/shared/lib/api';
-import { useDeleteGoal, usePatchGoal } from '@/shared/lib/mutations';
-import { goalQueries, userQueries } from '@/shared/lib/queryKeys';
+import { useDeleteGoal, usePatchGoal } from '@/shared/lib/query/mutations';
+import { goalQueries, userQueries } from '@/shared/lib/query/queryKeys';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 
@@ -131,9 +131,9 @@ function GoalProgress({ goalDetail }: GoalProgressProps) {
         </div>
 
         <div className="relative flex flex-col items-start gap-2">
-          <span className="text-[clamp(12px,2vw,20px)] font-semibold text-white">목표진행률</span>
+          <span className="truncate text-xl font-semibold text-white">목표진행률</span>
           <div className="flex items-baseline gap-1">
-            <span className="text-[clamp(20px,5vw,60px)] leading-[1] font-bold text-white">{goalDetail.progress}</span>
+            <span className="text-[41px] leading-[1] font-bold text-white">{goalDetail.progress}</span>
             <span className="text-[clamp(14px,2vw,30px)] text-white">%</span>
           </div>
         </div>

@@ -17,8 +17,8 @@ import StatusField from '../shared/StatusField';
 import TagInput from '../shared/TagInput';
 
 import { ApiError, PatchTodoRequest, PostTodoRequest } from '@/shared/lib/api';
-import { usePatchTodo, usePostTodo } from '@/shared/lib/mutations';
-import { goalQueries, todoQueries } from '@/shared/lib/queryKeys';
+import { usePatchTodo, usePostTodo } from '@/shared/lib/query/mutations';
+import { goalQueries, todoQueries } from '@/shared/lib/query/queryKeys';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { formatDateForAPI } from '@/shared/utils/utils';
 interface BaseProps {
@@ -160,7 +160,9 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
 
       closeModal();
     } catch (error) {
-      setSubmitError(error instanceof ApiError ? error.message : '요청 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      setSubmitError(
+        error instanceof ApiError ? error.message : '요청 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      );
     }
   };
 

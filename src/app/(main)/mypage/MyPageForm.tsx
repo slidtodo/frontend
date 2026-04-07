@@ -8,8 +8,8 @@ import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
 
-import { userQueries } from '@/shared/lib/queryKeys';
-import { usePatchCurrentUser, usePatchCurrentUserPassword } from '@/shared/lib/mutations';
+import { userQueries } from '@/shared/lib/query/queryKeys';
+import { usePatchCurrentUser, usePatchCurrentUserPassword } from '@/shared/lib/query/mutations';
 import { validatePassword, validatePasswordConfirm } from '@/shared/lib/validation';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 

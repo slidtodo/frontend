@@ -4,17 +4,18 @@ import { BellIcon } from 'lucide-react';
 import PageHeader from '@/shared/components/PageHeader';
 import { useMobileHeaderStore } from '@/shared/stores/useMobileHeaderStore';
 import { CurrentUserResponse } from '@/shared/lib/api/fetchUsers';
+import { todoQueries } from '@/shared/lib/query/queryKeys';
+import { useQuery } from '@tanstack/react-query';
 
 interface SidebarMobileCaseProps {
   user: CurrentUserResponse | undefined;
 }
 export default function SidebarMobileCase({ user }: SidebarMobileCaseProps) {
-  // TODO: 전역관리가 좋아보임. 해당 데이터 받아오기
   const pathname = usePathname();
   const slot = useMobileHeaderStore((s) => s.slot);
 
-  const allTodoCount = 5;
-  const favoriteCount = 3;
+  const { data: todoList } = useQuery(todoQueries.list());
+  const favoriteCount = todoList?.todos?.filter((todo) => todo.favorite).length ?? 0;
 
   let title: string | undefined;
   let count: number | undefined;
@@ -26,7 +27,7 @@ export default function SidebarMobileCase({ user }: SidebarMobileCaseProps) {
     title = `${user?.nickname ?? '체다치즈'}님의 목표`;
   } else if (pathname === '/dashboard/all-todo') {
     title = '모든 할 일';
-    count = allTodoCount;
+    count = todoList?.totalCount;
   } else if (/^\/goal\/[^/]+\/note$/.test(pathname)) {
     title = '노트 모아보기';
   } else if (/^\/goal\/[^/]+\/note\/create$/.test(pathname)) {

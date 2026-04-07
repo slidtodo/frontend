@@ -8,7 +8,7 @@ import { DropdownItemType } from '@/shared/types/types';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { PopupModal } from '@/shared/components/Modal/PopupModal';
 import { useToastStore } from '@/shared/stores/useToastStore';
-import { useDeleteNote } from '@/shared/lib/mutations';
+import { useDeleteNote } from '@/shared/lib/query/mutations';
 
 interface EllipsisButtonProps {
   items: DropdownItemType[];

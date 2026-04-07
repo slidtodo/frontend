@@ -309,16 +309,20 @@ export const usePostNote = (callbacks?: { onError: (error: Error) => void }) => 
   return useMutation({
     mutationFn: fetchNotes.postNote,
     onSuccess: (response) => {
-      if (!response.id || !response.goalId) return;
+      if (!response.id || !response.goalId) {
+        console.error('[usePostNote] Unexpected API response: missing id or goalId', response);
+        callbacks?.onError?.(new Error('노트 작성에 실패했습니다.'));
+        return;
+      }
 
       queryClient.setQueryData(noteQueries.detail(response.id).queryKey, response);
       queryClient.invalidateQueries({
-        queryKey: noteQueries.list().queryKey,
+        queryKey: noteQueries.lists(),
       });
 
       router.push(`/goal/${response.goalId}/note/${response.id}`);
     },
-    onError: (error) => {
+    onError: (error) => { 
       if (callbacks?.onError) callbacks.onError(error);
     },
   });

@@ -44,8 +44,8 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
   const setSlot = useMobileHeaderStore((s) => s.setSlot);
 
   const { mutate: createNote, isPending } = usePostNote({
-    onError: () => {
-      showToast('노트 작성에 실패했습니다', 'fail');
+    onError: (error) => {
+      showToast(error.message || '노트 작성에 실패했습니다', 'fail');
     },
   });
 

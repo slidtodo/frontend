@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
 import NoteCloseButton from '@/features/note/components/NoteEditor/EditorTitle/NoteCloseButton';
 
-const ANIMATION_DURATION = 280;
+const ANIMATION_DURATION = 300;
 
 export default function NoteDetailModal({ children }: { children: React.ReactNode }) {
   const router = useRouter();

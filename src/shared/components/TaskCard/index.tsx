@@ -29,8 +29,8 @@ export default function TaskCard({ todo, onCheckboxClick, onStareClick, variant 
       className={clsx(
         'group',
         'cursor-pointer',
-        'relative flex items-center gap-2',
-        'rounded-2xl px-2 py-2.5',
+        'relative flex items-center gap-1 lg:gap-2',
+        'rounded-2xl md:px-1 md:py-2 lg:px-2 lg:py-2.5',
         'transition-all duration-150 ease-in-out',
         'hover:bg-[rgba(0,200,127,0.1)]',
       )}

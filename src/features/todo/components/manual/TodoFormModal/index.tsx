@@ -16,7 +16,7 @@ import LinkInput from '../shared/LinkInput';
 import StatusField from '../shared/StatusField';
 import TagInput from '../shared/TagInput';
 
-import { PatchTodoRequest, PatchTodoRequestWithNull, PostTodoRequest } from '@/shared/lib/api';
+import { PatchTodoRequest, PostTodoRequest } from '@/shared/lib/api';
 import { usePatchTodo, usePostTodo } from '@/shared/lib/mutations';
 import { goalQueries, todoQueries } from '@/shared/lib/queryKeys';
 import { useModalStore } from '@/shared/stores/useModalStore';
@@ -32,11 +32,11 @@ interface CreateMode extends BaseProps {
 
 interface EditMode extends BaseProps {
   mode: 'edit';
-  todo: PatchTodoRequestWithNull & { id: number };
+  todo: PatchTodoRequest & { id: number };
 }
 
 type TodoFormModalProps = CreateMode | EditMode;
-type TodoFormValues = PostTodoRequest & PatchTodoRequestWithNull;
+type TodoFormValues = PostTodoRequest & PatchTodoRequest;
 
 export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModalProps) {
   const { closeModal } = useModalStore();
@@ -73,7 +73,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
 
   register('dueDate', { required: '마감기한은 필수입니다.' });
 
-  const tags = useWatch({ control, name: 'tags' }) ?? [];
+  const tags = (useWatch({ control, name: 'tags' }) ?? []).filter((tag): tag is string => tag !== null);
   const goalId = useWatch({ control, name: 'goalId' });
   const linkUrl = useWatch({ control, name: 'linkUrl' });
   const imageUrl = useWatch({ control, name: 'imageUrl' }) ?? null;
@@ -102,7 +102,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       dueDate: todoDetail.dueDate ?? undefined,
       linkUrl: todoDetail.linkUrl ?? undefined,
       imageUrl: todoDetail.imageUrl ?? undefined,
-      tags: todoDetail.tags ? todoDetail.tags.map((tag) => tag.name) : [],
+      tags: todoDetail.tags ? todoDetail.tags.map((tag) => tag.name).filter((tag): tag is string => tag !== null) : [],
       done: todoDetail.done ?? false,
     });
   }, [isEditMode, reset, todoDetail]);

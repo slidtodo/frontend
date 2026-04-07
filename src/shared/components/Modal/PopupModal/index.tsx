@@ -60,7 +60,8 @@ type PopupModalVariant =
   | { type: 'goalDelete' }
   | { type: 'noteDelete' }
   | { type: 'noteLoad'; noteTitle: string }
-  | { type: 'postCancel' };
+  | { type: 'postCancel' }
+  | { type: 'githubDisconnect' };
 
 interface PopupModalProps {
   onConfirm: () => void;
@@ -103,6 +104,13 @@ function getConfig(variant: PopupModalVariant): ModalConfig {
         warning: '작성하신 모든 내용이 사라집니다.',
         confirmLabel: '확인',
         labelledBy: 'confirm-modal-post-cancel',
+      };
+    case 'githubDisconnect':
+      return {
+        titleLines: ['Github 연결을 삭제하시겠어요?'],
+        warning: '연결 삭제 후 Github 로그인이 불가합니다.',
+        confirmLabel: '확인',
+        labelledBy: 'confirm-modal-github-disconnect',
       };
   }
 }

@@ -58,7 +58,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
           dueDate: todo.dueDate ?? undefined,
           linkUrl: todo.linkUrl ?? undefined,
           imageUrl: todo.imageUrl ?? undefined,
-          tags: todo.tags ?? [],
+          tags: todo.tags?.filter((tag): tag is string => tag !== null) ?? [],
           done: todo.done ?? false,
         }
       : {

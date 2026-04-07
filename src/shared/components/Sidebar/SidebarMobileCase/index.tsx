@@ -1,7 +1,10 @@
+'use client';
+
+import { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { BellIcon } from 'lucide-react';
 
 import PageHeader from '@/shared/components/PageHeader';
+import NotificationDropdown from '@/shared/components/Sidebar/NotificationDropdown';
 import { useMobileHeaderStore } from '@/shared/stores/useMobileHeaderStore';
 import { CurrentUserResponse } from '@/shared/lib/api/fetchUsers';
 import { todoQueries } from '@/shared/lib/query/queryKeys';
@@ -13,13 +16,22 @@ interface SidebarMobileCaseProps {
 export default function SidebarMobileCase({ user }: SidebarMobileCaseProps) {
   const pathname = usePathname();
   const slot = useMobileHeaderStore((s) => s.slot);
+  const [notificationOpen, setNotificationOpen] = useState(false);
 
   const { data: todoList } = useQuery(todoQueries.list());
   const favoriteCount = todoList?.todos?.filter((todo) => todo.favorite).length ?? 0;
 
   let title: string | undefined;
   let count: number | undefined;
-  const actions: React.ReactNode = <BellButton />;
+  const actions: React.ReactNode = (
+    <NotificationDropdown
+      isOpen={notificationOpen}
+      onOpen={() => setNotificationOpen(true)}
+      onClose={() => setNotificationOpen(false)}
+      isSidebarOpen={false}
+      placement="bottom"
+    />
+  );
 
   if (pathname === '/dashboard') {
     title = `${user?.nickname ?? '체다치즈'}님의 대시보드`;

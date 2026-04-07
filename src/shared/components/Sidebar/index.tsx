@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -8,7 +9,6 @@ import {
   LogOutIcon,
   FlagIcon,
   CopyCheckIcon,
-  BellIcon,
   MenuIcon,
   ChevronDownIcon,
   ChevronUpIcon,
@@ -19,6 +19,7 @@ import { useQuery } from '@tanstack/react-query';
 import SidebarMobileCase from './SidebarMobileCase';
 import SinglePostModal from '../Modal/SinglePostModal';
 import { SettingsModal } from '../Modal/SettingsModal';
+import NotificationDropdown from './NotificationDropdown';
 
 import { useSidebarContext, useSidebarOpen, MenuItem } from '@/shared/contexts/SidebarContext';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
@@ -58,20 +59,22 @@ interface SidebarDesktopTabletProps {
 }
 function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
   const { openModal } = useModalStore();
-  const { toggle, getMenus } = useSidebarContext();
+  const { toggle, menus, goals } = useSidebarContext();
   const isOpen = useSidebarOpen();
   const pathname = usePathname();
+  const [notificationOpen, setNotificationOpen] = useState(false);
 
   const { mutate } = usePostGoal();
   const { mutate: logout } = usePostLogout();
 
-  const menus = getMenus();
   const projectName = 'Bearlog';
   const { openTodoCreateModal } = useTodoCreateModal();
+  const pathnameGoalId = pathname.startsWith('/goal/') ? Number(pathname.split('/')[2]) : undefined;
+  const selectedGoalId = goals.find((goal) => goal.id === pathnameGoalId)?.id ?? goals[0]?.id;
 
   return (
     <div
-      className={`flex flex-col overflow-hidden rounded-tr-[32px] rounded-br-[32px] bg-white transition-all duration-300 ${
+      className={`flex flex-col rounded-tr-[32px] rounded-br-[32px] bg-white transition-all duration-300 ${
         isOpen ? 'min-w-[250px] gap-[80px] p-4 lg:min-w-[362px] lg:gap-[140px] lg:p-8' : 'min-w-[80px] gap-8 px-6 py-8'
       }`}
     >
@@ -172,19 +175,22 @@ function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
             </span>
           </button>
           <button
-            onClick={() =>
+            onClick={() => {
+              if (!selectedGoalId) return;
+
               openTodoCreateModal({
-                goalDetailId: undefined,
+                goalDetailId: selectedGoalId,
                 todo: {
                   title: '',
-                  goalId: undefined as unknown as number,
+                  goalId: selectedGoalId,
                   dueDate: undefined,
                   linkUrl: undefined,
                   imageUrl: undefined,
                   tags: [],
                 },
-              })
-            }
+              });
+            }}
+            disabled={!selectedGoalId}
             className="group border-bearlog-500 flex w-full flex-col items-center justify-center gap-2 rounded-[32px] border bg-[#ffffff] px-2 py-4 transition-all duration-200 hover:shadow-lg lg:px-[22.5px] lg:py-8"
           >
             <CopyCheckIcon
@@ -210,16 +216,12 @@ function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
             </div>
           </Link>
 
-          <button
-            className={`group hover:text-bearlog-600 relative text-gray-500 transition-all duration-200 ${
-              isOpen ? 'rounded-[999px] border border-gray-200 p-[20px]' : 'p-0'
-            }`}
-          >
-            <BellIcon size={24} className="transition-transform group-hover:scale-110" />
-            <div
-              className={`bg-bearlog-500 absolute top-[2px] right-[5px] rounded-full ${isOpen ? 'h-3 w-3' : 'h-2 w-2'}`}
-            />
-          </button>
+          <NotificationDropdown
+            isOpen={notificationOpen}
+            onClose={() => setNotificationOpen(false)}
+            isSidebarOpen={isOpen}
+            onOpen={() => setNotificationOpen(true)}
+          />
         </div>
       </div>
     </div>

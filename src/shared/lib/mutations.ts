@@ -316,7 +316,7 @@ export const usePostNote = (callbacks?: { onError: (error: Error) => void }) => 
         queryKey: noteQueries.list().queryKey,
       });
 
-      router.push(`/goal/${response.goalId}/note`);
+      router.push(`/goal/${response.goalId}/note/${response.id}`);
     },
     onError: (error) => {
       if (callbacks?.onError) callbacks.onError(error);

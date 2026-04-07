@@ -99,11 +99,9 @@ class FetchAuth {
 
   private isDev = process.env.NEXT_PUBLIC_USE_DEV_API === 'true';
 
-  getGithubAuthorizeUrlByEnv = () =>
-    this.isDev ? this.getDevGithubAuthorizeUrl() : this.getGithubAuthorizeUrl();
+  getGithubAuthorizeUrlByEnv = () => (this.isDev ? this.getDevGithubAuthorizeUrl() : this.getGithubAuthorizeUrl());
 
-  getGoogleAuthorizeUrlByEnv = () =>
-    this.isDev ? this.getDevGoogleAuthorizeUrl() : this.getGoogleAuthorizeUrl();
+  getGoogleAuthorizeUrlByEnv = () => (this.isDev ? this.getDevGoogleAuthorizeUrl() : this.getGoogleAuthorizeUrl());
 
   postGithubLoginByEnv = (body: GithubLoginRequest) =>
     this.isDev ? this.postDevGithubLogin(body) : this.postGithubLogin(body);

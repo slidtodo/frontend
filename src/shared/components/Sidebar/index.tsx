@@ -256,27 +256,34 @@ function SidebarMenuEntry({ menu, pathname }: { menu: MenuItem; pathname: string
   return (
     <Accordion.Item value={menu.name} className="flex w-full flex-col gap-2">
       <AccordionTrigger menu={menu} isActive={isActive} />
-      <Accordion.Content className="w-full">
-        {menu.subMenus.map((subMenu) => {
-          const isSubMenuActive = subMenu.href === pathname;
-          return (
-            <Link
-              key={subMenu.href}
-              href={subMenu.href}
-              className={`group flex w-[calc(100%-1rem)] items-center justify-start gap-2 rounded-[20px] px-4 py-1 transition-all duration-200 lg:px-6 lg:py-2`}
-            >
-              <span
-                className={`text-sm transition-all ${
-                  isSubMenuActive
-                    ? 'font-bold text-[#339C76]'
-                    : 'font-semibold text-gray-700 group-hover:text-[#339C76]'
-                }`}
-              >
-                {subMenu.name}
-              </span>
-            </Link>
-          );
-        })}
+      <Accordion.Content
+        forceMount
+        className="group grid w-full overflow-hidden transition-[grid-template-rows] duration-300 ease-out data-[state=closed]:grid-rows-[0fr] data-[state=open]:grid-rows-[1fr]"
+      >
+        <div className="min-h-0">
+          <div className="transition-all duration-300 ease-out group-data-[state=closed]:-translate-y-1.5 group-data-[state=closed]:opacity-0 group-data-[state=open]:translate-y-0 group-data-[state=open]:opacity-100">
+            {menu.subMenus.map((subMenu) => {
+              const isSubMenuActive = subMenu.href === pathname;
+              return (
+                <Link
+                  key={subMenu.href}
+                  href={subMenu.href}
+                  className={`group flex w-[calc(100%-1rem)] items-center justify-start gap-2 rounded-[20px] px-4 py-1 transition-all duration-200 lg:px-6 lg:py-2`}
+                >
+                  <span
+                    className={`text-sm transition-all ${
+                      isSubMenuActive
+                        ? 'font-bold text-[#339C76]'
+                        : 'font-semibold text-gray-700 group-hover:text-[#339C76]'
+                    }`}
+                  >
+                    {subMenu.name}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
       </Accordion.Content>
     </Accordion.Item>
   );

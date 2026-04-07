@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
  */
 export default async function AllTodoPage() {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(todoQueries.list({ done: undefined }));
+  await queryClient.prefetchQuery(todoQueries.list());
   const dehydratedState = dehydrate(queryClient);
 
   return (

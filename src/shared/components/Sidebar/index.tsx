@@ -238,11 +238,7 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
               <div className="flex flex-col items-start">
                 <div className="flex items-center justify-center">
                   <span className="w-15 truncate text-sm font-medium lg:w-full">{user?.nickname}</span>
-                  <ChevronRightIcon
-                    size={16}
-                    color="#A0A0A0"
-                    className="flex hidden items-center justify-center lg:block"
-                  />
+                  <ChevronRightIcon size={16} color="#A0A0A0" className="hidden lg:block" />
                 </div>
                 <span className="hidden truncate text-sm font-medium text-[#A0A0A0] lg:block">{user?.email}</span>
               </div>

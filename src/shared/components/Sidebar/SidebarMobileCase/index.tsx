@@ -14,7 +14,7 @@ export default function SidebarMobileCase({ user }: SidebarMobileCaseProps) {
   const pathname = usePathname();
   const slot = useMobileHeaderStore((s) => s.slot);
 
-  const { data: todoList } = useQuery(todoQueries.list({ done: undefined }));
+  const { data: todoList } = useQuery(todoQueries.list());
   const favoriteCount = todoList?.todos?.filter((todo) => todo.favorite).length ?? 0;
 
   let title: string | undefined;

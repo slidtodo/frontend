@@ -5,8 +5,8 @@ import { useState } from 'react';
 import TaskCard from '@/shared/components/TaskCard';
 
 import { GoalDetailResponse } from '@/shared/lib/api';
-import { usePatchTodo, usePatchTodoFavorite } from '@/shared/lib/mutations';
-import { todoQueries } from '@/shared/lib/queryKeys';
+import { usePatchTodo, usePatchTodoFavorite } from '@/shared/lib/query/mutations';
+import { todoQueries } from '@/shared/lib/query/queryKeys';
 import { useToastStore } from '@/shared/stores/useToastStore';
 
 export default function TaskCardWrapper({

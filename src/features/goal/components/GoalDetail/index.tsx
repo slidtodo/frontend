@@ -8,7 +8,7 @@ import Button from '@/shared/components/Button';
 import Empty from '@/shared/components/Empty';
 import TaskCardWrapper from '@/features/dashboard/components/TaskCardWrapper';
 
-import { goalQueries } from '@/shared/lib/queryKeys';
+import { goalQueries } from '@/shared/lib/query/queryKeys';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 
 interface GoalDetailProps {

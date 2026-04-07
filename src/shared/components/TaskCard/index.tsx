@@ -4,14 +4,14 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
-import { CheckIcon, EllipsisVertical, SquareMenuIcon, Star } from 'lucide-react';
+import { CheckIcon, EllipsisVertical, Star } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
 import EditDeleteDropdown from '@/features/dashboard/components/EditDeleteDropdown';
 import DetailTodoModal from '@/features/goal/components/DetailTodoModal';
 
 import { useTodoEditModal } from '@/features/todo/hooks/useTodoEditModal';
-import { useDeleteTodo } from '@/shared/lib/mutations';
+import { useDeleteTodo } from '@/shared/lib/query/mutations';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { TodoResponse } from '@/shared/lib/api';
 

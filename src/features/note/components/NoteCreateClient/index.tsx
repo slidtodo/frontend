@@ -20,7 +20,7 @@ import { createPortal } from 'react-dom';
 import { TodoResponse } from '@/shared/lib/api/fetchTodos';
 import { GoalDetailResponse } from '@/shared/lib/api/fetchGoals';
 import { useMobileHeaderStore } from '@/shared/stores/useMobileHeaderStore';
-import { usePostNote } from '@/shared/lib/mutations';
+import { usePostNote } from '@/shared/lib/query/mutations';
 
 interface NoteCreateClientProps {
   goal: GoalDetailResponse;

@@ -13,8 +13,8 @@ import SinglePostModal from '@/shared/components/Modal/SinglePostModal';
 import PageHeader from '@/shared/components/PageHeader';
 
 import { GoalDetailResponse } from '@/shared/lib/api';
-import { useDeleteGoal, usePatchGoal } from '@/shared/lib/mutations';
-import { goalQueries, userQueries } from '@/shared/lib/queryKeys';
+import { useDeleteGoal, usePatchGoal } from '@/shared/lib/query/mutations';
+import { goalQueries, userQueries } from '@/shared/lib/query/queryKeys';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 

@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { BellIcon } from 'lucide-react';
-import { notificationQueries } from '@/shared/lib/queryKeys';
+import { notificationQueries } from '@/shared/lib/query/queryKeys';
 import { fetchNotifications } from '@/shared/lib/api/fetchNotifications';
 import { getRelativeTime } from '@/shared/lib/formatters';
 import useOnClickOutside from '@/shared/hooks/useOnClickOutside';

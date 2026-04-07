@@ -5,7 +5,7 @@ import NoteEditor from '@/features/note/components/NoteEditor';
 import Button from '@/shared/components/Button';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { noteQueries, goalQueries, todoQueries } from '@/shared/lib/queryKeys';
+import { noteQueries, goalQueries, todoQueries } from '@/shared/lib/query/queryKeys';
 import { useDraftNote } from '@/features/note/hooks/useDraftNote';
 import { useDraftNoteRestore } from '@/features/note/hooks/useDraftNoteRestore';
 import DraftNoteToast from '@/features/note/components/DraftNoteToast';
@@ -19,7 +19,7 @@ import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
 import EditorToolbar from '@/features/note/components/NoteEditor/EditorToolbar';
 import { createPortal } from 'react-dom';
-import { usePatchNote } from '@/shared/lib/mutations';
+import { usePatchNote } from '@/shared/lib/query/mutations';
 
 interface NoteEditClientProps {
   noteId: number;

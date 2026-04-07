@@ -23,9 +23,9 @@ import NotificationDropdown from './NotificationDropdown';
 import { useSidebarContext, useSidebarOpen, MenuItem } from '@/shared/contexts/SidebarContext';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import { useModalStore } from '@/shared/stores/useModalStore';
-import { usePostGoal, usePostLogout } from '@/shared/lib/mutations';
+import { usePostGoal, usePostLogout } from '@/shared/lib/query/mutations';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
-import { userQueries } from '@/shared/lib/queryKeys';
+import { userQueries } from '@/shared/lib/query/queryKeys';
 import { CurrentUserResponse } from '@/shared/lib/api';
 
 export default function Sidebar() {

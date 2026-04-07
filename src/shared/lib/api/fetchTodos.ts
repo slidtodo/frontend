@@ -12,11 +12,6 @@ export type PatchTodoRequest = operations['update']['requestBody']['content']['a
 export type PatchTodoResponse = operations['update']['responses'][200]['content']['application/json'];
 export type PatchTodoFavoriteResponse = operations['toggleFavorite']['responses'][200]['content']['application/json'];
 
-export type PatchTodoRequestWithNull = Omit<PatchTodoRequest, 'imageUrl' | 'linkUrl'> & {
-  imageUrl?: string | null;
-  linkUrl?: string | null;
-};
-
 class FetchTodos {
   getTodos = (params?: GetTodosParams) => apiRequest<TodoListResponse>('/api/v1/todos', { params });
 
@@ -31,8 +26,8 @@ class FetchTodos {
       body,
     });
 
-  patchTodo = (todoId: number, body: PatchTodoRequestWithNull) =>
-    apiRequest<PatchTodoResponse, PatchTodoRequestWithNull>(`/api/v1/todos/${todoId}`, {
+  patchTodo = (todoId: number, body: PatchTodoRequest) =>
+    apiRequest<PatchTodoResponse, PatchTodoRequest>(`/api/v1/todos/${todoId}`, {
       method: 'PATCH',
       body,
     });

@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { BellIcon } from 'lucide-react';
-import { notificationQueries } from '@/shared/lib/queryKeys';
+import { notificationQueries } from '@/shared/lib/query/queryKeys';
 import { fetchNotifications } from '@/shared/lib/api/fetchNotifications';
 import { getRelativeTime } from '@/shared/lib/formatters';
 import useOnClickOutside from '@/shared/hooks/useOnClickOutside';
@@ -56,7 +56,7 @@ export default function NotificationDropdown({ isOpen, onOpen, onClose, isSideba
       <button
         ref={buttonRef}
         onClick={() => (isOpen ? onClose() : onOpen())}
-        className={`group hover:text-bearlog-600 relative text-gray-500 transition-all duration-200 ${
+        className={`group hover:text-bearlog-600 relative text-gray-500 ${
           isSidebarOpen ? 'rounded-[999px] border border-gray-200 p-[20px]' : 'p-0'
         }`}
       >

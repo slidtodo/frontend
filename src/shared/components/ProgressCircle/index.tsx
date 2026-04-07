@@ -50,6 +50,7 @@ export default function ProgressCircle({ className, color = '#008354', percent }
           transform: 'rotate(90deg) scaleX(-1)',
           transformOrigin: '50% 50%',
         }}
+        className="duration-300 ease-in-out"
       />
     </svg>
   );

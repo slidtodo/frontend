@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 import { XIcon } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 
@@ -16,9 +16,9 @@ import LinkInput from '../shared/LinkInput';
 import StatusField from '../shared/StatusField';
 import TagInput from '../shared/TagInput';
 
-import { PatchTodoRequest, PatchTodoRequestWithNull, PostTodoRequest } from '@/shared/lib/api';
-import { usePatchTodo, usePostTodo } from '@/shared/lib/mutations';
-import { goalQueries, todoQueries } from '@/shared/lib/queryKeys';
+import { ApiError, PatchTodoRequest, PostTodoRequest } from '@/shared/lib/api';
+import { usePatchTodo, usePostTodo } from '@/shared/lib/query/mutations';
+import { goalQueries, todoQueries } from '@/shared/lib/query/queryKeys';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { formatDateForAPI } from '@/shared/utils/utils';
 interface BaseProps {
@@ -32,15 +32,16 @@ interface CreateMode extends BaseProps {
 
 interface EditMode extends BaseProps {
   mode: 'edit';
-  todo: PatchTodoRequestWithNull & { id: number };
+  todo: PatchTodoRequest & { id: number };
 }
 
 type TodoFormModalProps = CreateMode | EditMode;
-type TodoFormValues = PostTodoRequest & PatchTodoRequestWithNull;
+type TodoFormValues = PostTodoRequest & PatchTodoRequest;
 
 export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModalProps) {
   const { closeModal } = useModalStore();
   const isEditMode = mode === 'edit';
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     register,
@@ -57,7 +58,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
           dueDate: todo.dueDate ?? undefined,
           linkUrl: todo.linkUrl ?? undefined,
           imageUrl: todo.imageUrl ?? undefined,
-          tags: todo.tags ?? [],
+          tags: todo.tags?.filter((tag): tag is string => tag !== null) ?? [],
           done: todo.done ?? false,
         }
       : {
@@ -73,7 +74,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
 
   register('dueDate', { required: '마감기한은 필수입니다.' });
 
-  const tags = useWatch({ control, name: 'tags' }) ?? [];
+  const tags = (useWatch({ control, name: 'tags' }) ?? []).filter((tag): tag is string => tag !== null);
   const goalId = useWatch({ control, name: 'goalId' });
   const linkUrl = useWatch({ control, name: 'linkUrl' });
   const imageUrl = useWatch({ control, name: 'imageUrl' }) ?? null;
@@ -92,6 +93,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
 
   const postTodoMutation = usePostTodo();
   const patchTodoMutation = usePatchTodo(todoId);
+  const isSubmitting = postTodoMutation.isPending || patchTodoMutation.isPending;
 
   useEffect(() => {
     if (!isEditMode || !todoDetail) return;
@@ -102,7 +104,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       dueDate: todoDetail.dueDate ?? undefined,
       linkUrl: todoDetail.linkUrl ?? undefined,
       imageUrl: todoDetail.imageUrl ?? undefined,
-      tags: todoDetail.tags ? todoDetail.tags.map((tag) => tag.name) : [],
+      tags: todoDetail.tags ? todoDetail.tags.map((tag) => tag.name).filter((tag): tag is string => tag !== null) : [],
       done: todoDetail.done ?? false,
     });
   }, [isEditMode, reset, todoDetail]);
@@ -132,28 +134,36 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       : goalOptions[0]?.value;
 
   const onSubmit = async (data: TodoFormValues) => {
-    if (isEditMode && 'id' in todo) {
-      await patchTodoMutation.mutateAsync({
-        title: data.title,
-        dueDate: data.dueDate,
-        linkUrl: data.linkUrl ?? null,
-        imageUrl: data.imageUrl ?? null,
-        tags: data.tags,
-        done: data.done,
-      });
-    } else {
-      await postTodoMutation.mutateAsync({
-        source: 'MANUAL',
-        title: data.title,
-        goalId: data.goalId,
-        dueDate: data.dueDate,
-        linkUrl: data.linkUrl ?? undefined,
-        imageUrl: data.imageUrl ?? undefined,
-        tags: data.tags,
-      });
-    }
+    setSubmitError(null);
 
-    closeModal();
+    try {
+      if (isEditMode && 'id' in todo) {
+        await patchTodoMutation.mutateAsync({
+          title: data.title,
+          dueDate: data.dueDate,
+          linkUrl: data.linkUrl ?? null,
+          imageUrl: data.imageUrl ?? null,
+          tags: data.tags,
+          done: data.done,
+        });
+      } else {
+        await postTodoMutation.mutateAsync({
+          source: 'MANUAL',
+          title: data.title,
+          goalId: data.goalId,
+          dueDate: data.dueDate,
+          linkUrl: data.linkUrl ?? undefined,
+          imageUrl: data.imageUrl ?? undefined,
+          tags: data.tags,
+        });
+      }
+
+      closeModal();
+    } catch (error) {
+      setSubmitError(
+        error instanceof ApiError ? error.message : '요청 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      );
+    }
   };
 
   return (
@@ -168,10 +178,17 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
     >
       <div className="mb-1 flex items-center justify-between md:mb-4">
         <h1 className="text-xl font-semibold text-gray-800">{isEditMode ? '할 일 수정' : '할 일 생성'}</h1>
-        <button type="button" className="cursor-pointer" onClick={closeModal}>
+        <button
+          type="button"
+          className="cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={closeModal}
+          disabled={isSubmitting}
+        >
           <XIcon size={24} className="stroke-gray-400" />
         </button>
       </div>
+
+      {submitError && <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-500">{submitError}</p>}
 
       {isEditMode && (
         <StatusField
@@ -254,10 +271,11 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
           variant="tertiary"
           className="h-12 w-full border border-gray-300 text-gray-500 md:h-14"
           onClick={closeModal}
+          disabled={isSubmitting}
         >
           취소
         </Button>
-        <Button type="submit" variant="primary" className="h-12 w-full md:h-14">
+        <Button type="submit" variant="primary" className="h-12 w-full md:h-14" disabled={isSubmitting}>
           확인
         </Button>
       </div>

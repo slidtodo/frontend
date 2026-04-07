@@ -1,4 +1,10 @@
-type QueryValue = string | number | boolean | null | undefined | Array<string | number | boolean>;
+type QueryValue =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | Array<string | number | boolean | null | undefined>;
 
 export class ApiError extends Error {
   constructor(
@@ -21,6 +27,7 @@ export const toQueryString = (params?: Record<string, QueryValue>): string => {
 
     if (Array.isArray(value)) {
       for (const item of value) {
+        if (item === undefined || item === null) continue;
         searchParams.append(key, String(item));
       }
       continue;

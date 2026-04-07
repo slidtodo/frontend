@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { createContext, useContext, useState, ReactNode, useMemo } from 'react';
 import { LayoutGridIcon, FlagIcon, ListCheckIcon, StarIcon } from 'lucide-react';
 
-import { goalQueries } from '@/shared/lib/queryKeys';
+import { goalQueries } from '@/shared/lib/query/queryKeys';
 import type { GoalListResponse } from '@/shared/lib/api/fetchGoals';
 import Image from 'next/image';
 

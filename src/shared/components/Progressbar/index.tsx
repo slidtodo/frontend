@@ -1,3 +1,6 @@
+import { useEffect } from 'react';
+import { motion, useSpring, useTransform } from 'framer-motion';
+
 interface ProgressbarProps {
   /**
    * @description
@@ -11,15 +14,31 @@ interface ProgressbarProps {
   number?: boolean;
 }
 export default function Progressbar({ progress, number = true }: ProgressbarProps) {
+  const safeProgress = Math.min(100, Math.max(0, progress));
+  const springProgress = useSpring(0, {
+    stiffness: 120,
+    damping: 20,
+    mass: 0.8,
+  });
+  const animatedLabel = useTransform(() => `${Math.round(springProgress.get())}%`);
+
+  useEffect(() => {
+    springProgress.set(safeProgress);
+  }, [safeProgress, springProgress]);
+
   return (
-    <div className="flex w-full items-center gap-[8px] transition-all duration-300 md:gap-[10px]">
-      <div className="h-2 w-full rounded bg-[#E9E9E9]">
-        <div className="bg-bearlog-500 h-full rounded" style={{ width: `${progress}%` }}></div>
+    <div className="flex w-full items-center gap-[8px] transition-all duration-300 ease-in-out md:gap-[10px]">
+      <div className="h-2 w-full overflow-hidden rounded bg-[#E9E9E9]">
+        <motion.div
+          className="bg-bearlog-500 h-full rounded"
+          animate={{ width: `${safeProgress}%` }}
+          transition={{ type: 'spring', stiffness: 120, damping: 20, mass: 0.8 }}
+        />
       </div>
       {number && (
-        <span className="text-bearlog-500 text-sm transition-all duration-300 md:text-base md:font-bold">
-          {progress}%
-        </span>
+        <motion.span className="text-bearlog-500 text-sm transition-all duration-300 ease-in-out md:text-base md:font-bold">
+          {animatedLabel}
+        </motion.span>
       )}
     </div>
   );

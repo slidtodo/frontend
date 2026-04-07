@@ -9,7 +9,7 @@ import { DataBoundary } from '@/shared/components/ErrorSuspenseBoundary';
 import PageHeader from '@/shared/components/PageHeader';
 import TaskCardWrapper from '@/features/dashboard/components/TaskCardWrapper';
 
-import { todoQueries } from '@/shared/lib/queryKeys';
+import { todoQueries } from '@/shared/lib/query/queryKeys';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 import type { TodoListResponse } from '@/shared/lib/api';
 import { TodoOptions } from '@/shared/types/types';
@@ -19,11 +19,12 @@ export default function AllTodoContent() {
   const breakpoint = useBreakpoint();
 
   const [selectedFilter, setSelectedFilter] = useState<TodoOptions>('ALL');
-  const { data: todoList } = useQuery(
-    todoQueries.list({
-      done: selectedFilter === 'ALL' ? undefined : selectedFilter === 'DONE' ? true : false,
-    }),
-  );
+  const done = selectedFilter === 'ALL' ? undefined : selectedFilter === 'DONE';
+
+  const { data: todoList } = useQuery({
+    ...todoQueries.list({ done }),
+    placeholderData: (prev) => prev,
+  });
 
   if (!todoList) return null;
   return (

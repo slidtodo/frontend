@@ -96,6 +96,102 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/dev/auth/signup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["signup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/dev/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["refresh"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/dev/auth/oauth/github": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["githubLogin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/dev/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["logout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/dev/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["login"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/dev/auth/login/google": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["googleLogin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/signup": {
         parameters: {
             query?: never;
@@ -109,7 +205,7 @@ export interface paths {
          * 회원가입
          * @description 이메일, 비밀번호, 닉네임으로 회원가입
          */
-        post: operations["signup"];
+        post: operations["signup_1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -129,7 +225,7 @@ export interface paths {
          * 토큰 재발급
          * @description 리프레시 토큰으로 액세스/리프레시 토큰 재발급 (쿠키 또는 요청 바디로 전달)
          */
-        post: operations["refresh"];
+        post: operations["refresh_1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -149,7 +245,7 @@ export interface paths {
          * GitHub 로그인
          * @description GitHub OAuth 인증 코드로 로그인/회원가입
          */
-        post: operations["githubLogin"];
+        post: operations["githubLogin_1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -169,7 +265,7 @@ export interface paths {
          * 로그아웃
          * @description 리프레시 토큰 무효화 및 쿠키 삭제
          */
-        post: operations["logout"];
+        post: operations["logout_1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -189,7 +285,7 @@ export interface paths {
          * 로그인
          * @description 이메일, 비밀번호로 로그인
          */
-        post: operations["login"];
+        post: operations["login_1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -209,7 +305,7 @@ export interface paths {
          * 구글 로그인
          * @description 구글 OAuth 인증 코드로 로그인/회원가입
          */
-        post: operations["googleLogin"];
+        post: operations["googleLogin_1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -484,6 +580,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/dev/auth/oauth/google/url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getGoogleAuthorizeUrl"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/dev/auth/oauth/github/url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getGithubAuthorizeUrl"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/oauth/google/url": {
         parameters: {
             query?: never;
@@ -495,7 +623,7 @@ export interface paths {
          * 구글 로그인 URL 조회
          * @description 프론트에서 redirect할 구글 OAuth 로그인 URL을 발급합니다
          */
-        get: operations["getGoogleAuthorizeUrl"];
+        get: operations["getGoogleAuthorizeUrl_1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -515,7 +643,7 @@ export interface paths {
          * GitHub 로그인 URL 조회
          * @description 프론트에서 redirect할 GitHub OAuth 로그인 URL을 발급합니다
          */
-        get: operations["getGithubAuthorizeUrl"];
+        get: operations["getGithubAuthorizeUrl_1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -898,10 +1026,10 @@ export interface components {
              * @description 마감일
              */
             dueDate?: string;
-            /** @description 링크 URL */
-            linkUrl?: string;
             /** @description 태그 이름 목록 */
             tags?: string[];
+            /** @description 링크 URL */
+            linkUrl?: string;
             /** @description 이미지 URL */
             imageUrl?: string;
         };
@@ -1405,6 +1533,144 @@ export interface operations {
             };
         };
         responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthTokenResponse"];
+                };
+            };
+        };
+    };
+    refresh: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["RefreshRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RefreshResponse"];
+                };
+            };
+        };
+    };
+    githubLogin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OAuthLoginRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthTokenResponse"];
+                };
+            };
+        };
+    };
+    logout: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    login: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthTokenResponse"];
+                };
+            };
+        };
+    };
+    googleLogin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OAuthLoginRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthTokenResponse"];
+                };
+            };
+        };
+    };
+    signup_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignupRequest"];
+            };
+        };
+        responses: {
             /** @description 회원가입 성공 */
             201: {
                 headers: {
@@ -1425,7 +1691,7 @@ export interface operations {
             };
         };
     };
-    refresh: {
+    refresh_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -1458,7 +1724,7 @@ export interface operations {
             };
         };
     };
-    githubLogin: {
+    githubLogin_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -1491,7 +1757,7 @@ export interface operations {
             };
         };
     };
-    logout: {
+    logout_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -1509,7 +1775,7 @@ export interface operations {
             };
         };
     };
-    login: {
+    login_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -1542,7 +1808,7 @@ export interface operations {
             };
         };
     };
-    googleLogin: {
+    googleLogin_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -2180,7 +2446,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 로그인 URL 발급 성공 */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -2192,6 +2458,46 @@ export interface operations {
         };
     };
     getGithubAuthorizeUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OAuthAuthorizeUrlResponse"];
+                };
+            };
+        };
+    };
+    getGoogleAuthorizeUrl_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 로그인 URL 발급 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OAuthAuthorizeUrlResponse"];
+                };
+            };
+        };
+    };
+    getGithubAuthorizeUrl_1: {
         parameters: {
             query?: never;
             header?: never;

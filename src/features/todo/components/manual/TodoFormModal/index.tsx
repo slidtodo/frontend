@@ -6,24 +6,23 @@ import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 
-import { PatchTodoRequest, PostTodoRequest } from '@/shared/lib/api';
-import { usePatchTodo, usePostTodo } from '@/shared/lib/mutations';
-import { goalQueries, todoQueries } from '@/shared/lib/queryKeys';
 import Button from '@/shared/components/Button';
 import Dropdown from '@/shared/components/Dropdown';
 import FormField from '@/shared/components/FormField';
 import Input from '@/shared/components/Input';
-import { useModalStore } from '@/shared/stores/useModalStore';
-import { formatDateForAPI } from '@/shared/utils/utils';
-
 import DateInput from '../shared/DateInput';
 import ImageInput from '../shared/ImageInput';
 import LinkInput from '../shared/LinkInput';
 import StatusField from '../shared/StatusField';
-import { TagInput } from '../shared/TagInput';
+import TagInput from '../shared/TagInput';
 
+import { PatchTodoRequest, PatchTodoRequestWithNull, PostTodoRequest } from '@/shared/lib/api';
+import { usePatchTodo, usePostTodo } from '@/shared/lib/mutations';
+import { goalQueries, todoQueries } from '@/shared/lib/queryKeys';
+import { useModalStore } from '@/shared/stores/useModalStore';
+import { formatDateForAPI } from '@/shared/utils/utils';
 interface BaseProps {
-  goalDetailId?: number;
+  goalDetailId: number;
 }
 
 interface CreateMode extends BaseProps {
@@ -33,11 +32,11 @@ interface CreateMode extends BaseProps {
 
 interface EditMode extends BaseProps {
   mode: 'edit';
-  todo: PatchTodoRequest & { id: number };
+  todo: PatchTodoRequestWithNull & { id: number };
 }
 
 type TodoFormModalProps = CreateMode | EditMode;
-type FormValues = Omit<PostTodoRequest & PatchTodoRequest, 'imageUrl'> & { imageUrl?: string | null };
+type TodoFormValues = PostTodoRequest & PatchTodoRequestWithNull;
 
 export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModalProps) {
   const { closeModal } = useModalStore();
@@ -50,7 +49,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
     setValue,
     control,
     formState: { errors },
-  } = useForm<FormValues>({
+  } = useForm<TodoFormValues>({
     mode: 'onSubmit',
     defaultValues: isEditMode
       ? {
@@ -62,7 +61,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
           done: todo.done ?? false,
         }
       : {
-          goalId: goalDetailId ?? todo.goalId ?? undefined,
+          goalId: goalDetailId ?? todo.goalId,
           title: '',
           dueDate: undefined,
           linkUrl: undefined,
@@ -132,13 +131,13 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       ? String(todo.goalId)
       : goalOptions[0]?.value;
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = async (data: TodoFormValues) => {
     if (isEditMode && 'id' in todo) {
       await patchTodoMutation.mutateAsync({
         title: data.title,
         dueDate: data.dueDate,
-        linkUrl: data.linkUrl,
-        imageUrl: data.imageUrl ?? undefined,
+        linkUrl: data.linkUrl ?? null,
+        imageUrl: data.imageUrl ?? null,
         tags: data.tags,
         done: data.done,
       });
@@ -148,7 +147,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         title: data.title,
         goalId: data.goalId,
         dueDate: data.dueDate,
-        linkUrl: data.linkUrl,
+        linkUrl: data.linkUrl ?? undefined,
         imageUrl: data.imageUrl ?? undefined,
         tags: data.tags,
       });
@@ -170,7 +169,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       <div className="mb-1 flex items-center justify-between md:mb-4">
         <h1 className="text-xl font-semibold text-gray-800">{isEditMode ? '할 일 수정' : '할 일 생성'}</h1>
         <button type="button" className="cursor-pointer" onClick={closeModal}>
-          <XIcon size={24} className="stroke-[#A4A4A4]" />
+          <XIcon size={24} className="stroke-gray-400" />
         </button>
       </div>
 
@@ -244,7 +243,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         <ImageInput
           image={imageUrl}
           onChange={(nextImage) => {
-            setValue('imageUrl', nextImage ?? null, { shouldDirty: true });
+            setValue('imageUrl', nextImage ?? undefined, { shouldDirty: true });
           }}
         />
       </FormField>

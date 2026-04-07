@@ -17,7 +17,7 @@ export default function GithubCallbackPage() {
 
     const login = async () => {
       try {
-        await fetchAuth.postGithubLogin({ code });
+        await fetchAuth.postGithubLoginByEnv({ code });
         router.push('/dashboard');
       } catch (error) {
         console.error('GitHub login callback failed:', error);

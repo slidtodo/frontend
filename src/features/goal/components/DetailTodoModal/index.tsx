@@ -1,7 +1,7 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
 
-import DetailTodoModalComponents from './DetailTodoModalComponets';
+import DetailTodoModalComponents from './DetailTodoModalComponents';
 
 import { todoQueries } from '@/shared/lib/queryKeys';
 import { memo } from 'react';

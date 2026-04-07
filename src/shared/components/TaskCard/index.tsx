@@ -2,7 +2,6 @@
 
 import clsx from 'clsx';
 import Image from 'next/image';
-import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { CheckIcon, EllipsisVertical, SquareMenuIcon, Star } from 'lucide-react';
@@ -12,33 +11,17 @@ import EditDeleteDropdown from '@/features/dashboard/components/EditDeleteDropdo
 import DetailTodoModal from '@/features/goal/components/DetailTodoModal';
 
 import { useTodoEditModal } from '@/features/todo/hooks/useTodoEditModal';
-import { useDeleteTodo, usePatchTodo, usePatchTodoFavorite } from '@/shared/lib/mutations';
-import { todoQueries } from '@/shared/lib/queryKeys';
-import { useToastStore } from '@/shared/stores/useToastStore';
+import { useDeleteTodo } from '@/shared/lib/mutations';
 import { useModalStore } from '@/shared/stores/useModalStore';
-
-export interface TaskCardTodo {
-  id?: number;
-  title?: string;
-  done?: boolean;
-  favorite?: boolean;
-  goal?: {
-    id?: number;
-  };
-}
+import { TodoResponse } from '@/shared/lib/api';
 
 interface TaskCardProps {
-  todo: TaskCardTodo;
-  starred?: boolean;
-  onCheckboxClick?: (id: number, done: boolean) => void;
+  todo: TodoResponse;
+  onCheckboxClick: () => void;
+  onStareClick: () => void;
   variant?: 'default' | 'green';
 }
-export default function TaskCard({
-  todo,
-  starred: initialStarred = false,
-  onCheckboxClick,
-  variant = 'default',
-}: TaskCardProps) {
+export default function TaskCard({ todo, onCheckboxClick, onStareClick, variant = 'default' }: TaskCardProps) {
   const isGreen = variant === 'green';
 
   return (
@@ -58,57 +41,39 @@ export default function TaskCard({
         <TaskLinkNoteCreate todo={todo} />
         <TaskLinkGithub />
         <TaskEditTodo todo={todo} />
-        <TaskFavorite initialStarred={initialStarred} todo={todo} />
+        <TaskFavorite todo={todo} onStareClick={onStareClick} />
       </div>
     </li>
   );
 }
 
 interface TaskCheckboxProps {
-  todo: TaskCardTodo;
-  onCheckboxClick?: (id: number, done: boolean) => void;
+  todo: TodoResponse;
+  onCheckboxClick: () => void;
   isGreen: boolean;
 }
 function TaskCheckbox({ todo, isGreen, onCheckboxClick }: TaskCheckboxProps) {
-  const { showToast } = useToastStore();
   const { openModal } = useModalStore();
-
-  const patchTodo = usePatchTodo(todo.id);
-  const checked = todo.done ?? false;
-
-  const handleCheckboxClick = async () => {
-    if (todo.id === undefined) return;
-
-    try {
-      await patchTodo.mutateAsync({
-        done: !checked,
-      });
-      onCheckboxClick?.(todo.id, !checked);
-      showToast(`할 일을${!checked ? ' 완료했습니다.' : ' 미완료 처리했습니다.'}`);
-    } catch (error) {
-      console.error('할 일 상태 업데이트 실패:', error);
-    }
-  };
 
   return (
     <>
       <button
         type="button"
         role="checkbox"
-        aria-checked={checked}
-        aria-label={`${todo.title} ${checked ? '완료 취소' : '완료 처리'}`}
-        onClick={handleCheckboxClick}
+        aria-checked={todo.done ?? false}
+        aria-label={`${todo.title} ${todo.done ? '완료 취소' : '완료 처리'}`}
+        onClick={onCheckboxClick}
         className={twMerge(
           clsx(
             'relative flex cursor-pointer items-center justify-center',
             'size-4.5 shrink-0 rounded-md',
             'transition-all duration-150',
-            checked ? 'bg-bearlog-500 border-transparent' : 'border border-gray-300 bg-white',
+            todo.done ? 'bg-bearlog-500 border-transparent' : 'border border-gray-300 bg-white',
             isGreen && 'border-none',
           ),
         )}
       >
-        {checked && <CheckIcon size={16} color="#ffffff" />}
+        {todo.done && <CheckIcon size={16} color="#ffffff" />}
       </button>
       <button
         type="button"
@@ -119,7 +84,7 @@ function TaskCheckbox({ todo, isGreen, onCheckboxClick }: TaskCheckboxProps) {
           'group min-w-0 flex-1 cursor-pointer truncate text-left',
           'text-base leading-6 tracking-[-0.03em]',
           'transition-all duration-150',
-          checked ? 'group-hover:text-bearlog-600 font-medium group-hover:font-semibold' : '',
+          todo.done ? 'group-hover:text-bearlog-600 font-medium group-hover:font-semibold' : '',
           isGreen ? 'text-gray-800' : 'group-hover:text-bearlog-600 text-gray-500 group-hover:font-semibold',
         )}
       >
@@ -130,19 +95,14 @@ function TaskCheckbox({ todo, isGreen, onCheckboxClick }: TaskCheckboxProps) {
 }
 
 interface TaskLinkNoteCreateProps {
-  todo: TaskCardTodo;
+  todo: TodoResponse;
 }
-
 function TaskLinkNoteCreate({ todo }: TaskLinkNoteCreateProps) {
-  const { data: goal } = useQuery({
-    ...todoQueries.detail(todo.id as number),
-    enabled: !!todo.id,
-  });
+  if (!todo.goal?.id || !todo.id) return null;
 
-  if (!goal?.goal?.id || !todo.id) return null;
   return (
     <Link
-      href={`/goal/${goal.goal.id}/note/create?todoId=${todo.id}`}
+      href={`/goal/${todo.goal.id}/note/create?todoId=${todo.id}`}
       className={
         'relative flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[rgba(0,200,127,0.1)] p-1'
       }
@@ -162,9 +122,8 @@ function TaskLinkGithub() {
 }
 
 interface TaskLinkDetailProps {
-  todo: TaskCardTodo;
+  todo: TodoResponse;
 }
-
 function TaskEditTodo({ todo }: TaskLinkDetailProps) {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -209,40 +168,19 @@ function TaskEditTodo({ todo }: TaskLinkDetailProps) {
 }
 
 interface TaskFavoriteProps {
-  initialStarred?: boolean;
-  todo: TaskCardTodo;
+  todo: TodoResponse;
+  onStareClick: () => void;
 }
-
-function TaskFavorite({ initialStarred, todo }: TaskFavoriteProps) {
-  const { showToast } = useToastStore();
-
-  const [starred, setStarred] = useState(initialStarred);
-  const { mutate: patchTodoFavorite } = usePatchTodoFavorite(todo.id);
-
-  function handleStarToggle() {
-    const nextStarred = !starred;
-    setStarred(nextStarred);
-
-    patchTodoFavorite(undefined, {
-      onSuccess: () => {
-        showToast(`즐겨찾기에 ${nextStarred ? '추가되었습니다.' : '해제되었습니다.'}`);
-      },
-      onError: (error) => {
-        console.error(error);
-        setStarred(!nextStarred);
-      },
-    });
-  }
-
+function TaskFavorite({ todo, onStareClick }: TaskFavoriteProps) {
   return (
     <button
       type="button"
-      aria-label={starred ? '즐겨찾기 해제' : '즐겨찾기 추가'}
-      aria-pressed={starred}
-      onClick={handleStarToggle}
+      aria-label={todo.favorite ? '즐겨찾기 해제' : '즐겨찾기 추가'}
+      aria-pressed={todo.favorite}
+      onClick={onStareClick}
       className="h-6 w-6 cursor-pointer rounded-full"
     >
-      <Star className={'h-6 w-6 stroke-[rgba(0,200,127,0.1)]'} fill={starred ? '#00c87f' : 'none'} />
+      <Star className={'h-6 w-6 stroke-[rgba(0,200,127,0.1)]'} fill={todo.favorite ? '#00c87f' : 'none'} />
     </button>
   );
 }

@@ -32,13 +32,21 @@ export default function LoginPage() {
     }
   };
   const handleGithubLogin = async () => {
-    const { loginUrl } = await fetchAuth.getGithubAuthorizeUrlByEnv();
-    if (loginUrl) window.location.href = loginUrl;
+    try {
+      const { loginUrl } = await fetchAuth.getGithubAuthorizeUrlByEnv();
+      if (loginUrl) window.location.href = loginUrl;
+    } catch (error) {
+      console.error('GitHub 로그인 URL 요청 실패:', error);
+    }
   };
 
   const handleGoogleLogin = async () => {
-    const data = await fetchAuth.getGoogleAuthorizeUrlByEnv();
-    if (data.loginUrl) window.location.href = data.loginUrl;
+    try {
+      const data = await fetchAuth.getGoogleAuthorizeUrlByEnv();
+      if (data.loginUrl) window.location.href = data.loginUrl;
+    } catch (error) {
+      console.error('Google 로그인 URL 요청 실패:', error);
+    }
   };
   return (
     <main className="flex min-h-screen items-center justify-center py-20">
@@ -70,12 +78,15 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </FormField>
-          <Button type="submit" className="mt-8 h-14 w-full bg-[#00C87F] hover:bg-[#00C87F]/90" disabled={!email || !password}>
+          <Button
+            type="submit"
+            className="mt-8 h-14 w-full bg-[#00C87F] hover:bg-[#00C87F]/90"
+            disabled={!email || !password}
+          >
             로그인하기
           </Button>
         </form>
 
-        
         <div className="mt-6 flex h-6 w-full items-center justify-center gap-2 text-sm">
           <span className="text-base leading-6 font-medium text-[#333333]">베어로그가 처음이신가요?</span>
           <Link href="/signup" className="text-base leading-6 font-semibold text-[#008354]">

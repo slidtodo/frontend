@@ -44,13 +44,21 @@ export default function SignupPage() {
   };
 
   const handleGithubLogin = async () => {
-    const data = await fetchAuth.getGithubAuthorizeUrl();
-    if (data.loginUrl) window.location.href = data.loginUrl;
+    try {
+      const data = await fetchAuth.getGithubAuthorizeUrlByEnv();
+      if (data.loginUrl) window.location.href = data.loginUrl;
+    } catch (error) {
+      console.error('GitHub 로그인 URL 요청 실패:', error);
+    }
   };
 
   const handleGoogleLogin = async () => {
-    const data = await fetchAuth.getGoogleAuthorizeUrl();
-    if (data.loginUrl) window.location.href = data.loginUrl;
+    try {
+      const data = await fetchAuth.getGoogleAuthorizeUrlByEnv();
+      if (data.loginUrl) window.location.href = data.loginUrl;
+    } catch (error) {
+      console.error('Google 로그인 URL 요청 실패:', error);
+    }
   };
 
   return (

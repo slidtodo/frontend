@@ -17,7 +17,7 @@ const REFRESH_ENDPOINT = 'auth/refresh';
 const FORWARDED_REQUEST_HEADERS = ['accept', 'content-type'] as const;
 const FORWARDED_RESPONSE_HEADERS = ['content-type', 'location'] as const;
 
-const ALLOWED_PATH_PREFIXES = ['auth/', 'todos', 'goals', 'notes', 'notifications', 'tags', 'users/me'] as const;
+const ALLOWED_PATH_PREFIXES = ['auth/', 'dev/auth/', 'todos', 'goals', 'notes', 'notifications', 'tags', 'users/me'] as const;
 
 type ProxyRouteContext = {
   params: Promise<{ endpoint: string[] }>;
@@ -28,7 +28,7 @@ const isAllowedPath = (pathname: string) => {
 };
 
 const shouldSyncAuthCookies = (pathname: string) => {
-  return pathname.startsWith('auth/');
+  return pathname.startsWith('auth/') || pathname.startsWith('dev/auth/');
 };
 
 const buildUpstreamHeaders = (request: NextRequest, accessToken?: string) => {
@@ -76,7 +76,7 @@ const syncAuthCookies = async (pathname: string, response: Response, nextRespons
     return;
   }
 
-  if (pathname === 'auth/logout') {
+  if (pathname === 'auth/logout' || pathname === 'dev/auth/logout') {
     nextResponse.cookies.delete(ACCESS_TOKEN_COOKIE);
     nextResponse.cookies.delete(REFRESH_TOKEN_COOKIE);
     return;

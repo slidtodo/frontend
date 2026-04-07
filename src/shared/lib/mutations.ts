@@ -198,10 +198,13 @@ export const usePatchTodo = (todoId?: number) => {
     onMutate: async (data: PatchTodoRequest) => {
       await queryClient.cancelQueries({ queryKey: ['todos', 'detail', todoId] });
       const previousTodo = queryClient.getQueryData(['todos', 'detail', todoId]);
-      queryClient.setQueryData(['todos', 'detail', todoId], (old: PatchTodoResponse) => ({
-        ...old,
-        ...data,
-      }));
+      queryClient.setQueryData(['todos', 'detail', todoId], (old: PatchTodoResponse) => {
+        if (!old) return old;
+        return {
+          ...old,
+          ...data,
+        };
+      });
       return { previousTodo };
     },
 

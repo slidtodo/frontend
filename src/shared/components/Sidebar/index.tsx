@@ -18,6 +18,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import SidebarMobileCase from './SidebarMobileCase';
 import SinglePostModal from '../Modal/SinglePostModal';
+import { SettingsModal } from '../Modal/SettingsModal';
 import NotificationDropdown from './NotificationDropdown';
 
 import { useSidebarContext, useSidebarOpen, MenuItem } from '@/shared/contexts/SidebarContext';
@@ -132,7 +133,10 @@ function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
           </Accordion.Root>
 
           <div className="flex w-full flex-col">
-            <button className="flex items-center justify-start gap-[10px] rounded-[20px] px-[14px] py-[10px] transition-all duration-100 hover:bg-gray-100">
+            <button
+              onClick={() => openModal(<SettingsModal />)}
+              className="flex items-center justify-start gap-[10px] rounded-[20px] px-[14px] py-[10px] transition-all duration-100 hover:bg-gray-100"
+            >
               <SettingsIcon color="#BBBBBB" size={24} />
               <span className="text-lg font-semibold text-gray-500">설정</span>
             </button>

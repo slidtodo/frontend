@@ -13,7 +13,7 @@ export default function DraftNoteToast({ onLoad, onClose }: DraftNoteToastProps)
       <div className="relative">
         {/* 말풍선 꼬리 (우측 상단) */}
         <div
-          className="absolute right-5 hidden h-0 w-0 md:-top-2 md:block"
+          className="absolute -top-[8px] right-5 h-0 w-0"
           style={{
             borderLeft: '10px solid transparent',
             borderRight: '0px solid transparent',
@@ -22,7 +22,7 @@ export default function DraftNoteToast({ onLoad, onClose }: DraftNoteToastProps)
         />
 
         {/* 말풍선 본체 */}
-        <div className="bg-bearlog-100 flex w-[281px] flex-col gap-2 rounded-[20px] px-5 py-4 shadow-[0_0_30px_rgba(0,0,0,0.05)]">
+        <div className="bg-bearlog-100 flex w-70.25 flex-col gap-2 rounded-[20px] px-5 py-4 shadow-[0_0_30px_rgba(0,0,0,0.05)]">
           {/* 상단: 텍스트 + X 버튼 */}
           <div className="flex items-start justify-between gap-3">
             <p className="text-sm leading-5 font-normal tracking-[-0.42px] text-gray-600">

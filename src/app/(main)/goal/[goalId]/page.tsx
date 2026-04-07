@@ -28,7 +28,7 @@ export default async function GoalDetailPage({ params }: GoalDetailPageProps) {
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <div className="flex flex-col gap-16">
+      <div className="flex h-full flex-col gap-16">
         <GoalSummary goalId={numericGoalId} />
         <GoalDetail goalId={numericGoalId} />
       </div>

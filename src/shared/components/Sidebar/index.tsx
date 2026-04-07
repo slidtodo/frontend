@@ -12,6 +12,7 @@ import {
   MenuIcon,
   ChevronDownIcon,
   ChevronUpIcon,
+  ChevronRightIcon,
 } from 'lucide-react';
 import { Accordion } from 'radix-ui';
 import { useQuery } from '@tanstack/react-query';
@@ -209,9 +210,22 @@ function SidebarDesktopTablet({ user }: SidebarDesktopTabletProps) {
             href="/mypage"
             className={`w-full items-center justify-start gap-[8px] rounded-[999px] border border-gray-200 px-[20px] py-[12px] lg:pr-[42px] lg:pl-[12px] ${isOpen ? 'flex' : 'hidden'}`}
           >
-            <Image src={user?.profileImageUrl || '/image/default-profile.png'} alt="Character" width={38} height={38} />
+            <Image
+              src={user?.profileImageUrl || '/image/default-profile.png'}
+              alt="Character Profile Image"
+              width={38}
+              height={38}
+              className="rounded-full object-cover"
+            />
             <div className="flex flex-col items-start">
-              <span className="w-15 truncate text-sm font-medium lg:w-full">{user?.nickname}</span>
+              <div className="flex items-center justify-center">
+                <span className="w-15 truncate text-sm font-medium lg:w-full">{user?.nickname}</span>
+                <ChevronRightIcon
+                  size={16}
+                  color="#A0A0A0"
+                  className="flex hidden items-center justify-center lg:block"
+                />
+              </div>
               <span className="hidden truncate text-sm font-medium text-[#A0A0A0] lg:block">{user?.email}</span>
             </div>
           </Link>

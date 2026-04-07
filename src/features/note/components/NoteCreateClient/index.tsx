@@ -10,11 +10,7 @@ import { useToastStore } from '@/shared/stores/useToastStore';
 import { useRouter } from 'next/navigation';
 import DraftNoteToast from '@/features/note/components/DraftNoteToast';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
-import { useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
-import TextAlign from '@tiptap/extension-text-align';
-import Placeholder from '@tiptap/extension-placeholder';
+import { useNoteEditor } from '@/features/note/hooks/useNoteEditor';
 import EditorToolbar from '@/features/note/components/NoteEditor/EditorToolbar';
 import { createPortal } from 'react-dom';
 import { TodoResponse } from '@/shared/lib/api/fetchTodos';
@@ -119,19 +115,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
     return () => setSlot(null);
   }, [breakpoint, handleSaveDraft, handleSubmit, showDraftToast, handleToastLoad, handleCloseToast, setSlot]);
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      TextAlign.configure({ types: ['heading', 'paragraph'] }),
-      Placeholder.configure({ placeholder: '이 곳을 통해 노트 작성을 시작해주세요' }),
-    ],
-    content,
-    immediatelyRender: false,
-    onUpdate: ({ editor }) => {
-      setContent(editor.getHTML());
-    },
-  });
+  const editor = useNoteEditor({ content, onContentChange: setContent });
 
   return (
     <div className="mx-auto flex h-full w-full max-w-[768px] flex-col">

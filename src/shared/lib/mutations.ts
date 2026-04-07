@@ -303,7 +303,6 @@ export const usePostLogout = () => {
 
 // note
 export const usePostNote = (callbacks?: { onError: (error: Error) => void }) => {
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -320,7 +319,7 @@ export const usePostNote = (callbacks?: { onError: (error: Error) => void }) => 
         queryKey: noteQueries.lists(),
       });
 
-      router.push(`/goal/${response.goalId}/note/${response.id}`);
+      window.location.href = `/goal/${response.goalId}/note/${response.id}`;
     },
     onError: (error) => { 
       if (callbacks?.onError) callbacks.onError(error);

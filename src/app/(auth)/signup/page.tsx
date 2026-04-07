@@ -9,9 +9,11 @@ import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
 import { validateEmail, validatePassword, validatePasswordConfirm } from '@/shared/lib/validation';
 import { fetchAuth } from '@/shared/lib/api/fetchAuth';
+import { useToastStore } from '@/shared/stores/useToastStore';
 
 export default function SignupPage() {
   const router = useRouter();
+  const { showToast } = useToastStore();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -35,29 +37,31 @@ export default function SignupPage() {
     try {
       await fetchAuth.postSignup({ nickname: name, email, password });
 
-      alert('회원가입 성공!');
+      showToast('회원가입이 완료되었습니다.', 'success');
       router.push('/login');
     } catch (error) {
       console.error(error);
-      alert('회원가입 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      showToast('회원가입 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', 'fail');
     }
   };
 
   const handleGithubLogin = async () => {
     try {
-      const data = await fetchAuth.getGithubAuthorizeUrlByEnv();
-      if (data.loginUrl) window.location.href = data.loginUrl;
+      const { loginUrl } = await fetchAuth.getGithubAuthorizeUrlByEnv();
+      if (loginUrl) window.location.href = loginUrl;
     } catch (error) {
       console.error('GitHub 로그인 URL 요청 실패:', error);
+      showToast('소셜 로그인에 실패했습니다. 다시 시도해주세요.', 'fail');
     }
   };
 
   const handleGoogleLogin = async () => {
     try {
-      const data = await fetchAuth.getGoogleAuthorizeUrlByEnv();
-      if (data.loginUrl) window.location.href = data.loginUrl;
+      const { loginUrl } = await fetchAuth.getGoogleAuthorizeUrlByEnv();
+      if (loginUrl) window.location.href = loginUrl;
     } catch (error) {
       console.error('Google 로그인 URL 요청 실패:', error);
+      showToast('소셜 로그인에 실패했습니다. 다시 시도해주세요.', 'fail');
     }
   };
 

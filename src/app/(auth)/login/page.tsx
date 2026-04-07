@@ -9,9 +9,11 @@ import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import Image from 'next/image';
 import { fetchAuth } from '@/shared/lib/api/fetchAuth'; // 추가
+import { useToastStore } from '@/shared/stores/useToastStore';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { showToast } = useToastStore();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -37,15 +39,17 @@ export default function LoginPage() {
       if (loginUrl) window.location.href = loginUrl;
     } catch (error) {
       console.error('GitHub 로그인 URL 요청 실패:', error);
+      showToast('소셜 로그인에 실패했습니다. 다시 시도해주세요.', 'fail');
     }
   };
 
   const handleGoogleLogin = async () => {
     try {
-      const data = await fetchAuth.getGoogleAuthorizeUrlByEnv();
-      if (data.loginUrl) window.location.href = data.loginUrl;
+      const { loginUrl } = await fetchAuth.getGoogleAuthorizeUrlByEnv();
+      if (loginUrl) window.location.href = loginUrl;
     } catch (error) {
       console.error('Google 로그인 URL 요청 실패:', error);
+      showToast('소셜 로그인에 실패했습니다. 다시 시도해주세요.', 'fail');
     }
   };
   return (

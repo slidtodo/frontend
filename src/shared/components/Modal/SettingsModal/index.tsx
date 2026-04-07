@@ -18,16 +18,17 @@ export function SettingsModal() {
     >
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-xl font-semibold text-slate-800">설정</h2>
-        <button type="button" onClick={closeModal} className="text-gray-400 hover:text-gray-600">
+        <button type="button" onClick={closeModal} className="text-gray-400 hover:text-gray-600" aria-label="닫기">
           <XIcon size={20} />
         </button>
       </div>
 
       {/* 언어 */}
       <div className="mb-6 flex flex-col gap-2">
-        <label className="text-sm font-medium text-slate-700">언어</label>
+        <label htmlFor="language-select" className="text-sm font-medium text-slate-700">언어</label>
         <div className="relative h-14 w-98">
           <select
+            id="language-select"
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
             className="h-full w-full appearance-none rounded-2xl border border-gray-200 px-4 text-sm text-slate-800 outline-none focus:border-gray-400"

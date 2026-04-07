@@ -669,25 +669,25 @@ export interface components {
              * Format: date-time
              * @description 마감일
              */
-            dueDate?: string;
+            dueDate?: string | null;
             /** @description 링크 URL */
-            linkUrl?: string;
+            linkUrl?: string | null;
             /** @description 이미지 URL */
-            imageUrl?: string;
+            imageUrl?: string | null;
             /**
              * @description 할일 출처 (MANUAL, GITHUB_ISSUE, GITHUB_PR)
-             * @enum {string}
+             * @enum {string|null}
              */
-            source?: "MANUAL" | "GITHUB_ISSUE" | "GITHUB_PR";
+            source?: "MANUAL" | "GITHUB_ISSUE" | "GITHUB_PR" | null;
             /**
              * Format: int64
              * @description 외부 소스 항목 ID
              */
-            sourceItemId?: number;
+            sourceItemId?: number | null;
             /** @description 상태 */
-            status?: string;
+            status?: string | null;
             /** @description 태그 이름 목록 */
-            tags?: string[];
+            tags?: (string | null)[] | null;
         };
         /** @description 목표 요약 정보 */
         GoalInfo: {
@@ -724,11 +724,11 @@ export interface components {
              * Format: date-time
              * @description 마감일
              */
-            dueDate?: string;
+            dueDate?: string | null;
             /** @description 이미지 URL */
-            imageUrl?: string;
+            imageUrl?: string | null;
             /** @description 링크 URL */
-            linkUrl?: string;
+            linkUrl?: string | null;
             /**
              * @description 할일 출처 (MANUAL, GITHUB_ISSUE, GITHUB_PR)
              * @enum {string}
@@ -738,12 +738,11 @@ export interface components {
              * Format: int64
              * @description 외부 소스 항목 ID (GitHub issue/PR 번호)
              */
-            sourceItemId?: number;
+            sourceItemId?: number | null;
             /** @description 상태 */
-            status?: string;
+            status?: string | null;
             /** @description 즐겨찾기 여부 */
             favorite: boolean;
-            /** @description 연결된 목표 정보 */
             goal: components["schemas"]["GoalInfo"];
             /**
              * Format: int64
@@ -782,9 +781,9 @@ export interface components {
             /** @description 노트 제목 */
             title: string;
             /** @description 노트 내용 */
-            content?: string;
+            content?: string | null;
             /** @description 링크 URL */
-            linkUrl?: string;
+            linkUrl?: string | null;
         };
         /** @description 노트 응답 */
         NoteResponse: {
@@ -811,9 +810,9 @@ export interface components {
             /** @description 노트 제목 */
             title: string;
             /** @description 노트 내용 */
-            content?: string;
+            content?: string | null;
             /** @description 링크 URL */
-            linkUrl?: string;
+            linkUrl?: string | null;
             /**
              * @description 할일 출처 (MANUAL, GITHUB_ISSUE, GITHUB_PR)
              * @enum {string}
@@ -823,9 +822,9 @@ export interface components {
              * Format: int64
              * @description 외부 소스 항목 ID
              */
-            sourceItemId?: number;
+            sourceItemId?: number | null;
             /** @description 상태 */
-            status?: string;
+            status?: string | null;
             /**
              * Format: date-time
              * @description 생성일시
@@ -836,7 +835,6 @@ export interface components {
              * @description 수정일시
              */
             updatedAt: string;
-            /** @description 연결된 할일 정보 */
             todo: components["schemas"]["TodoInfo"];
         };
         /** @description 할일 정보 */
@@ -891,9 +889,9 @@ export interface components {
              * Format: int64
              * @description GitHub 리포지토리 ID
              */
-            repositoryId?: number;
+            repositoryId?: number | null;
             /** @description GitHub 리포지토리 전체 이름 (owner/repo) */
-            repositoryFullName?: string;
+            repositoryFullName?: string | null;
             /**
              * Format: int64
              * @description 사용자 ID
@@ -941,7 +939,7 @@ export interface components {
             /** @description 닉네임 */
             nickname: string;
             /** @description 프로필 이미지 URL */
-            profileImageUrl?: string;
+            profileImageUrl?: string | null;
             /**
              * @description 로그인 제공자 (LOCAL, GOOGLE, GITHUB)
              * @enum {string}
@@ -957,7 +955,7 @@ export interface components {
         /** @description 토큰 갱신 요청 */
         RefreshRequest: {
             /** @description 리프레시 토큰 */
-            refreshToken?: string;
+            refreshToken?: string | null;
         };
         /** @description 토큰 갱신 응답 */
         RefreshResponse: {
@@ -981,9 +979,9 @@ export interface components {
         /** @description 사용자 정보 수정 요청 */
         UpdateUserRequest: {
             /** @description 닉네임 */
-            nickname?: string;
+            nickname?: string | null;
             /** @description 프로필 이미지 URL */
-            profileImageUrl?: string;
+            profileImageUrl?: string | null;
         };
         /** @description 사용자 정보 응답 */
         UserResponse: {
@@ -997,7 +995,7 @@ export interface components {
             /** @description 닉네임 */
             nickname: string;
             /** @description 프로필 이미지 URL */
-            profileImageUrl?: string;
+            profileImageUrl?: string | null;
             /**
              * @description 로그인 제공자 (LOCAL, GOOGLE, GITHUB)
              * @enum {string}
@@ -1018,20 +1016,20 @@ export interface components {
         /** @description 할일 수정 요청 */
         UpdateTodoRequest: {
             /** @description 할일 제목 */
-            title?: string;
+            title?: string | null;
             /** @description 완료 여부 */
-            done?: boolean;
+            done?: boolean | null;
             /**
              * Format: date-time
              * @description 마감일
              */
-            dueDate?: string;
-            /** @description 링크 URL */
-            linkUrl?: string;
+            dueDate?: string | null;
             /** @description 태그 이름 목록 */
-            tags?: string[];
+            tags?: (string | null)[] | null;
+            /** @description 링크 URL */
+            linkUrl?: string | null;
             /** @description 이미지 URL */
-            imageUrl?: string;
+            imageUrl?: string | null;
         };
         /** @description 알림 응답 */
         NotificationResponse: {
@@ -1058,11 +1056,11 @@ export interface components {
         /** @description 노트 수정 요청 */
         UpdateNoteRequest: {
             /** @description 노트 제목 */
-            title?: string;
+            title?: string | null;
             /** @description 노트 내용 */
-            content?: string;
+            content?: string | null;
             /** @description 링크 URL */
-            linkUrl?: string;
+            linkUrl?: string | null;
         };
         /** @description 목표 수정 요청 */
         UpdateGoalRequest: {
@@ -1112,7 +1110,7 @@ export interface components {
              * Format: int64
              * @description 다음 페이지 커서 (마지막 페이지면 null)
              */
-            nextCursor?: number;
+            nextCursor?: number | null;
             /** @description 다음 페이지 존재 여부 */
             hasMore: boolean;
             /**
@@ -1160,7 +1158,6 @@ export interface components {
         NoteListResponse: {
             /** @description 노트 목록 */
             notes: components["schemas"]["NoteListItem"][];
-            /** @description 페이지 정보 */
             pageInfo: components["schemas"]["PageInfo"];
         };
         /** @description 페이지 정보 */
@@ -1194,7 +1191,7 @@ export interface components {
              * Format: int64
              * @description 다음 페이지 커서 (마지막 페이지면 null)
              */
-            nextCursor?: number;
+            nextCursor?: number | null;
             /** @description 다음 페이지 존재 여부 */
             hasMore: boolean;
             /**
@@ -1221,9 +1218,9 @@ export interface components {
              * Format: int64
              * @description GitHub 리포지토리 ID
              */
-            repositoryId?: number;
+            repositoryId?: number | null;
             /** @description GitHub 리포지토리 전체 이름 (owner/repo) */
-            repositoryFullName?: string;
+            repositoryFullName?: string | null;
             /**
              * Format: int64
              * @description 사용자 ID
@@ -1279,7 +1276,7 @@ export interface components {
         /** @description 회원 탈퇴 요청 */
         DeleteUserRequest: {
             /** @description 비밀번호 (로컬 로그인 사용자만 필수) */
-            password?: string;
+            password?: string | null;
         };
     };
     responses: never;

@@ -79,7 +79,7 @@ function Dropdown({ items, selectedValue, onSelectItem, isDisabled, className, d
         className={twMerge(
           dropdownVariants({ disabled: isDisabled }),
           'flex w-full items-center gap-2',
-          isToggleOpen && 'rounded-2xl border border-[#FF8442]',
+          isToggleOpen && 'border-bearlog-500 rounded-2xl border',
           className,
         )}
         disabled={isDisabled}
@@ -128,8 +128,15 @@ interface DropdownItemProps {
 export function DropdownItem({ item, onSelectItem }: DropdownItemProps) {
   return (
     <div className="flex w-full bg-white p-1.5">
-      <button onClick={(e) => { e.stopPropagation(); e.preventDefault(); onSelectItem(item); }} className={twMerge(clsx('flex w-full cursor-pointer'))}>
-        <div className={twMerge(clsx('w-full rounded-xl p-2 text-left hover:bg-[#FEEFDC]'))}>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          onSelectItem(item);
+        }}
+        className={twMerge(clsx('flex w-full cursor-pointer'))}
+      >
+        <div className={twMerge(clsx('hover:bg-bearlog-500/20 w-full rounded-xl p-2 text-left'))}>
           <span className="text-sm leading-6 font-medium tracking-[-0.48px] text-[#333] md:text-base">
             {item.label}
           </span>

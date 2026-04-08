@@ -79,14 +79,14 @@ function Dropdown({ items, selectedValue, onSelectItem, isDisabled, className, d
         className={twMerge(
           dropdownVariants({ disabled: isDisabled }),
           'flex w-full items-center gap-2',
-          isToggleOpen && 'rounded-2xl border border-[#FF8442]',
+          isToggleOpen && 'border-bearlog-500 rounded-2xl border',
           className,
         )}
         disabled={isDisabled}
       >
         <span className="line-clamp-1 text-sm font-normal md:text-base">{selectedItem?.label} </span>
         {/* //TODO 선택된 아이템 표시 */}
-        <ChevronDown size={16} className="text-[#A4A4A4] dark:text-white" />
+        <ChevronDown size={16} className="text-gray-400 dark:text-white" />
       </button>
       <div className="absolute top-full right-0 left-0 z-50 mt-1">
         {isToggleOpen && <DropdownList className="w-full" items={items} onSelectItem={handleSelectItem} />}
@@ -136,8 +136,8 @@ export function DropdownItem({ item, onSelectItem }: DropdownItemProps) {
         }}
         className={twMerge(clsx('flex w-full cursor-pointer'))}
       >
-        <div className={twMerge(clsx('w-full rounded-xl p-2 text-left hover:bg-[#FEEFDC]'))}>
-          <span className="text-sm leading-6 font-medium tracking-[-0.48px] text-[#333] md:text-base">
+        <div className={twMerge(clsx('hover:bg-bearlog-100 w-full rounded-xl p-2 text-left'))}>
+          <span className="text-sm leading-6 font-medium tracking-[-0.48px] text-gray-700 md:text-base">
             {item.label}
           </span>
         </div>

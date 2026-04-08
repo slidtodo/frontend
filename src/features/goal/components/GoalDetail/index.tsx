@@ -61,12 +61,14 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
             </div>
           }
         />
-        <section className="rounded-2xl bg-white px-[28px] py-[32px]">
-          <div className="flex max-h-[512px] flex-col gap-4 overflow-y-auto">
+        <section className="h-full rounded-2xl bg-white px-[28px] py-[32px]">
+          <div className="flex h-full flex-col gap-4 overflow-y-auto">
             {goalDetail?.todoList && goalDetail?.todoList.length > 0 ? (
               goalDetail.todoList.map((todo) => <TaskCardWrapper key={todo.id} item={todo} mode="todo" />)
             ) : (
-              <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>
+              <div className="flex h-full items-center justify-center">
+                <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>
+              </div>
             )}
           </div>
         </section>
@@ -74,11 +76,13 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
       <div className="flex flex-1 flex-col gap-[10px]">
         <PageSubTitle subTitle="DONE" textClassName="font-semibold" className="py-[6px]" />
         <section className="h-full rounded-2xl bg-white px-[28px] py-[32px]">
-          <div className="flex max-h-[512px] flex-col gap-4 overflow-y-auto">
+          <div className="flex h-full flex-col gap-4 overflow-y-auto">
             {goalDetail?.doneList && goalDetail?.doneList.length > 0 ? (
               goalDetail.doneList.map((todo) => <TaskCardWrapper key={todo.id} item={todo} mode="done" />)
             ) : (
-              <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>
+              <div className="flex h-full items-center justify-center">
+                <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>
+              </div>
             )}
           </div>
         </section>

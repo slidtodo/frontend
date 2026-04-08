@@ -1,12 +1,12 @@
 'use client';
 
+import Image from 'next/image';
 import { useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
 import { DropdownList } from '@/shared/components/Dropdown';
 import useOnClickOutside from '@/shared/hooks/useOnClickOutside';
 import { DropdownItemType } from '@/shared/types/types';
-import { dropdownVariants } from '@/shared/components/Dropdown';
 
 interface FavoriteTodoDropdownGoalProps {
   items: DropdownItemType[];
@@ -43,16 +43,20 @@ export default function FavoriteTodoDropdownGoal({
         type="button"
         onClick={() => setIsToggleOpen((prev) => !prev)}
         className={[
-          dropdownVariants({ disabled: false }),
-          'flex w-full items-center justify-between gap-2',
-          isToggleOpen && 'rounded-2xl border border-[#FF8442]',
-        ].join(' ')}
+          'flex w-full items-center justify-between gap-2 self-stretch rounded-xl border border-gray-300 bg-gray-100 p-4 text-base font-medium',
+          isToggleOpen && 'border-bearlog-500 rounded-2xl',
+        ]
+          .filter(Boolean)
+          .join(' ')}
       >
-        <span className="line-clamp-1 text-sm font-normal md:text-base">{selectedItem?.label ?? '선택해주세요'}</span>
+        <div className="flex min-w-0 items-center gap-2">
+          <Image src="/image/goal-todo.png" alt="goal todo" width={32} height={32} />
+          <span className="line-clamp-1 text-sm font-normal md:text-base">{selectedItem?.label ?? '선택해주세요'}</span>
+        </div>
 
         <ChevronDown
           size={16}
-          className={`shrink-0 text-[#A4A4A4] transition-transform ${isToggleOpen ? 'rotate-180' : ''}`}
+          className={`shrink-0 text-gray-400 transition-transform ${isToggleOpen ? 'rotate-180' : ''}`}
         />
       </button>
 

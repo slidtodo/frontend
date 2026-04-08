@@ -136,7 +136,9 @@ export function DropdownItem({ item, onSelectItem }: DropdownItemProps) {
         }}
         className={twMerge(clsx('flex w-full cursor-pointer'))}
       >
-        <div className={twMerge(clsx('hover:bg-bearlog-100 w-full rounded-xl p-2 text-left'))}>
+        <div
+          className={twMerge(clsx('hover:bg-bearlog-100 w-full rounded-xl p-2 text-left transition-all duration-200'))}
+        >
           <span className="text-sm leading-6 font-medium tracking-[-0.48px] text-gray-700 md:text-base">
             {item.label}
           </span>

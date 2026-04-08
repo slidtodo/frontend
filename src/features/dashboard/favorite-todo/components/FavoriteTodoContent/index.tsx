@@ -9,7 +9,7 @@ import { DataBoundary } from '@/shared/components/ErrorSuspenseBoundary';
 import PageHeader from '@/shared/components/PageHeader';
 import TaskCardWrapper from '@/features/dashboard/components/TaskCardWrapper';
 
-import { todoQueries } from '@/shared/lib/query/queryKeys';
+import { goalQueries, todoQueries } from '@/shared/lib/query/queryKeys';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 import type { TodoListResponse } from '@/shared/lib/api';
 import { TodoOptions } from '@/shared/types/types';
@@ -24,6 +24,7 @@ export default function FavoriteTodoContent() {
 
   const [selectedGoal, setSelectedGoal] = useState<string>('');
 
+  console.log('selectedGoal', selectedGoal);
   const { data: todoList } = useQuery({
     ...todoQueries.list({ done }),
     placeholderData: (prev) => prev,
@@ -32,15 +33,22 @@ export default function FavoriteTodoContent() {
   if (!todoList) return null;
 
   const favoriteTodos = todoList.todos?.filter((todo) => todo.favorite) ?? [];
+  const goalFilteredTodos = () => {
+    if (selectedGoal === '') {
+      return favoriteTodos;
+    }
+    return selectedGoal ? favoriteTodos.filter((todo) => String(todo.goal?.id) === selectedGoal) : favoriteTodos;
+  };
+
   const favoriteTodoList: TodoListResponse = {
-    todos: favoriteTodos,
+    todos: goalFilteredTodos(),
     nextCursor: todoList.nextCursor ?? null,
     hasMore: todoList.hasMore,
     totalCount: favoriteTodos.length,
   };
 
   return (
-    <div className="mx-auto mb-[76px] flex max-w-[720px] flex-col gap-6">
+    <div className="mx-auto mb-[76px] flex h-full max-w-[720px] flex-col gap-6">
       {breakpoint !== 'mobile' && (
         <PageHeader
           title="찜한 할 일"
@@ -48,15 +56,12 @@ export default function FavoriteTodoContent() {
           className="pl-2"
         />
       )}
-      <section className="flex flex-col gap-3">
+      <section className="flex h-full flex-col gap-3">
         <AllTodoFilter todos={favoriteTodoList} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
-        {favoriteTodoList && (favoriteTodoList.todos?.length ?? 0) === 0 ? (
-          <Empty>등록된 할 일이 없습니다.</Empty>
-        ) : (
-          <DataBoundary>
-            <AllTodoFetcher todos={favoriteTodoList} selectedGoal={selectedGoal} setSelectedGoal={setSelectedGoal} />
-          </DataBoundary>
-        )}
+
+        <DataBoundary>
+          <AllTodoFetcher todos={favoriteTodoList} selectedGoal={selectedGoal} setSelectedGoal={setSelectedGoal} />
+        </DataBoundary>
       </section>
     </div>
   );
@@ -123,28 +128,44 @@ interface AllTodoFetcherProps {
   selectedGoal: string;
   setSelectedGoal: React.Dispatch<React.SetStateAction<string>>;
 }
+
 function AllTodoFetcher({ todos, selectedGoal, setSelectedGoal }: AllTodoFetcherProps) {
-  const { data: goalList } = useQuery(todoQueries.list());
+  const { data: goalList } = useQuery(goalQueries.list());
+
   const goalItems = [
     { label: '전체 목표', value: '' },
-    ...(goalList?.todos
-      ? Array.from(new Set(goalList.todos.map((todo) => todo.goal))).map((goal) => ({
-          label: goal.title,
-          value: String(goal.id),
-        }))
+    ...(goalList?.goals
+      ? Array.from(new Set(goalList.goals.map((goal) => goal.id))).map((goalId) => {
+          const goal = goalList.goals.find((g) => g.id === goalId);
+
+          return {
+            label: goal?.title ?? '',
+            value: String(goalId),
+          };
+        })
       : []),
   ];
+
   return (
-    <section className="rounded-4xl bg-white p-4 md:p-8">
+    <section
+      className={`flex flex-col gap-5 rounded-4xl bg-white p-4 md:p-8 ${todos.todos?.length === 0 ? 'h-full' : 'h-fit'}`}
+    >
       <FavoriteTodoDropdownGoal
         selectedValue={selectedGoal}
         onSelectItem={(item) => setSelectedGoal(item.value)}
         items={goalItems}
       />
-      <div className="flex max-h-[680px] flex-col gap-4 overflow-y-auto">
-        {todos.todos?.map((todo) => (
-          <TaskCardWrapper key={todo.id} item={todo} mode="todo" />
-        ))}
+
+      <div className="flex h-full flex-col gap-4 overflow-y-auto">
+        {(todos.todos?.length ?? 0) === 0 ? (
+          <Empty>등록된 할 일이 없습니다.</Empty>
+        ) : (
+          <div className="space-y-4">
+            {todos.todos?.map((todo) => (
+              <TaskCardWrapper key={todo.id} item={todo} mode="todo" />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

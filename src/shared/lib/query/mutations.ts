@@ -16,6 +16,7 @@ import { fetchUsers, PatchCurrentUserPasswordRequest, PatchCurrentUserRequest } 
 import { goalKeys, noteKeys, todoKeys, userKeys } from './keyFactory';
 import { noteQueries } from './queryKeys';
 import { useToastStore } from '@/shared/stores/useToastStore';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 // goal
 export const usePostGoal = () => {

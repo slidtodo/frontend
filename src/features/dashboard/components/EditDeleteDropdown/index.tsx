@@ -1,6 +1,7 @@
 'use client';
 
 import { RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 import { createPortal } from 'react-dom';
 
 interface EditDeleteDropdownProps {
@@ -17,6 +18,7 @@ interface DropdownPosition {
 
 export default function EditDeleteDropdown({ handleEdit, handleDelete, onClose, anchorRef }: EditDeleteDropdownProps) {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const { t } = useLanguage();
 
   const [position, setPosition] = useState<DropdownPosition>({ top: 0, left: 0 });
 
@@ -77,14 +79,14 @@ export default function EditDeleteDropdown({ handleEdit, handleDelete, onClose, 
         className="block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-orange-50"
         onClick={handleEdit}
       >
-        수정
+        {t.common.edit}
       </button>
       <button
         type="button"
         className="block w-full rounded-lg px-3 py-2 text-left text-sm text-red-500 hover:bg-red-50"
         onClick={handleDelete}
       >
-        삭제
+        {t.common.delete}
       </button>
     </div>,
     document.body,

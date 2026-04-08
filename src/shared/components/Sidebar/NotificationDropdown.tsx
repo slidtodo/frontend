@@ -8,6 +8,7 @@ import { notificationQueries } from '@/shared/lib/query/queryKeys';
 import { fetchNotifications } from '@/shared/lib/api/fetchNotifications';
 import { getRelativeTime } from '@/shared/lib/formatters';
 import useOnClickOutside from '@/shared/hooks/useOnClickOutside';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 interface NotificationDropdownProps {
   isOpen: boolean;
@@ -20,6 +21,7 @@ interface NotificationDropdownProps {
 export default function NotificationDropdown({ isOpen, onOpen, onClose, isSidebarOpen, placement = 'right' }: NotificationDropdownProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0 });
   const queryClient = useQueryClient();
   const { data: notifications = [] } = useQuery(notificationQueries.list());
@@ -82,17 +84,17 @@ export default function NotificationDropdown({ isOpen, onOpen, onClose, isSideba
             className="fixed z-50 w-[320px] rounded-2xl border border-gray-100 bg-white shadow-xl"
           >
             <div className="flex items-center justify-between px-5 py-4">
-              <span className="text-base font-semibold text-gray-800">알림</span>
+              <span className="text-base font-semibold text-gray-800">{t.notification.title}</span>
               {hasUnread && (
                 <button onClick={handleMarkAllRead} className="text-bearlog-600 text-sm font-medium hover:underline">
-                  모두 읽기
+                  {t.notification.markAllRead}
                 </button>
               )}
             </div>
 
             <ul className="max-h-100 overflow-y-auto">
               {notifications.length === 0 ? (
-                <li className="px-5 py-8 text-center text-sm text-gray-400">알림이 없습니다.</li>
+                <li className="px-5 py-8 text-center text-sm text-gray-400">{t.notification.empty}</li>
               ) : (
                 notifications.map((notification) => (
                   <li

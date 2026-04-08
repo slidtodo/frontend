@@ -17,6 +17,7 @@ import { useDeleteGoal, usePatchGoal } from '@/shared/lib/query/mutations';
 import { goalQueries, userQueries } from '@/shared/lib/query/queryKeys';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 interface GoalSummaryProps {
   goalId: number;
@@ -24,6 +25,7 @@ interface GoalSummaryProps {
 
 function GoalSummary({ goalId }: GoalSummaryProps) {
   const breakpoint = useBreakpoint();
+  const { t } = useLanguage();
 
   const { data: user } = useQuery(userQueries.current());
   const { data: goalDetail } = useQuery({
@@ -33,7 +35,7 @@ function GoalSummary({ goalId }: GoalSummaryProps) {
 
   return (
     <div className="flex flex-col gap-10">
-      {breakpoint !== 'mobile' && <PageHeader title={`${user?.nickname}의 목표`} className="pl-2" />}
+      {breakpoint !== 'mobile' && <PageHeader title={`${user?.nickname}${t.goal.title}`} className="pl-2" />}
       <section className="flex flex-col gap-6 xl:flex-row xl:gap-8">
         <GoalInfo goalDetail={goalDetail} />
 
@@ -57,6 +59,7 @@ function GoalInfo({ goalDetail }: GoalInfoProps) {
   const { openModal } = useModalStore();
   const { mutate: deleteGoal } = useDeleteGoal(goalDetail?.id);
   const { mutateAsync: patchGoal } = usePatchGoal(goalDetail?.id);
+  const { t } = useLanguage();
 
   if (!goalDetail) return null;
 
@@ -64,8 +67,8 @@ function GoalInfo({ goalDetail }: GoalInfoProps) {
     setOpen(false);
     openModal(
       <SinglePostModal
-        title="목표 수정"
-        placeholder="목표 제목을 입력하세요"
+        title={t.goal.editTitle}
+        placeholder={t.goal.editPlaceholder}
         defaultValue={goalDetail.title ?? ''}
         inputType="text"
         onConfirm={async (title) => {
@@ -121,6 +124,7 @@ interface GoalProgressProps {
 }
 
 function GoalProgress({ goalDetail }: GoalProgressProps) {
+  const { t } = useLanguage();
   if (!goalDetail) return null;
 
   return (
@@ -131,7 +135,7 @@ function GoalProgress({ goalDetail }: GoalProgressProps) {
         </div>
 
         <div className="relative flex flex-col items-start gap-2">
-          <span className="truncate text-xl font-semibold text-white">목표진행률</span>
+          <span className="truncate text-xl font-semibold text-white">{t.goal.progressLabel}</span>
           <div className="flex items-baseline gap-1">
             <span className="text-[41px] leading-[1] font-bold text-white">{goalDetail.progress}</span>
             <span className="text-[clamp(14px,2vw,30px)] text-white">%</span>
@@ -156,12 +160,13 @@ interface LinkNoteProps {
 }
 
 function LinkNote({ goalDetail }: LinkNoteProps) {
+  const { t } = useLanguage();
   const goalId = goalDetail?.id;
 
   return (
     <div className="relative min-h-[160px] w-full rounded-[32px] bg-[#63B6FF] shadow-[0_10px_40px_0_rgba(99,182,255,0.24)]">
       <Link className="absolute top-1/5 left-1/7 flex items-center gap-[2px]" href={`/goal/${goalId}/note`}>
-        <span className="text-2xl font-bold text-white">노트 모아보기</span>
+        <span className="text-2xl font-bold text-white">{t.goal.noteCollection}</span>
         <ChevronRightIcon size={24} color="#ffffff" className="cursor-pointer" />
       </Link>
 

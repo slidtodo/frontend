@@ -13,15 +13,17 @@ import TaskCardWrapper from '../TaskCardWrapper';
 
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import { todoQueries, userQueries } from '@/shared/lib/query/queryKeys';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 export default function DashBoardSummary() {
   const { data: user } = useQuery(userQueries.current());
   const breakpoint = useBreakpoint();
+  const { t } = useLanguage();
 
   return (
     <>
       <div className="flex items-center justify-end pb-[30px] md:justify-between lg:pb-[34px]">
-        {breakpoint !== 'mobile' && <PageHeader title={`${user?.nickname}님의 대시보드`} />}
+        {breakpoint !== 'mobile' && <PageHeader title={`${user?.nickname}${t.dashboard.title}`} />}
 
         <div className="flex shrink-0 justify-end md:w-fit">
           <TabChangeMode mode="MANUAL" />
@@ -30,14 +32,14 @@ export default function DashBoardSummary() {
       <section className="flex w-full flex-col gap-[40px] pb-[40px] md:flex-row md:gap-[12px] lg:gap-[32px] lg:pb-[34px]">
         <div className="flex w-full flex-col justify-between gap-[10px]">
           <PageSubTitle
-            subTitle="최근 등록한 할 일"
+            subTitle={t.dashboard.recentTodo}
             icons={<Image src={'/image/task-green.png'} alt="Task Icon" width={40} height={40} />}
             actions={
               <Link
                 href="/dashboard/all-todo"
                 className="text-bearlog-500 w-full cursor-pointer text-sm font-semibold md:text-base"
               >
-                모두 보기 <ChevronRightIcon className="inline-block cursor-pointer" />
+                {t.dashboard.viewAll} <ChevronRightIcon className="inline-block cursor-pointer" />
               </Link>
             }
           />
@@ -45,7 +47,7 @@ export default function DashBoardSummary() {
         </div>
         <div className="flex w-full flex-col justify-between gap-[10px]">
           <PageSubTitle
-            subTitle="내 진행 상황"
+            subTitle={t.dashboard.myProgress}
             icons={<Image src={'/image/progress-green.png'} alt="Progress Icon" width={40} height={40} />}
           />
           <CurrentProgressCard />
@@ -61,6 +63,7 @@ function RecentPostCard() {
       sort: 'LATEST',
     }),
   );
+  const { t } = useLanguage();
 
   const recentTodos = todos?.todos?.slice(0, 4) ?? [];
 
@@ -70,7 +73,7 @@ function RecentPostCard() {
         recentTodos.map((item) => <TaskCardWrapper key={item.id} item={item} mode="todo" />)
       ) : (
         <div className="flex h-full items-center justify-center">
-          <span className="text-gray-500">최근 등록한 할 일이 없습니다.</span>
+          <span className="text-gray-500">{t.dashboard.noRecentTodo}</span>
         </div>
       )}
     </article>
@@ -79,6 +82,7 @@ function RecentPostCard() {
 
 function CurrentProgressCard() {
   const { data: percents } = useQuery(userQueries.progress());
+  const { t } = useLanguage();
 
   return (
     <article className="bg-bearlog-500 relative h-[187px] rounded-[40px] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)] md:h-[229px] lg:h-[256px]">
@@ -103,7 +107,7 @@ function CurrentProgressCard() {
           <ProgressCircle percent={percents?.totalProgress ?? 0} className="h-auto w-full" color="#008354" />
         </div>
         <div className="flex flex-col items-start gap-2">
-          <span className="text-[clamp(12px,2vw,20px)] font-semibold text-white">TO DO 진행률</span>
+          <span className="text-[clamp(12px,2vw,20px)] font-semibold text-white">{t.dashboard.todoProgress}</span>
           <div className="flex items-baseline gap-1">
             <span className="text-[clamp(20px,5vw,60px)] leading-[1] font-bold text-white">
               {percents?.totalProgress}

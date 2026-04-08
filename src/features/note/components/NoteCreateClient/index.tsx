@@ -21,6 +21,7 @@ import { TodoResponse } from '@/shared/lib/api/fetchTodos';
 import { GoalDetailResponse } from '@/shared/lib/api/fetchGoals';
 import { useMobileHeaderStore } from '@/shared/stores/useMobileHeaderStore';
 import { usePostNote } from '@/shared/lib/query/mutations';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 interface NoteCreateClientProps {
   goal: GoalDetailResponse;
@@ -31,6 +32,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
   const todoId = todo?.id ?? null;
 
   const router = useRouter();
+  const { t } = useLanguage();
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -45,7 +47,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
 
   const { mutate: createNote, isPending } = usePostNote({
     onError: (error) => {
-      showToast(error.message || '노트 작성에 실패했습니다', 'fail');
+      showToast(error.message || t.note.createFail, 'fail');
     },
   });
 
@@ -70,16 +72,16 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
         ...(linkUrl ? { linkUrl } : {}),
       };
       saveDraft(body);
-      showToast('임시 저장이 완료되었습니다 ・ 1초전', 'success');
+      showToast(t.note.tempSaveSuccess, 'success');
     } catch (error) {
-      showToast('임시 저장이 실패했습니다', 'fail');
+      showToast(t.note.tempSaveFail, 'fail');
       console.error('임시 저장 실패:', error);
     }
-  }, [todoId, title, content, linkUrl, saveDraft, showToast]);
+  }, [todoId, title, content, linkUrl, saveDraft, showToast, t]);
 
   const handleSubmit = useCallback(() => {
     if (!todoId) {
-      showToast('먼저 할 일을 등록해주세요', 'fail');
+      showToast(t.note.todoRequired, 'fail');
       router.push('/dashboard/all-todo');
       return;
     }
@@ -91,7 +93,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
       ...(linkUrl ? { linkUrl } : {}),
     };
     createNote(body);
-  }, [todoId, title, content, linkUrl, createNote, showToast, router]);
+  }, [todoId, title, content, linkUrl, createNote, showToast, router, t]);
 
   useEffect(() => {
     if (breakpoint !== 'mobile') return;
@@ -103,7 +105,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
             className="text-bearlog-500 hover:text-bearlog-600 cursor-pointer px-1.5 transition-all duration-200 font-semibold text-sm"
             onClick={handleSaveDraft}
           >
-            임시저장
+            {t.note.tempSave}
           </button>
           {showDraftToast && <DraftNoteToast onLoad={handleToastLoad} onClose={handleCloseToast} />}
         </div>
@@ -112,19 +114,19 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
           className="cursor-pointer px-1.5 text-gray-500 transition-all duration-200 hover:text-gray-600 font-semibold text-sm"
           onClick={handleSubmit}
         >
-          등록
+          {t.note.register}
         </button>
       </div>,
     );
     return () => setSlot(null);
-  }, [breakpoint, handleSaveDraft, handleSubmit, showDraftToast, handleToastLoad, handleCloseToast, setSlot]);
+  }, [breakpoint, handleSaveDraft, handleSubmit, showDraftToast, handleToastLoad, handleCloseToast, setSlot, t]);
 
   const editor = useEditor({
     extensions: [
       StarterKit,
       Underline,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
-      Placeholder.configure({ placeholder: '이 곳을 통해 노트 작성을 시작해주세요' }),
+      Placeholder.configure({ placeholder: t.note.placeholder }),
     ],
     content,
     immediatelyRender: false,
@@ -142,11 +144,11 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
         )}
       {breakpoint !== 'mobile' && (
         <section className="mb-0 flex shrink-0 items-center justify-between md:mb-3 md:gap-4 lg:mb-[22px]">
-          <PageHeader title={'노트 작성하기'} />
+          <PageHeader title={t.note.createTitle} />
           <div className="flex gap-2">
             <div className="relative">
               <Button onClick={handleSaveDraft} variant="secondary" className="px-[27px] py-[10px] text-sm">
-                임시저장
+                {t.note.tempSave}
               </Button>
               {showDraftToast && <DraftNoteToast onLoad={handleToastLoad} onClose={handleCloseToast} />}
             </div>
@@ -156,7 +158,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
               variant="primary"
               className="px-[27px] py-[10px] text-sm"
             >
-              {isPending ? '등록 중...' : '등록하기'}
+              {isPending ? t.note.registering : t.note.register}
             </Button>
           </div>
         </section>

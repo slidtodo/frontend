@@ -13,6 +13,7 @@ import TaskCardWrapper from '../TaskCardWrapper';
 
 import type { GoalDetailResponse } from '@/shared/lib/api';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 interface GoalBoxProps {
   data: GoalDetailResponse;
@@ -21,6 +22,7 @@ interface GoalBoxProps {
 export default function GoalBox({ data }: GoalBoxProps) {
   const router = useRouter();
   const { openTodoCreateModal } = useTodoCreateModal();
+  const { t } = useLanguage();
 
   const [search, setSearch] = useState('');
   const normalizedSearch = search.trim().toLowerCase();
@@ -29,7 +31,6 @@ export default function GoalBox({ data }: GoalBoxProps) {
   const filterTodos = useCallback(
     (todos: GoalDetailResponse['todoList']) => {
       if (!isSearching) return todos;
-
       return todos.filter((todo) => todo.title.toLowerCase().includes(normalizedSearch));
     },
     [isSearching, normalizedSearch],
@@ -57,7 +58,11 @@ export default function GoalBox({ data }: GoalBoxProps) {
         </div>
 
         <div className="flex w-full flex-1 justify-between gap-0 md:justify-end md:gap-2 lg:gap-[14px]">
-          <SearchInput placeholder="할 일을 검색해주세요" value={search} onChange={(e) => setSearch(e.target.value)} />
+          <SearchInput
+            placeholder={t.todo.searchPlaceholder}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
           <Button
             variant="primary"
             className="p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
@@ -77,7 +82,7 @@ export default function GoalBox({ data }: GoalBoxProps) {
             }}
           >
             <PlusIcon size={20} />
-            <span className="hidden w-full w-max text-sm font-semibold md:block">할 일 추가</span>
+            <span className="hidden w-full w-max text-sm font-semibold md:block">{t.todo.addTodo}</span>
           </Button>
         </div>
       </div>
@@ -85,12 +90,12 @@ export default function GoalBox({ data }: GoalBoxProps) {
       <div className="flex w-full flex-col justify-around gap-2 md:flex-row lg:gap-8">
         {visibleTodoList.length === 0 && visibleDoneList.length === 0 ? (
           <div className="h-40 md:h-80">
-            <Empty>{isSearching ? '검색 결과가 없습니다.' : '현재 등록된 할 일이 없습니다.'}</Empty>
+            <Empty>{isSearching ? t.todo.noSearchResult : t.todo.emptyTodo}</Empty>
           </div>
         ) : (
           <>
-            <ListBox title="TODO" mode="todo" items={visibleTodoList} />
-            <ListBox title="DONE" mode="done" items={visibleDoneList} />
+            <ListBox title={t.allTodo.todo} mode="todo" items={visibleTodoList} />
+            <ListBox title={t.allTodo.done} mode="done" items={visibleDoneList} />
           </>
         )}
       </div>

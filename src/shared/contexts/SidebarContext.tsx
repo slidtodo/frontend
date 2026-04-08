@@ -8,6 +8,7 @@ import { LayoutGridIcon, FlagIcon, ListCheckIcon, StarIcon } from 'lucide-react'
 import { goalQueries } from '@/shared/lib/query/queryKeys';
 import type { GoalListResponse } from '@/shared/lib/api/fetchGoals';
 import Image from 'next/image';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 const sidebarMenuIconClassName = 'h-6 w-6 transition-all [&_*]:fill-current [&_*]:stroke-current';
 interface MenuBase {
@@ -35,6 +36,7 @@ const SidebarMenuContext = createContext<MenuItem | null>(null);
 export function SidebarProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(true);
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   const { data: goals } = useQuery(goalQueries.list());
   const goalData = useMemo(() => goals?.goals ?? [], [goals]);
@@ -43,12 +45,12 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
     return [
       {
         icon: <LayoutGridIcon className={sidebarMenuIconClassName} />,
-        name: '대시보드',
+        name: t.sidebar.dashboard,
         href: '/dashboard',
       },
       {
         icon: <FlagIcon className={sidebarMenuIconClassName} />,
-        name: '목표',
+        name: t.sidebar.goal,
         href: '/goal',
         subMenus: goalData.map((goal) => ({
           name: goal.title ?? '',
@@ -57,7 +59,7 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
       },
       {
         icon: <ListCheckIcon className={sidebarMenuIconClassName} />,
-        name: '할 일',
+        name: t.sidebar.todo,
         href: '/dashboard/all-todo',
       },
       {
@@ -70,16 +72,16 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
             className={sidebarMenuIconClassName}
           />
         ),
-        name: '캘린더',
+        name: t.sidebar.calendar,
         href: '/calendar',
       },
       {
         icon: <StarIcon className={sidebarMenuIconClassName} />,
-        name: '찜한 할일',
+        name: t.sidebar.favoriteTodo,
         href: '/favorite-todo',
       },
     ];
-  }, [goalData]);
+  }, [goalData, t]);
 
   const sidebar = useMemo<SidebarContextType>(() => {
     return {

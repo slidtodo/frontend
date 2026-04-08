@@ -21,6 +21,7 @@ import { usePatchTodo, usePostTodo } from '@/shared/lib/query/mutations';
 import { goalQueries, todoQueries } from '@/shared/lib/query/queryKeys';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { formatDateForAPI } from '@/shared/utils/utils';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 interface BaseProps {
   goalDetailId: number;
 }
@@ -40,6 +41,7 @@ type TodoFormValues = PostTodoRequest & PatchTodoRequest;
 
 export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModalProps) {
   const { closeModal } = useModalStore();
+  const { t } = useLanguage();
   const isEditMode = mode === 'edit';
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -72,7 +74,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         },
   });
 
-  register('dueDate', { required: '마감기한은 필수입니다.' });
+  register('dueDate', { required: t.todo.dueDateRequired });
 
   const tags = (useWatch({ control, name: 'tags' }) ?? []).filter((tag): tag is string => tag !== null);
   const goalId = useWatch({ control, name: 'goalId' });
@@ -161,7 +163,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       closeModal();
     } catch (error) {
       setSubmitError(
-        error instanceof ApiError ? error.message : '요청 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        error instanceof ApiError ? error.message : t.todo.submitError,
       );
     }
   };
@@ -177,7 +179,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       )}
     >
       <div className="mb-1 flex items-center justify-between md:mb-4">
-        <h1 className="text-xl font-semibold text-gray-800">{isEditMode ? '할 일 수정' : '할 일 생성'}</h1>
+        <h1 className="text-xl font-semibold text-gray-800">{isEditMode ? t.todo.editTitle : t.todo.createTitle}</h1>
         <button
           type="button"
           className="cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
@@ -199,20 +201,20 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         />
       )}
 
-      <FormField label="제목" required>
+      <FormField label={t.todo.titleLabel} required>
         <Input
           autoFocus
-          {...register('title', { required: '제목은 필수입니다.' })}
-          placeholder="할 일의 제목을 적어주세요"
+          {...register('title', { required: t.todo.titleRequired })}
+          placeholder={t.todo.titlePlaceholder}
           className="h-11 rounded-xl border-gray-300 p-3 text-sm font-normal text-[#333] placeholder:text-gray-500 md:h-14 md:rounded-2xl md:p-4 md:text-base"
         />
         {errors.title && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.title.message}</p>}
       </FormField>
 
-      <FormField label="목표" required>
+      <FormField label={t.todo.goalLabel} required>
         <Dropdown
           defaultValue={defaultGoalId}
-          {...register('goalId', { required: '목표는 필수입니다.' })}
+          {...register('goalId', { required: t.todo.goalRequired })}
           items={goalOptions}
           selectedValue={goalId ? String(goalId) : ''}
           onSelectItem={(item) => setValue('goalId', Number(item.value), { shouldDirty: true })}
@@ -222,7 +224,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         {errors.goalId && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.goalId.message}</p>}
       </FormField>
 
-      <FormField label="마감기한" required>
+      <FormField label={t.todo.dueDateLabel} required>
         <DateInput
           date={selectedDate}
           onSelect={(nextDate) => {
@@ -235,7 +237,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         {errors.dueDate && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.dueDate.message}</p>}
       </FormField>
 
-      <FormField label="태그">
+      <FormField label={t.todo.tagLabel}>
         <TagInput
           tags={tags}
           onAddTag={(tag) => setValue('tags', [...tags, tag], { shouldDirty: true })}
@@ -249,14 +251,14 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         />
       </FormField>
 
-      <FormField label="링크">
+      <FormField label={t.todo.linkLabel}>
         <LinkInput
           value={linkUrl ?? ''}
           onChange={(value) => setValue('linkUrl', value || undefined, { shouldDirty: true })}
         />
       </FormField>
 
-      <FormField label="이미지">
+      <FormField label={t.todo.imageLabel}>
         <ImageInput
           image={imageUrl}
           onChange={(nextImage) => {
@@ -273,10 +275,10 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
           onClick={closeModal}
           disabled={isSubmitting}
         >
-          취소
+          {t.modal.cancel}
         </Button>
         <Button type="submit" variant="primary" className="h-12 w-full md:h-14" disabled={isSubmitting}>
-          확인
+          {t.modal.confirm}
         </Button>
       </div>
     </form>

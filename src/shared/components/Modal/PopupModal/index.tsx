@@ -1,6 +1,7 @@
 'use client';
 
 import { useModalStore } from '@/shared/stores/useModalStore';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 import { OctagonAlert } from 'lucide-react';
 import Button from '../../Button';
 
@@ -61,10 +62,11 @@ type PopupModalVariant =
   | { type: 'noteDelete' }
   | { type: 'noteLoad'; noteTitle: string }
   | { type: 'postCancel' }
-  | { type: 'githubDisconnect' };
+  | { type: 'githubDisconnect' }
+  | { type: 'accountDelete'; isLocalUser: boolean };
 
 interface PopupModalProps {
-  onConfirm: () => void;
+  onConfirm: (value?: string) => void;
   variant: PopupModalVariant;
 }
 
@@ -73,51 +75,62 @@ interface ModalConfig {
   warning: string | null;
   confirmLabel: string;
   labelledBy: string;
-}
-
-function getConfig(variant: PopupModalVariant): ModalConfig {
-  switch (variant.type) {
-    case 'goalDelete':
-      return {
-        titleLines: ['목표를 삭제하시겠어요?'],
-        warning: '삭제된 목표는 복구할 수 없습니다.',
-        confirmLabel: '확인',
-        labelledBy: 'confirm-modal-goal-delete',
-      };
-    case 'noteDelete':
-      return {
-        titleLines: ['노트를 삭제하시겠어요?'],
-        warning: '삭제된 노트는 복구할 수 없습니다.',
-        confirmLabel: '확인',
-        labelledBy: 'confirm-modal-note-delete',
-      };
-    case 'noteLoad':
-      return {
-        titleLines: [`'${variant.noteTitle}'`, '제목의 노트를 불러오시겠어요?'],
-        warning: null,
-        confirmLabel: '불러오기',
-        labelledBy: 'confirm-modal-note-load',
-      };
-    case 'postCancel':
-      return {
-        titleLines: ['게시물 작성을 취소하시겠어요?'],
-        warning: '작성하신 모든 내용이 사라집니다.',
-        confirmLabel: '확인',
-        labelledBy: 'confirm-modal-post-cancel',
-      };
-    case 'githubDisconnect':
-      return {
-        titleLines: ['Github 연결을 삭제하시겠어요?'],
-        warning: '연결 삭제 후 Github 로그인이 불가합니다.',
-        confirmLabel: '확인',
-        labelledBy: 'confirm-modal-github-disconnect',
-      };
-  }
+  showPasswordInput?: boolean;
 }
 
 export function PopupModal({ onConfirm, variant }: PopupModalProps) {
   const { closeModal } = useModalStore();
-  const { titleLines, warning, confirmLabel, labelledBy } = getConfig(variant);
+  const { t } = useLanguage();
+
+  function getConfig(v: PopupModalVariant): ModalConfig {
+    switch (v.type) {
+      case 'goalDelete':
+        return {
+          titleLines: [t.modal.deleteGoalTitle],
+          warning: t.modal.deleteGoalDesc,
+          confirmLabel: t.modal.confirm,
+          labelledBy: 'confirm-modal-goal-delete',
+        };
+      case 'noteDelete':
+        return {
+          titleLines: [t.modal.deleteNoteTitle],
+          warning: t.modal.deleteNoteDesc,
+          confirmLabel: t.modal.confirm,
+          labelledBy: 'confirm-modal-note-delete',
+        };
+      case 'noteLoad':
+        return {
+          titleLines: [`'${v.noteTitle}'`, t.modal.loadNoteTitle],
+          warning: null,
+          confirmLabel: t.modal.loadNoteButton,
+          labelledBy: 'confirm-modal-note-load',
+        };
+      case 'postCancel':
+        return {
+          titleLines: [t.modal.cancelPostTitle],
+          warning: t.modal.cancelPostDesc,
+          confirmLabel: t.modal.confirm,
+          labelledBy: 'confirm-modal-post-cancel',
+        };
+      case 'githubDisconnect':
+        return {
+          titleLines: [t.modal.githubDisconnectTitle],
+          warning: t.modal.githubDisconnectDesc,
+          confirmLabel: t.modal.githubDisconnectButton,
+          labelledBy: 'confirm-modal-github-disconnect',
+        };
+      case 'accountDelete':
+        return {
+          titleLines: [t.modal.withdrawTitle],
+          warning: t.modal.withdrawDesc,
+          confirmLabel: t.modal.withdrawButton,
+          labelledBy: 'confirm-modal-account-delete',
+          showPasswordInput: v.isLocalUser,
+        };
+    }
+  }
+
+  const { titleLines, warning, confirmLabel, labelledBy, showPasswordInput } = getConfig(variant);
 
   return (
     <div
@@ -141,6 +154,14 @@ export function PopupModal({ onConfirm, variant }: PopupModalProps) {
             <span className="text-bearlog-600 text-xs leading-6 font-medium md:text-base">{warning}</span>
           </div>
         )}
+        {showPasswordInput && (
+          <input
+            type="password"
+            placeholder={t.modal.passwordPlaceholder}
+            className="mt-4 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-gray-400"
+            id="popup-password-input"
+          />
+        )}
       </div>
 
       <div className="flex gap-3">
@@ -149,13 +170,14 @@ export function PopupModal({ onConfirm, variant }: PopupModalProps) {
           className="flex-1 bg-[#F2F2F2] px-[18px] py-[10px] text-sm text-gray-500 md:py-[14px] md:text-[18px]"
           onClick={closeModal}
         >
-          취소
+          {t.modal.cancel}
         </Button>
         <Button
           variant="primary"
           className="flex-1 px-[18px] py-[10px] text-sm md:py-[14px] md:text-[18px]"
           onClick={() => {
-            onConfirm();
+            const passwordInput = document.getElementById('popup-password-input') as HTMLInputElement | null;
+            onConfirm(passwordInput?.value);
             closeModal();
           }}
         >

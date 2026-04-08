@@ -5,14 +5,15 @@ import { AnimatePresence } from 'framer-motion';
 import { PlusIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-import Progressbar from '@/shared/components/Progressbar';
-import SearchInput from '@/shared/components/SearchInput';
 import Button from '@/shared/components/Button';
 import Empty from '@/shared/components/Empty';
+import Progressbar from '@/shared/components/Progressbar';
+import SearchInput from '@/shared/components/SearchInput';
 import TaskCardWrapper from '../TaskCardWrapper';
 
 import type { GoalDetailResponse } from '@/shared/lib/api';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
+import { useGithubTodoCreateModal } from '@/features/todo/hooks/useGithubTodoCreateModal';
 
 interface GoalBoxProps {
   data: GoalDetailResponse;
@@ -21,6 +22,7 @@ interface GoalBoxProps {
 export default function GoalBox({ data }: GoalBoxProps) {
   const router = useRouter();
   const { openTodoCreateModal } = useTodoCreateModal();
+  const { openGithubTodoCreateModal } = useGithubTodoCreateModal();
 
   const [search, setSearch] = useState('');
   const normalizedSearch = search.trim().toLowerCase();
@@ -37,47 +39,70 @@ export default function GoalBox({ data }: GoalBoxProps) {
 
   const visibleTodoList = filterTodos(data.todoList);
   const visibleDoneList = filterTodos(data.doneList);
+  const isGithubGoal = data.source === 'GITHUB';
+
+  const handleAddTodo = () => {
+    if (data.id === undefined) return;
+
+    if (isGithubGoal) {
+      openGithubTodoCreateModal({
+        goalId: data.id,
+        goalTitle: data.title,
+      });
+    } else {
+      openTodoCreateModal({
+        goalDetailId: data.id,
+        todo: {
+          title: '',
+          goalId: data.id,
+          dueDate: undefined,
+          linkUrl: undefined,
+          imageUrl: undefined,
+          tags: [],
+        },
+      });
+    }
+  };
 
   return (
     <article className="flex flex-col gap-4 rounded-[40px] bg-white p-6 lg:px-8 lg:py-6">
       <div className="flex flex-col items-center gap-2 px-2 md:flex-row md:gap-12 lg:gap-8">
-        <div className="flex w-full flex-1 flex-col gap-1 lg:flex-row lg:gap-4">
-          <div className="w-full max-w-[229px]">
-            <button
-              onClick={() => {
-                if (data.id === undefined) return;
-                router.push(`goal/${data.id}`);
-              }}
-              className="font-base overflow-hidden text-left font-semibold text-ellipsis whitespace-nowrap text-gray-700"
-            >
-              {data.title}
-            </button>
+        <div className="flex w-full flex-1 flex-col gap-2">
+          <div className="flex items-center gap-3">
+            <div className="w-full max-w-[229px]">
+              <button
+                onClick={() => {
+                  if (data.id === undefined) return;
+                  router.push(`goal/${data.id}`);
+                }}
+                className="font-base overflow-hidden text-left font-semibold text-ellipsis whitespace-nowrap text-gray-700"
+              >
+                {data.title}
+              </button>
+            </div>
+            {isGithubGoal && (
+              <span className="rounded-full bg-[#F6F8FA] px-3 py-1 text-xs font-semibold text-gray-600">GitHub</span>
+            )}
           </div>
+
+          {isGithubGoal && data.repositoryFullName && (
+            <span className="text-sm text-gray-500">{data.repositoryFullName}</span>
+          )}
           <Progressbar progress={data.progress ?? 0} />
         </div>
 
         <div className="flex w-full flex-1 justify-between gap-0 md:justify-end md:gap-2 lg:gap-[14px]">
-          <SearchInput placeholder="할 일을 검색해주세요" value={search} onChange={(e) => setSearch(e.target.value)} />
+          <SearchInput placeholder="할 일을 검색해 주세요" value={search} onChange={(e) => setSearch(e.target.value)} />
           <Button
             variant="primary"
             className="p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
             disabled={data.id === undefined}
-            onClick={() => {
-              openTodoCreateModal({
-                goalDetailId: data.id,
-                todo: {
-                  title: '',
-                  goalId: data.id,
-                  dueDate: undefined,
-                  linkUrl: undefined,
-                  imageUrl: undefined,
-                  tags: [],
-                },
-              });
-            }}
+            onClick={handleAddTodo}
           >
             <PlusIcon size={20} />
-            <span className="hidden w-full w-max text-sm font-semibold md:block">할 일 추가</span>
+            <span className="hidden w-max text-sm font-semibold md:block">
+              {isGithubGoal ? '이슈/PR 추가' : '할 일 추가'}
+            </span>
           </Button>
         </div>
       </div>

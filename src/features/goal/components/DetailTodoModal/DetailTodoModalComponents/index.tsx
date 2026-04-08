@@ -3,7 +3,7 @@ import React, { memo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
-import { FlagIcon, CalendarIcon, HashIcon, XIcon, LinkIcon } from 'lucide-react';
+import { FlagIcon, CalendarIcon, HashIcon, XIcon, LinkIcon, GitBranchIcon } from 'lucide-react';
 
 import Tag from '@/shared/components/Tag';
 
@@ -11,6 +11,14 @@ import { useModalStore } from '@/shared/stores/useModalStore';
 import { TodoResponse } from '@/shared/lib/api';
 import { noteQueries } from '@/shared/lib/query/queryKeys';
 import { formatDate } from '@/shared/utils/utils';
+
+/** GitHub 소스 라벨 반환 */
+function getGithubSourceLabel(source: TodoResponse['source']): string | null {
+  if (source === 'GITHUB_ISSUE') return 'GitHub Issue';
+  if (source === 'GITHUB_PR') return 'GitHub PR';
+  return null;
+}
+
 interface DetailTodoModalComponentsProps {
   todo: TodoResponse | undefined;
 }
@@ -19,14 +27,23 @@ const DetailTodoModalComponents = memo(function DetailTodoModalComponents({ todo
 
   if (!todo) return null;
 
+  const githubSourceLabel = getGithubSourceLabel(todo.source);
+  const hasGithubLink = githubSourceLabel && todo.linkUrl;
+
   return (
     <div className="flex w-85.75 flex-col gap-6 rounded-3xl bg-white p-4 shadow-[0px_0px_60px_0px_rgba(0,0,0,0.05)] md:w-114 md:rounded-[40px] md:p-8">
       <div className="flex items-center justify-between">
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-xl font-semibold text-gray-800">{todo?.title}</span>
           <div className="bg-bearlog-500/10 text-bearlog-600 rounded-lg px-[5.5px] py-[3px] text-sm font-semibold">
             {todo?.done ? 'DONE' : 'TO DO'}
           </div>
+          {/* GitHub 소스 뱃지 */}
+          {githubSourceLabel && (
+            <span className="rounded-lg bg-[#F6F8FA] px-[6px] py-[3px] text-xs font-semibold text-gray-600">
+              {githubSourceLabel}
+            </span>
+          )}
         </div>
         <XIcon className="cursor-pointer text-slate-400" size={24} onClick={closeModal} />
       </div>
@@ -45,7 +62,41 @@ const DetailTodoModalComponents = memo(function DetailTodoModalComponents({ todo
           ))}
         />
       </div>
-      {(todo?.imageUrl || todo?.linkUrl) && (
+
+      {/* GitHub 링크 섹션 */}
+      {githubSourceLabel && (
+        <div className="flex flex-col gap-2">
+          <span className="text-base font-semibold text-gray-700">GitHub 연동</span>
+          <div className="flex items-center gap-2 rounded-2xl bg-[#F6F8FA] px-4 py-3">
+            <GitBranchIcon size={16} className="shrink-0 text-gray-400" />
+            {hasGithubLink ? (
+              <a
+                href={todo.linkUrl!}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="min-w-0 truncate text-sm text-[#1E90FF] hover:underline"
+                title={todo.linkUrl!}
+              >
+                {todo.linkUrl}
+              </a>
+            ) : (
+              <span className="text-sm text-gray-500">
+                {/* TODO: 백엔드 Phase 7 완료 후 GitHub URL이 자동으로 채워집니다 */}
+                GitHub URL이 아직 연결되지 않았습니다.
+              </span>
+            )}
+          </div>
+          {todo.done && (
+            <p className="px-1 text-xs text-gray-400">
+              {todo.source === 'GITHUB_ISSUE'
+                ? '이 할 일은 완료되어 GitHub Issue가 close되었습니다.'
+                : '이 할 일은 완료되어 GitHub PR이 merge되었습니다.'}
+            </p>
+          )}
+        </div>
+      )}
+
+      {(todo?.imageUrl || (todo?.linkUrl && !githubSourceLabel)) && (
         <div className="flex flex-col gap-2">
           <span className="text-base font-semibold text-gray-700">첨부파일</span>
           <div className="flex flex-col gap-3">

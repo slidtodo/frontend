@@ -13,10 +13,13 @@ import TaskCardWrapper from '../TaskCardWrapper';
 
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import { todoQueries, userQueries } from '@/shared/lib/query/queryKeys';
+import { useTodoModeStore } from '@/shared/stores/useTodoModeStore';
 
 export default function DashBoardSummary() {
   const { data: user } = useQuery(userQueries.current());
   const breakpoint = useBreakpoint();
+  const mode = useTodoModeStore((state) => state.mode);
+  const setMode = useTodoModeStore((state) => state.setMode);
 
   return (
     <>
@@ -24,7 +27,7 @@ export default function DashBoardSummary() {
         {breakpoint !== 'mobile' && <PageHeader title={`${user?.nickname}님의 대시보드`} />}
 
         <div className="flex shrink-0 justify-end md:w-fit">
-          <TabChangeMode mode="MANUAL" />
+          <TabChangeMode mode={mode} onModeChange={setMode} />
         </div>
       </div>
       <section className="flex w-full flex-col gap-[40px] pb-[40px] md:flex-row md:gap-[12px] lg:gap-[32px] lg:pb-[34px]">

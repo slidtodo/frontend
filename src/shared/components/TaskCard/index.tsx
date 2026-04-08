@@ -15,6 +15,18 @@ import { useDeleteTodo } from '@/shared/lib/query/mutations';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { TodoResponse } from '@/shared/lib/api';
 
+/** GitHub 연동 todo 여부 */
+function isGithubTodo(source: TodoResponse['source']) {
+  return source === 'GITHUB_ISSUE' || source === 'GITHUB_PR';
+}
+
+/** GitHub 연동 todo의 뱃지 레이블 */
+function getGithubSourceLabel(source: TodoResponse['source']) {
+  if (source === 'GITHUB_ISSUE') return 'Issue';
+  if (source === 'GITHUB_PR') return 'PR';
+  return null;
+}
+
 interface TaskCardProps {
   todo: TodoResponse;
   onCheckboxClick: () => void;
@@ -38,8 +50,10 @@ export default function TaskCard({ todo, onCheckboxClick, onStareClick, variant 
       <TaskCheckbox isGreen={isGreen} onCheckboxClick={onCheckboxClick} todo={todo} />
 
       <div className="flex shrink-0 items-center gap-2" role="toolbar" aria-label={`${todo.title} 작업 도구`}>
+        {/* GitHub 소스 뱃지 */}
+        <TaskGithubBadge todo={todo} />
         <TaskLinkNoteCreate todo={todo} />
-        <TaskLinkGithub />
+        <TaskLinkGithub todo={todo} />
         <TaskEditTodo todo={todo} />
         <TaskFavorite todo={todo} onStareClick={onStareClick} />
       </div>
@@ -55,21 +69,32 @@ interface TaskCheckboxProps {
 function TaskCheckbox({ todo, isGreen, onCheckboxClick }: TaskCheckboxProps) {
   const { openModal } = useModalStore();
 
+  // GitHub 연동 todo는 완료 후 되돌리기 불가
+  const isGithub = isGithubTodo(todo.source);
+  const isDoneAndLocked = isGithub && todo.done;
+
   return (
     <>
       <button
         type="button"
         role="checkbox"
         aria-checked={todo.done ?? false}
-        aria-label={`${todo.title} ${todo.done ? '완료 취소' : '완료 처리'}`}
-        onClick={onCheckboxClick}
+        aria-label={
+          isDoneAndLocked
+            ? `${todo.title} (GitHub 연동 완료 후 되돌리기 불가)`
+            : `${todo.title} ${todo.done ? '완료 취소' : '완료 처리'}`
+        }
+        onClick={isDoneAndLocked ? undefined : onCheckboxClick}
+        disabled={isDoneAndLocked}
+        title={isDoneAndLocked ? 'GitHub 연동 할 일은 완료 후 되돌릴 수 없습니다.' : undefined}
         className={twMerge(
           clsx(
-            'relative flex cursor-pointer items-center justify-center',
+            'relative flex items-center justify-center',
             'size-4.5 shrink-0 rounded-md',
             'transition-all duration-150 ease-in-out',
             todo.done ? 'bg-bearlog-500 border-none' : 'border border-gray-300 bg-white',
             isGreen ? '' : 'border-none',
+            isDoneAndLocked ? 'cursor-not-allowed opacity-70' : 'cursor-pointer',
           ),
         )}
       >
@@ -94,6 +119,21 @@ function TaskCheckbox({ todo, isGreen, onCheckboxClick }: TaskCheckboxProps) {
   );
 }
 
+/** GitHub 소스 뱃지 (Issue / PR) */
+interface TaskGithubBadgeProps {
+  todo: TodoResponse;
+}
+function TaskGithubBadge({ todo }: TaskGithubBadgeProps) {
+  const label = getGithubSourceLabel(todo.source);
+  if (!label) return null;
+
+  return (
+    <span className="hidden rounded-md bg-[#F6F8FA] px-[6px] py-[2px] text-[10px] font-semibold text-gray-500 group-hover:inline-block md:inline-block">
+      {label}
+    </span>
+  );
+}
+
 interface TaskLinkNoteCreateProps {
   todo: TodoResponse;
 }
@@ -111,11 +151,36 @@ function TaskLinkNoteCreate({ todo }: TaskLinkNoteCreateProps) {
   );
 }
 
-function TaskLinkGithub() {
+/** GitHub URL 링크 — GitHub 연동 todo에서만 표시, linkUrl이 있을 때 이동 */
+interface TaskLinkGithubProps {
+  todo: TodoResponse;
+}
+function TaskLinkGithub({ todo }: TaskLinkGithubProps) {
+  if (!isGithubTodo(todo.source)) return null;
+
+  if (!todo.linkUrl) {
+    return (
+      <span
+        title="GitHub URL이 아직 연결되지 않았습니다"
+        className="flex h-6 w-6 cursor-not-allowed items-center justify-center opacity-40"
+        aria-label="GitHub 링크 없음"
+      >
+        <Image src="/image/github-icon.png" alt="GitHub menu" width={24} height={24} />
+      </span>
+    );
+  }
+
   return (
-    <button type="button" aria-label="GitHub 링크 이동">
-      <Image src="/image/github-icon.png" alt="GitHub menu" width={24} height={24} className="cursor-pointer" />
-    </button>
+    <a
+      href={todo.linkUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="GitHub에서 보기"
+      title={todo.linkUrl}
+      className="flex h-6 w-6 cursor-pointer items-center justify-center"
+    >
+      <Image src="/image/github-icon.png" alt="GitHub menu" width={24} height={24} />
+    </a>
   );
 }
 

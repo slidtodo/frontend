@@ -10,17 +10,42 @@ import TaskCardWrapper from '@/features/dashboard/components/TaskCardWrapper';
 
 import { goalQueries } from '@/shared/lib/query/queryKeys';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
+import { useGithubTodoCreateModal } from '@/features/todo/hooks/useGithubTodoCreateModal';
 
 interface GoalDetailProps {
   goalId: number;
 }
 export default function GoalDetail({ goalId }: GoalDetailProps) {
   const { openTodoCreateModal } = useTodoCreateModal();
+  const { openGithubTodoCreateModal } = useGithubTodoCreateModal();
 
   const { data: goalDetail } = useQuery({
     ...goalQueries.detail(goalId),
     enabled: !!goalId,
   });
+
+  const isGithubGoal = goalDetail?.source === 'GITHUB';
+
+  const handleAddTodo = () => {
+    if (isGithubGoal) {
+      openGithubTodoCreateModal({
+        goalId,
+        goalTitle: goalDetail?.title,
+      });
+    } else {
+      openTodoCreateModal({
+        goalDetailId: goalId,
+        todo: {
+          title: '',
+          goalId,
+          dueDate: undefined,
+          linkUrl: undefined,
+          imageUrl: undefined,
+          tags: [],
+        },
+      });
+    }
+  };
 
   return (
     <section className="flex h-full flex-col gap-8 lg:flex-row">
@@ -41,22 +66,12 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
               </Button>
               <Button
                 className="rounded-full p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
-                onClick={() => {
-                  openTodoCreateModal({
-                    goalDetailId: goalId,
-                    todo: {
-                      title: '',
-                      goalId,
-                      dueDate: undefined,
-                      linkUrl: undefined,
-                      imageUrl: undefined,
-                      tags: [],
-                    },
-                  });
-                }}
+                onClick={handleAddTodo}
               >
                 <PlusIcon size={20} />
-                <span className="hidden w-full w-max text-sm font-semibold md:block">할 일 추가</span>
+                <span className="hidden w-full w-max text-sm font-semibold md:block">
+                  {isGithubGoal ? '이슈/PR 추가' : '할 일 추가'}
+                </span>
               </Button>
             </div>
           }

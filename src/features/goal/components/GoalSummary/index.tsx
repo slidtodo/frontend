@@ -7,16 +7,16 @@ import Link from 'next/link';
 import { ChevronRightIcon, EllipsisVerticalIcon } from 'lucide-react';
 
 import EditDeleteDropdown from '@/features/dashboard/components/EditDeleteDropdown';
+import PageHeader from '@/shared/components/PageHeader';
 import ProgressCircle from '@/shared/components/ProgressCircle';
 import { PopupModal } from '@/shared/components/Modal/PopupModal';
 import SinglePostModal from '@/shared/components/Modal/SinglePostModal';
-import PageHeader from '@/shared/components/PageHeader';
 
 import { GoalDetailResponse } from '@/shared/lib/api';
-import { useDeleteGoal, usePatchGoal } from '@/shared/lib/query/mutations';
+import { useDeleteGoal, useDisconnectGithubGoal, usePatchGoal } from '@/shared/lib/query/mutations';
 import { goalQueries, userQueries } from '@/shared/lib/query/queryKeys';
-import { useModalStore } from '@/shared/stores/useModalStore';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
+import { useModalStore } from '@/shared/stores/useModalStore';
 
 interface GoalSummaryProps {
   goalId: number;
@@ -45,6 +45,7 @@ function GoalSummary({ goalId }: GoalSummaryProps) {
     </div>
   );
 }
+
 export default memo(GoalSummary);
 
 interface GoalInfoProps {
@@ -56,16 +57,21 @@ function GoalInfo({ goalDetail }: GoalInfoProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const { openModal } = useModalStore();
   const { mutate: deleteGoal } = useDeleteGoal(goalDetail?.id);
+  const { mutate: disconnectGithubGoal } = useDisconnectGithubGoal(goalDetail?.id);
   const { mutateAsync: patchGoal } = usePatchGoal(goalDetail?.id);
 
   if (!goalDetail) return null;
 
+  const isGithubGoal = goalDetail.source === 'GITHUB';
+
   const handleEdit = () => {
+    if (isGithubGoal) return;
+
     setOpen(false);
     openModal(
       <SinglePostModal
         title="목표 수정"
-        placeholder="목표 제목을 입력하세요"
+        placeholder="목표 제목을 입력해 주세요"
         defaultValue={goalDetail.title ?? ''}
         inputType="text"
         onConfirm={async (title) => {
@@ -81,8 +87,13 @@ function GoalInfo({ goalDetail }: GoalInfoProps) {
     setOpen(false);
     openModal(
       <PopupModal
-        variant={{ type: 'goalDelete' }}
+        variant={{ type: isGithubGoal ? 'githubDisconnect' : 'goalDelete' }}
         onConfirm={() => {
+          if (isGithubGoal) {
+            disconnectGithubGoal();
+            return;
+          }
+
           deleteGoal();
         }}
       />,
@@ -92,10 +103,18 @@ function GoalInfo({ goalDetail }: GoalInfoProps) {
   return (
     <div className="flex items-center justify-between rounded-2xl bg-white xl:flex-1">
       <div className="flex items-center justify-center gap-4 py-5 pl-5 md:py-6 md:pl-6 lg:py-15 lg:pl-10">
-        <Image src="/image/goal-todo.png" alt="Task Icon" width={40} height={40} />
-        <span className="overflow-hidden text-lg font-semibold text-ellipsis whitespace-nowrap lg:text-2xl">
-          {goalDetail.title}
-        </span>
+        <Image src={isGithubGoal ? '/image/github-icon.png' : '/image/goal-todo.png'} alt="Goal Icon" width={40} height={40} />
+        <div className="flex min-w-0 flex-col gap-1">
+          <div className="flex items-center gap-2">
+            <span className="overflow-hidden text-lg font-semibold text-ellipsis whitespace-nowrap lg:text-2xl">
+              {goalDetail.title}
+            </span>
+            {isGithubGoal && <span className="rounded-full bg-[#F6F8FA] px-3 py-1 text-xs font-semibold text-gray-600">GitHub</span>}
+          </div>
+          {isGithubGoal && goalDetail.repositoryFullName && (
+            <span className="text-sm text-gray-500">{goalDetail.repositoryFullName}</span>
+          )}
+        </div>
       </div>
 
       <div className="relative mr-5 shrink-0 md:mr-6 lg:mr-10">
@@ -109,6 +128,9 @@ function GoalInfo({ goalDetail }: GoalInfoProps) {
             handleDelete={handleDelete}
             onClose={() => setOpen(false)}
             anchorRef={buttonRef}
+            editLabel={isGithubGoal ? '수정 불가' : undefined}
+            editDisabled={isGithubGoal}
+            deleteLabel={isGithubGoal ? '연결 해제' : undefined}
           />
         )}
       </div>
@@ -138,13 +160,7 @@ function GoalProgress({ goalDetail }: GoalProgressProps) {
           </div>
         </div>
         <div className="absolute right-0 bottom-0">
-          <Image
-            src={'/image/teaching-bear-lg.png'}
-            alt="Progress card Tablet"
-            width={88}
-            height={72}
-            className="block"
-          />
+          <Image src={'/image/teaching-bear-lg.png'} alt="Progress card Tablet" width={88} height={72} className="block" />
         </div>
       </div>
     </div>

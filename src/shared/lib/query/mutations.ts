@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 
 import { fetchAuth } from '../api';
 import { fetchGoals, GoalListResponse, PatchGoalResponse, PostGoalRequest } from '../api/fetchGoals';
+import { ConnectGithubRepositoryRequest, fetchGithubIntegrations } from '../api/fetchGithubIntegrations';
 import { fetchNotes, PatchNoteRequest } from '../api/fetchNotes';
 import {
   fetchTodos,
@@ -13,7 +14,7 @@ import {
   TodoListResponse,
 } from '../api/fetchTodos';
 import { fetchUsers, PatchCurrentUserPasswordRequest, PatchCurrentUserRequest } from '../api/fetchUsers';
-import { goalKeys, noteKeys, todoKeys, userKeys } from './keyFactory';
+import { githubKeys, goalKeys, noteKeys, todoKeys, userKeys } from './keyFactory';
 import { noteQueries } from './queryKeys';
 import { useToastStore } from '@/shared/stores/useToastStore';
 
@@ -126,6 +127,51 @@ export const usePatchGoal = (goalId?: number) => {
     },
     onError: () => {
       showToast('목표 수정에 실패했습니다.', 'fail');
+    },
+  });
+};
+
+export const useConnectGithubRepository = () => {
+  const { showToast } = useToastStore();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: ConnectGithubRepositoryRequest) => fetchGithubIntegrations.postConnectRepository(data),
+    onSuccess: () => {
+      showToast('GitHub 저장소가 목표로 연결되었습니다.');
+      queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: githubKeys.repositories() });
+      queryClient.invalidateQueries({ queryKey: userKeys.progress() });
+    },
+    onError: () => {
+      showToast('GitHub 저장소 연결에 실패했습니다.', 'fail');
+    },
+  });
+};
+
+export const useDisconnectGithubGoal = (goalId?: number) => {
+  const router = useRouter();
+  const { showToast } = useToastStore();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      if (goalId === undefined) {
+        throw new Error('Goal id is required');
+      }
+
+      return fetchGithubIntegrations.deleteConnectedGoal(goalId);
+    },
+    onSuccess: () => {
+      showToast('GitHub 저장소 연결이 해제되었습니다.');
+      queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: goalKeys.details() });
+      queryClient.invalidateQueries({ queryKey: githubKeys.repositories() });
+      queryClient.invalidateQueries({ queryKey: userKeys.progress() });
+      router.push('/dashboard');
+    },
+    onError: () => {
+      showToast('GitHub 저장소 연결 해제에 실패했습니다.', 'fail');
     },
   });
 };

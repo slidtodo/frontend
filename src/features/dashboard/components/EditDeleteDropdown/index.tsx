@@ -8,6 +8,9 @@ interface EditDeleteDropdownProps {
   handleDelete: () => void;
   onClose?: () => void;
   anchorRef: RefObject<HTMLElement | null>;
+  editLabel?: string;
+  editDisabled?: boolean;
+  deleteLabel?: string;
 }
 
 interface DropdownPosition {
@@ -15,7 +18,15 @@ interface DropdownPosition {
   left: number;
 }
 
-export default function EditDeleteDropdown({ handleEdit, handleDelete, onClose, anchorRef }: EditDeleteDropdownProps) {
+export default function EditDeleteDropdown({
+  handleEdit,
+  handleDelete,
+  onClose,
+  anchorRef,
+  editLabel = '수정',
+  editDisabled = false,
+  deleteLabel = '삭제',
+}: EditDeleteDropdownProps) {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const [position, setPosition] = useState<DropdownPosition>({ top: 0, left: 0 });
@@ -74,17 +85,18 @@ export default function EditDeleteDropdown({ handleEdit, handleDelete, onClose, 
     >
       <button
         type="button"
-        className="block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-orange-50"
+        className="block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-orange-50 disabled:cursor-not-allowed disabled:text-gray-400 disabled:hover:bg-white"
         onClick={handleEdit}
+        disabled={editDisabled}
       >
-        수정
+        {editLabel}
       </button>
       <button
         type="button"
         className="block w-full rounded-lg px-3 py-2 text-left text-sm text-red-500 hover:bg-red-50"
         onClick={handleDelete}
       >
-        삭제
+        {deleteLabel}
       </button>
     </div>,
     document.body,

@@ -34,6 +34,11 @@ export const authKeys = {
   githubAuthorizeUrl: () => [...authKeys.all, 'githubAuthorizeUrl'] as const,
 };
 
+export const githubKeys = {
+  all: ['github'] as const,
+  repositories: () => [...githubKeys.all, 'repositories'] as const,
+};
+
 export const userKeys = {
   all: ['users'] as const,
   me: () => [...userKeys.all, 'me'] as const,

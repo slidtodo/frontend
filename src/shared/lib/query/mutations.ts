@@ -369,8 +369,9 @@ export const usePostNote = (callbacks?: { onError: (error: Error) => void }) => 
   });
 };
 
-export const usePatchNote = (noteId: number, goalId: number, callbacks?: { onError?: (error: Error) => void }) => {
+export const usePatchNote = (noteId: number, goalId: number) => {
   const queryClient = useQueryClient();
+  const { showToast } = useToastStore();
 
   return useMutation({
     mutationFn: (body: PatchNoteRequest) => fetchNotes.patchNote(noteId, body),
@@ -379,7 +380,7 @@ export const usePatchNote = (noteId: number, goalId: number, callbacks?: { onErr
       queryClient.invalidateQueries({ queryKey: noteKeys.lists() });
       window.location.href = `/goal/${goalId}/note/${noteId}`;
     },
-    onError: (error) => callbacks?.onError?.(error),
+    onError: () => showToast('노트 수정에 실패했습니다', 'fail'),
   });
 };
 
@@ -405,7 +406,7 @@ export const useDeleteNote = (noteId: number, goalId: number) => {
       router.push(`/goal/${goalId}/note?page=${page}`);
     },
     onError: () => {
-      showToast('노트 삭제에 실패했습니다', 'fail')
+      showToast('노트 삭제에 실패했습니다', 'fail');
     },
   });
 };

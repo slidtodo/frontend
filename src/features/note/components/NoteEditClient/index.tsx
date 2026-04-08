@@ -47,9 +47,7 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
     },
   });
 
-  const { mutate: patchNote, isPending } = usePatchNote(noteId, goalId, {
-    onError: () => showToast('노트 수정에 실패했습니다', 'fail'),
-  });
+  const { mutate: patchNote, isPending } = usePatchNote(noteId, goalId);
 
   const breakpoint = useBreakpoint();
 

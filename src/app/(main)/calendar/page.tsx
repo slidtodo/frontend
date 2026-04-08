@@ -21,9 +21,11 @@ export default async function CalendarPage() {
 
   return (
     <HydrationBoundary state={dehydratedState}>
+      <div className="mx-auto flex h-full w-full max-w-[1312px] flex-col">
         <DataBoundary>
           <CalendarClient />
         </DataBoundary>
+      </div>
     </HydrationBoundary>
   );
 }

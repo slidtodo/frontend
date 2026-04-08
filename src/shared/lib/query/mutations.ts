@@ -332,7 +332,7 @@ export const usePostLogout = () => {
   const { showToast } = useToastStore();
 
   return useMutation({
-    mutationFn: () => fetchAuth.postLogout(),
+    mutationFn: () => fetchAuth.postLogoutByEnv(),
     onSuccess: () => {
       showToast('로그아웃 되었습니다.');
       router.push('/login');

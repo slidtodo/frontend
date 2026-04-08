@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 
@@ -16,6 +16,7 @@ import { useModalStore } from '@/shared/stores/useModalStore';
 import { useToastStore } from '@/shared/stores/useToastStore';
 import { PopupModal } from '@/shared/components/Modal/PopupModal';
 import { fetchUsers } from '@/shared/lib/api/fetchUsers';
+import { fetchImages } from '@/shared/lib/api/fetchImages';
 
 // TODO: 리액트 훅 폼 적용 필요
 export default function MyPageForm() {
@@ -39,6 +40,20 @@ export default function MyPageForm() {
 
   const isLocalLogin = user?.loginProvider === 'LOCAL';
   const isGithubConnected = user?.loginProvider === 'GITHUB';
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleProfileImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const { uploadUrl, url } = await fetchImages.postImageUploadUrl({ fileName: file.name });
+      await fetch(uploadUrl, { method: 'PUT', body: file });
+      patchUser({ profileImageUrl: url });
+    } catch {
+      showToast('이미지 업로드에 실패했습니다. 다시 시도해주세요.', 'fail');
+    }
+  };
 
   const handleGithubDisconnect = () => {
     openModal(
@@ -47,7 +62,7 @@ export default function MyPageForm() {
         onConfirm={() => {
           // TODO: GitHub 연결 해제 API 연동 필요
         }}
-      />
+      />,
     );
   };
 
@@ -63,7 +78,7 @@ export default function MyPageForm() {
             showToast('회원 탈퇴에 실패했습니다. 다시 시도해주세요.', 'fail');
           }
         }}
-      />
+      />,
     );
   };
 
@@ -122,19 +137,44 @@ export default function MyPageForm() {
     <div className="flex flex-col gap-10">
       {!isMobile && <PageHeader title="내 정보 관리" />}
 
-      <div className="flex w-140 min-h-219.5 flex-col gap-6 rounded-2xl bg-white p-8">
+      <div className="flex min-h-219.5 w-140 flex-col gap-6 rounded-2xl bg-white p-8">
         {/* 프로필 이미지 */}
         <div className="flex justify-center">
-          <div className="relative">
-            <Image
-              src={user?.profileImageUrl ?? '/icons/image.png'}
-              alt="프로필"
-              width={132}
-              height={132}
-              className="rounded-full object-cover"
+          <div className="relative h-33 w-33">
+            <div className="h-full w-full overflow-hidden rounded-full bg-[#C8EDEA]">
+              <Image
+                src={user?.profileImageUrl ?? '/image/default-profile.png'}
+                alt="프로필"
+                width={132}
+                height={132}
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleProfileImageChange}
             />
-            <button className="absolute right-0 bottom-0 flex h-6 w-6 items-center justify-center rounded-full bg-[#FF8442]">
-              <span className="text-xs text-white">✎</span>
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="absolute right-0 bottom-0 flex h-9 w-9 items-center justify-center rounded-full bg-[#00C87F]"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="white"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+              </svg>
             </button>
           </div>
         </div>
@@ -200,25 +240,25 @@ export default function MyPageForm() {
             회원 탈퇴하기
           </button>
         </div>
-      </div>
 
-      {/* GitHub 연동 */}
-      {isGithubConnected && (
-        <div className="flex w-140 items-center justify-between rounded-2xl bg-white px-8 py-5">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-gray-700">Github 연동</span>
-            <span className="h-2 w-2 rounded-full bg-[#00C87F]" />
-            <span className="text-sm text-gray-500">연결됨</span>
+        {/* GitHub 연동 */}
+        {isGithubConnected && (
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-gray-700">Github 연동</span>
+              <span className="h-2 w-2 rounded-full bg-[#00C87F]" />
+              <span className="text-sm text-gray-500">연결됨</span>
+            </div>
+            <button
+              type="button"
+              onClick={handleGithubDisconnect}
+              className="rounded-full border border-gray-200 px-4 py-1.5 text-sm text-gray-500 hover:bg-gray-50"
+            >
+              연결 삭제
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={handleGithubDisconnect}
-            className="rounded-full border border-gray-200 px-4 py-1.5 text-sm text-gray-500 hover:bg-gray-50"
-          >
-            연결 삭제
-          </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

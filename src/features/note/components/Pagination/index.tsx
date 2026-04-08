@@ -1,39 +1,30 @@
-import { ChevronLeftIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon } from 'lucide-react';
+import { ChevronLeftIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon, LucideIcon } from 'lucide-react';
 
 // ---- 서브 컴포넌트 ----
 
 interface NavButtonProps {
+  icon: LucideIcon;
   disabled?: boolean;
   onClick?: () => void;
+  'aria-label': string;
 }
 
 const btnBase = 'flex-row-center h-6 w-6 cursor-pointer rounded-[5px] p-0.5';
 const enabledStyle = 'bg-primary-500-10 text-primary-500';
 const disabledStyle = 'bg-gray-200 text-gray-300';
 
-const ChevronLeft = ({ disabled, onClick }: NavButtonProps) => (
-  <button className={`${btnBase} ${disabled ? disabledStyle : enabledStyle}`} onClick={onClick} disabled={disabled}>
-    <ChevronLeftIcon className={`${disabled ? 'text-gray-300' : 'text-primary-500'} h-full w-full`} />
-  </button>
-);
-
-const ChevronRight = ({ disabled, onClick }: NavButtonProps) => (
-  <button className={`${btnBase} ${disabled ? disabledStyle : enabledStyle}`} onClick={onClick} disabled={disabled}>
-    <ChevronRightIcon className={`${disabled ? 'text-gray-300' : 'text-primary-500'} h-full w-full`} />
-  </button>
-);
-
-const ChevronsLeft = ({ disabled, onClick }: NavButtonProps) => (
-  <button className={`${btnBase} ${disabled ? disabledStyle : enabledStyle}`} onClick={onClick} disabled={disabled}>
-    <ChevronsLeftIcon className={`${disabled ? 'text-gray-300' : 'text-primary-500'} h-full w-full`} />
-  </button>
-);
-
-const ChevronsRight = ({ disabled, onClick }: NavButtonProps) => (
-  <button className={`${btnBase} ${disabled ? disabledStyle : enabledStyle}`} onClick={onClick} disabled={disabled}>
-    <ChevronsRightIcon className={`${disabled ? 'text-gray-300' : 'text-primary-500'} h-full w-full`} />
-  </button>
-);
+const NavButton = ({ icon: Icon, disabled, onClick, 'aria-label': ariaLabel }: NavButtonProps) => {
+  return (
+    <button
+      className={`${btnBase} ${disabled ? disabledStyle : enabledStyle}`}
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={ariaLabel}
+    >
+      <Icon className={`${disabled ? 'text-gray-300' : 'text-primary-500'} h-full w-full`} />
+    </button>
+  );
+};
 
 interface PageButtonProps {
   page: number | string;
@@ -113,8 +104,18 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) 
 
   return (
     <div className="inline-flex items-center gap-3">
-      <ChevronsLeft disabled={currentPage === 1} onClick={() => onPageChange(1)} />
-      <ChevronLeft disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)} />
+      <NavButton
+        icon={ChevronsLeftIcon}
+        disabled={currentPage === 1}
+        onClick={() => onPageChange(1)}
+        aria-label="첫 페이지"
+      />
+      <NavButton
+        icon={ChevronLeftIcon}
+        disabled={currentPage === 1}
+        onClick={() => onPageChange(currentPage - 1)}
+        aria-label="이전 페이지"
+      />
 
       {getPages().map((page, idx) => (
         <PageButton
@@ -126,8 +127,18 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) 
         />
       ))}
 
-      <ChevronRight disabled={currentPage === totalPages} onClick={() => onPageChange(currentPage + 1)} />
-      <ChevronsRight disabled={currentPage === totalPages} onClick={() => onPageChange(totalPages)} />
+      <NavButton
+        icon={ChevronRightIcon}
+        disabled={currentPage === totalPages}
+        onClick={() => onPageChange(currentPage + 1)}
+        aria-label="다음 페이지"
+      />
+      <NavButton
+        icon={ChevronsRightIcon}
+        disabled={currentPage === totalPages}
+        onClick={() => onPageChange(totalPages)}
+        aria-label="마지막 페이지"
+      />
     </div>
   );
 };

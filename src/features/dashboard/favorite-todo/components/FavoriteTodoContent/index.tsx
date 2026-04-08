@@ -14,12 +14,15 @@ import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 import type { TodoListResponse } from '@/shared/lib/api';
 import { TodoOptions } from '@/shared/types/types';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
+import FavoriteTodoDropdownGoal from '../FavoriteTodoDropdownGoal';
 
 export default function FavoriteTodoContent() {
   const breakpoint = useBreakpoint();
 
   const [selectedFilter, setSelectedFilter] = useState<TodoOptions>('ALL');
   const done = selectedFilter === 'ALL' ? undefined : selectedFilter === 'DONE';
+
+  const [selectedGoal, setSelectedGoal] = useState<string>('');
 
   const { data: todoList } = useQuery({
     ...todoQueries.list({ done }),
@@ -51,7 +54,7 @@ export default function FavoriteTodoContent() {
           <Empty>등록된 할 일이 없습니다.</Empty>
         ) : (
           <DataBoundary>
-            <AllTodoFetcher todos={favoriteTodoList} />
+            <AllTodoFetcher todos={favoriteTodoList} selectedGoal={selectedGoal} setSelectedGoal={setSelectedGoal} />
           </DataBoundary>
         )}
       </section>
@@ -117,10 +120,27 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
 
 interface AllTodoFetcherProps {
   todos: TodoListResponse;
+  selectedGoal: string;
+  setSelectedGoal: React.Dispatch<React.SetStateAction<string>>;
 }
-function AllTodoFetcher({ todos }: AllTodoFetcherProps) {
+function AllTodoFetcher({ todos, selectedGoal, setSelectedGoal }: AllTodoFetcherProps) {
+  const { data: goalList } = useQuery(todoQueries.list());
+  const goalItems = [
+    { label: '전체 목표', value: '' },
+    ...(goalList?.todos
+      ? Array.from(new Set(goalList.todos.map((todo) => todo.goal))).map((goal) => ({
+          label: goal.title,
+          value: String(goal.id),
+        }))
+      : []),
+  ];
   return (
     <section className="rounded-4xl bg-white p-4 md:p-8">
+      <FavoriteTodoDropdownGoal
+        selectedValue={selectedGoal}
+        onSelectItem={(item) => setSelectedGoal(item.value)}
+        items={goalItems}
+      />
       <div className="flex max-h-[680px] flex-col gap-4 overflow-y-auto">
         {todos.todos?.map((todo) => (
           <TaskCardWrapper key={todo.id} item={todo} mode="todo" />

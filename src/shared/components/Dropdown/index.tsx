@@ -34,7 +34,7 @@ import { twMerge } from 'tailwind-merge';
  * @param isDisabled - 비활성화 여부 (기본값: false)
  * @param className - 추가 스타일 클래스
  */
-const dropdownVariants = cva(
+export const dropdownVariants = cva(
   'rounded-xl border border-[#CCC] bg-[#FFF] flex p-4 items-center gap-2 self-stretch text-base font-medium justify-between',
   {
     variants: {
@@ -128,7 +128,14 @@ interface DropdownItemProps {
 export function DropdownItem({ item, onSelectItem }: DropdownItemProps) {
   return (
     <div className="flex w-full bg-white p-1.5">
-      <button onClick={(e) => { e.stopPropagation(); e.preventDefault(); onSelectItem(item); }} className={twMerge(clsx('flex w-full cursor-pointer'))}>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          onSelectItem(item);
+        }}
+        className={twMerge(clsx('flex w-full cursor-pointer'))}
+      >
         <div className={twMerge(clsx('w-full rounded-xl p-2 text-left hover:bg-[#FEEFDC]'))}>
           <span className="text-sm leading-6 font-medium tracking-[-0.48px] text-[#333] md:text-base">
             {item.label}

@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -13,6 +13,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   ChevronRightIcon,
+  XIcon,
 } from 'lucide-react';
 import { Accordion } from 'radix-ui';
 import { useQuery } from '@tanstack/react-query';
@@ -31,6 +32,7 @@ import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 import { userQueries } from '@/shared/lib/query/queryKeys';
 import { CurrentUserResponse } from '@/shared/lib/api';
 
+// TODO: 전체적으로 정리필요
 export default function Sidebar() {
   const breakpoint = useBreakpoint();
   const isTablet = breakpoint === 'tablet';
@@ -49,11 +51,194 @@ interface SidebarMobileProps {
   user: CurrentUserResponse | undefined;
 }
 function SidebarMobile({ user }: SidebarMobileProps) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuMounted, setMobileMenuMounted] = useState(false);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { mutate } = usePostGoal();
+  const { mutate: logout } = usePostLogout();
+  const { openTodoCreateModal } = useTodoCreateModal();
+  const pathname = usePathname();
+  const { menus, goals } = useSidebarContext();
+  const { openModal } = useModalStore();
+  const selectedGoalId = getSelectedGoalId(pathname, goals);
+
+  const openMobileMenu = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+
+    setMobileMenuMounted(true);
+    requestAnimationFrame(() => setMobileMenuOpen(true));
+  };
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+
+    closeTimeoutRef.current = setTimeout(() => {
+      setMobileMenuMounted(false);
+      closeTimeoutRef.current = null;
+    }, 300);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <div className="flex items-center gap-3 border-b-2 border-gray-200 bg-white px-5 py-4">
-      <MenuIcon size={24} className="text-gray-500 hover:cursor-pointer" />
-      <SidebarMobileCase user={user} />
-    </div>
+    <>
+      <div className="flex items-center gap-3 border-b-2 border-gray-200 bg-white px-5 py-4">
+        <button onClick={openMobileMenu} className="cursor-pointer transition-colors hover:text-gray-600">
+          <MenuIcon size={24} className="text-gray-500" />
+        </button>
+        <SidebarMobileCase user={user} />
+      </div>
+
+      {/* Mobile Menu Modal */}
+      {mobileMenuMounted && (
+        <>
+          {/* Overlay */}
+          <button
+            type="button"
+            className={`fixed inset-0 z-40 bg-black/40 transition-opacity duration-300 ${
+              mobileMenuOpen ? 'opacity-100' : 'opacity-0'
+            }`}
+            onClick={closeMobileMenu}
+            aria-label="Close menu"
+          />
+
+          {/* Modal */}
+          <div className="fixed inset-0 z-50 flex w-full items-center justify-center overflow-hidden">
+            <div
+              className={`h-full w-full overflow-y-auto bg-white shadow-2xl transition-transform duration-300 ease-out ${
+                mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+              }`}
+            >
+              {/* Header */}
+              <div className="flex flex-col gap-6 p-6">
+                <div className="flex w-full justify-end">
+                  <button onClick={closeMobileMenu} className="w-fit cursor-pointer text-gray-400 hover:text-gray-600">
+                    <XIcon size={24} />
+                  </button>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="relative h-10 w-10 shrink-0 rounded-2xl shadow-[0_3px_20px_rgba(0,200,127,0.35)]">
+                    <Image priority src="/image/bearlog-icon.png" alt="Logo" fill className="object-contain" />
+                  </div>
+                  <h2 className="text-xl font-semibold text-gray-800">Bearlog</h2>
+                </div>
+              </div>
+
+              {/* Menu Items */}
+              <div className="px-4 py-6">
+                <Accordion.Root
+                  type="multiple"
+                  defaultValue={menus.filter((menu) => isMenuActive(menu, pathname)).map((menu) => menu.name)}
+                  className="flex flex-col gap-2"
+                >
+                  {menus.map((menu) => (
+                    <SidebarMenuEntry key={menu.name} menu={menu} pathname={pathname} onClose={closeMobileMenu} />
+                  ))}
+                </Accordion.Root>
+
+                {/* Settings & Logout */}
+                <div className="mt-6 pt-4">
+                  <button
+                    onClick={() => {
+                      openModal(<SettingsModal />);
+                      closeMobileMenu();
+                    }}
+                    className="flex w-full items-center justify-start gap-3 rounded-lg px-3 py-3 transition-all hover:bg-gray-50"
+                  >
+                    <SettingsIcon color="#BBBBBB" size={20} />
+                    <span className="text-lg font-semibold text-gray-500">설정</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      logout();
+                      closeMobileMenu();
+                    }}
+                    className="flex w-full items-center justify-start gap-3 rounded-lg px-3 py-3 transition-all hover:bg-gray-50"
+                  >
+                    <LogOutIcon color="#BBBBBB" size={20} />
+                    <span className="text-lg font-semibold text-gray-500">로그아웃</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="p-4">
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      openModal(
+                        <SinglePostModal
+                          title="목표 생성"
+                          placeholder="목표 제목을 입력하세요"
+                          onConfirm={(title) => mutate({ title })}
+                        />,
+                      );
+                      closeMobileMenu();
+                    }}
+                    className="group bg-bearlog-500 flex flex-1 items-center justify-center gap-1 rounded-full py-3 transition-all hover:shadow-lg"
+                  >
+                    <FlagIcon color="#FFFFFF" className="h-6 w-6 transition-transform group-hover:scale-110" />
+                    <span className="text-base font-semibold text-white">새 목표</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (!selectedGoalId) return;
+                      openTodoCreateModal({
+                        goalDetailId: selectedGoalId,
+                        todo: {
+                          title: '',
+                          goalId: selectedGoalId,
+                          dueDate: undefined,
+                          linkUrl: undefined,
+                          imageUrl: undefined,
+                          tags: [],
+                        },
+                      });
+                      closeMobileMenu();
+                    }}
+                    disabled={!selectedGoalId}
+                    className="group border-bearlog-500 flex flex-1 items-center justify-center gap-1 rounded-full border bg-white py-3 transition-all hover:shadow-lg disabled:opacity-50"
+                  >
+                    <CopyCheckIcon color="#00C87F" className="h-6 w-6 transition-transform group-hover:scale-110" />
+                    <span className="text-bearlog-600 text-base font-semibold">새 할일</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Profile */}
+              <div className="p-4">
+                <Link
+                  href="/mypage"
+                  onClick={closeMobileMenu}
+                  className="flex items-center gap-3 rounded-full border border-gray-200 px-4 py-2"
+                >
+                  <Image
+                    src={user?.profileImageUrl || '/image/default-profile.png'}
+                    alt="Profile"
+                    width={32}
+                    height={32}
+                    className="rounded-full object-cover"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-xs font-medium text-gray-800">{user?.nickname}</p>
+                    <p className="truncate text-xs text-gray-400">{user?.email}</p>
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+    </>
   );
 }
 
@@ -72,10 +257,8 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
   const { mutate } = usePostGoal();
   const { mutate: logout } = usePostLogout();
 
-  const projectName = 'Bearlog';
   const { openTodoCreateModal } = useTodoCreateModal();
-  const pathnameGoalId = pathname.startsWith('/goal/') ? Number(pathname.split('/')[2]) : undefined;
-  const selectedGoalId = goals.find((goal) => goal.id === pathnameGoalId)?.id ?? goals[0]?.id;
+  const selectedGoalId = getSelectedGoalId(pathname, goals);
 
   return (
     <>
@@ -135,7 +318,7 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
               aria-hidden={!isOpen}
             >
               <h2 className="pl-1 text-2xl leading-[42px] font-semibold whitespace-nowrap text-gray-800 lg:text-3xl">
-                {projectName}
+                Bearlog
               </h2>
             </div>
           </Link>
@@ -261,13 +444,19 @@ function isMenuActive(menu: MenuItem, pathname: string) {
   return menu.href === pathname || menu.subMenus?.some((subMenu) => subMenu.href === pathname);
 }
 
-function SidebarMenuEntry({ menu, pathname }: { menu: MenuItem; pathname: string }) {
+function getSelectedGoalId(pathname: string, goals: { id?: number }[]) {
+  const pathnameGoalId = pathname.startsWith('/goal/') ? Number(pathname.split('/')[2]) : undefined;
+  return goals.find((goal) => goal.id === pathnameGoalId)?.id ?? goals[0]?.id;
+}
+
+function SidebarMenuEntry({ menu, pathname, onClose }: { menu: MenuItem; pathname: string; onClose?: () => void }) {
   const isActive = isMenuActive(menu, pathname);
 
   if (!menu.subMenus?.length) {
     return (
       <Link
         href={menu.href}
+        onClick={onClose}
         className="group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px]"
       >
         <span
@@ -301,6 +490,7 @@ function SidebarMenuEntry({ menu, pathname }: { menu: MenuItem; pathname: string
                 <Link
                   key={subMenu.href}
                   href={subMenu.href}
+                  onClick={onClose}
                   className={`group flex w-[calc(100%-1rem)] items-center justify-start gap-2 rounded-[20px] px-4 py-1 transition-all duration-200 hover:bg-[#F2FBF7] lg:px-6 lg:py-2 ${
                     isSubMenuActive ? 'bg-[#F2FBF7]' : ''
                   }`}
@@ -355,8 +545,4 @@ function AccordionTrigger({ children, menu, isActive, ...props }: AccordionTrigg
       </span>
     </Accordion.Trigger>
   );
-}
-
-function SidebarMobileMenu() {
-  return null;
 }

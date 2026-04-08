@@ -24,7 +24,6 @@ export default function FavoriteTodoContent() {
 
   const [selectedGoal, setSelectedGoal] = useState<string>('');
 
-  console.log('selectedGoal', selectedGoal);
   const { data: todoList } = useQuery({
     ...todoQueries.list({ done }),
     placeholderData: (prev) => prev,

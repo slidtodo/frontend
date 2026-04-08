@@ -344,18 +344,20 @@ export const usePostLogout = () => {
 };
 
 // note
-export const usePostNote = (callbacks?: { onError: (error: Error) => void }) => {
+export const usePostNote = () => {
   const queryClient = useQueryClient();
+  const { showToast } = useToastStore();
 
   return useMutation({
     mutationFn: fetchNotes.postNote,
     onSuccess: (response) => {
       if (!response.id || !response.goalId) {
         console.error('[usePostNote] Unexpected API response: missing id or goalId', response);
-        callbacks?.onError?.(new Error('노트 작성에 실패했습니다.'));
+        showToast('노트 작성에 실패했습니다.', 'fail');
         return;
       }
 
+      showToast('노트가 작성되었습니다.');
       queryClient.setQueryData(noteQueries.detail(response.id).queryKey, response);
       queryClient.invalidateQueries({
         queryKey: noteKeys.lists(),
@@ -363,8 +365,8 @@ export const usePostNote = (callbacks?: { onError: (error: Error) => void }) => 
 
       window.location.href = `/goal/${response.goalId}/note/${response.id}`;
     },
-    onError: (error) => {
-      if (callbacks?.onError) callbacks.onError(error);
+    onError: () => {
+      showToast('노트 작성에 실패했습니다.', 'fail');
     },
   });
 };

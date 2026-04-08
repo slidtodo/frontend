@@ -20,6 +20,7 @@ import Placeholder from '@tiptap/extension-placeholder';
 import EditorToolbar from '@/features/note/components/NoteEditor/EditorToolbar';
 import { createPortal } from 'react-dom';
 import { usePatchNote } from '@/shared/lib/query/mutations';
+import Empty from '@/shared/components/Empty';
 
 interface NoteEditClientProps {
   noteId: number;
@@ -115,8 +116,7 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
     return () => setSlot(null);
   }, [breakpoint, handleSaveDraft, handleSubmit, showDraftToast, handleToastLoad, handleCloseToast, setSlot]);
 
-  if (isNoteReadError)
-    return <p className="p-10 text-center text-sm text-gray-500">노트를 불러오는 데 실패했습니다.</p>;
+  if (isNoteReadError) return <Empty>노트를 불러오는 데 실패했습니다.</Empty>;
 
   return (
     <div className="mx-auto flex h-full w-full max-w-[768px] flex-col">

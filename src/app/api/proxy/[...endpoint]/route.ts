@@ -16,7 +16,7 @@ const REFRESH_TOKEN_COOKIE = 'refreshToken';
 const FORWARDED_REQUEST_HEADERS = ['accept', 'content-type'] as const;
 const FORWARDED_RESPONSE_HEADERS = ['content-type', 'location'] as const;
 
-const ALLOWED_PATH_PREFIXES = ['auth/', 'dev/auth/', 'todos', 'goals', 'notes', 'notifications', 'tags', 'users/me'] as const;
+const ALLOWED_PATH_PREFIXES = ['auth/', 'dev/auth/', 'todos', 'goals', 'notes', 'notifications', 'tags', 'users/me', 'images'] as const;
 
 type ProxyRouteContext = {
   params: Promise<{ endpoint: string[] }>;

@@ -1424,6 +1424,8 @@ export interface operations {
                 search?: string;
                 /** @description 정렬 (LATEST 또는 OLDEST, 기본값 LATEST) */
                 sort?: "LATEST" | "OLDEST";
+                /** @description 즐겨찾기 여부 필터 */
+                favorite?: boolean;
             };
             header?: never;
             path?: never;

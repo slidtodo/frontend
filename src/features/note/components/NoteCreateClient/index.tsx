@@ -10,11 +10,7 @@ import { useToastStore } from '@/shared/stores/useToastStore';
 import { useRouter } from 'next/navigation';
 import DraftNoteToast from '@/features/note/components/DraftNoteToast';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
-import { useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
-import TextAlign from '@tiptap/extension-text-align';
-import Placeholder from '@tiptap/extension-placeholder';
+import { useNoteEditor } from '@/features/note/hooks/useNoteEditor';
 import EditorToolbar from '@/features/note/components/NoteEditor/EditorToolbar';
 import { createPortal } from 'react-dom';
 import { TodoResponse } from '@/shared/lib/api/fetchTodos';
@@ -43,11 +39,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
   const { showToast } = useToastStore();
   const setSlot = useMobileHeaderStore((s) => s.setSlot);
 
-  const { mutate: createNote, isPending } = usePostNote({
-    onError: (error) => {
-      showToast(error.message || '노트 작성에 실패했습니다', 'fail');
-    },
-  });
+  const { mutate: createNote, isPending } = usePostNote();
 
   const breakpoint = useBreakpoint();
 
@@ -100,7 +92,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
         <div className="relative">
           <button
             type="button"
-            className="text-bearlog-500 hover:text-bearlog-600 cursor-pointer px-1.5 transition-all duration-200 font-semibold text-sm"
+            className="text-bearlog-500 hover:text-bearlog-600 cursor-pointer px-1.5 text-sm font-semibold transition-all duration-200"
             onClick={handleSaveDraft}
           >
             임시저장
@@ -109,7 +101,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
         </div>
         <button
           type="button"
-          className="cursor-pointer px-1.5 text-gray-500 transition-all duration-200 hover:text-gray-600 font-semibold text-sm"
+          className="cursor-pointer px-1.5 text-sm font-semibold text-gray-500 transition-all duration-200 hover:text-gray-600"
           onClick={handleSubmit}
         >
           등록
@@ -119,19 +111,7 @@ export default function NoteCreateClient({ goal, todo }: NoteCreateClientProps) 
     return () => setSlot(null);
   }, [breakpoint, handleSaveDraft, handleSubmit, showDraftToast, handleToastLoad, handleCloseToast, setSlot]);
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      TextAlign.configure({ types: ['heading', 'paragraph'] }),
-      Placeholder.configure({ placeholder: '이 곳을 통해 노트 작성을 시작해주세요' }),
-    ],
-    content,
-    immediatelyRender: false,
-    onUpdate: ({ editor }) => {
-      setContent(editor.getHTML());
-    },
-  });
+  const editor = useNoteEditor({ content, onContentChange: setContent });
 
   return (
     <div className="mx-auto flex h-full w-full max-w-[768px] flex-col">

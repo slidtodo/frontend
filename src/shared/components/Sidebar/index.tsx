@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -9,17 +9,14 @@ import {
   LogOutIcon,
   FlagIcon,
   CopyCheckIcon,
-  MenuIcon,
   ChevronDownIcon,
   ChevronUpIcon,
   ChevronRightIcon,
-  XIcon,
 } from 'lucide-react';
 import { Accordion } from 'radix-ui';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 
-import SidebarMobileCase from './SidebarMobileCase';
 import SinglePostModal from '../Modal/SinglePostModal';
 import { SettingsModal } from '../Modal/SettingsModal';
 import NotificationDropdown from './NotificationDropdown';

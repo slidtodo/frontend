@@ -18,8 +18,9 @@ import { useModalStore } from '@/shared/stores/useModalStore';
 import { getSelectedGoalId, isMenuActive, SidebarMenuEntry } from '..';
 import { CurrentUserResponse } from '@/shared/lib/api';
 
-// 모바일일 때 렌더링 되는 사이드바 컴포넌트
+const CLOSETIME = 300;
 
+// 모바일일 때 렌더링 되는 사이드바 컴포넌트
 interface SidebarMobileProps {
   user: CurrentUserResponse | undefined;
 }
@@ -51,7 +52,7 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
     closeTimeoutRef.current = setTimeout(() => {
       setMobileMenuMounted(false);
       closeTimeoutRef.current = null;
-    }, 300);
+    }, CLOSETIME);
   };
 
   useEffect(() => {

@@ -9,7 +9,7 @@ import { DataBoundary } from '@/shared/components/ErrorSuspenseBoundary';
 import PageHeader from '@/shared/components/PageHeader';
 import TaskCardWrapper from '@/features/dashboard/components/TaskCardWrapper';
 
-import { todoQueries } from '@/shared/lib/query/queryKeys';
+import { goalQueries, todoQueries } from '@/shared/lib/query/queryKeys';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 import type { TodoListResponse } from '@/shared/lib/api';
 import { TodoOptions } from '@/shared/types/types';
@@ -57,7 +57,9 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
     { id: 2, label: 'TO DO' },
     { id: 3, label: 'DONE' },
   ];
+  const { data: goalList } = useQuery(goalQueries.list());
   const { openTodoCreateModal } = useTodoCreateModal();
+  const defaultGoalId = todos.todos?.[0]?.goal?.id ?? goalList?.goals?.[0]?.id;
 
   return (
     <div className="flex justify-between px-2">
@@ -79,12 +81,15 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
       <Button
         variant="cancel"
         className="group hover:bg-bearlog-500 flex items-center gap-1 bg-[#F2F2F2] px-3 py-[10px] md:px-[20px]"
+        disabled={!defaultGoalId}
         onClick={() => {
+          if (!defaultGoalId) return;
+
           openTodoCreateModal({
-            goalDetailId: todos.todos?.[0]?.goal?.id,
+            goalDetailId: defaultGoalId,
             todo: {
               title: '',
-              goalId: todos.todos?.[0]?.goal?.id,
+              goalId: defaultGoalId,
               dueDate: undefined,
               linkUrl: undefined,
               imageUrl: undefined,

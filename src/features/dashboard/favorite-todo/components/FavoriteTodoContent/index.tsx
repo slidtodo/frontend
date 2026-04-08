@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { PlusIcon } from 'lucide-react';
 
@@ -29,22 +29,22 @@ export default function FavoriteTodoContent() {
     placeholderData: (prev) => prev,
   });
 
-  if (!todoList) return null;
-
-  const favoriteTodos = todoList.todos?.filter((todo) => todo.favorite) ?? [];
-  const goalFilteredTodos = () => {
+  const favoriteTodos = useMemo(() => todoList?.todos?.filter((todo) => todo.favorite) ?? [], [todoList]);
+  const goalFilteredTodos = useMemo(() => {
     if (selectedGoal === '') {
       return favoriteTodos;
     }
     return selectedGoal ? favoriteTodos.filter((todo) => String(todo.goal?.id) === selectedGoal) : favoriteTodos;
-  };
+  }, [selectedGoal, favoriteTodos]);
 
   const favoriteTodoList: TodoListResponse = {
-    todos: goalFilteredTodos(),
-    nextCursor: todoList.nextCursor ?? null,
-    hasMore: todoList.hasMore,
+    todos: goalFilteredTodos,
+    nextCursor: todoList?.nextCursor ?? null,
+    hasMore: todoList?.hasMore ?? false,
     totalCount: favoriteTodos.length,
   };
+
+  if (!todoList) return null;
 
   return (
     <div className="mx-auto mb-[76px] flex h-full max-w-[720px] flex-col gap-6">
@@ -77,7 +77,9 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
     { id: 2, label: 'TO DO' },
     { id: 3, label: 'DONE' },
   ];
+  const { data: goalList } = useQuery(goalQueries.list());
   const { openTodoCreateModal } = useTodoCreateModal();
+  const defaultGoalId = todos.todos?.[0]?.goal?.id ?? goalList?.goals?.[0]?.id;
 
   return (
     <div className="flex justify-between px-2">
@@ -99,12 +101,15 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
       <Button
         variant="cancel"
         className="group hover:bg-bearlog-500 flex items-center gap-1 bg-[#F2F2F2] px-3 py-[10px] md:px-[20px]"
+        disabled={!defaultGoalId}
         onClick={() => {
+          if (!defaultGoalId) return;
+
           openTodoCreateModal({
-            goalDetailId: todos.todos?.[0]?.goal?.id,
+            goalDetailId: defaultGoalId,
             todo: {
               title: '',
-              goalId: todos.todos?.[0]?.goal?.id,
+              goalId: defaultGoalId,
               dueDate: undefined,
               linkUrl: undefined,
               imageUrl: undefined,
@@ -134,14 +139,10 @@ function AllTodoFetcher({ todos, selectedGoal, setSelectedGoal }: AllTodoFetcher
   const goalItems = [
     { label: '전체 목표', value: '' },
     ...(goalList?.goals
-      ? Array.from(new Set(goalList.goals.map((goal) => goal.id))).map((goalId) => {
-          const goal = goalList.goals.find((g) => g.id === goalId);
-
-          return {
-            label: goal?.title ?? '',
-            value: String(goalId),
-          };
-        })
+      ? goalList.goals.map((goal) => ({
+          label: goal.title ?? '',
+          value: String(goal.id),
+        }))
       : []),
   ];
 

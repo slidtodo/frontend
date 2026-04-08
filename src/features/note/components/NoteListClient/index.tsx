@@ -17,14 +17,6 @@ interface NoteListClientProps {
 
 export default function NoteListClient({ goalId, search, sort }: NoteListClientProps) {
   const [page, setPage] = useState(1);
-  const [prevSearch, setPrevSearch] = useState(search);
-  const [prevSort, setPrevSort] = useState(sort);
-
-  if (search !== prevSearch || sort !== prevSort) {
-    setPrevSearch(search);
-    setPrevSort(sort);
-    setPage(1);
-  }
 
   const { data: goal } = useQuery(goalQueries.detail(goalId));
   const { data: noteList } = useQuery({

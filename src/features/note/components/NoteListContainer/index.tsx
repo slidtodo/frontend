@@ -28,7 +28,7 @@ export default function NoteListContainer({ goalId }: NoteListContainerProps) {
         }}
         onCreateNote={() => router.push(`/goal/${goalId}/note/create`)}
       />
-      <NoteListClient goalId={goalId} search={submittedSearch} sort={sort} />
+      <NoteListClient key={`${submittedSearch}-${sort}`} goalId={goalId} search={submittedSearch} sort={sort} />
     </>
   );
 }

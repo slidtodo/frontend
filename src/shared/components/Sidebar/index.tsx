@@ -50,8 +50,8 @@ interface SidebarMobileProps {
 }
 function SidebarMobile({ user }: SidebarMobileProps) {
   return (
-    <div className="flex items-center border-b-2 border-gray-200 bg-white px-5 py-4">
-      <MenuIcon size={24} className="pr-3 text-gray-500 hover:cursor-pointer" />
+    <div className="flex items-center gap-3 border-b-2 border-gray-200 bg-white px-5 py-4">
+      <MenuIcon size={24} className="text-gray-500 hover:cursor-pointer" />
       <SidebarMobileCase user={user} />
     </div>
   );
@@ -291,17 +291,19 @@ function SidebarMenuEntry({ menu, pathname }: { menu: MenuItem; pathname: string
       <AccordionTrigger menu={menu} isActive={isActive} />
       <Accordion.Content
         forceMount
-        className="group grid w-full overflow-hidden transition-[grid-template-rows] duration-300 ease-out data-[state=closed]:grid-rows-[0fr] data-[state=open]:grid-rows-[1fr]"
+        className="group/submenu grid w-full overflow-hidden transition-[grid-template-rows] duration-300 ease-out data-[state=closed]:grid-rows-[0fr] data-[state=open]:grid-rows-[1fr]"
       >
         <div className="min-h-0">
-          <div className="transition-all duration-300 ease-out group-data-[state=closed]:-translate-y-1.5 group-data-[state=closed]:opacity-0 group-data-[state=open]:translate-y-0 group-data-[state=open]:opacity-100">
+          <div className="transition-all duration-300 ease-out group-data-[state=closed]/submenu:-translate-y-1.5 group-data-[state=closed]/submenu:opacity-0 group-data-[state=open]/submenu:translate-y-0 group-data-[state=open]/submenu:opacity-100">
             {menu.subMenus.map((subMenu) => {
               const isSubMenuActive = subMenu.href === pathname;
               return (
                 <Link
                   key={subMenu.href}
                   href={subMenu.href}
-                  className={`group flex w-[calc(100%-1rem)] items-center justify-start gap-2 rounded-[20px] px-4 py-1 transition-all duration-200 lg:px-6 lg:py-2`}
+                  className={`group flex w-[calc(100%-1rem)] items-center justify-start gap-2 rounded-[20px] px-4 py-1 transition-all duration-200 hover:bg-[#F2FBF7] lg:px-6 lg:py-2 ${
+                    isSubMenuActive ? 'bg-[#F2FBF7]' : ''
+                  }`}
                 >
                   <span
                     className={`text-sm transition-all ${
@@ -353,4 +355,8 @@ function AccordionTrigger({ children, menu, isActive, ...props }: AccordionTrigg
       </span>
     </Accordion.Trigger>
   );
+}
+
+function SidebarMobileMenu() {
+  return null;
 }

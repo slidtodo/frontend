@@ -1,8 +1,24 @@
-export default function FavoriteTodoPage() {
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+
+import FavoriteTodoContent from '@/features/dashboard/favorite-todo/components/FavoriteTodoContent';
+
+import { todoQueries } from '@/shared/lib/query/queryKeys';
+
+export const dynamic = 'force-dynamic';
+
+/**
+ * @description 해당 페이지는 서버 컴포넌트입니다. 클라이언트 컴포넌트로 변경하지 말아주세요
+ * 'use client'로 변경 x
+ */
+
+export default async function FavoriteTodoPage() {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(todoQueries.list());
+  const dehydratedState = dehydrate(queryClient);
+
   return (
-    <div className="flex w-full flex-col">
-      <h1 className="text-2xl font-bold">찜한할일 페이지</h1>
-      <p>찜한할일 기능은 현재 개발 중입니다.</p>
-    </div>
+    <HydrationBoundary state={dehydratedState}>
+      <FavoriteTodoContent />
+    </HydrationBoundary>
   );
 }

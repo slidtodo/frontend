@@ -5,7 +5,7 @@ import { fetchGoals, type GetGoalsParams } from '../api/fetchGoals';
 import { fetchNotes, type GetNotesParams } from '../api/fetchNotes';
 import { fetchNotifications } from '../api/fetchNotifications';
 import { fetchTags } from '../api/fetchTags';
-import { fetchTodos, type GetTodosParams } from '../api/fetchTodos';
+import { fetchTodos, type GetTodosParams, type GetTodoCalendarParams } from '../api/fetchTodos';
 import { fetchUsers } from '../api/fetchUsers';
 import { authKeys, goalKeys, noteKeys, notificationKeys, tagKeys, todoKeys, userKeys } from './keyFactory';
 
@@ -36,6 +36,12 @@ export const todoQueries = {
     queryOptions({
       queryKey: todoKeys.detail(todoId),
       queryFn: () => fetchTodos.getTodo(todoId),
+    }),
+
+  calendar: (params: GetTodoCalendarParams) =>
+    queryOptions({
+      queryKey: todoKeys.calendar(params),
+      queryFn: () => fetchTodos.getTodoCalendar(params),
     }),
 };
 

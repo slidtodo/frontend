@@ -20,7 +20,7 @@ export default function CalendarCell({ day, isToday, todos, isLastRow }: Calenda
   return (
     <div
       className={clsx(
-        'border-border-secondary min-h-[100px] p-1.5 md:min-h-[120px] md:p-2',
+        'border-border-secondary relative min-h-25 p-1.5 md:min-h-30 md:p-2',
         !isLastRow && 'border-b',
         'border-r nth-[7n]:border-r-0',
       )}
@@ -52,7 +52,7 @@ export default function CalendarCell({ day, isToday, todos, isLastRow }: Calenda
             ) : (
               todos.slice(0, MAX_VISIBLE).map((todo) => <CalendarEventItem key={todo.id} todo={todo} />)
             )}
-            {overflow > 0 && <span className="pl-1 text-xs text-gray-400">+{overflow}</span>}
+            {overflow > 0 && <span className="text-xs text-gray-400">+{overflow}</span>}
           </div>
         </>
       )}

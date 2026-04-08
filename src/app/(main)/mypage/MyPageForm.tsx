@@ -7,6 +7,7 @@ import PageHeader from '@/shared/components/PageHeader';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
+import { useRouter } from 'next/navigation';
 
 import { userQueries } from '@/shared/lib/query/queryKeys';
 import { usePatchCurrentUser, usePatchCurrentUserPassword } from '@/shared/lib/query/mutations';
@@ -37,9 +38,9 @@ export default function MyPageForm() {
   const { mutate: patchPassword, isPending: isPatchingPassword } = usePatchCurrentUserPassword();
   const { openModal } = useModalStore();
   const { showToast } = useToastStore();
-
+  const router = useRouter();
   const isLocalLogin = user?.loginProvider === 'LOCAL';
-  const isGithubConnected = user?.loginProvider === 'GITHUB';
+  const isGithubConnected = user?.githubConnected;
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleProfileImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +51,8 @@ export default function MyPageForm() {
       const { uploadUrl, url } = await fetchImages.postImageUploadUrl({ fileName: file.name });
       await fetch(uploadUrl, { method: 'PUT', body: file });
       patchUser({ profileImageUrl: url });
-    } catch {
+    } catch (error) {
+      console.error('Failed to upload profile image:', error);
       showToast('이미지 업로드에 실패했습니다. 다시 시도해주세요.', 'fail');
     }
   };
@@ -73,8 +75,9 @@ export default function MyPageForm() {
         onConfirm={async (password) => {
           try {
             await fetchUsers.deleteCurrentUser(password ? { password } : undefined);
-            window.location.href = '/login';
-          } catch {
+            router.push('/login');
+          } catch (error) {
+            console.error('Failed to delete account:', error);
             showToast('회원 탈퇴에 실패했습니다. 다시 시도해주세요.', 'fail');
           }
         }}

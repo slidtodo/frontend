@@ -8,13 +8,13 @@ import Empty from '@/shared/components/Empty';
 import { DataBoundary } from '@/shared/components/ErrorSuspenseBoundary';
 import PageHeader from '@/shared/components/PageHeader';
 import TaskCardWrapper from '@/features/dashboard/components/TaskCardWrapper';
+import FavoriteTodoDropdownGoal from '../FavoriteTodoDropdownGoal';
 
 import { goalQueries, todoQueries } from '@/shared/lib/query/queryKeys';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 import type { TodoListResponse } from '@/shared/lib/api';
 import { TodoOptions } from '@/shared/types/types';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
-import FavoriteTodoDropdownGoal from '../FavoriteTodoDropdownGoal';
 
 export default function FavoriteTodoContent() {
   const breakpoint = useBreakpoint();

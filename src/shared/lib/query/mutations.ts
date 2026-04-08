@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { fetchAuth } from '../api';
 import { fetchGoals, GoalListResponse, PatchGoalResponse, PostGoalRequest } from '../api/fetchGoals';
@@ -383,13 +383,16 @@ export const usePatchNote = (noteId: number, goalId: number, callbacks?: { onErr
   });
 };
 
-export const useDeleteNote = (noteId: number, goalId: number, callbacks?: { onError?: (error: Error) => void }) => {
+export const useDeleteNote = (noteId: number, goalId: number) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const queryClient = useQueryClient();
+  const { showToast } = useToastStore();
 
   return useMutation({
     mutationFn: () => fetchNotes.deleteNote(noteId),
     onSuccess: () => {
+      showToast('노트가 삭제되었습니다.', 'success');
       queryClient.removeQueries({
         queryKey: noteQueries.detail(noteId).queryKey,
       });
@@ -398,10 +401,11 @@ export const useDeleteNote = (noteId: number, goalId: number, callbacks?: { onEr
         queryKey: noteKeys.lists(),
       });
 
-      router.push(`/goal/${goalId}/note`);
+      const page = searchParams.get('page') ?? '1';
+      router.push(`/goal/${goalId}/note?page=${page}`);
     },
-    onError: (error) => {
-      callbacks?.onError?.(error);
+    onError: () => {
+      showToast('노트 삭제에 실패했습니다', 'fail')
     },
   });
 };

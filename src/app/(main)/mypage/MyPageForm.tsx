@@ -12,6 +12,10 @@ import { userQueries } from '@/shared/lib/query/queryKeys';
 import { usePatchCurrentUser, usePatchCurrentUserPassword } from '@/shared/lib/query/mutations';
 import { validatePassword, validatePasswordConfirm } from '@/shared/lib/validation';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
+import { useModalStore } from '@/shared/stores/useModalStore';
+import { useToastStore } from '@/shared/stores/useToastStore';
+import { PopupModal } from '@/shared/components/Modal/PopupModal';
+import { fetchUsers } from '@/shared/lib/api/fetchUsers';
 
 // TODO: 리액트 훅 폼 적용 필요
 export default function MyPageForm() {
@@ -30,8 +34,38 @@ export default function MyPageForm() {
 
   const { mutate: patchUser, isPending: isPatchingUser } = usePatchCurrentUser();
   const { mutate: patchPassword, isPending: isPatchingPassword } = usePatchCurrentUserPassword();
+  const { openModal } = useModalStore();
+  const { showToast } = useToastStore();
 
   const isLocalLogin = user?.loginProvider === 'LOCAL';
+  const isGithubConnected = user?.loginProvider === 'GITHUB';
+
+  const handleGithubDisconnect = () => {
+    openModal(
+      <PopupModal
+        variant={{ type: 'githubDisconnect' }}
+        onConfirm={() => {
+          // TODO: GitHub 연결 해제 API 연동 필요
+        }}
+      />
+    );
+  };
+
+  const handleAccountDelete = () => {
+    openModal(
+      <PopupModal
+        variant={{ type: 'accountDelete', isLocalUser: isLocalLogin }}
+        onConfirm={async (password) => {
+          try {
+            await fetchUsers.deleteCurrentUser(password ? { password } : undefined);
+            window.location.href = '/login';
+          } catch {
+            showToast('회원 탈퇴에 실패했습니다. 다시 시도해주세요.', 'fail');
+          }
+        }}
+      />
+    );
+  };
 
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
@@ -88,15 +122,15 @@ export default function MyPageForm() {
     <div className="flex flex-col gap-10">
       {!isMobile && <PageHeader title="내 정보 관리" />}
 
-      <div className="flex w-[400px] flex-col gap-6 rounded-2xl bg-white p-8">
+      <div className="flex w-140 min-h-219.5 flex-col gap-6 rounded-2xl bg-white p-8">
         {/* 프로필 이미지 */}
         <div className="flex justify-center">
           <div className="relative">
             <Image
               src={user?.profileImageUrl ?? '/icons/image.png'}
               alt="프로필"
-              width={80}
-              height={80}
+              width={132}
+              height={132}
               className="rounded-full object-cover"
             />
             <button className="absolute right-0 bottom-0 flex h-6 w-6 items-center justify-center rounded-full bg-[#FF8442]">
@@ -146,17 +180,45 @@ export default function MyPageForm() {
           </FormField>
         )}
 
-        {/* 저장하기 버튼 */}
-        <Button
-          variant="primary"
-          type="button"
-          className="h-14 w-full"
-          onClick={handleSave}
-          disabled={isPatchingUser || isPatchingPassword}
-        >
-          저장하기
-        </Button>
+        {/* 저장하기 / 회원 탈퇴 버튼 */}
+        <div className="flex flex-col gap-2">
+          <Button
+            variant="primary"
+            type="button"
+            className="h-14 w-full"
+            onClick={handleSave}
+            disabled={isPatchingUser || isPatchingPassword}
+          >
+            저장하기
+          </Button>
+
+          <button
+            type="button"
+            onClick={handleAccountDelete}
+            className="h-14 w-full rounded-full bg-gray-100 text-sm font-medium text-gray-500 hover:bg-gray-200"
+          >
+            회원 탈퇴하기
+          </button>
+        </div>
       </div>
+
+      {/* GitHub 연동 */}
+      {isGithubConnected && (
+        <div className="flex w-140 items-center justify-between rounded-2xl bg-white px-8 py-5">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-gray-700">Github 연동</span>
+            <span className="h-2 w-2 rounded-full bg-[#00C87F]" />
+            <span className="text-sm text-gray-500">연결됨</span>
+          </div>
+          <button
+            type="button"
+            onClick={handleGithubDisconnect}
+            className="rounded-full border border-gray-200 px-4 py-1.5 text-sm text-gray-500 hover:bg-gray-50"
+          >
+            연결 삭제
+          </button>
+        </div>
+      )}
     </div>
   );
 }

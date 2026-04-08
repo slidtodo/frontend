@@ -108,6 +108,8 @@ class FetchAuth {
 
   postGoogleLoginByEnv = (body: GoogleLoginRequest) =>
     this.isDev ? this.postDevGoogleLogin(body) : this.postGoogleLogin(body);
+
+  postLogoutByEnv = () => (this.isDev ? this.postDevLogout() : this.postLogout());
 }
 
 const fetchAuth = new FetchAuth();

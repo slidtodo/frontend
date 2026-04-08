@@ -9,7 +9,6 @@ import {
   LogOutIcon,
   FlagIcon,
   CopyCheckIcon,
-  MenuIcon,
   ChevronDownIcon,
   ChevronUpIcon,
   ChevronRightIcon,
@@ -18,7 +17,6 @@ import { Accordion } from 'radix-ui';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 
-import SidebarMobileCase from './SidebarMobileCase';
 import SinglePostModal from '../Modal/SinglePostModal';
 import { SettingsModal } from '../Modal/SettingsModal';
 import NotificationDropdown from './NotificationDropdown';
@@ -30,7 +28,9 @@ import { usePostGoal, usePostLogout } from '@/shared/lib/query/mutations';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 import { userQueries } from '@/shared/lib/query/queryKeys';
 import { CurrentUserResponse } from '@/shared/lib/api';
+import SidebarMobile from './SidebarMobileDrawer';
 
+// TODO: 전체적으로 정리필요
 export default function Sidebar() {
   const breakpoint = useBreakpoint();
   const isTablet = breakpoint === 'tablet';
@@ -44,20 +44,6 @@ export default function Sidebar() {
   else return <SidebarDesktopTablet user={user} isTablet={isTablet} />;
 }
 
-// 모바일일 때 렌더링 되는 사이드바 컴포넌트
-interface SidebarMobileProps {
-  user: CurrentUserResponse | undefined;
-}
-function SidebarMobile({ user }: SidebarMobileProps) {
-  return (
-    <div className="flex items-center border-b-2 border-gray-200 bg-white px-5 py-4">
-      <MenuIcon size={24} className="pr-3 text-gray-500 hover:cursor-pointer" />
-      <SidebarMobileCase user={user} />
-    </div>
-  );
-}
-
-// 데스크탑과 태블릿에서 렌더링 되는 사이드바 컴포넌트
 interface SidebarDesktopTabletProps {
   user: CurrentUserResponse | undefined;
   isTablet: boolean;
@@ -72,10 +58,8 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
   const { mutate } = usePostGoal();
   const { mutate: logout } = usePostLogout();
 
-  const projectName = 'Bearlog';
   const { openTodoCreateModal } = useTodoCreateModal();
-  const pathnameGoalId = pathname.startsWith('/goal/') ? Number(pathname.split('/')[2]) : undefined;
-  const selectedGoalId = goals.find((goal) => goal.id === pathnameGoalId)?.id ?? goals[0]?.id;
+  const selectedGoalId = getSelectedGoalId(pathname, goals);
 
   return (
     <>
@@ -135,7 +119,7 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
               aria-hidden={!isOpen}
             >
               <h2 className="pl-1 text-2xl leading-[42px] font-semibold whitespace-nowrap text-gray-800 lg:text-3xl">
-                {projectName}
+                Bearlog
               </h2>
             </div>
           </Link>
@@ -257,17 +241,31 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
   );
 }
 
-function isMenuActive(menu: MenuItem, pathname: string) {
+export function isMenuActive(menu: MenuItem, pathname: string) {
   return menu.href === pathname || menu.subMenus?.some((subMenu) => subMenu.href === pathname);
 }
 
-function SidebarMenuEntry({ menu, pathname }: { menu: MenuItem; pathname: string }) {
+export function getSelectedGoalId(pathname: string, goals: { id?: number }[]) {
+  const pathnameGoalId = pathname.startsWith('/goal/') ? Number(pathname.split('/')[2]) : undefined;
+  return goals.find((goal) => goal.id === pathnameGoalId)?.id ?? goals[0]?.id;
+}
+
+export function SidebarMenuEntry({
+  menu,
+  pathname,
+  onClose,
+}: {
+  menu: MenuItem;
+  pathname: string;
+  onClose?: () => void;
+}) {
   const isActive = isMenuActive(menu, pathname);
 
   if (!menu.subMenus?.length) {
     return (
       <Link
         href={menu.href}
+        onClick={onClose}
         className="group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px]"
       >
         <span
@@ -291,17 +289,20 @@ function SidebarMenuEntry({ menu, pathname }: { menu: MenuItem; pathname: string
       <AccordionTrigger menu={menu} isActive={isActive} />
       <Accordion.Content
         forceMount
-        className="group grid w-full overflow-hidden transition-[grid-template-rows] duration-300 ease-out data-[state=closed]:grid-rows-[0fr] data-[state=open]:grid-rows-[1fr]"
+        className="group/submenu grid w-full overflow-hidden transition-[grid-template-rows] duration-300 ease-out data-[state=closed]:grid-rows-[0fr] data-[state=open]:grid-rows-[1fr]"
       >
         <div className="min-h-0">
-          <div className="transition-all duration-300 ease-out group-data-[state=closed]:-translate-y-1.5 group-data-[state=closed]:opacity-0 group-data-[state=open]:translate-y-0 group-data-[state=open]:opacity-100">
+          <div className="transition-all duration-300 ease-out group-data-[state=closed]/submenu:-translate-y-1.5 group-data-[state=closed]/submenu:opacity-0 group-data-[state=open]/submenu:translate-y-0 group-data-[state=open]/submenu:opacity-100">
             {menu.subMenus.map((subMenu) => {
               const isSubMenuActive = subMenu.href === pathname;
               return (
                 <Link
                   key={subMenu.href}
                   href={subMenu.href}
-                  className={`group flex w-[calc(100%-1rem)] items-center justify-start gap-2 rounded-[20px] px-4 py-1 transition-all duration-200 lg:px-6 lg:py-2`}
+                  onClick={onClose}
+                  className={`group flex w-[calc(100%-1rem)] items-center justify-start gap-2 rounded-[20px] px-4 py-1 transition-all duration-200 hover:bg-[#F2FBF7] lg:px-6 lg:py-2 ${
+                    isSubMenuActive ? 'bg-[#F2FBF7]' : ''
+                  }`}
                 >
                   <span
                     className={`text-sm transition-all ${

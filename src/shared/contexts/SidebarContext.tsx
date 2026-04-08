@@ -7,6 +7,7 @@ import { LayoutGridIcon, FlagIcon, ListCheckIcon, StarIcon } from 'lucide-react'
 
 import { goalQueries } from '@/shared/lib/query/queryKeys';
 import type { GoalListResponse } from '@/shared/lib/api/fetchGoals';
+import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import Image from 'next/image';
 
 const sidebarMenuIconClassName = 'h-6 w-6 transition-all [&_*]:fill-current [&_*]:stroke-current';
@@ -33,7 +34,9 @@ const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 const SidebarMenuContext = createContext<MenuItem | null>(null);
 
 export function SidebarProvider({ children }: { children: ReactNode }) {
-  const [isOpen, setIsOpen] = useState(true);
+  const breakpoint = useBreakpoint();
+  const [manualIsOpen, setManualIsOpen] = useState<boolean | null>(null);
+  const isOpen = manualIsOpen ?? breakpoint === 'desktop';
   const pathname = usePathname();
 
   const { data: goals } = useQuery(goalQueries.list());
@@ -83,11 +86,11 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
 
   const sidebar = useMemo<SidebarContextType>(() => {
     return {
-      toggle: () => setIsOpen((prev) => !prev),
+      toggle: () => setManualIsOpen((prev) => !(prev ?? breakpoint === 'desktop')),
       menus: allMenus,
       goals: goalData,
     };
-  }, [allMenus, goalData]);
+  }, [allMenus, breakpoint, goalData]);
 
   const currentMenu = useMemo(() => {
     return (

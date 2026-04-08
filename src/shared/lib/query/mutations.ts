@@ -203,6 +203,7 @@ export const usePostTodo = () => {
             linkUrl: data.linkUrl ?? null,
             imageUrl: data.imageUrl ?? null,
             goalId: data.goalId,
+            source: data.source ?? 'MANUAL',
           },
           ...(old?.todos ?? []),
         ],
@@ -257,7 +258,6 @@ export const useDeleteTodo = (todoId?: number) => {
 };
 
 export const usePatchTodo = (todoId?: number) => {
-  const { showToast } = useToastStore();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -296,8 +296,11 @@ export const usePatchTodo = (todoId?: number) => {
       queryClient.invalidateQueries({ queryKey: goalKeys.details() });
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
     },
-    onError: () => {
-      showToast('할 일 수정에 실패했습니다.', 'fail');
+    onError: (_error, _variables, context) => {
+      // optimistic update 롤백 — 에러 시 이전 상태로 즉시 복원
+      if (todoId !== undefined && context?.previousTodo !== undefined) {
+        queryClient.setQueryData(todoKeys.detail(todoId), context.previousTodo);
+      }
     },
   });
 };

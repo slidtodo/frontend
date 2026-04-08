@@ -1,8 +1,8 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { PlusIcon } from 'lucide-react';
+import { EllipsisVerticalIcon, PlusIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import Button from '@/shared/components/Button';
@@ -10,8 +10,12 @@ import Empty from '@/shared/components/Empty';
 import Progressbar from '@/shared/components/Progressbar';
 import SearchInput from '@/shared/components/SearchInput';
 import TaskCardWrapper from '../TaskCardWrapper';
+import EditDeleteDropdown from '../EditDeleteDropdown';
 
 import type { GoalDetailResponse } from '@/shared/lib/api';
+import { useDisconnectGithubGoal } from '@/shared/lib/query/mutations';
+import { useModalStore } from '@/shared/stores/useModalStore';
+import { PopupModal } from '@/shared/components/Modal/PopupModal';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 import { useGithubTodoCreateModal } from '@/features/todo/hooks/useGithubTodoCreateModal';
 
@@ -23,6 +27,11 @@ export default function GoalBox({ data }: GoalBoxProps) {
   const router = useRouter();
   const { openTodoCreateModal } = useTodoCreateModal();
   const { openGithubTodoCreateModal } = useGithubTodoCreateModal();
+  const { openModal } = useModalStore();
+  const { mutate: disconnectGithubGoal } = useDisconnectGithubGoal(data.id);
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownButtonRef = useRef<HTMLButtonElement>(null);
 
   const [search, setSearch] = useState('');
   const normalizedSearch = search.trim().toLowerCase();
@@ -64,6 +73,16 @@ export default function GoalBox({ data }: GoalBoxProps) {
     }
   };
 
+  const handleDisconnect = () => {
+    setDropdownOpen(false);
+    openModal(
+      <PopupModal
+        variant={{ type: 'githubDisconnect' }}
+        onConfirm={() => disconnectGithubGoal()}
+      />,
+    );
+  };
+
   return (
     <article className="flex flex-col gap-4 rounded-[40px] bg-white p-6 lg:px-8 lg:py-6">
       <div className="flex flex-col items-center gap-2 px-2 md:flex-row md:gap-12 lg:gap-8">
@@ -82,6 +101,29 @@ export default function GoalBox({ data }: GoalBoxProps) {
             </div>
             {isGithubGoal && (
               <span className="rounded-full bg-[#F6F8FA] px-3 py-1 text-xs font-semibold text-gray-600">GitHub</span>
+            )}
+            {isGithubGoal && (
+              <div className="relative ml-auto shrink-0">
+                <button
+                  ref={dropdownButtonRef}
+                  type="button"
+                  className="cursor-pointer"
+                  onClick={() => setDropdownOpen((prev) => !prev)}
+                >
+                  <EllipsisVerticalIcon size={24} color="#A4A4A4" />
+                </button>
+                {dropdownOpen && (
+                  <EditDeleteDropdown
+                    handleEdit={() => {}}
+                    handleDelete={handleDisconnect}
+                    onClose={() => setDropdownOpen(false)}
+                    anchorRef={dropdownButtonRef}
+                    editLabel="수정 불가"
+                    editDisabled={true}
+                    deleteLabel="연결 해제"
+                  />
+                )}
+              </div>
             )}
           </div>
 

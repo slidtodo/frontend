@@ -10,16 +10,29 @@ import PageSubTitle from '@/shared/components/PageSubTitle';
 import ProgressCircle from '@/shared/components/ProgressCircle';
 import TabChangeMode from '@/shared/components/TabChangeMode';
 import TaskCardWrapper from '../TaskCardWrapper';
+import GithubRepoConnectModal from '@/shared/components/Modal/GithubRepoConnectModal';
 
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
-import { todoQueries, userQueries } from '@/shared/lib/query/queryKeys';
-import { useTodoModeStore } from '@/shared/stores/useTodoModeStore';
+import { todoQueries, userQueries, goalQueries } from '@/shared/lib/query/queryKeys';
+import { useModalStore } from '@/shared/stores/useModalStore';
+import { useTodoModeStore, TodoMode } from '@/shared/stores/useTodoModeStore';
 
 export default function DashBoardSummary() {
   const { data: user } = useQuery(userQueries.current());
+  const { data: goals } = useQuery(goalQueries.list());
   const breakpoint = useBreakpoint();
   const mode = useTodoModeStore((state) => state.mode);
   const setMode = useTodoModeStore((state) => state.setMode);
+  const { openModal } = useModalStore();
+
+  const githubGoals = goals?.goals?.filter((goal) => goal.source === 'GITHUB') ?? [];
+
+  const handleModeChange = (nextMode: TodoMode) => {
+    setMode(nextMode);
+    if (nextMode === 'GITHUB' && githubGoals.length === 0) {
+      openModal(<GithubRepoConnectModal />, undefined, 'bottom');
+    }
+  };
 
   return (
     <>
@@ -27,7 +40,7 @@ export default function DashBoardSummary() {
         {breakpoint !== 'mobile' && <PageHeader title={`${user?.nickname}님의 대시보드`} />}
 
         <div className="flex shrink-0 justify-end md:w-fit">
-          <TabChangeMode mode={mode} onModeChange={setMode} />
+          <TabChangeMode mode={mode} onModeChange={handleModeChange} />
         </div>
       </div>
       <section className="flex w-full flex-col gap-[40px] pb-[40px] md:flex-row md:gap-[12px] lg:gap-[32px] lg:pb-[34px]">

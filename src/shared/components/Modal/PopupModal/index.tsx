@@ -107,9 +107,9 @@ function getConfig(variant: PopupModalVariant): ModalConfig {
       };
     case 'githubDisconnect':
       return {
-        titleLines: ['Github 연결을 삭제하시겠어요?'],
-        warning: '연결 삭제 후 Github 로그인이 불가합니다.',
-        confirmLabel: '확인',
+        titleLines: ['GitHub 저장소 연결을 해제하시겠어요?'],
+        warning: '연결된 이슈·PR 할 일의 GitHub 동기화가 중단됩니다.',
+        confirmLabel: '해제',
         labelledBy: 'confirm-modal-github-disconnect',
       };
   }

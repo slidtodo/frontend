@@ -17,7 +17,7 @@ export default function NoteListContainer({ goalId }: NoteListContainerProps) {
 
   const submittedSearch = searchParams.get('search') ?? '';
   const sort = (searchParams.get('sort') as 'LATEST' | 'OLDEST') ?? 'LATEST';
-  const page = Number(searchParams.get('page') ?? '1');
+  const page = Number(searchParams.get('page') ?? '1') || 1;
 
   const updateParams = (params: Record<string, string>) => {
     const next = new URLSearchParams(searchParams.toString());

@@ -1,8 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { OctagonAlert } from 'lucide-react';
 import Button from '../../Button';
+import Input from '../../Input';
 
 /**
  * PopupModal
@@ -52,6 +54,8 @@ import Button from '../../Button';
  * | noteDelete    | 없음                  | 노트 삭제 확인   |
  * | noteLoad      | noteTitle: string     | 노트 불러오기    |
  * | postCancel    | 없음                  | 게시물 작성 취소 |
+ * | githubDisconnect | 없음               | GitHub 연동 해제 |
+ * | accountDelete | isLocalUser: boolean  | 회원 탈퇴        |
  *
  * @param onConfirm - 확인 버튼 클릭 시 실행할 콜백 (closeModal은 자동 호출됨)
  */
@@ -61,10 +65,11 @@ type PopupModalVariant =
   | { type: 'noteDelete' }
   | { type: 'noteLoad'; noteTitle: string }
   | { type: 'postCancel' }
-  | { type: 'githubDisconnect' };
+  | { type: 'githubDisconnect' }
+  | { type: 'accountDelete'; isLocalUser: boolean };
 
 interface PopupModalProps {
-  onConfirm: () => void;
+  onConfirm: (password?: string) => void;
   variant: PopupModalVariant;
 }
 
@@ -107,10 +112,17 @@ function getConfig(variant: PopupModalVariant): ModalConfig {
       };
     case 'githubDisconnect':
       return {
-        titleLines: ['GitHub 저장소 연결을 해제하시겠어요?'],
-        warning: '연결된 이슈·PR 할 일의 GitHub 동기화가 중단됩니다.',
-        confirmLabel: '해제',
+        titleLines: ['GitHub 연동을 해제하시겠어요?'],
+        warning: '해제 후 GitHub으로 로그인할 수 없습니다.',
+        confirmLabel: '연동 해제',
         labelledBy: 'confirm-modal-github-disconnect',
+      };
+    case 'accountDelete':
+      return {
+        titleLines: ['회원 탈퇴하기'],
+        warning: '회원 탈퇴 시 계정 정보가 삭제되어 복구가 불가해요.\n정말로 탈퇴하시겠습니까?',
+        confirmLabel: '탈퇴하기',
+        labelledBy: 'confirm-modal-account-delete',
       };
   }
 }
@@ -118,6 +130,9 @@ function getConfig(variant: PopupModalVariant): ModalConfig {
 export function PopupModal({ onConfirm, variant }: PopupModalProps) {
   const { closeModal } = useModalStore();
   const { titleLines, warning, confirmLabel, labelledBy } = getConfig(variant);
+  const [password, setPassword] = useState('');
+
+  const isLocalAccountDelete = variant.type === 'accountDelete' && variant.isLocalUser;
 
   return (
     <div
@@ -136,10 +151,23 @@ export function PopupModal({ onConfirm, variant }: PopupModalProps) {
           ))}
         </p>
         {warning && (
-          <div className="flex items-center justify-center gap-1">
+          <div className="mt-[17.5px] flex items-start justify-center gap-1">
             <OctagonAlert className="text-bearlog-500" size={15} />
-            <span className="text-bearlog-600 text-xs leading-6 font-medium md:text-base">{warning}</span>
+            <span className="text-bearlog-600 text-xs leading-6 font-medium whitespace-pre-line md:text-base">
+              {warning}
+            </span>
           </div>
+        )}
+
+        {/* LOCAL 유저 비밀번호 입력 */}
+        {isLocalAccountDelete && (
+          <Input
+            type="password"
+            placeholder="비밀번호를 입력해주세요"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="mt-4"
+          />
         )}
       </div>
 
@@ -154,8 +182,9 @@ export function PopupModal({ onConfirm, variant }: PopupModalProps) {
         <Button
           variant="primary"
           className="flex-1 px-[18px] py-[10px] text-sm md:py-[14px] md:text-[18px]"
+          disabled={isLocalAccountDelete && !password}
           onClick={() => {
-            onConfirm();
+            onConfirm(isLocalAccountDelete ? password : undefined);
             closeModal();
           }}
         >

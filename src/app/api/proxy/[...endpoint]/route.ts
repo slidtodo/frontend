@@ -26,6 +26,7 @@ const ALLOWED_PATH_PREFIXES = [
   'tags',
   'users/me',
   'integrations/github',
+  'images',
 ] as const;
 
 type ProxyRouteContext = {

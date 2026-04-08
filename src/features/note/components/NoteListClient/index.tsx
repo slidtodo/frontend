@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { noteQueries, goalQueries } from '@/shared/lib/query/queryKeys';
 import NoteItem from '@/features/note/components/NoteItem';
@@ -13,10 +14,13 @@ interface NoteListClientProps {
   goalId: number;
   search?: string;
   sort?: 'LATEST' | 'OLDEST';
+  page: number;
+  onPageChange: (page: number) => void;
 }
 
-export default function NoteListClient({ goalId, search, sort }: NoteListClientProps) {
-  const [page, setPage] = useState(1);
+export default function NoteListClient({ goalId, search, sort, page, onPageChange }: NoteListClientProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const { data: goal } = useQuery(goalQueries.detail(goalId));
   const { data: noteList } = useQuery({
@@ -27,6 +31,14 @@ export default function NoteListClient({ goalId, search, sort }: NoteListClientP
   const notes = (noteList?.notes ?? []).filter((note) => note.id != null);
   const currentPage = (noteList?.pageInfo?.page ?? 0) + 1;
   const totalPages = noteList?.pageInfo?.totalPages ?? 1;
+
+  useEffect(() => {
+    if (notes.length === 0 && page > 1 && noteList !== undefined) {
+      const next = new URLSearchParams(searchParams.toString());
+      next.set('page', String(page - 1));
+      router.replace(`?${next.toString()}`);
+    }
+  }, [notes.length, page, noteList, router, searchParams]);
 
   return (
     <>
@@ -55,7 +67,7 @@ export default function NoteListClient({ goalId, search, sort }: NoteListClientP
 
       {notes.length > 0 && (
         <div className="mt-6 flex justify-center">
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage} />
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
         </div>
       )}
     </>

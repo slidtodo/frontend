@@ -134,7 +134,7 @@ export function PopupModal({ onConfirm, variant }: PopupModalProps) {
     }
   }
 
-  const { titleLines, warning, confirmLabel, labelledBy, showPasswordInput } = getConfig(variant);
+  const { titleLines, warning, confirmLabel, labelledBy } = getConfig(variant);
   const [password, setPassword] = useState('');
   const isLocalAccountDelete = variant.type === 'accountDelete' && variant.isLocalUser;
 

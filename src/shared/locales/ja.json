@@ -28,6 +28,8 @@
     "snsSignup": "SNSアカウントで会員登録",
     "googleLogin": "Googleログイン",
     "githubLogin": "GitHubログイン",
+    "loginSuccess": "ログインしました。",
+    "loginFail": "メールアドレスまたはパスワードが正しくありません。",
     "loggingIn": "ログイン中...",
     "socialLoginFail": "ソーシャルログインに失敗しました。もう一度お試しください。",
     "signupSuccess": "会員登録が完了しました。",

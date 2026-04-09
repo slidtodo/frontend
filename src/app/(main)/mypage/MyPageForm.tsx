@@ -18,11 +18,13 @@ import { useToastStore } from '@/shared/stores/useToastStore';
 import { PopupModal } from '@/shared/components/Modal/PopupModal';
 import { fetchUsers } from '@/shared/lib/api/fetchUsers';
 import { fetchImages } from '@/shared/lib/api/fetchImages';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 // TODO: 리액트 훅 폼 적용 필요
 export default function MyPageForm() {
   const breakpoint = useBreakpoint();
   const isMobile = breakpoint === 'mobile';
+  const { t } = useLanguage();
 
   const { data: user } = useQuery(userQueries.current());
   const [nickname, setNickname] = useState(user?.nickname || '');
@@ -53,7 +55,7 @@ export default function MyPageForm() {
       patchUser({ profileImageUrl: url });
     } catch (error) {
       console.error('Failed to upload profile image:', error);
-      showToast('이미지 업로드에 실패했습니다. 다시 시도해주세요.', 'fail');
+      showToast(t.mypage.imageUploadFail, 'fail');
     }
   };
 
@@ -78,7 +80,7 @@ export default function MyPageForm() {
             router.push('/login');
           } catch (error) {
             console.error('Failed to delete account:', error);
-            showToast('회원 탈퇴에 실패했습니다. 다시 시도해주세요.', 'fail');
+            showToast(t.mypage.withdrawFail, 'fail');
           }
         }}
       />,
@@ -92,15 +94,15 @@ export default function MyPageForm() {
 
   const handleNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewPassword(e.target.value);
-    setNewPasswordError(validatePassword(e.target.value));
+    setNewPasswordError(validatePassword(e.target.value, t.validation));
     if (newPasswordConfirm) {
-      setNewPasswordConfirmError(validatePasswordConfirm(e.target.value, newPasswordConfirm));
+      setNewPasswordConfirmError(validatePasswordConfirm(e.target.value, newPasswordConfirm, t.validation));
     }
   };
 
   const handleNewPasswordConfirmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewPasswordConfirm(e.target.value);
-    setNewPasswordConfirmError(validatePasswordConfirm(newPassword, e.target.value));
+    setNewPasswordConfirmError(validatePasswordConfirm(newPassword, e.target.value, t.validation));
   };
 
   const handleSave = () => {
@@ -114,8 +116,8 @@ export default function MyPageForm() {
     }
 
     if (isLocalLogin && currentPassword && newPassword && newPasswordConfirm) {
-      const pwError = validatePassword(newPassword);
-      const confirmError = validatePasswordConfirm(newPassword, newPasswordConfirm);
+      const pwError = validatePassword(newPassword, t.validation);
+      const confirmError = validatePasswordConfirm(newPassword, newPasswordConfirm, t.validation);
 
       if (pwError || confirmError) {
         if (pwError) setNewPasswordError(pwError);
@@ -138,7 +140,7 @@ export default function MyPageForm() {
 
   return (
     <div className="flex flex-col gap-10">
-      {!isMobile && <PageHeader title="내 정보 관리" />}
+      {!isMobile && <PageHeader title={t.mypage.title} />}
 
       <div className="flex min-h-219.5 w-140 flex-col gap-6 rounded-2xl bg-white p-8">
         {/* 프로필 이미지 */}
@@ -147,7 +149,7 @@ export default function MyPageForm() {
             <div className="h-full w-full overflow-hidden rounded-full bg-[#C8EDEA]">
               <Image
                 src={user?.profileImageUrl ?? '/image/default-profile.png'}
-                alt="프로필"
+                alt={t.mypage.profileAlt}
                 width={132}
                 height={132}
                 className="h-full w-full object-cover"
@@ -183,29 +185,34 @@ export default function MyPageForm() {
         </div>
 
         {/* 이메일 */}
-        <FormField label="이메일">
+        <FormField label={t.mypage.email}>
           <Input type="email" value={user?.email ?? ''} disabled />
         </FormField>
 
         {/* 닉네임 */}
-        <FormField label="닉네임">
-          <Input type="text" value={nickname} onChange={handleNicknameChange} placeholder="닉네임을 입력해주세요" />
-          {nicknameSuccess && <p className="px-1 text-sm text-[#0CAF60]">사용 가능한 닉네임입니다.</p>}
+        <FormField label={t.mypage.nickname}>
+          <Input
+            type="text"
+            value={nickname}
+            onChange={handleNicknameChange}
+            placeholder={t.mypage.nicknamePlaceholder}
+          />
+          {nicknameSuccess && <p className="px-1 text-sm text-[#0CAF60]">{t.mypage.nicknameSuccess}</p>}
         </FormField>
 
         {/* 비밀번호 변경 - 소셜 로그인이면 숨김 */}
         {isLocalLogin && (
-          <FormField label="비밀번호 변경">
+          <FormField label={t.mypage.passwordChange}>
             <div className="flex flex-col gap-2">
               <Input
                 type="password"
-                placeholder="현재 비밀번호를 입력해주세요"
+                placeholder={t.mypage.currentPassword}
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
               />
               <Input
                 type="password"
-                placeholder="새 비밀번호를 입력해주세요"
+                placeholder={t.mypage.newPassword}
                 value={newPassword}
                 onChange={handleNewPasswordChange}
                 className={newPasswordError ? 'border-red-500' : ''}
@@ -213,7 +220,7 @@ export default function MyPageForm() {
               {newPasswordError && <p className="px-1 text-sm text-red-500">{newPasswordError}</p>}
               <Input
                 type="password"
-                placeholder="새 비밀번호를 다시 입력해주세요"
+                placeholder={t.mypage.newPasswordConfirm}
                 value={newPasswordConfirm}
                 onChange={handleNewPasswordConfirmChange}
                 className={newPasswordConfirmError ? 'border-red-500' : ''}
@@ -232,7 +239,7 @@ export default function MyPageForm() {
             onClick={handleSave}
             disabled={isPatchingUser || isPatchingPassword}
           >
-            저장하기
+            {t.mypage.save}
           </Button>
 
           <button
@@ -240,7 +247,7 @@ export default function MyPageForm() {
             onClick={handleAccountDelete}
             className="h-14 w-full rounded-full bg-gray-100 text-sm font-medium text-gray-500 hover:bg-gray-200"
           >
-            회원 탈퇴하기
+            {t.mypage.withdraw}
           </button>
         </div>
 
@@ -248,16 +255,16 @@ export default function MyPageForm() {
         {isGithubConnected && (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-gray-700">Github 연동</span>
+              <span className="text-sm font-medium text-gray-700">{t.mypage.githubConnect}</span>
               <span className="h-2 w-2 rounded-full bg-[#00C87F]" />
-              <span className="text-sm text-gray-500">연결됨</span>
+              <span className="text-sm text-gray-500">{t.mypage.connected}</span>
             </div>
             <button
               type="button"
               onClick={handleGithubDisconnect}
               className="rounded-full border border-gray-200 px-4 py-1.5 text-sm text-gray-500 hover:bg-gray-50"
             >
-              연결 삭제
+              {t.mypage.disconnect}
             </button>
           </div>
         )}

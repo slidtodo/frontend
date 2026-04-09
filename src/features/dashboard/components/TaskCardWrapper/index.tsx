@@ -8,6 +8,7 @@ import { ApiError, GoalDetailResponse } from '@/shared/lib/api';
 import { usePatchTodo, usePatchTodoFavorite } from '@/shared/lib/query/mutations';
 import { todoQueries } from '@/shared/lib/query/queryKeys';
 import { useToastStore } from '@/shared/stores/useToastStore';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 export default function TaskCardWrapper({
   item,
@@ -17,6 +18,7 @@ export default function TaskCardWrapper({
   mode: 'todo' | 'done';
 }) {
   const { showToast } = useToastStore();
+  const { t } = useLanguage();
 
   // 할 일 상세 정보를 가져오기 위한 query 훅
   const { data: todoDetail } = useQuery({
@@ -50,6 +52,8 @@ export default function TaskCardWrapper({
       } else {
         showToast('할 일을 미완료 처리했습니다.');
       }
+
+      showToast(!todoDetail.done ? t.mutations.todoCompleted : t.mutations.todoUncompleted);
     } catch (error) {
       // GitHub 연동 todo 완료 실패 시 상세 에러 메시지 표시
       if (isGithubTodo && !todoDetail.done) {
@@ -77,7 +81,7 @@ export default function TaskCardWrapper({
 
     patchTodoFavorite(undefined, {
       onSuccess: () => {
-        showToast(`즐겨찾기에 ${nextStarred ? '추가되었습니다.' : '해제되었습니다.'}`);
+        showToast(nextStarred ? t.mutations.favoriteAdded : t.mutations.favoriteRemoved);
       },
       onError: (error) => {
         console.error(error);

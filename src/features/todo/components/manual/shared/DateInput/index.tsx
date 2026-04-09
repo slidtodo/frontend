@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
 import Button from '@/shared/components/Button';
 import { cn } from '@/shared/lib/utils';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 interface DateInputProps {
   date: Date | undefined;
@@ -18,6 +19,7 @@ interface DateInputProps {
 }
 
 export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateInputProps) {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   return (
     <Popover
@@ -42,7 +44,7 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
           {date ? (
             <span className="text-gray-700">{formatDate(date)}</span>
           ) : (
-            <span className="text-gray-500">날짜를 선택해주세요</span>
+            <span className="text-gray-500">{t.todo.dueDatePlaceholder}</span>
           )}
         </button>
       </PopoverTrigger>
@@ -119,7 +121,7 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
             }}
             className="flex flex-1 items-center justify-center rounded-full border border-gray-300 py-[10px] text-sm font-semibold text-gray-500"
           >
-            취소
+            {t.common.cancel}
           </Button>
           <Button
             type="button"
@@ -129,7 +131,7 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
             }}
             className="bg-bearlog-500 flex flex-1 items-center justify-center rounded-full py-[10px] text-sm font-semibold text-white"
           >
-            확인
+            {t.common.confirm}
           </Button>
         </div>
       </PopoverContent>

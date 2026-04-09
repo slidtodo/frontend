@@ -18,10 +18,12 @@ import { fetchUsers, PatchCurrentUserPasswordRequest, PatchCurrentUserRequest } 
 import { githubKeys, goalKeys, noteKeys, todoKeys, userKeys } from './keyFactory';
 import { noteQueries } from './queryKeys';
 import { useToastStore } from '@/shared/stores/useToastStore';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 // goal
 export const usePostGoal = () => {
   const { showToast } = useToastStore();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -51,7 +53,7 @@ export const usePostGoal = () => {
       return { previousGoals };
     },
     onSuccess: () => {
-      showToast('목표가 생성되었습니다.');
+      showToast(t.mutations.goalCreated);
       queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
     },
   });
@@ -60,6 +62,7 @@ export const usePostGoal = () => {
 export const useDeleteGoal = (goalId?: number) => {
   const router = useRouter();
   const { showToast } = useToastStore();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -81,18 +84,19 @@ export const useDeleteGoal = (goalId?: number) => {
       return { previousGoal };
     },
     onSuccess: () => {
-      showToast('목표가 삭제되었습니다.');
+      showToast(t.mutations.goalDeleted);
       queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
       router.push('/dashboard');
     },
     onError: () => {
-      showToast('목표 삭제에 실패했습니다.', 'fail');
+      showToast(t.mutations.goalDeleteFail, 'fail');
     },
   });
 };
 
 export const usePatchGoal = (goalId?: number) => {
   const { showToast } = useToastStore();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -118,7 +122,7 @@ export const usePatchGoal = (goalId?: number) => {
       return { previousGoal };
     },
     onSuccess: () => {
-      showToast('목표가 수정되었습니다.');
+      showToast(t.mutations.goalUpdated);
 
       if (goalId !== undefined) {
         queryClient.invalidateQueries({ queryKey: goalKeys.detail(goalId) });
@@ -127,7 +131,7 @@ export const usePatchGoal = (goalId?: number) => {
       queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
     },
     onError: () => {
-      showToast('목표 수정에 실패했습니다.', 'fail');
+      showToast(t.mutations.goalUpdateFail, 'fail');
     },
   });
 };
@@ -198,6 +202,7 @@ export const useDisconnectGithubGoal = (goalId?: number) => {
 // todo
 export const usePostTodo = () => {
   const { showToast } = useToastStore();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -231,20 +236,21 @@ export const usePostTodo = () => {
       return { previousTodos };
     },
     onSuccess: () => {
-      showToast('할 일이 생성되었습니다.');
+      showToast(t.mutations.todoCreated);
       queryClient.invalidateQueries({ queryKey: todoKeys.lists() });
       queryClient.invalidateQueries({ queryKey: goalKeys.details() });
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
     },
     onError: (error) => {
       const message = error instanceof ApiError ? error.message : '할 일 생성에 실패했습니다.';
-      showToast(message, 'fail');
+      showToast(t.mutations.todoCreateFail, 'fail');
     },
   });
 };
 
 export const useDeleteTodo = (todoId?: number) => {
   const { showToast } = useToastStore();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -266,18 +272,21 @@ export const useDeleteTodo = (todoId?: number) => {
       return { previousTodo };
     },
     onSuccess: () => {
-      showToast('할 일이 삭제되었습니다.');
+      showToast(t.mutations.todoDeleted);
       queryClient.invalidateQueries({ queryKey: todoKeys.lists() });
       queryClient.invalidateQueries({ queryKey: goalKeys.details() });
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
     },
     onError: () => {
-      showToast('할 일 삭제에 실패했습니다.', 'fail');
+      showToast(t.mutations.todoDeleteFail, 'fail');
     },
   });
 };
 
 export const usePatchTodo = (todoId?: number) => {
+  const { showToast } = useToastStore();
+  const { t } = useLanguage();
+
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -316,17 +325,20 @@ export const usePatchTodo = (todoId?: number) => {
       queryClient.invalidateQueries({ queryKey: goalKeys.details() });
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
     },
+
     onError: (_error, _variables, context) => {
       // optimistic update 롤백 — 에러 시 이전 상태로 즉시 복원
       if (todoId !== undefined && context?.previousTodo !== undefined) {
         queryClient.setQueryData(todoKeys.detail(todoId), context.previousTodo);
       }
+      showToast(t.mutations.todoUpdateFail, 'fail');
     },
   });
 };
 
 export const usePatchTodoFavorite = (todoId?: number) => {
   const { showToast } = useToastStore();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -363,7 +375,7 @@ export const usePatchTodoFavorite = (todoId?: number) => {
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
     },
     onError: () => {
-      showToast('즐겨찾기 설정에 실패했습니다.', 'fail');
+      showToast(t.mutations.favoriteFail, 'fail');
     },
   });
 };
@@ -372,6 +384,7 @@ export const usePatchTodoFavorite = (todoId?: number) => {
 export const usePatchCurrentUser = () => {
   const queryClient = useQueryClient();
   const { showToast } = useToastStore();
+  const { t } = useLanguage();
 
   return useMutation({
     mutationFn: (data: PatchCurrentUserRequest) => fetchUsers.patchCurrentUser(data),
@@ -379,18 +392,19 @@ export const usePatchCurrentUser = () => {
       queryClient.invalidateQueries({ queryKey: userKeys.me() });
     },
     onError: () => {
-      showToast('정보 수정에 실패했습니다.', 'fail');
+      showToast(t.mutations.userUpdateFail, 'fail');
     },
   });
 };
 
 export const usePatchCurrentUserPassword = () => {
   const { showToast } = useToastStore();
+  const { t } = useLanguage();
 
   return useMutation({
     mutationFn: (data: PatchCurrentUserPasswordRequest) => fetchUsers.patchCurrentUserPassword(data),
     onError: () => {
-      showToast('비밀번호 변경에 실패했습니다.', 'fail');
+      showToast(t.mutations.passwordUpdateFail, 'fail');
     },
   });
 };
@@ -399,15 +413,16 @@ export const usePatchCurrentUserPassword = () => {
 export const usePostLogout = () => {
   const router = useRouter();
   const { showToast } = useToastStore();
+  const { t } = useLanguage();
 
   return useMutation({
     mutationFn: () => fetchAuth.postLogoutByEnv(),
     onSuccess: () => {
-      showToast('로그아웃 되었습니다.');
+      showToast(t.mutations.logoutSuccess);
       router.push('/login');
     },
     onError: () => {
-      showToast('로그아웃에 실패했습니다.', 'fail');
+      showToast(t.mutations.logoutFail, 'fail');
     },
   });
 };

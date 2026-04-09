@@ -1,7 +1,10 @@
+'use client';
+
 import Tag from '@/shared/components/Tag';
 import { formatDate } from '@/shared/utils/utils';
 import clsx from 'clsx';
 import { CalendarIcon, FlagIcon, Hash, SquareCheck } from 'lucide-react';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 /**
  * 부모 컴포넌트에서 사용법
@@ -40,6 +43,7 @@ interface EditorMetaProps {
 }
 
 export default function EditorMeta({ goal, todos, createdAt, tags }: EditorMetaProps) {
+  const { t } = useLanguage();
   const todosTagLabel = todos.done ? 'DONE' : 'TO DO';
   const today = formatDate(new Date());
   const formattedCreatedAt = createdAt ? formatDate(new Date(createdAt)) : null;
@@ -48,10 +52,10 @@ export default function EditorMeta({ goal, todos, createdAt, tags }: EditorMetaP
     <div className="flex w-full flex-col gap-3 md:flex-row">
       {/* 왼쪽 — 목표 / 할 일 */}
       <div className="flex flex-1 flex-col gap-3 md:w-1/2">
-        <MetaRow icon={<FlagIcon size={18} className="text-[#A4A4A4]" />} label="목표">
+        <MetaRow icon={<FlagIcon size={18} className="text-[#A4A4A4]" />} label={t.note.goalLabel}>
           <span className="line-clamp-1 text-sm font-normal text-[#333333]">{goal.title}</span>
         </MetaRow>
-        <MetaRow icon={<SquareCheck size={18} className="text-[#A4A4A4]" />} label="할 일">
+        <MetaRow icon={<SquareCheck size={18} className="text-[#A4A4A4]" />} label={t.note.todoLabel}>
           <div className="flex items-center gap-2">
             <span className="line-clamp-1 text-sm font-normal text-[#333333]">{todos.title}</span>
 
@@ -69,11 +73,11 @@ export default function EditorMeta({ goal, todos, createdAt, tags }: EditorMetaP
 
       {/* 오른쪽 — 작성일 / 태그 */}
       <div className="flex flex-1 flex-col gap-3 md:w-1/2">
-        <MetaRow icon={<CalendarIcon size={17} className="line-clamp-1 text-[#A4A4A4]" />} label="작성일">
+        <MetaRow icon={<CalendarIcon size={17} className="line-clamp-1 text-[#A4A4A4]" />} label={t.note.createdAtLabel}>
           <span className="line-clamp-1 text-sm font-normal text-[#333333]">{formattedCreatedAt ?? today}</span>
         </MetaRow>
 
-        <MetaRow icon={<Hash size={17} className="text-[#A4A4A4]" />} label="태그">
+        <MetaRow icon={<Hash size={17} className="text-[#A4A4A4]" />} label={t.note.tagLabel}>
           <div className="no-scrollbar flex gap-1 overflow-x-auto">
             {tags.map((tag) => (
               <Tag

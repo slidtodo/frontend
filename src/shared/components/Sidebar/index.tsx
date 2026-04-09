@@ -28,6 +28,7 @@ import { usePostGoal, usePostLogout } from '@/shared/lib/query/mutations';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 import { userQueries } from '@/shared/lib/query/queryKeys';
 import { CurrentUserResponse } from '@/shared/lib/api';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 import SidebarMobile from './SidebarMobileDrawer';
 
 // TODO: 전체적으로 정리필요
@@ -54,6 +55,7 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
   const isOpen = useSidebarOpen();
   const pathname = usePathname();
   const [notificationOpen, setNotificationOpen] = useState(false);
+  const { t } = useLanguage();
 
   const { mutate } = usePostGoal();
   const { mutate: logout } = usePostLogout();
@@ -141,14 +143,14 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
                 className="flex items-center justify-start gap-[10px] rounded-[20px] px-[14px] py-[10px] transition-all duration-100 hover:bg-gray-100"
               >
                 <SettingsIcon color="#BBBBBB" size={24} />
-                <span className="text-lg font-semibold text-gray-500">설정</span>
+                <span className="text-lg font-semibold text-gray-500">{t.sidebar.settings}</span>
               </button>
               <button
                 onClick={() => logout()}
                 className="flex items-center justify-start gap-[10px] rounded-[20px] px-[14px] py-[10px] transition-all duration-100 hover:bg-gray-100"
               >
                 <LogOutIcon color="#BBBBBB" size={24} />
-                <span className="text-lg font-semibold text-gray-500">로그아웃</span>
+                <span className="text-lg font-semibold text-gray-500">{t.sidebar.logout}</span>
               </button>
             </div>
           </div>
@@ -160,8 +162,8 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
               onClick={() =>
                 openModal(
                   <SinglePostModal
-                    title="목표 생성"
-                    placeholder="목표 제목을 입력하세요"
+                    title={t.sidebar.newGoalTitle}
+                    placeholder={t.sidebar.newGoalPlaceholder}
                     onConfirm={(title) => mutate({ title })}
                   />,
                 )
@@ -174,7 +176,7 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
                 size={40}
               />
               <span className="text-md cursor-pointer font-semibold text-[#ffffff] transition-all group-hover:font-bold lg:text-lg">
-                새 목표
+                {t.sidebar.newGoal}
               </span>
             </button>
             <button
@@ -202,7 +204,7 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
                 size={40}
               />
               <span className="text-md text-bearlog-600 cursor-pointer font-semibold transition-all group-hover:font-bold lg:text-lg">
-                새 할일
+                {t.sidebar.newTodo}
               </span>
             </button>
           </div>

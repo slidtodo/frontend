@@ -16,6 +16,7 @@ import { useNoteEditor } from '@/features/note/hooks/useNoteEditor';
 import EditorToolbar from '@/features/note/components/NoteEditor/EditorToolbar';
 import { createPortal } from 'react-dom';
 import { usePatchNote } from '@/shared/lib/query/mutations';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 import Empty from '@/shared/components/Empty';
 
 interface NoteEditClientProps {
@@ -38,6 +39,7 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
   const { showToast } = useToastStore();
   const { saveDraft } = useDraftNote(`note_draft_edit_${noteId}`);
   const setSlot = useMobileHeaderStore((s) => s.setSlot);
+  const { t } = useLanguage();
 
   const { showDraftToast, handleCloseToast, handleToastLoad } = useDraftNoteRestore({
     key: `note_draft_edit_${noteId}`,
@@ -57,12 +59,12 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
   const handleSaveDraft = useCallback(() => {
     try {
       saveDraft({ title, content, ...(linkUrl ? { linkUrl } : {}) });
-      showToast('임시 저장이 완료되었습니다 ・ 1초전', 'success');
+      showToast(t.note.tempSaveSuccess, 'success');
     } catch (error) {
-      showToast('임시 저장이 실패했습니다', 'fail');
+      showToast(t.note.tempSaveFail, 'fail');
       console.error('임시 저장 실패:', error);
     }
-  }, [title, content, linkUrl, saveDraft, showToast]);
+  }, [title, content, linkUrl, saveDraft, showToast, t]);
 
   const handleSubmit = useCallback(() => {
     patchNote({
@@ -82,7 +84,7 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
             className="px-1.5 text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
             onClick={handleSaveDraft}
           >
-            임시저장
+            {t.note.tempSave}
           </button>
           {showDraftToast && <DraftNoteToast onLoad={handleToastLoad} onClose={handleCloseToast} />}
         </div>
@@ -91,12 +93,12 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
           className="px-1.5 text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
           onClick={handleSubmit}
         >
-          수정
+          {t.note.edit}
         </button>
       </div>,
     );
     return () => setSlot(null);
-  }, [breakpoint, handleSaveDraft, handleSubmit, showDraftToast, handleToastLoad, handleCloseToast, setSlot]);
+  }, [breakpoint, handleSaveDraft, handleSubmit, showDraftToast, handleToastLoad, handleCloseToast, setSlot, t]);
 
   if (isNoteReadError) return <Empty>노트를 불러오는 데 실패했습니다.</Empty>;
 
@@ -109,7 +111,7 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
         )}
       {breakpoint !== 'mobile' && (
         <section className="mb-0 flex shrink-0 items-center justify-between md:mb-3 md:gap-4 lg:mb-[22px]">
-          <PageHeader title="노트 수정하기" />
+          <PageHeader title={t.note.createTitle} />
           <div className="flex gap-2">
             <div className="relative">
               <Button
@@ -117,7 +119,7 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
                 variant="secondary"
                 className="cursor-pointer text-sm md:h-10 md:px-[27px]"
               >
-                임시저장
+                {t.note.tempSave}
               </Button>
               {showDraftToast && <DraftNoteToast onLoad={handleToastLoad} onClose={handleCloseToast} />}
             </div>
@@ -127,7 +129,7 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
               variant="primary"
               className="cursor-pointer text-sm md:h-10 md:px-[27px]"
             >
-              {isPending ? '수정 중...' : '수정하기'}
+              {isPending ? `${t.note.edit}...` : t.note.edit}
             </Button>
           </div>
         </section>

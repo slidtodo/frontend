@@ -14,9 +14,11 @@ import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 import type { TodoListResponse } from '@/shared/lib/api';
 import { TodoOptions } from '@/shared/types/types';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 export default function AllTodoContent() {
   const breakpoint = useBreakpoint();
+  const { t } = useLanguage();
 
   const [selectedFilter, setSelectedFilter] = useState<TodoOptions>('ALL');
   const done = selectedFilter === 'ALL' ? undefined : selectedFilter === 'DONE';
@@ -30,12 +32,16 @@ export default function AllTodoContent() {
   return (
     <div className="mx-auto mb-[76px] flex max-w-[720px] flex-col gap-6">
       {breakpoint !== 'mobile' && (
-        <PageHeader title="모든 할 일" count={todoList?.totalCount ?? todoList?.todos?.length ?? 0} className="pl-2" />
+        <PageHeader
+          title={t.allTodo.title}
+          count={todoList?.totalCount ?? todoList?.todos?.length ?? 0}
+          className="pl-2"
+        />
       )}
       <section className="flex flex-col gap-3">
         <AllTodoFilter todos={todoList} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
         {todoList && (todoList.todos?.length ?? 0) === 0 ? (
-          <Empty>등록된 할 일이 없습니다.</Empty>
+          <Empty>{t.allTodo.empty}</Empty>
         ) : (
           <DataBoundary>
             <AllTodoFetcher todos={todoList} />
@@ -52,14 +58,16 @@ interface AllTodoFilterProps {
   setSelectedFilter: React.Dispatch<React.SetStateAction<TodoOptions>>;
 }
 function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilterProps) {
-  const todoButtons: { id: number; label: TodoOptions }[] = [
-    { id: 1, label: 'ALL' },
-    { id: 2, label: 'TO DO' },
-    { id: 3, label: 'DONE' },
-  ];
-  const { data: goalList } = useQuery(goalQueries.list());
   const { openTodoCreateModal } = useTodoCreateModal();
+  const { t } = useLanguage();
+  const { data: goalList } = useQuery(goalQueries.list());
   const defaultGoalId = todos.todos?.[0]?.goal?.id ?? goalList?.goals?.[0]?.id;
+
+  const todoButtons: { id: number; label: TodoOptions; translationKey: 'all' | 'todo' | 'done' }[] = [
+    { id: 1, label: 'ALL', translationKey: 'all' },
+    { id: 2, label: 'TO DO', translationKey: 'todo' },
+    { id: 3, label: 'DONE', translationKey: 'done' },
+  ];
 
   return (
     <div className="flex justify-between px-2">
@@ -74,7 +82,7 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
             }`}
             onClick={() => setSelectedFilter(button.label)}
           >
-            {button.label}
+            {t.allTodo[button.translationKey]}
           </button>
         ))}
       </div>
@@ -100,7 +108,7 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
       >
         <PlusIcon size={20} className="text-gray-500 group-hover:text-white" />
         <span className="overflow-hidden text-sm font-semibold text-ellipsis whitespace-nowrap text-gray-500 group-hover:text-white">
-          할 일 추가
+          {t.allTodo.addTodo}
         </span>
       </Button>
     </div>

@@ -11,11 +11,13 @@ import TaskCardWrapper from '@/features/dashboard/components/TaskCardWrapper';
 import { goalQueries } from '@/shared/lib/query/queryKeys';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 import { useGithubTodoCreateModal } from '@/features/todo/hooks/useGithubTodoCreateModal';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 interface GoalDetailProps {
   goalId: number;
 }
 export default function GoalDetail({ goalId }: GoalDetailProps) {
+  const { t } = useLanguage();
   const { openTodoCreateModal } = useTodoCreateModal();
   const { openGithubTodoCreateModal } = useGithubTodoCreateModal();
 
@@ -61,7 +63,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
               >
                 <CalendarIcon size={20} color="#737373" />
                 <Link href={`/calendar`} className="hidden w-full w-max text-sm font-semibold text-gray-500 md:block">
-                  캘린더 보기
+                  {t.goal.calendarView}
                 </Link>
               </Button>
               <Button
@@ -70,7 +72,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
               >
                 <PlusIcon size={20} />
                 <span className="hidden w-full w-max text-sm font-semibold md:block">
-                  {isGithubGoal ? '이슈/PR 추가' : '할 일 추가'}
+                  {isGithubGoal ? '이슈/PR 추가' : t.goal.addTodo}
                 </span>
               </Button>
             </div>
@@ -82,7 +84,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
               goalDetail.todoList.map((todo) => <TaskCardWrapper key={todo.id} item={todo} mode="todo" />)
             ) : (
               <div className="flex h-full items-center justify-center">
-                <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>
+                <Empty>{t.goal.emptyTodo}</Empty>
               </div>
             )}
           </div>
@@ -96,7 +98,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
               goalDetail.doneList.map((todo) => <TaskCardWrapper key={todo.id} item={todo} mode="done" />)
             ) : (
               <div className="flex h-full items-center justify-center">
-                <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>
+                <Empty>{t.goal.emptyTodo}</Empty>
               </div>
             )}
           </div>

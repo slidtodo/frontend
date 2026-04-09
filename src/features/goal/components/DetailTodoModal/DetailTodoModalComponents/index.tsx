@@ -11,6 +11,7 @@ import { useModalStore } from '@/shared/stores/useModalStore';
 import { TodoResponse } from '@/shared/lib/api';
 import { noteQueries } from '@/shared/lib/query/queryKeys';
 import { formatDate } from '@/shared/utils/utils';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 /** GitHub 소스 라벨 반환 */
 function getGithubSourceLabel(source: TodoResponse['source']): string | null {
@@ -24,6 +25,7 @@ interface DetailTodoModalComponentsProps {
 }
 const DetailTodoModalComponents = memo(function DetailTodoModalComponents({ todo }: DetailTodoModalComponentsProps) {
   const { closeModal } = useModalStore();
+  const { t } = useLanguage();
 
   if (!todo) return null;
 
@@ -48,15 +50,15 @@ const DetailTodoModalComponents = memo(function DetailTodoModalComponents({ todo
         <XIcon className="cursor-pointer text-slate-400" size={24} onClick={closeModal} />
       </div>
       <div className="flex flex-col gap-4">
-        <DetailItemSummary icon={<FlagIcon size={18} />} label="목표" value={todo?.goal?.title} />
+        <DetailItemSummary icon={<FlagIcon size={18} />} label={t.todo.goalLabel} value={todo?.goal?.title} />
         <DetailItemSummary
           icon={<CalendarIcon size={18} />}
-          label="마감기한"
+          label={t.todo.dueDateLabel}
           value={todo?.dueDate ? formatDate(todo.dueDate) : ''}
         />
         <DetailItemSummary
           icon={<HashIcon size={18} />}
-          label="태그"
+          label={t.todo.tagLabel}
           value={todo?.tags?.map((tag) => (
             <Tag key={tag.id} string={tag.name ?? ''} />
           ))}
@@ -98,7 +100,7 @@ const DetailTodoModalComponents = memo(function DetailTodoModalComponents({ todo
 
       {(todo?.imageUrl || (todo?.linkUrl && !githubSourceLabel)) && (
         <div className="flex flex-col gap-2">
-          <span className="text-base font-semibold text-gray-700">첨부파일</span>
+          <span className="text-base font-semibold text-gray-700">{t.todo.attachmentLabel}</span>
           <div className="flex flex-col gap-3">
             <div className="flex gap-1">
               <LinkIcon size={17} className="inline-block text-gray-400" />
@@ -117,7 +119,7 @@ const DetailTodoModalComponents = memo(function DetailTodoModalComponents({ todo
 
       {todo?.noteIds && todo.noteIds.length > 0 && (
         <div className="flex flex-col gap-2">
-          <span className="text-base font-semibold">작성된 노트</span>
+          <span className="text-base font-semibold">{t.todo.noteLabel}</span>
           {todo.noteIds.map((noteId) => (
             <NoteItem key={noteId} noteId={noteId} />
           ))}

@@ -8,12 +8,15 @@ import PageSubTitle from '@/shared/components/PageSubTitle';
 import GoalBox from '../GoalBox';
 
 import { GoalListResponse } from '@/shared/lib/api';
+
 import { goalQueries } from '@/shared/lib/query/queryKeys';
 import { useTodoModeStore } from '@/shared/stores/useTodoModeStore';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 export default function DashboardDetail() {
   const mode = useTodoModeStore((state) => state.mode);
   const { data: goals } = useQuery(goalQueries.list());
+  const { t } = useLanguage();
 
   const visibleGoals = goals?.goals?.filter((goal) => goal.source === mode) ?? [];
 
@@ -49,4 +52,3 @@ function GoalDetailItem({ goal }: { goal: GoalListResponse['goals'][number] }) {
 
   return <GoalBox data={goalDetail} />;
 }
-

@@ -15,9 +15,11 @@ import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 import type { TodoListResponse } from '@/shared/lib/api';
 import { TodoOptions } from '@/shared/types/types';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 export default function FavoriteTodoContent() {
   const breakpoint = useBreakpoint();
+  const { t } = useLanguage();
 
   const [selectedFilter, setSelectedFilter] = useState<TodoOptions>('ALL');
   const done = selectedFilter === 'ALL' ? undefined : selectedFilter === 'DONE';
@@ -50,7 +52,7 @@ export default function FavoriteTodoContent() {
     <div className="mx-auto mb-[76px] flex h-full max-w-[720px] flex-col gap-6">
       {breakpoint !== 'mobile' && (
         <PageHeader
-          title="찜한 할 일"
+          title={t.sidebar.favoriteTodo}
           count={favoriteTodoList?.totalCount ?? favoriteTodoList?.todos?.length ?? 0}
           className="pl-2"
         />
@@ -72,6 +74,7 @@ interface AllTodoFilterProps {
   setSelectedFilter: React.Dispatch<React.SetStateAction<TodoOptions>>;
 }
 function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilterProps) {
+  const { t } = useLanguage();
   const todoButtons: { id: number; label: TodoOptions }[] = [
     { id: 1, label: 'ALL' },
     { id: 2, label: 'TO DO' },
@@ -120,7 +123,7 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
       >
         <PlusIcon size={20} className="text-gray-500 group-hover:text-white" />
         <span className="overflow-hidden text-sm font-semibold text-ellipsis whitespace-nowrap text-gray-500 group-hover:text-white">
-          할 일 추가
+          {t.allTodo.addTodo}
         </span>
       </Button>
     </div>
@@ -134,10 +137,11 @@ interface AllTodoFetcherProps {
 }
 
 function AllTodoFetcher({ todos, selectedGoal, setSelectedGoal }: AllTodoFetcherProps) {
+  const { t } = useLanguage();
   const { data: goalList } = useQuery(goalQueries.list());
 
   const goalItems = [
-    { label: '전체 목표', value: '' },
+    { label: t.allTodo.allGoal, value: '' },
     ...(goalList?.goals
       ? goalList.goals.map((goal) => ({
           label: goal.title ?? '',
@@ -158,7 +162,7 @@ function AllTodoFetcher({ todos, selectedGoal, setSelectedGoal }: AllTodoFetcher
 
       <div className="flex h-full flex-col gap-4 overflow-y-auto">
         {(todos.todos?.length ?? 0) === 0 ? (
-          <Empty>등록된 할 일이 없습니다.</Empty>
+          <Empty>{t.allTodo.empty}</Empty>
         ) : (
           <div className="space-y-4">
             {todos.todos?.map((todo) => (

@@ -22,7 +22,7 @@ export default function CalendarClient() {
 
   const todos = calendarData?.todos ?? [];
 
-  const [selectedDay, setSelectedDay] = useState(today.getDate());
+  const [selectedDay, setSelectedDay] = useState<number | null>(today.getDate());
   const selectedDateKey = `${year}-${String(month).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`;
   const selectedDate = `${year}. ${String(month).padStart(2, '0')}. ${String(selectedDay).padStart(2, '0')}`;
   const todayTodos = todos.filter((todo) => todo.dueDate?.slice(0, 10) === selectedDateKey);
@@ -36,18 +36,23 @@ export default function CalendarClient() {
     ...(goalList?.goals ?? []).filter((g) => g.id != null).map((g) => ({ label: g.title ?? '', value: String(g.id) })),
   ];
 
+  const isCurrentMonth = (y: number, m: number) =>
+    y === today.getFullYear() && m === today.getMonth() + 1;
+
   const prevMonth = () => {
-    if (month === 1) {
-      setYear((y) => y - 1);
-      setMonth(12);
-    } else setMonth((m) => m - 1);
+    const newYear = month === 1 ? year - 1 : year;
+    const newMonth = month === 1 ? 12 : month - 1;
+    setYear(newYear);
+    setMonth(newMonth);
+    setSelectedDay(isCurrentMonth(newYear, newMonth) ? today.getDate() : null);
   };
 
   const nextMonth = () => {
-    if (month === 12) {
-      setYear((y) => y + 1);
-      setMonth(1);
-    } else setMonth((m) => m + 1);
+    const newYear = month === 12 ? year + 1 : year;
+    const newMonth = month === 12 ? 1 : month + 1;
+    setYear(newYear);
+    setMonth(newMonth);
+    setSelectedDay(isCurrentMonth(newYear, newMonth) ? today.getDate() : null);
   };
 
   return (

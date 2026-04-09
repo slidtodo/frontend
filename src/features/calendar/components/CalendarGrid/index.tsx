@@ -5,7 +5,7 @@ interface CalendarGridProps {
   year: number;
   month: number;
   todos: TodoResponse[];
-  selectedDay: number;
+  selectedDay: number | null;
   onSelectDay: (day: number) => void;
 }
 

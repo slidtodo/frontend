@@ -23,20 +23,20 @@ export default function CalendarCell({ day, todos, isLastRow, isSelected, onDayC
   return (
     <div
       className={clsx(
-        'border-border-secondary relative min-h-25 overflow-hidden p-1.5 md:min-h-30 md:p-2',
+        'border-border-secondary relative h-20 overflow-hidden p-1.5 md:h-28 md:p-2 lg:h-35.5',
         !isLastRow && 'border-b',
         'border-r nth-[7n]:border-r-0',
       )}
     >
       {isAllDone && (
         <>
-          <div className="bg-bearlog-500/10 absolute inset-0" />
+          <div className="bg-bearlog-500/10 pointer-events-none absolute inset-0" />
           <Image
             src="/image/stamp.png"
             alt="스탬프 이미지"
             width={80}
             height={80}
-            className="pointer-events-none absolute top-1/2 left-1/2 aspect-auto w-full -translate-x-1/2 -translate-y-1/2 opacity-80"
+            className="absolute top-1/2 left-1/2 aspect-auto w-full -translate-x-1/2 -translate-y-1/2 opacity-80"
           />
         </>
       )}

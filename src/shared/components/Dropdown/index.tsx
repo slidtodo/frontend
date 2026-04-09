@@ -56,9 +56,10 @@ interface DropdownProps extends React.HTMLAttributes<HTMLButtonElement> {
   isDisabled?: boolean;
   className?: string;
   defaultValue?: string;
+  icon?: React.ReactNode;
 }
 
-function Dropdown({ items, selectedValue, onSelectItem, isDisabled, className, defaultValue }: DropdownProps) {
+function Dropdown({ items, selectedValue, onSelectItem, isDisabled, className, defaultValue, icon }: DropdownProps) {
   const [isToggleOpen, setIsToggleOpen] = useState(false);
   const selectedItem =
     items.find((item) => item.value === selectedValue) || items.find((item) => item.value === defaultValue);
@@ -84,6 +85,7 @@ function Dropdown({ items, selectedValue, onSelectItem, isDisabled, className, d
         )}
         disabled={isDisabled}
       >
+        {icon}
         <span className="line-clamp-1 text-sm font-normal md:text-base">{selectedItem?.label} </span>
         {/* //TODO 선택된 아이템 표시 */}
         <ChevronDown size={16} className="text-gray-400 dark:text-white" />

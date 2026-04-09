@@ -1,8 +1,31 @@
-export default function CalendarPage() {
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+import { todoQueries, goalQueries, userQueries } from '@/shared/lib/query/queryKeys';
+import CalendarClient from '@/features/calendar/components/CalendarClient';
+import { DataBoundary } from '@/shared/components/ErrorSuspenseBoundary';
+
+export const dynamic = 'force-dynamic';
+
+export default async function CalendarPage() {
+  const queryClient = new QueryClient();
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1;
+
+  await Promise.all([
+    queryClient.prefetchQuery(todoQueries.calendar({ year, month })),
+    queryClient.prefetchQuery(goalQueries.list()),
+    queryClient.prefetchQuery(userQueries.current()),
+  ]);
+
+  const dehydratedState = dehydrate(queryClient);
+
   return (
-    <div className="flex w-full flex-col">
-      <h1 className="text-2xl font-bold">캘린더 페이지</h1>
-      <p>캘린더 기능은 현재 개발 중입니다.</p>
-    </div>
+    <HydrationBoundary state={dehydratedState}>
+      <div className="mx-auto flex h-full w-full max-w-[1312px] flex-col">
+        <DataBoundary>
+          <CalendarClient />
+        </DataBoundary>
+      </div>
+    </HydrationBoundary>
   );
 }

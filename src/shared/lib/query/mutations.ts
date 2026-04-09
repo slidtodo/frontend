@@ -327,7 +327,6 @@ export const usePatchTodo = (todoId?: number) => {
     },
 
     onError: (_error, _variables, context) => {
-      // optimistic update 롤백 — 에러 시 이전 상태로 즉시 복원
       if (todoId !== undefined && context?.previousTodo !== undefined) {
         queryClient.setQueryData(todoKeys.detail(todoId), context.previousTodo);
       }

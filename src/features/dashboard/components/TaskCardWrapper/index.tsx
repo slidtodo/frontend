@@ -39,23 +39,20 @@ export default function TaskCardWrapper({
       await patchTodo.mutateAsync({
         done: !todoDetail.done,
       });
-
       if (!todoDetail.done) {
-        // 완료 처리 시 type 필드("ISSUE" | "PR")로 소스 분기
-        if (todoDetail.type === 'ISSUE') {
-          showToast('할 일을 완료했습니다. GitHub Issue가 close됩니다.');
-        } else if (todoDetail.type === 'PR') {
-          showToast('할 일을 완료했습니다. GitHub PR이 merge됩니다.');
+        if (isGithubTodo) {
+          const githubMessage =
+            todoDetail.type === 'ISSUE'
+              ? '할 일을 완료했습니다. GitHub Issue가 close됩니다.'
+              : '할 일을 완료했습니다. GitHub PR이 merge됩니다.';
+          showToast(githubMessage);
         } else {
-          showToast('할 일을 완료했습니다.');
+          showToast(t.mutations.todoCompleted);
         }
       } else {
-        showToast('할 일을 미완료 처리했습니다.');
+        showToast(t.mutations.todoUncompleted);
       }
-
-      showToast(!todoDetail.done ? t.mutations.todoCompleted : t.mutations.todoUncompleted);
     } catch (error) {
-      // GitHub 연동 todo 완료 실패 시 상세 에러 메시지 표시
       if (isGithubTodo && !todoDetail.done) {
         const message =
           error instanceof ApiError

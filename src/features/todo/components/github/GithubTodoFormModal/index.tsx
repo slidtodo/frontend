@@ -14,8 +14,9 @@ import { ApiError, PostTodoRequest } from '@/shared/lib/api';
 import { usePostTodo } from '@/shared/lib/query/mutations';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { formatDateForAPI } from '@/shared/utils/utils';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
-type GithubTodoSource = 'GITHUB_ISSUES' | 'GITHUB_PR';
+type GithubTodoSource = 'GITHUB_ISSUE' | 'GITHUB_PR';
 
 interface GithubTodoFormModalProps {
   goalId: number;
@@ -33,7 +34,7 @@ type GithubTodoFormValues = {
 const SOURCE_OPTIONS: { label: string; value: GithubTodoSource }[] = [
   {
     label: 'Issues',
-    value: 'GITHUB_ISSUES',
+    value: 'GITHUB_ISSUE',
   },
   {
     label: 'PR',
@@ -44,6 +45,7 @@ const SOURCE_OPTIONS: { label: string; value: GithubTodoSource }[] = [
 export default function GithubTodoFormModal({ goalId }: GithubTodoFormModalProps) {
   const { closeModal } = useModalStore();
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   const {
     register,
@@ -56,13 +58,11 @@ export default function GithubTodoFormModal({ goalId }: GithubTodoFormModalProps
     defaultValues: {
       title: '',
       dueDate: undefined,
-      source: 'GITHUB_ISSUES',
+      source: 'GITHUB_ISSUE',
       headBranch: '',
       baseBranch: '',
     },
   });
-
-  register('dueDate', { required: '마감기한은 필수입니다.' });
 
   const dueDate = useWatch({ control, name: 'dueDate' });
   const source = useWatch({ control, name: 'source' });
@@ -95,9 +95,7 @@ export default function GithubTodoFormModal({ goalId }: GithubTodoFormModalProps
       await postTodoMutation.mutateAsync(body);
       closeModal();
     } catch (error) {
-      setSubmitError(
-        error instanceof ApiError ? error.message : '요청 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
-      );
+      setSubmitError(error instanceof ApiError ? error.message : t.todo.submitError);
     }
   };
 
@@ -111,7 +109,7 @@ export default function GithubTodoFormModal({ goalId }: GithubTodoFormModalProps
     >
       <div className="mb-1 flex items-center justify-between md:mb-4">
         <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold text-gray-800">할 일 생성</h1>
+          <h1 className="text-xl font-semibold text-gray-800">{t.todo.createTitle}</h1>
         </div>
         <button
           type="button"
@@ -221,6 +219,7 @@ export default function GithubTodoFormModal({ goalId }: GithubTodoFormModalProps
 
       <FormField label="마감기한" required>
         <DateInput
+          {...register('dueDate', { required: t.todo.dueDateRequired })}
           date={selectedDate}
           onSelect={(nextDate) => {
             setValue('dueDate', nextDate ? formatDateForAPI(nextDate) : undefined, {

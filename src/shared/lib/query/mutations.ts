@@ -242,8 +242,9 @@ export const usePostTodo = () => {
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
     },
     onError: (error) => {
-      const message = error instanceof ApiError ? error.message : '할 일 생성에 실패했습니다.';
-      showToast(t.mutations.todoCreateFail, 'fail');
+      console.error(error);
+      const message = error instanceof ApiError ? error.message : t.mutations.todoCreateFail;
+      showToast(message, 'fail');
     },
   });
 };

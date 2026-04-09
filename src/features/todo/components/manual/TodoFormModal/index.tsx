@@ -74,8 +74,6 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         },
   });
 
-  register('dueDate', { required: t.todo.dueDateRequired });
-
   const tags = (useWatch({ control, name: 'tags' }) ?? []).filter((tag): tag is string => tag !== null);
   const goalId = useWatch({ control, name: 'goalId' });
   const linkUrl = useWatch({ control, name: 'linkUrl' });
@@ -162,9 +160,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
 
       closeModal();
     } catch (error) {
-      setSubmitError(
-        error instanceof ApiError ? error.message : t.todo.submitError,
-      );
+      setSubmitError(error instanceof ApiError ? error.message : t.todo.submitError);
     }
   };
 
@@ -226,6 +222,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
 
       <FormField label={t.todo.dueDateLabel} required>
         <DateInput
+          {...register('dueDate', { required: t.todo.dueDateRequired })}
           date={selectedDate}
           onSelect={(nextDate) => {
             setValue('dueDate', nextDate ? formatDateForAPI(nextDate) : undefined, { shouldValidate: true });

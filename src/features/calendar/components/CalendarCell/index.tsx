@@ -42,7 +42,7 @@ export default function CalendarCell({ day, todos, isLastRow, isSelected, onDayC
       )}
       {day != null && (
         <>
-          <button onClick={() => day != null && onDayClick?.(day)} className="mb-1.5 flex justify-start">
+          <button onClick={() => onDayClick?.(day)} className="mb-1.5 flex justify-start">
             <span
               className={clsx(
                 'flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-xs font-semibold',

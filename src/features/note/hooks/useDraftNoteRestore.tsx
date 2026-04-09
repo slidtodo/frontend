@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DraftNote, useDraftNote } from './useDraftNote';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { PopupModal } from '@/shared/components/Modal/PopupModal';
@@ -17,10 +17,15 @@ export function useDraftNoteRestore({ key, onRestore }: UseDraftNoteRestoreOptio
   const [draftState, setDraftState] = useState<{
     draft: DraftNote | null;
     showDraftToast: boolean;
-  }>(() => {
+  }>({ draft: null, showDraftToast: false });
+
+  useEffect(() => {
     const saved = getDraft();
-    return { draft: saved ?? null, showDraftToast: !!saved };
-  });
+    if (saved) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setDraftState({ draft: saved, showDraftToast: true });
+    }
+  }, [getDraft]);
 
   const { draft, showDraftToast } = draftState;
 

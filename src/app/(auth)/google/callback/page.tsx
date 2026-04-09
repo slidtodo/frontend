@@ -17,7 +17,7 @@ export default function GoogleCallbackPage() {
 
     const login = async () => {
       try {
-        await fetchAuth.postGoogleLogin({ code });
+        await fetchAuth.postGoogleLoginByEnv({ code });
         router.push('/dashboard');
       } catch (error) {
         console.error('구글 로그인 콜백 실패:', error);

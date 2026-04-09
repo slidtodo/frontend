@@ -34,7 +34,7 @@ import { twMerge } from 'tailwind-merge';
  * @param isDisabled - 비활성화 여부 (기본값: false)
  * @param className - 추가 스타일 클래스
  */
-const dropdownVariants = cva(
+export const dropdownVariants = cva(
   'rounded-xl border border-[#CCC] bg-[#FFF] flex p-4 items-center gap-2 self-stretch text-base font-medium justify-between',
   {
     variants: {
@@ -86,7 +86,7 @@ function Dropdown({ items, selectedValue, onSelectItem, isDisabled, className, d
       >
         <span className="line-clamp-1 text-sm font-normal md:text-base">{selectedItem?.label} </span>
         {/* //TODO 선택된 아이템 표시 */}
-        <ChevronDown size={16} className="text-[#A4A4A4] dark:text-white" />
+        <ChevronDown size={16} className="text-gray-400 dark:text-white" />
       </button>
       <div className="absolute top-full right-0 left-0 z-50 mt-1">
         {isToggleOpen && <DropdownList className="w-full" items={items} onSelectItem={handleSelectItem} />}

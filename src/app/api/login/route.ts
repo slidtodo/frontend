@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 
 const apiBaseUrl = (process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL ?? '').replace(/\/+$/, '');
+const isDevApi = process.env.NEXT_PUBLIC_USE_DEV_API === 'true';
+const loginEndpoint = isDevApi ? '/api/v1/dev/auth/login' : '/api/v1/auth/login';
 
 export async function POST(request: Request) {
   const body = (await request.json()) as {
@@ -8,7 +10,7 @@ export async function POST(request: Request) {
     password?: string;
   };
 
-  const response = await fetch(`${apiBaseUrl}/api/v1/auth/login`, {
+  const response = await fetch(`${apiBaseUrl}${loginEndpoint}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -31,7 +33,7 @@ export async function POST(request: Request) {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      maxAge: 60 * 14,
+      maxAge: 60 * 30,
     });
   }
   if (data.refreshToken) {
@@ -40,7 +42,7 @@ export async function POST(request: Request) {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      maxAge: 60 * 59,
+      maxAge: 60 * 60 * 24 * 7,
     });
   }
 

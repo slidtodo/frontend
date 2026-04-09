@@ -17,7 +17,7 @@ export default function NoteItem({ note, goalId }: { note: Note; goalId: string 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 md:gap-4">
             <Image src={noteIcon} sizes="32" alt="노트 아이콘" className="md:h-10 md:w-10" />
-            <h1 className="line-clamp-1 text-sm font-semibold text-[#1E293B] md:text-xl">{note.title}</h1>
+            <h3 className="line-clamp-1 text-sm font-semibold text-[#1E293B] md:text-xl">{note.title}</h3>
           </div>
           <EllipsisButton
             items={[

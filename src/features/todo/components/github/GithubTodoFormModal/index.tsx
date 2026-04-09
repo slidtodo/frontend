@@ -26,6 +26,8 @@ type GithubTodoFormValues = {
   title: string;
   dueDate?: string;
   source: GithubTodoSource;
+  headBranch?: string;
+  baseBranch?: string;
 };
 
 const SOURCE_OPTIONS: { label: string; value: GithubTodoSource; description: string }[] = [
@@ -57,6 +59,8 @@ export default function GithubTodoFormModal({ goalId, goalTitle }: GithubTodoFor
       title: '',
       dueDate: undefined,
       source: 'GITHUB_ISSUE',
+      headBranch: '',
+      baseBranch: '',
     },
   });
 
@@ -66,6 +70,7 @@ export default function GithubTodoFormModal({ goalId, goalTitle }: GithubTodoFor
   const source = useWatch({ control, name: 'source' });
 
   const selectedDate = dueDate ? new Date(dueDate) : undefined;
+  const isPR = source === 'GITHUB_PR';
 
   const postTodoMutation = usePostTodo();
   const isSubmitting = postTodoMutation.isPending;
@@ -82,6 +87,11 @@ export default function GithubTodoFormModal({ goalId, goalTitle }: GithubTodoFor
         linkUrl: undefined,
         imageUrl: undefined,
         tags: [],
+        // PR 생성 시 headBranch(소스 브랜치, 이미 존재해야 함)와 baseBranch(대상 브랜치) 전달
+        ...(isPR && {
+          headBranch: data.headBranch?.trim() || undefined,
+          baseBranch: data.baseBranch?.trim() || undefined,
+        }),
       };
 
       await postTodoMutation.mutateAsync(body);
@@ -148,41 +158,21 @@ export default function GithubTodoFormModal({ goalId, goalTitle }: GithubTodoFor
       </FormField>
 
       {/* PR 생성 안내 */}
-      {source === 'GITHUB_PR' && (
+      {isPR && (
         <div className="rounded-2xl bg-[#F6F8FA] px-4 py-3 text-xs leading-5 text-gray-600">
           <p className="font-semibold text-gray-700">PR 생성 방식</p>
-          <p>• 연결된 레포의 기본 브랜치를 기준으로 새 브랜치를 생성합니다.</p>
-          <p>• 할 일 ID 기준 브랜치(todo-{'{id}'})와 마크다운 파일이 자동 생성됩니다.</p>
+          <p>• PR을 생성할 소스 브랜치(Head)와 대상 브랜치(Base)를 직접 입력하세요.</p>
+          <p>• 두 브랜치는 레포에 이미 존재해야 합니다.</p>
           <p>• 완료 처리 시 실제 PR이 merge됩니다.</p>
-          {/*
-           * TODO(백엔드 협업 필요):
-           * POST /api/v1/todos (source=GITHUB_PR) 요청 시 백엔드에서 아래 처리 필요:
-           *   1. GitHubApiClient.createBranch(accessToken, repoFullName, baseBranch, "todo-{id}") 호출
-           *   2. GitHubApiClient.createPullRequest(accessToken, repoFullName, title, "todo-{id}", baseBranch) 호출
-           *   3. 생성된 PR의 number → sourceItemId, html_url → linkUrl 저장
-           * PATCH /api/v1/todos/{id} (done=true, source=GITHUB_PR) 시:
-           *   1. GitHubApiClient.mergePullRequest(accessToken, repoFullName, sourceItemId) 호출
-           *   2. 실패 시 에러 코드 GITHUB_PR_MERGE_FAILED 응답
-           */}
         </div>
       )}
 
       {/* Issue 생성 안내 */}
-      {source === 'GITHUB_ISSUE' && (
+      {!isPR && (
         <div className="rounded-2xl bg-[#F6F8FA] px-4 py-3 text-xs leading-5 text-gray-600">
           <p className="font-semibold text-gray-700">Issue 생성 방식</p>
           <p>• 연결된 레포에 GitHub Issue가 생성됩니다.</p>
           <p>• 완료 처리 시 실제 Issue가 close됩니다.</p>
-          {/*
-           * TODO(백엔드 협업 필요):
-           * POST /api/v1/todos (source=GITHUB_ISSUE) 요청 시 백엔드에서 아래 처리 필요:
-           *   1. GitHubApiClient.createIssue(accessToken, repoFullName, title) 호출
-           *   2. 생성된 Issue의 number → sourceItemId, html_url → linkUrl 저장
-           *   3. 응답의 linkUrl이 있어야 프론트 TaskLinkGithub 아이콘이 활성화됨
-           * PATCH /api/v1/todos/{id} (done=true, source=GITHUB_ISSUE) 시:
-           *   1. GitHubApiClient.closeIssue(accessToken, repoFullName, sourceItemId) 호출
-           *   2. 실패 시 에러 코드 GITHUB_ISSUE_CLOSE_FAILED 응답
-           */}
         </div>
       )}
 
@@ -190,11 +180,35 @@ export default function GithubTodoFormModal({ goalId, goalTitle }: GithubTodoFor
         <Input
           autoFocus
           {...register('title', { required: '제목은 필수입니다.' })}
-          placeholder={source === 'GITHUB_ISSUE' ? 'GitHub Issue 제목을 입력해주세요' : 'GitHub PR 제목을 입력해주세요'}
+          placeholder={isPR ? 'GitHub PR 제목을 입력해주세요' : 'GitHub Issue 제목을 입력해주세요'}
           className="h-11 rounded-xl border-gray-300 p-3 text-sm font-normal text-[#333] placeholder:text-gray-500 md:h-14 md:rounded-2xl md:p-4 md:text-base"
         />
         {errors.title && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.title.message}</p>}
       </FormField>
+
+      {/* PR 전용 — Head 브랜치 입력 */}
+      {isPR && (
+        <FormField label="Head 브랜치 (소스)" required>
+          <Input
+            {...register('headBranch', { required: 'Head 브랜치는 PR 생성에 필수입니다.' })}
+            placeholder="예: feature/my-feature"
+            className="h-11 rounded-xl border-gray-300 p-3 text-sm font-normal text-[#333] placeholder:text-gray-500 md:h-14 md:rounded-2xl md:p-4 md:text-base"
+          />
+          {errors.headBranch && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.headBranch.message}</p>}
+        </FormField>
+      )}
+
+      {/* PR 전용 — Base 브랜치 입력 */}
+      {isPR && (
+        <FormField label="Base 브랜치" required>
+          <Input
+            {...register('baseBranch', { required: 'Base 브랜치는 PR 생성에 필수입니다.' })}
+            placeholder="예: main, develop"
+            className="h-11 rounded-xl border-gray-300 p-3 text-sm font-normal text-[#333] placeholder:text-gray-500 md:h-14 md:rounded-2xl md:p-4 md:text-base"
+          />
+          {errors.baseBranch && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.baseBranch.message}</p>}
+        </FormField>
+      )}
 
       <FormField label="마감기한" required>
         <DateInput
@@ -224,7 +238,7 @@ export default function GithubTodoFormModal({ goalId, goalTitle }: GithubTodoFor
           취소
         </Button>
         <Button type="submit" variant="primary" className="h-12 w-full md:h-14" disabled={isSubmitting}>
-          {isSubmitting ? '생성 중...' : source === 'GITHUB_ISSUE' ? 'Issue 생성' : 'PR 생성'}
+          {isSubmitting ? '생성 중...' : isPR ? 'PR 생성' : 'Issue 생성'}
         </Button>
       </div>
     </form>

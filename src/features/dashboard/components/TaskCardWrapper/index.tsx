@@ -29,8 +29,8 @@ export default function TaskCardWrapper({
   const handleCheckboxClick = async () => {
     if (todoDetail?.id === undefined) return;
 
-    // GitHub 연동 todo는 완료 후 되돌리기 불가
-    const isGithubTodo = todoDetail.source === 'GITHUB_ISSUE' || todoDetail.source === 'GITHUB_PR';
+    // GitHub 연동 todo는 완료 후 되돌리기 불가 — 백엔드는 source를 "github"(소문자)로 반환
+    const isGithubTodo = todoDetail.source === 'github';
     if (isGithubTodo && todoDetail.done) return;
 
     try {
@@ -39,10 +39,10 @@ export default function TaskCardWrapper({
       });
 
       if (!todoDetail.done) {
-        // 완료 처리 시 소스 타입에 따라 메시지 분기
-        if (todoDetail.source === 'GITHUB_ISSUE') {
+        // 완료 처리 시 type 필드("ISSUE" | "PR")로 소스 분기
+        if (todoDetail.type === 'ISSUE') {
           showToast('할 일을 완료했습니다. GitHub Issue가 close됩니다.');
-        } else if (todoDetail.source === 'GITHUB_PR') {
+        } else if (todoDetail.type === 'PR') {
           showToast('할 일을 완료했습니다. GitHub PR이 merge됩니다.');
         } else {
           showToast('할 일을 완료했습니다.');
@@ -56,7 +56,7 @@ export default function TaskCardWrapper({
         const message =
           error instanceof ApiError
             ? error.message
-            : todoDetail.source === 'GITHUB_ISSUE'
+            : todoDetail.type === 'ISSUE'
               ? 'GitHub Issue close에 실패했습니다. 잠시 후 다시 시도해주세요.'
               : 'GitHub PR merge에 실패했습니다. 잠시 후 다시 시도해주세요.';
         showToast(message, 'fail');

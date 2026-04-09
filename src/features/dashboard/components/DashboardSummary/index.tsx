@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRef, useEffect } from 'react';
 import { ChevronRightIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 
@@ -19,7 +20,7 @@ import { useTodoModeStore, TodoMode } from '@/shared/stores/useTodoModeStore';
 
 export default function DashBoardSummary() {
   const { data: user } = useQuery(userQueries.current());
-  const { data: goals } = useQuery(goalQueries.list());
+  const { data: goals, isFetched: isGoalsFetched } = useQuery(goalQueries.list());
   const breakpoint = useBreakpoint();
   const mode = useTodoModeStore((state) => state.mode);
   const setMode = useTodoModeStore((state) => state.setMode);
@@ -27,12 +28,41 @@ export default function DashBoardSummary() {
 
   const githubGoals = goals?.goals?.filter((goal) => goal.source === 'GITHUB') ?? [];
 
+  // GITHUB 모드 세션 내에서 레포 연결 모달 중복 오픈 방지
+  const githubModalOpenedRef = useRef(false);
+  const prevGithubGoalsLengthRef = useRef(githubGoals.length);
+
   const handleModeChange = (nextMode: TodoMode) => {
     setMode(nextMode);
-    if (nextMode === 'GITHUB' && githubGoals.length === 0) {
+  };
+
+  /**
+   * GITHUB 모드로 전환 시 연결된 레포가 없으면 레포 연결 모달 오픈.
+   * - handleModeChange에서 처리하지 않고 useEffect로 처리하는 이유:
+   *   goals 쿼리가 아직 로딩 중일 때 모드를 전환하면 githubGoals가 빈 배열로 평가되어
+   *   오판이 발생할 수 있기 때문에 isGoalsFetched 이후 판단.
+   * - MANUAL 전환 시 ref 초기화 → GITHUB 재진입 시 조건 재평가
+   * - 레포가 있다가 해제된 경우(length > 0 → 0) ref 초기화 → 바로 모달 오픈
+   */
+  useEffect(() => {
+    const prevLength = prevGithubGoalsLengthRef.current;
+    prevGithubGoalsLengthRef.current = githubGoals.length;
+
+    if (mode !== 'GITHUB') {
+      githubModalOpenedRef.current = false;
+      return;
+    }
+
+    // 레포가 있다가 모두 해제된 경우 → 모달 다시 열 수 있도록 ref 초기화
+    if (prevLength > 0 && githubGoals.length === 0) {
+      githubModalOpenedRef.current = false;
+    }
+
+    if (isGoalsFetched && githubGoals.length === 0 && !githubModalOpenedRef.current) {
+      githubModalOpenedRef.current = true;
       openModal(<GithubRepoConnectModal />, undefined, 'bottom');
     }
-  };
+  }, [mode, isGoalsFetched, githubGoals.length, openModal]);
 
   return (
     <>

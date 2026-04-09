@@ -750,11 +750,17 @@ export interface components {
             linkUrl?: string | null;
             /** @description 이미지 URL */
             imageUrl?: string | null;
+            /** @description 할일 출처 (manual, github, MANUAL, GITHUB_ISSUE, GITHUB_PR) */
+            source?: string | null;
             /**
-             * @description 할일 출처 (MANUAL, GITHUB_ISSUE, GITHUB_PR)
+             * @description 할일 타입 (BASIC, ISSUE, PR)
              * @enum {string|null}
              */
-            source?: "MANUAL" | "GITHUB_ISSUE" | "GITHUB_PR" | null;
+            type?: "BASIC" | "ISSUE" | "PR" | null;
+            /** @description PR 생성 시 source branch */
+            headBranch?: string | null;
+            /** @description PR 생성 시 base branch */
+            baseBranch?: string | null;
             /**
              * Format: int64
              * @description 외부 소스 항목 ID
@@ -805,11 +811,13 @@ export interface components {
             imageUrl?: string | null;
             /** @description 링크 URL */
             linkUrl?: string | null;
+            /** @description 할일 출처 (manual, github) */
+            source: string;
             /**
-             * @description 할일 출처 (MANUAL, GITHUB_ISSUE, GITHUB_PR)
-             * @enum {string}
+             * @description 할일 타입 (BASIC, ISSUE, PR)
+             * @enum {string|null}
              */
-            source: "MANUAL" | "GITHUB_ISSUE" | "GITHUB_PR";
+            type?: "BASIC" | "ISSUE" | "PR" | null;
             /**
              * Format: int64
              * @description 외부 소스 항목 ID (GitHub issue/PR 번호)

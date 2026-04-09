@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { fetchAuth } from '../api';
+import { ApiError } from '../api/utils';
 import { fetchGoals, GoalListResponse, PatchGoalResponse, PostGoalRequest } from '../api/fetchGoals';
 import { ConnectGithubRepositoryRequest, fetchGithubIntegrations } from '../api/fetchGithubIntegrations';
 import { fetchNotes, PatchNoteRequest } from '../api/fetchNotes';
@@ -162,6 +163,20 @@ export const useDisconnectGithubGoal = (goalId?: number) => {
 
       return fetchGithubIntegrations.deleteConnectedGoal(goalId);
     },
+    onMutate: async () => {
+      if (goalId === undefined) throw new Error('Goal id is required');
+
+      await queryClient.cancelQueries({ queryKey: goalKeys.lists() });
+      const previousGoals = queryClient.getQueryData(goalKeys.list());
+
+      // 즉시 UI 갱신: 해당 goal을 list에서 제거 (source가 MANUAL로 변경되어 GITHUB 모드에서 사라짐)
+      queryClient.setQueryData(goalKeys.list(), (old: GoalListResponse | undefined) => ({
+        ...old,
+        goals: (old?.goals ?? []).filter((goal) => goal.id !== goalId),
+      }));
+
+      return { previousGoals };
+    },
     onSuccess: () => {
       showToast('GitHub 저장소 연결이 해제되었습니다.');
       queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
@@ -170,7 +185,11 @@ export const useDisconnectGithubGoal = (goalId?: number) => {
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
       router.push('/dashboard');
     },
-    onError: () => {
+    onError: (_error, _variables, context) => {
+      // optimistic update 롤백
+      if (context?.previousGoals !== undefined) {
+        queryClient.setQueryData(goalKeys.list(), context.previousGoals);
+      }
       showToast('GitHub 저장소 연결 해제에 실패했습니다.', 'fail');
     },
   });
@@ -217,8 +236,9 @@ export const usePostTodo = () => {
       queryClient.invalidateQueries({ queryKey: goalKeys.details() });
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
     },
-    onError: () => {
-      showToast('할 일 생성에 실패했습니다.', 'fail');
+    onError: (error) => {
+      const message = error instanceof ApiError ? error.message : '할 일 생성에 실패했습니다.';
+      showToast(message, 'fail');
     },
   });
 };

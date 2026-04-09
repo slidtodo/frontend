@@ -77,7 +77,7 @@ export default function GoalBox({ data }: GoalBoxProps) {
     setDropdownOpen(false);
     openModal(
       <PopupModal
-        variant={{ type: 'githubDisconnect' }}
+        variant={{ type: 'githubRepoDisconnect' }}
         onConfirm={() => disconnectGithubGoal()}
       />,
     );

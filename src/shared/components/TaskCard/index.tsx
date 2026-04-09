@@ -15,15 +15,15 @@ import { useDeleteTodo } from '@/shared/lib/query/mutations';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { TodoResponse } from '@/shared/lib/api';
 
-/** GitHub 연동 todo 여부 */
+/** GitHub 연동 todo 여부 — 백엔드는 source를 항상 "github"(소문자)로 반환 */
 function isGithubTodo(source: TodoResponse['source']) {
-  return source === 'GITHUB_ISSUE' || source === 'GITHUB_PR';
+  return source === 'github';
 }
 
-/** GitHub 연동 todo의 뱃지 레이블 */
-function getGithubSourceLabel(source: TodoResponse['source']) {
-  if (source === 'GITHUB_ISSUE') return 'Issue';
-  if (source === 'GITHUB_PR') return 'PR';
+/** GitHub 연동 todo의 뱃지 레이블 — type 필드("ISSUE" | "PR")로 구분 */
+function getGithubSourceLabel(type: TodoResponse['type']) {
+  if (type === 'ISSUE') return 'Issue';
+  if (type === 'PR') return 'PR';
   return null;
 }
 
@@ -124,7 +124,7 @@ interface TaskGithubBadgeProps {
   todo: TodoResponse;
 }
 function TaskGithubBadge({ todo }: TaskGithubBadgeProps) {
-  const label = getGithubSourceLabel(todo.source);
+  const label = getGithubSourceLabel(todo.type);
   if (!label) return null;
 
   return (
@@ -221,6 +221,7 @@ function TaskEditTodo({ todo }: TaskLinkDetailProps) {
             });
             setOpen(false);
           }}
+          editDisabled={isGithubTodo(todo.source)}
           handleDelete={handleDelete}
           onClose={() => setOpen(false)}
           anchorRef={buttonRef}

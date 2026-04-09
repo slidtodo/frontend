@@ -66,6 +66,7 @@ type PopupModalVariant =
   | { type: 'noteLoad'; noteTitle: string }
   | { type: 'postCancel' }
   | { type: 'githubDisconnect' }
+  | { type: 'githubRepoDisconnect' }
   | { type: 'accountDelete'; isLocalUser: boolean };
 
 interface PopupModalProps {
@@ -116,6 +117,13 @@ function getConfig(variant: PopupModalVariant): ModalConfig {
         warning: '해제 후 GitHub으로 로그인할 수 없습니다.',
         confirmLabel: '연동 해제',
         labelledBy: 'confirm-modal-github-disconnect',
+      };
+    case 'githubRepoDisconnect':
+      return {
+        titleLines: ['GitHub 레포 연결을 해제하시겠어요?'],
+        warning: '해제 시 이 목표의 Issue·PR 할 일을 더 이상 생성할 수 없습니다.',
+        confirmLabel: '연결 해제',
+        labelledBy: 'confirm-modal-github-repo-disconnect',
       };
     case 'accountDelete':
       return {

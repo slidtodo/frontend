@@ -8,6 +8,7 @@ import { GoalDetailResponse } from '@/shared/lib/api';
 import { usePatchTodo, usePatchTodoFavorite } from '@/shared/lib/query/mutations';
 import { todoQueries } from '@/shared/lib/query/queryKeys';
 import { useToastStore } from '@/shared/stores/useToastStore';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 export default function TaskCardWrapper({
   item,
@@ -17,6 +18,7 @@ export default function TaskCardWrapper({
   mode: 'todo' | 'done';
 }) {
   const { showToast } = useToastStore();
+  const { t } = useLanguage();
 
   // 할 일 상세 정보를 가져오기 위한 query 훅
   const { data: todoDetail } = useQuery({
@@ -34,7 +36,7 @@ export default function TaskCardWrapper({
         done: !todoDetail.done,
       });
 
-      showToast(`할 일을${!todoDetail.done ? ' 완료했습니다.' : ' 미완료 처리했습니다.'}`);
+      showToast(!todoDetail.done ? t.mutations.todoCompleted : t.mutations.todoUncompleted);
     } catch (error) {
       console.error('할 일 상태 업데이트 실패:', error);
     }
@@ -50,7 +52,7 @@ export default function TaskCardWrapper({
 
     patchTodoFavorite(undefined, {
       onSuccess: () => {
-        showToast(`즐겨찾기에 ${nextStarred ? '추가되었습니다.' : '해제되었습니다.'}`);
+        showToast(nextStarred ? t.mutations.favoriteAdded : t.mutations.favoriteRemoved);
       },
       onError: (error) => {
         console.error(error);

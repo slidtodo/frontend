@@ -9,6 +9,7 @@ import { useMobileHeaderStore } from '@/shared/stores/useMobileHeaderStore';
 import { CurrentUserResponse } from '@/shared/lib/api/fetchUsers';
 import { todoQueries } from '@/shared/lib/query/queryKeys';
 import { useQuery } from '@tanstack/react-query';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 interface SidebarMobileCaseProps {
   user: CurrentUserResponse | undefined;
@@ -17,6 +18,7 @@ export default function SidebarMobileCase({ user }: SidebarMobileCaseProps) {
   const pathname = usePathname();
   const slot = useMobileHeaderStore((s) => s.slot);
   const [notificationOpen, setNotificationOpen] = useState(false);
+  const { t } = useLanguage();
 
   const { data: todoList } = useQuery(todoQueries.list());
   const favoriteCount = todoList?.todos?.filter((todo) => todo.favorite).length ?? 0;
@@ -34,25 +36,25 @@ export default function SidebarMobileCase({ user }: SidebarMobileCaseProps) {
   );
 
   if (pathname === '/dashboard') {
-    title = `${user?.nickname ?? '체다치즈'}님의 대시보드`;
+    title = `${user?.nickname ?? '체다치즈'}${t.dashboard.title}`;
   } else if (/^\/goal\/[^/]+$/.test(pathname)) {
-    title = `${user?.nickname ?? '체다치즈'}님의 목표`;
+    title = `${user?.nickname ?? '체다치즈'}${t.goal.title}`;
   } else if (pathname === '/dashboard/all-todo') {
-    title = '모든 할 일';
+    title = t.allTodo.title;
     count = todoList?.totalCount;
   } else if (/^\/goal\/[^/]+\/note$/.test(pathname)) {
-    title = '노트 모아보기';
+    title = t.goal.noteCollection;
   } else if (/^\/goal\/[^/]+\/note\/create$/.test(pathname)) {
-    title = '노트 작성하기';
+    title = t.note.createTitle;
   } else if (/^\/goal\/[^/]+\/note\/[^/]+\/edit$/.test(pathname)) {
-    title = '노트 수정하기';
+    title = t.note.editTitle;
   } else if (pathname === '/favorite-todo') {
-    title = '찜한 할 일';
+    title = t.sidebar.favoriteTodo;
     count = favoriteCount;
   } else if (pathname === '/calendar') {
-    title = `${user?.nickname ?? '체다치즈'}님의 캘린더`;
+    title = t.sidebar.calendar;
   } else if (pathname === '/mypage') {
-    title = '내 정보 관리';
+    title = t.mypage.title;
   }
 
   if (slot) {

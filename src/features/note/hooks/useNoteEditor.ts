@@ -3,6 +3,8 @@ import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
+import { useEffect, useRef } from 'react';
 
 interface UseNoteEditorOptions {
   content: string;
@@ -10,13 +12,20 @@ interface UseNoteEditorOptions {
 }
 
 export function useNoteEditor({ content, onContentChange }: UseNoteEditorOptions) {
-  return useEditor({
+  const { t } = useLanguage();
+  const placeholderRef = useRef(t.note.placeholder);
+
+  useEffect(() => {
+    placeholderRef.current = t.note.placeholder;
+  }, [t.note.placeholder]);
+
+  const editor = useEditor({
     extensions: [
       StarterKit,
       Underline,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       Placeholder.configure({
-        placeholder: '이 곳을 통해 노트 작성을 시작해주세요',
+        placeholder: () => placeholderRef.current,
       }),
     ],
     content,
@@ -25,4 +34,11 @@ export function useNoteEditor({ content, onContentChange }: UseNoteEditorOptions
       onContentChange(editor.getHTML());
     },
   });
+
+  useEffect(() => {
+    if (!editor) return;
+    editor.view.dispatch(editor.view.state.tr);
+  }, [editor, t.note.placeholder]);
+
+  return editor;
 }

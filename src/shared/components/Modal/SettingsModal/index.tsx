@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { SunIcon, MoonIcon, XIcon, ChevronDownIcon } from 'lucide-react';
+import { SunIcon, MoonIcon, XIcon } from 'lucide-react';
 import Button from '@/shared/components/Button';
+import Dropdown from '@/shared/components/Dropdown';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { useLanguage, type Language } from '@/shared/contexts/LanguageContext';
 
@@ -38,20 +39,16 @@ export function SettingsModal() {
       {/* 언어 */}
       <div className="mb-6 flex flex-col gap-2">
         <label htmlFor="language-select" className="text-sm font-medium text-slate-700">{t.settings.language}</label>
-        <div className="relative h-14 w-98">
-          <select
-            id="language-select"
-            value={tempLanguage}
-            onChange={(e) => setTempLanguage(e.target.value as Language)}
-            className="h-full w-full appearance-none rounded-2xl border border-gray-200 px-4 text-sm text-slate-800 outline-none focus:border-gray-400"
-          >
-            <option value="ko">한국어</option>
-            <option value="en">English</option>
-            <option value="zh">简体中文</option>
-            <option value="ja">日本語</option>
-          </select>
-          <ChevronDownIcon size={16} className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-gray-400" />
-        </div>
+        <Dropdown
+          items={[
+            { label: '한국어', value: 'ko' },
+            { label: 'English', value: 'en' },
+            { label: '简体中文', value: 'zh' },
+            { label: '日本語', value: 'ja' },
+          ]}
+          selectedValue={tempLanguage}
+          onSelectItem={(item) => setTempLanguage(item.value as Language)}
+        />
       </div>
 
       {/* 다크모드 */}

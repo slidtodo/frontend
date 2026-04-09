@@ -78,14 +78,15 @@ export default function CalendarClient() {
         </div>
 
         <CalendarGrid year={year} month={month} todos={todos} selectedDay={selectedDay} onSelectDay={setSelectedDay} />
+
         {!isDesktop && (
-          <div className="flex flex-col gap-4">
-            <p>{selectedDate}</p>
-            {todayTodos.map((todo) => (
-              <div key={todo.id} className="flex w-full flex-col gap-[6px]">
-                <CalendarEventItem todo={todo} />
-              </div>
-            ))}
+          <div className="border-border-secondary flex flex-col border-t px-4 py-5">
+            <h3 className="text-sm font-semibold pb-4">{selectedDate}</h3>
+            <div className="flex w-full flex-col gap-[6px] last:pb-[34px]">
+              {todayTodos.map((todo) => (
+                <CalendarEventItem key={todo.id} todo={todo} />
+              ))}
+            </div>
           </div>
         )}
       </div>

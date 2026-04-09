@@ -8,6 +8,7 @@ import CalendarGrid from '@/features/calendar/components/CalendarGrid';
 import PageHeader from '@/shared/components/PageHeader';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import Dropdown from '@/shared/components/Dropdown';
+import CalendarEventItem from '../CalendarEventItem';
 
 export default function CalendarClient() {
   const today = new Date();
@@ -21,8 +22,14 @@ export default function CalendarClient() {
 
   const todos = calendarData?.todos ?? [];
 
+  const [selectedDay, setSelectedDay] = useState(today.getDate());
+  const selectedDateKey = `${year}-${String(month).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`;
+  const selectedDate = `${year}. ${String(month).padStart(2, '0')}. ${String(selectedDay).padStart(2, '0')}`;
+  const todayTodos = todos.filter((todo) => todo.dueDate?.slice(0, 10) === selectedDateKey);
+
   const breakpoint = useBreakpoint();
   const isMobile = breakpoint === 'mobile';
+  const isDesktop = breakpoint === 'desktop';
 
   const goalFilterItems = [
     { label: '전체 목표', value: '' },
@@ -46,7 +53,7 @@ export default function CalendarClient() {
   return (
     <>
       {!isMobile && <PageHeader title={`${user?.nickname ?? ''}님의 캘린더`} className="md:mb-[32px] lg:mb-5" />}
-      <div className="flex w-full flex-col bg-white md:rounded-t-4xl md:rounded-b-4xl md:border border-border-secondary">
+      <div className="border-border-secondary flex w-full flex-col bg-white md:rounded-t-4xl md:rounded-b-4xl md:border">
         <div className="flex flex-col items-center gap-5 px-4 py-5 lg:flex-row lg:justify-between lg:px-8">
           <div className="flex items-center gap-4">
             <button onClick={prevMonth} className="cursor-pointer rounded-full p-1 hover:bg-gray-100">
@@ -62,7 +69,7 @@ export default function CalendarClient() {
 
           <div className="w-full lg:max-w-[350px]">
             <Dropdown
-              className=" border-gray-100 bg-gray-50 h-12"
+              className="h-12 border-gray-100 bg-gray-50"
               items={goalFilterItems}
               selectedValue={goalId !== undefined ? String(goalId) : ''}
               onSelectItem={(item) => setGoalId(item.value === '' ? undefined : Number(item.value))}
@@ -70,7 +77,17 @@ export default function CalendarClient() {
           </div>
         </div>
 
-        <CalendarGrid year={year} month={month} todos={todos} />
+        <CalendarGrid year={year} month={month} todos={todos} selectedDay={selectedDay} onSelectDay={setSelectedDay} />
+        {!isDesktop && (
+          <div className="flex flex-col gap-4">
+            <p>{selectedDate}</p>
+            {todayTodos.map((todo) => (
+              <div key={todo.id} className="flex w-full flex-col gap-[6px]">
+                <CalendarEventItem todo={todo} />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

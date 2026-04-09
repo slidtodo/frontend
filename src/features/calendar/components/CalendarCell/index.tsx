@@ -5,14 +5,15 @@ import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 
 interface CalendarCellProps {
   day: number | null;
-  isToday: boolean;
   todos: TodoResponse[];
   isLastRow: boolean;
+  isSelected?: boolean;
+  onDayClick?: (day: number) => void;
 }
 
 const MAX_VISIBLE = 3;
 
-export default function CalendarCell({ day, isToday, todos, isLastRow }: CalendarCellProps) {
+export default function CalendarCell({ day, todos, isLastRow, isSelected, onDayClick }: CalendarCellProps) {
   const overflow = todos.length - MAX_VISIBLE;
   const breakpoint = useBreakpoint();
   const isDotEvent = breakpoint === 'mobile' || breakpoint === 'tablet';
@@ -27,16 +28,16 @@ export default function CalendarCell({ day, isToday, todos, isLastRow }: Calenda
     >
       {day != null && (
         <>
-          <div className="mb-1.5 flex justify-start">
+          <button onClick={() => day != null && onDayClick?.(day)} className="mb-1.5 flex justify-start">
             <span
               className={clsx(
-                'flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold',
-                isToday ? 'bg-bearlog-500 text-white' : 'text-gray-600',
+                'flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-xs font-semibold',
+                isSelected ? 'bg-bearlog-500 text-white' : 'text-gray-600',
               )}
             >
               {day}
             </span>
-          </div>
+          </button>
 
           <div className="flex flex-col gap-0.5">
             {isDotEvent ? (

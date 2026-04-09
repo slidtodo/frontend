@@ -5,11 +5,13 @@ interface CalendarGridProps {
   year: number;
   month: number;
   todos: TodoResponse[];
+  selectedDay: number;
+  onSelectDay: (day: number) => void;
 }
 
 const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
-export default function CalendarGrid({ year, month, todos }: CalendarGridProps) {
+export default function CalendarGrid({ year, month, todos, selectedDay, onSelectDay }: CalendarGridProps) {
   // dueDate 기준으로 날짜별 그룹핑
   const todosByDate: Record<string, TodoResponse[]> = {};
   for (const todo of todos) {
@@ -55,9 +57,10 @@ export default function CalendarGrid({ year, month, todos }: CalendarGridProps) 
             <CalendarCell
               key={idx}
               day={day}
-              isToday={day != null && isToday(day)}
               todos={dateKey ? (todosByDate[dateKey] ?? []) : []}
               isLastRow={idx >= cells.length - 7}
+              isSelected={day === selectedDay}
+              onDayClick={onSelectDay}
             />
           );
         })}

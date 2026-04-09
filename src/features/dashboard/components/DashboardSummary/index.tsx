@@ -84,24 +84,22 @@ export default function DashBoardSummary() {
               </Link>
             }
           />
-          <RecentPostCard t={t} />
+          <RecentPostCard />
         </div>
         <div className="flex w-full flex-col justify-between gap-[10px]">
           <PageSubTitle
             subTitle={t.dashboard.myProgress}
             icons={<Image src={'/image/progress-green.png'} alt="Progress Icon" width={40} height={40} />}
           />
-          <CurrentProgressCard t={t} />
+          <CurrentProgressCard />
         </div>
       </section>
     </>
   );
 }
 
-interface RecentPostCardProps {
-  t: ReturnType<typeof useLanguage>['t'];
-}
-function RecentPostCard({ t }: RecentPostCardProps) {
+function RecentPostCard() {
+  const { t } = useLanguage();
   const { data: todos } = useQuery(
     todoQueries.list({
       sort: 'LATEST',
@@ -122,10 +120,8 @@ function RecentPostCard({ t }: RecentPostCardProps) {
   );
 }
 
-interface CurrentProgressCardProps {
-  t: ReturnType<typeof useLanguage>['t'];
-}
-function CurrentProgressCard({ t }: CurrentProgressCardProps) {
+function CurrentProgressCard() {
+  const { t } = useLanguage();
   const { data: percents } = useQuery(userQueries.progress());
 
   return (

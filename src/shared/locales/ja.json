@@ -86,6 +86,7 @@
   "todo": {
     "searchPlaceholder": "タスクを検索してください",
     "addTodo": "タスクを追加",
+    "addGithubTodo": "Issues / PR を追加",
     "noSearchResult": "検索結果がありません。",
     "emptyTodo": "登録されたタスクがありません。",
     "dueDateRequired": "期限は必須です。",

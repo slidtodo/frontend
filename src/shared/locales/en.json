@@ -86,6 +86,7 @@
   "todo": {
     "searchPlaceholder": "Search to dos",
     "addTodo": "Add To Do",
+    "addGithubTodo": "Add Issues / PR",
     "noSearchResult": "No search results.",
     "emptyTodo": "No to dos registered.",
     "dueDateRequired": "Due date is required.",

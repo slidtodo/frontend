@@ -86,6 +86,7 @@
   "todo": {
     "searchPlaceholder": "搜索待办事项",
     "addTodo": "添加待办",
+    "addGithubTodo": "添加 Issues / PR",
     "noSearchResult": "无搜索结果。",
     "emptyTodo": "暂无待办事项。",
     "dueDateRequired": "截止日期为必填项。",

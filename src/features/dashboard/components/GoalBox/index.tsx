@@ -83,8 +83,7 @@ export default function GoalBox({ data }: GoalBoxProps) {
           >
             <PlusIcon size={20} />
             <span className="hidden w-max text-sm font-semibold md:block">
-              {isGithubGoal ? '개발자 번역필요' : t.todo.addTodo}
-              {/* {isGithubGoal ? t.todo.addGithubTodo : t.todo.addTodo} */}
+              {isGithubGoal ? t.todo.addGithubTodo : t.todo.addTodo}
             </span>
           </Button>
         </div>
@@ -141,7 +140,9 @@ function ListBox({ title, mode, items }: ListBoxProps) {
   const textColor = mode === 'todo' ? 'text-[#00D185]' : 'text-gray-400';
 
   return (
-    <div className={`flex h-[324px] flex-1 flex-col gap-4 overflow-hidden rounded-[16px] ${bgColor} p-4 lg:rounded-[24px] lg:p-6`}>
+    <div
+      className={`flex h-[324px] flex-1 flex-col gap-4 overflow-hidden rounded-[16px] ${bgColor} p-4 lg:rounded-[24px] lg:p-6`}
+    >
       <span className={`shrink-0 text-sm font-bold ${textColor} lg:text-base`}>{title}</span>
       <div className="min-h-0 flex-1 overflow-y-auto">
         <div className="flex w-full min-w-0 flex-col gap-1">

@@ -86,6 +86,7 @@
   "todo": {
     "searchPlaceholder": "할 일을 검색해주세요",
     "addTodo": "할 일 추가",
+    "addGithubTodo": "Issues / PR 추가",
     "noSearchResult": "검색 결과가 없습니다.",
     "emptyTodo": "현재 등록된 할 일이 없습니다.",
     "dueDateRequired": "마감기한은 필수입니다.",

@@ -30,11 +30,7 @@ export default function CalendarGrid({ year, month, todos, selectedDay, onSelect
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ];
   while (cells.length % 7 !== 0) cells.push(null);
-
-  const today = new Date();
-  const isToday = (day: number) =>
-    today.getFullYear() === year && today.getMonth() + 1 === month && today.getDate() === day;
-
+  
   return (
     <div className="w-full overflow-hidden last:rounded-b-4xl">
       {/* 요일 헤더 */}

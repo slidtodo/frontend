@@ -2,6 +2,7 @@ import { TodoResponse } from '@/shared/lib/api/fetchTodos';
 import CalendarEventItem from '@/features/calendar/components/CalendarEventItem';
 import clsx from 'clsx';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
+import Image from 'next/image';
 
 interface CalendarCellProps {
   day: number | null;
@@ -17,15 +18,28 @@ export default function CalendarCell({ day, todos, isLastRow, isSelected, onDayC
   const overflow = todos.length - MAX_VISIBLE;
   const breakpoint = useBreakpoint();
   const isDotEvent = breakpoint === 'mobile' || breakpoint === 'tablet';
+  const isAllDone = todos.length > 0 && todos.every((todo) => todo.done);
 
   return (
     <div
       className={clsx(
-        'border-border-secondary relative min-h-25 p-1.5 md:min-h-30 md:p-2',
+        'border-border-secondary relative min-h-25 overflow-hidden p-1.5 md:min-h-30 md:p-2',
         !isLastRow && 'border-b',
         'border-r nth-[7n]:border-r-0',
       )}
     >
+      {isAllDone && (
+        <>
+          <div className="bg-bearlog-500/10 absolute inset-0" />
+          <Image
+            src="/image/stamp.png"
+            alt="스탬프 이미지"
+            width={80}
+            height={80}
+            className="pointer-events-none absolute top-1/2 left-1/2 aspect-auto w-full -translate-x-1/2 -translate-y-1/2 opacity-80"
+          />
+        </>
+      )}
       {day != null && (
         <>
           <button onClick={() => day != null && onDayClick?.(day)} className="mb-1.5 flex justify-start">

@@ -28,6 +28,8 @@
     "snsSignup": "使用 SNS 注册",
     "googleLogin": "Google 登录",
     "githubLogin": "GitHub 登录",
+    "loginSuccess": "登录成功。",
+    "loginFail": "邮箱或密码不正确。",
     "loggingIn": "登录中...",
     "socialLoginFail": "社交登录失败，请重试。",
     "signupSuccess": "注册成功。",

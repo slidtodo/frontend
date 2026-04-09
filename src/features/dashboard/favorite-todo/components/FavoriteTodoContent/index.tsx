@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { PlusIcon } from 'lucide-react';
 
@@ -8,45 +8,59 @@ import Empty from '@/shared/components/Empty';
 import { DataBoundary } from '@/shared/components/ErrorSuspenseBoundary';
 import PageHeader from '@/shared/components/PageHeader';
 import TaskCardWrapper from '@/features/dashboard/components/TaskCardWrapper';
+import FavoriteTodoDropdownGoal from '../FavoriteTodoDropdownGoal';
 
 import { goalQueries, todoQueries } from '@/shared/lib/query/queryKeys';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 import type { TodoListResponse } from '@/shared/lib/api';
 import { TodoOptions } from '@/shared/types/types';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
-import { useLanguage } from '@/shared/contexts/LanguageContext';
 
-export default function AllTodoContent() {
+export default function FavoriteTodoContent() {
   const breakpoint = useBreakpoint();
-  const { t } = useLanguage();
 
   const [selectedFilter, setSelectedFilter] = useState<TodoOptions>('ALL');
   const done = selectedFilter === 'ALL' ? undefined : selectedFilter === 'DONE';
+
+  const [selectedGoal, setSelectedGoal] = useState<string>('');
 
   const { data: todoList } = useQuery({
     ...todoQueries.list({ done }),
     placeholderData: (prev) => prev,
   });
 
+  const favoriteTodos = useMemo(() => todoList?.todos?.filter((todo) => todo.favorite) ?? [], [todoList]);
+  const goalFilteredTodos = useMemo(() => {
+    if (selectedGoal === '') {
+      return favoriteTodos;
+    }
+    return selectedGoal ? favoriteTodos.filter((todo) => String(todo.goal?.id) === selectedGoal) : favoriteTodos;
+  }, [selectedGoal, favoriteTodos]);
+
+  const favoriteTodoList: TodoListResponse = {
+    todos: goalFilteredTodos,
+    nextCursor: todoList?.nextCursor ?? null,
+    hasMore: todoList?.hasMore ?? false,
+    totalCount: favoriteTodos.length,
+  };
+
   if (!todoList) return null;
+
   return (
-    <div className="mx-auto mb-[76px] flex max-w-[720px] flex-col gap-6">
+    <div className="mx-auto mb-[76px] flex h-full max-w-[720px] flex-col gap-6">
       {breakpoint !== 'mobile' && (
         <PageHeader
-          title={t.allTodo.title}
-          count={todoList?.totalCount ?? todoList?.todos?.length ?? 0}
+          title="찜한 할 일"
+          count={favoriteTodoList?.totalCount ?? favoriteTodoList?.todos?.length ?? 0}
           className="pl-2"
         />
       )}
-      <section className="flex flex-col gap-3">
-        <AllTodoFilter todos={todoList} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
-        {todoList && (todoList.todos?.length ?? 0) === 0 ? (
-          <Empty>{t.allTodo.empty}</Empty>
-        ) : (
-          <DataBoundary>
-            <AllTodoFetcher todos={todoList} />
-          </DataBoundary>
-        )}
+      <section className="flex h-full flex-col gap-3">
+        <AllTodoFilter todos={favoriteTodoList} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
+
+        <DataBoundary>
+          <AllTodoFetcher todos={favoriteTodoList} selectedGoal={selectedGoal} setSelectedGoal={setSelectedGoal} />
+        </DataBoundary>
       </section>
     </div>
   );
@@ -58,16 +72,14 @@ interface AllTodoFilterProps {
   setSelectedFilter: React.Dispatch<React.SetStateAction<TodoOptions>>;
 }
 function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilterProps) {
-  const { openTodoCreateModal } = useTodoCreateModal();
-  const { t } = useLanguage();
-  const { data: goalList } = useQuery(goalQueries.list());
-  const defaultGoalId = todos.todos?.[0]?.goal?.id ?? goalList?.goals?.[0]?.id;
-
-  const todoButtons: { id: number; label: TodoOptions; translationKey: 'all' | 'todo' | 'done' }[] = [
-    { id: 1, label: 'ALL', translationKey: 'all' },
-    { id: 2, label: 'TO DO', translationKey: 'todo' },
-    { id: 3, label: 'DONE', translationKey: 'done' },
+  const todoButtons: { id: number; label: TodoOptions }[] = [
+    { id: 1, label: 'ALL' },
+    { id: 2, label: 'TO DO' },
+    { id: 3, label: 'DONE' },
   ];
+  const { data: goalList } = useQuery(goalQueries.list());
+  const { openTodoCreateModal } = useTodoCreateModal();
+  const defaultGoalId = todos.todos?.[0]?.goal?.id ?? goalList?.goals?.[0]?.id;
 
   return (
     <div className="flex justify-between px-2">
@@ -82,7 +94,7 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
             }`}
             onClick={() => setSelectedFilter(button.label)}
           >
-            {t.allTodo[button.translationKey]}
+            {button.label}
           </button>
         ))}
       </div>
@@ -108,7 +120,7 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
       >
         <PlusIcon size={20} className="text-gray-500 group-hover:text-white" />
         <span className="overflow-hidden text-sm font-semibold text-ellipsis whitespace-nowrap text-gray-500 group-hover:text-white">
-          {t.allTodo.addTodo}
+          할 일 추가
         </span>
       </Button>
     </div>
@@ -117,14 +129,43 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
 
 interface AllTodoFetcherProps {
   todos: TodoListResponse;
+  selectedGoal: string;
+  setSelectedGoal: React.Dispatch<React.SetStateAction<string>>;
 }
-function AllTodoFetcher({ todos }: AllTodoFetcherProps) {
+
+function AllTodoFetcher({ todos, selectedGoal, setSelectedGoal }: AllTodoFetcherProps) {
+  const { data: goalList } = useQuery(goalQueries.list());
+
+  const goalItems = [
+    { label: '전체 목표', value: '' },
+    ...(goalList?.goals
+      ? goalList.goals.map((goal) => ({
+          label: goal.title ?? '',
+          value: String(goal.id),
+        }))
+      : []),
+  ];
+
   return (
-    <section className="rounded-4xl bg-white p-4 md:p-8">
-      <div className="flex max-h-[680px] flex-col gap-4 overflow-y-auto">
-        {todos.todos?.map((todo) => (
-          <TaskCardWrapper key={todo.id} item={todo} mode="todo" />
-        ))}
+    <section
+      className={`flex flex-col gap-5 rounded-4xl bg-white p-4 md:p-8 ${todos.todos?.length === 0 ? 'h-full' : 'h-fit'}`}
+    >
+      <FavoriteTodoDropdownGoal
+        selectedValue={selectedGoal}
+        onSelectItem={(item) => setSelectedGoal(item.value)}
+        items={goalItems}
+      />
+
+      <div className="flex h-full flex-col gap-4 overflow-y-auto">
+        {(todos.todos?.length ?? 0) === 0 ? (
+          <Empty>등록된 할 일이 없습니다.</Empty>
+        ) : (
+          <div className="space-y-4">
+            {todos.todos?.map((todo) => (
+              <TaskCardWrapper key={todo.id} item={todo} mode="todo" />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

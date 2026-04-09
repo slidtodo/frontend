@@ -12,12 +12,11 @@ const AUTH_COOKIE_OPTIONS = {
 
 const ACCESS_TOKEN_COOKIE = 'accessToken';
 const REFRESH_TOKEN_COOKIE = 'refreshToken';
-const REFRESH_ENDPOINT = 'auth/refresh';
 
 const FORWARDED_REQUEST_HEADERS = ['accept', 'content-type'] as const;
 const FORWARDED_RESPONSE_HEADERS = ['content-type', 'location'] as const;
 
-const ALLOWED_PATH_PREFIXES = ['auth/', 'dev/auth/', 'todos', 'goals', 'notes', 'notifications', 'tags', 'users/me'] as const;
+const ALLOWED_PATH_PREFIXES = ['auth/', 'dev/auth/', 'todos', 'goals', 'notes', 'notifications', 'tags', 'users/me', 'images'] as const;
 
 type ProxyRouteContext = {
   params: Promise<{ endpoint: string[] }>;
@@ -29,6 +28,10 @@ const isAllowedPath = (pathname: string) => {
 
 const shouldSyncAuthCookies = (pathname: string) => {
   return pathname.startsWith('auth/') || pathname.startsWith('dev/auth/');
+};
+
+const getRefreshEndpoint = (pathname: string) => {
+  return pathname.startsWith('dev/auth/') ? 'dev/auth/refresh' : 'auth/refresh';
 };
 
 const buildUpstreamHeaders = (request: NextRequest, accessToken?: string) => {
@@ -135,10 +138,10 @@ const requestUpstream = async ({
   });
 };
 
-const refreshAccessToken = async (refreshToken?: string) => {
+const refreshAccessToken = async (pathname: string, refreshToken?: string) => {
   if (!refreshToken) return null;
 
-  const refreshUrl = `${apiBaseUrl}/api/v1/${REFRESH_ENDPOINT}`;
+  const refreshUrl = `${apiBaseUrl}/api/v1/${getRefreshEndpoint(pathname)}`;
 
   const response = await fetch(refreshUrl, {
     method: 'POST',
@@ -213,7 +216,7 @@ const handler = async (request: NextRequest, context: ProxyRouteContext) => {
 
     // 일반 API 요청에서 accessToken 만료 시 refresh 후 1회 재시도
     if (upstreamResponse.status === 401 && refreshToken) {
-      const refreshed = await refreshAccessToken(refreshToken);
+      const refreshed = await refreshAccessToken(pathname, refreshToken);
 
       if (refreshed?.accessToken) {
         upstreamResponse = await requestUpstream({

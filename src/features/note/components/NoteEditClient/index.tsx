@@ -12,11 +12,7 @@ import DraftNoteToast from '@/features/note/components/DraftNoteToast';
 import { useToastStore } from '@/shared/stores/useToastStore';
 import { useMobileHeaderStore } from '@/shared/stores/useMobileHeaderStore';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
-import { useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
-import TextAlign from '@tiptap/extension-text-align';
-import Placeholder from '@tiptap/extension-placeholder';
+import { useNoteEditor } from '@/features/note/hooks/useNoteEditor';
 import EditorToolbar from '@/features/note/components/NoteEditor/EditorToolbar';
 import { createPortal } from 'react-dom';
 import { usePatchNote } from '@/shared/lib/query/mutations';
@@ -53,25 +49,11 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
     },
   });
 
-  const { mutate: patchNote, isPending } = usePatchNote(noteId, goalId, {
-    onError: () => showToast(t.note.createFail, 'fail'),
-  });
+  const { mutate: patchNote, isPending } = usePatchNote(noteId, goalId);
 
   const breakpoint = useBreakpoint();
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      TextAlign.configure({ types: ['heading', 'paragraph'] }),
-      Placeholder.configure({ placeholder: t.note.placeholder }),
-    ],
-    content,
-    immediatelyRender: false,
-    onUpdate: ({ editor }) => {
-      setContent(editor.getHTML());
-    },
-  });
+  const editor = useNoteEditor({ content, onContentChange: setContent });
 
   const handleSaveDraft = useCallback(() => {
     try {

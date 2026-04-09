@@ -7,6 +7,7 @@ import PageHeader from '@/shared/components/PageHeader';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
+import { useRouter } from 'next/navigation';
 
 import { userQueries } from '@/shared/lib/query/queryKeys';
 import { usePatchCurrentUser, usePatchCurrentUserPassword } from '@/shared/lib/query/mutations';
@@ -39,9 +40,9 @@ export default function MyPageForm() {
   const { mutate: patchPassword, isPending: isPatchingPassword } = usePatchCurrentUserPassword();
   const { openModal } = useModalStore();
   const { showToast } = useToastStore();
-
+  const router = useRouter();
   const isLocalLogin = user?.loginProvider === 'LOCAL';
-  const isGithubConnected = user?.loginProvider === 'GITHUB';
+  const isGithubConnected = user?.githubConnected;
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleProfileImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +53,8 @@ export default function MyPageForm() {
       const { uploadUrl, url } = await fetchImages.postImageUploadUrl({ fileName: file.name });
       await fetch(uploadUrl, { method: 'PUT', body: file });
       patchUser({ profileImageUrl: url });
-    } catch {
+    } catch (error) {
+      console.error('Failed to upload profile image:', error);
       showToast(t.mypage.imageUploadFail, 'fail');
     }
   };
@@ -75,8 +77,9 @@ export default function MyPageForm() {
         onConfirm={async (password) => {
           try {
             await fetchUsers.deleteCurrentUser(password ? { password } : undefined);
-            window.location.href = '/login';
-          } catch {
+            router.push('/login');
+          } catch (error) {
+            console.error('Failed to delete account:', error);
             showToast(t.mypage.withdrawFail, 'fail');
           }
         }}
@@ -188,7 +191,12 @@ export default function MyPageForm() {
 
         {/* 닉네임 */}
         <FormField label={t.mypage.nickname}>
-          <Input type="text" value={nickname} onChange={handleNicknameChange} placeholder={t.mypage.nicknamePlaceholder} />
+          <Input
+            type="text"
+            value={nickname}
+            onChange={handleNicknameChange}
+            placeholder={t.mypage.nicknamePlaceholder}
+          />
           {nicknameSuccess && <p className="px-1 text-sm text-[#0CAF60]">{t.mypage.nicknameSuccess}</p>}
         </FormField>
 

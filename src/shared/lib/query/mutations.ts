@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { fetchAuth } from '../api';
 import { fetchGoals, GoalListResponse, PatchGoalResponse, PostGoalRequest } from '../api/fetchGoals';
@@ -343,7 +343,7 @@ export const usePostLogout = () => {
   const { t } = useLanguage();
 
   return useMutation({
-    mutationFn: () => fetchAuth.postLogout(),
+    mutationFn: () => fetchAuth.postLogoutByEnv(),
     onSuccess: () => {
       showToast(t.mutations.logoutSuccess);
       router.push('/login');
@@ -355,18 +355,20 @@ export const usePostLogout = () => {
 };
 
 // note
-export const usePostNote = (callbacks?: { onError: (error: Error) => void }) => {
+export const usePostNote = () => {
   const queryClient = useQueryClient();
+  const { showToast } = useToastStore();
 
   return useMutation({
     mutationFn: fetchNotes.postNote,
     onSuccess: (response) => {
       if (!response.id || !response.goalId) {
         console.error('[usePostNote] Unexpected API response: missing id or goalId', response);
-        callbacks?.onError?.(new Error('노트 작성에 실패했습니다.'));
+        showToast('노트 작성에 실패했습니다.', 'fail');
         return;
       }
 
+      showToast('노트가 작성되었습니다.');
       queryClient.setQueryData(noteQueries.detail(response.id).queryKey, response);
       queryClient.invalidateQueries({
         queryKey: noteKeys.lists(),
@@ -374,14 +376,15 @@ export const usePostNote = (callbacks?: { onError: (error: Error) => void }) => 
 
       window.location.href = `/goal/${response.goalId}/note/${response.id}`;
     },
-    onError: (error) => {
-      if (callbacks?.onError) callbacks.onError(error);
+    onError: () => {
+      showToast('노트 작성에 실패했습니다.', 'fail');
     },
   });
 };
 
-export const usePatchNote = (noteId: number, goalId: number, callbacks?: { onError?: (error: Error) => void }) => {
+export const usePatchNote = (noteId: number, goalId: number) => {
   const queryClient = useQueryClient();
+  const { showToast } = useToastStore();
 
   return useMutation({
     mutationFn: (body: PatchNoteRequest) => fetchNotes.patchNote(noteId, body),
@@ -390,17 +393,20 @@ export const usePatchNote = (noteId: number, goalId: number, callbacks?: { onErr
       queryClient.invalidateQueries({ queryKey: noteKeys.lists() });
       window.location.href = `/goal/${goalId}/note/${noteId}`;
     },
-    onError: (error) => callbacks?.onError?.(error),
+    onError: () => showToast('노트 수정에 실패했습니다', 'fail'),
   });
 };
 
-export const useDeleteNote = (noteId: number, goalId: number, callbacks?: { onError?: (error: Error) => void }) => {
+export const useDeleteNote = (noteId: number, goalId: number) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const queryClient = useQueryClient();
+  const { showToast } = useToastStore();
 
   return useMutation({
     mutationFn: () => fetchNotes.deleteNote(noteId),
     onSuccess: () => {
+      showToast('노트가 삭제되었습니다.', 'success');
       queryClient.removeQueries({
         queryKey: noteQueries.detail(noteId).queryKey,
       });
@@ -409,10 +415,11 @@ export const useDeleteNote = (noteId: number, goalId: number, callbacks?: { onEr
         queryKey: noteKeys.lists(),
       });
 
-      router.push(`/goal/${goalId}/note`);
+      const page = searchParams.get('page') ?? '1';
+      router.push(`/goal/${goalId}/note?page=${page}`);
     },
-    onError: (error) => {
-      callbacks?.onError?.(error);
+    onError: () => {
+      showToast('노트 삭제에 실패했습니다', 'fail');
     },
   });
 };

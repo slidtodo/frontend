@@ -19,7 +19,6 @@ import { useLanguage } from '@/shared/contexts/LanguageContext';
 interface GoalBoxProps {
   data: GoalDetailResponse;
 }
-
 export default function GoalBox({ data }: GoalBoxProps) {
   const { openTodoCreateModal } = useTodoCreateModal();
   const { openGithubTodoCreateModal } = useGithubTodoCreateModal();
@@ -142,14 +141,16 @@ function ListBox({ title, mode, items }: ListBoxProps) {
   const textColor = mode === 'todo' ? 'text-[#00D185]' : 'text-gray-400';
 
   return (
-    <div className={`flex max-h-[324px] flex-1 flex-col gap-4 rounded-[16px] ${bgColor} p-4 lg:rounded-[24px] lg:p-6`}>
-      <span className={`text-sm font-bold ${textColor} lg:text-base`}>{title}</span>
-      <div className="flex max-h-[236px] flex-col gap-1 overflow-y-auto">
-        <AnimatePresence initial={false} mode="popLayout">
-          {items.map((item) => (
-            <TaskCardWrapper key={item.id} item={item} mode={mode} />
-          ))}
-        </AnimatePresence>
+    <div className={`flex h-[324px] flex-1 flex-col gap-4 overflow-hidden rounded-[16px] ${bgColor} p-4 lg:rounded-[24px] lg:p-6`}>
+      <span className={`shrink-0 text-sm font-bold ${textColor} lg:text-base`}>{title}</span>
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        <div className="flex w-full min-w-0 flex-col gap-1">
+          <AnimatePresence initial={false} mode="popLayout">
+            {items.map((item) => (
+              <TaskCardWrapper key={item.id} item={item} mode={mode} />
+            ))}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );

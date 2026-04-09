@@ -52,7 +52,8 @@
     "newGoal": "새 목표",
     "newTodo": "새 할일",
     "newGoalTitle": "목표 생성",
-    "newGoalPlaceholder": "목표 제목을 입력하세요"
+    "newGoalPlaceholder": "목표 제목을 입력하세요",
+    "developerModeAlert": "개발자 모드에서는 목표를 생성할 수 없습니다."
   },
   "dashboard": {
     "title": "님의 대시보드",
@@ -172,7 +173,7 @@
     "cancelPostTitle": "게시물 작성을 취소하시겠어요?",
     "cancelPostDesc": "작성하신 모든 내용이 사라집니다.",
     "githubDisconnectTitle": "GitHub 연동을 해제하시겠어요?",
-    "githubDisconnectDesc": "해제 후 GitHub으로 로그인할 수 없습니다.",
+    "githubDisconnectDesc": "해당 레포지토리와 연동이 해제됩니다.",
     "githubDisconnectButton": "연결 삭제",
     "withdrawTitle": "회원 탈퇴하기",
     "withdrawDesc": "회원 탈퇴 시 계정 정보가 삭제되어 복구가 불가해요.\n정말로 탈퇴하시겠습니까?",

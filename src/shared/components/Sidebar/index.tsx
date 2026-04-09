@@ -20,6 +20,7 @@ import clsx from 'clsx';
 import SinglePostModal from '../Modal/SinglePostModal';
 import { SettingsModal } from '../Modal/SettingsModal';
 import NotificationDropdown from './NotificationDropdown';
+import SidebarMobile from './SidebarMobileDrawer';
 
 import { useSidebarContext, useSidebarOpen, MenuItem } from '@/shared/contexts/SidebarContext';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
@@ -29,7 +30,9 @@ import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 import { userQueries } from '@/shared/lib/query/queryKeys';
 import { CurrentUserResponse } from '@/shared/lib/api';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
-import SidebarMobile from './SidebarMobileDrawer';
+import { useTodoModeStore } from '@/shared/stores/useTodoModeStore';
+import { useToastStore } from '@/shared/stores/useToastStore';
+import { useGithubTodoCreateModal } from '@/features/todo/hooks/useGithubTodoCreateModal';
 
 // TODO: 전체적으로 정리필요
 export default function Sidebar() {
@@ -56,12 +59,44 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
   const pathname = usePathname();
   const [notificationOpen, setNotificationOpen] = useState(false);
   const { t } = useLanguage();
+  const { showToast } = useToastStore();
+  const mode = useTodoModeStore((state) => state.mode);
 
   const { mutate } = usePostGoal();
   const { mutate: logout } = usePostLogout();
 
   const { openTodoCreateModal } = useTodoCreateModal();
-  const selectedGoalId = getSelectedGoalId(pathname, goals);
+  const { openGithubTodoCreateModal } = useGithubTodoCreateModal();
+
+  const selectedGoalId = getSelectedGoalId(pathname, goals, mode);
+
+  const handleAddTodo = () => {
+    if (!selectedGoalId) return;
+
+    const selectedGoal = goals.find((goal) => goal.id === selectedGoalId);
+    if (!selectedGoal) return;
+
+    const isGithubGoal = selectedGoal.source === 'GITHUB';
+
+    if (isGithubGoal) {
+      openGithubTodoCreateModal({
+        goalId: selectedGoalId,
+        goalTitle: selectedGoal.title,
+      });
+    } else {
+      openTodoCreateModal({
+        goalDetailId: selectedGoalId,
+        todo: {
+          title: '',
+          goalId: selectedGoalId,
+          dueDate: undefined,
+          linkUrl: undefined,
+          imageUrl: undefined,
+          tags: [],
+        },
+      });
+    }
+  };
 
   return (
     <>
@@ -159,15 +194,19 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
         <div className="flex flex-col items-center gap-8 transition-all duration-300">
           <div className={`w-full gap-4 ${isOpen ? 'flex' : 'hidden'}`}>
             <button
-              onClick={() =>
-                openModal(
-                  <SinglePostModal
-                    title={t.sidebar.newGoalTitle}
-                    placeholder={t.sidebar.newGoalPlaceholder}
-                    onConfirm={(title) => mutate({ title })}
-                  />,
-                )
-              }
+              onClick={() => {
+                if (mode === 'MANUAL') {
+                  openModal(
+                    <SinglePostModal
+                      title={t.sidebar.newGoalTitle}
+                      placeholder={t.sidebar.newGoalPlaceholder}
+                      onConfirm={(title) => mutate({ title })}
+                    />,
+                  );
+                } else {
+                  showToast(t.sidebar.developerModeAlert, 'fail');
+                }
+              }}
               className="group bg-bearlog-500 flex w-full flex-col items-center justify-center gap-2 rounded-[32px] px-2 py-4 transition-all duration-200 hover:shadow-lg lg:px-[22.5px] lg:py-8"
             >
               <FlagIcon
@@ -180,21 +219,7 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
               </span>
             </button>
             <button
-              onClick={() => {
-                if (!selectedGoalId) return;
-
-                openTodoCreateModal({
-                  goalDetailId: selectedGoalId,
-                  todo: {
-                    title: '',
-                    goalId: selectedGoalId,
-                    dueDate: undefined,
-                    linkUrl: undefined,
-                    imageUrl: undefined,
-                    tags: [],
-                  },
-                });
-              }}
+              onClick={handleAddTodo}
               disabled={!selectedGoalId}
               className="group border-bearlog-500 flex w-full flex-col items-center justify-center gap-2 rounded-[32px] border bg-[#ffffff] px-2 py-4 transition-all duration-200 hover:shadow-lg lg:px-[22.5px] lg:py-8"
             >
@@ -247,9 +272,14 @@ export function isMenuActive(menu: MenuItem, pathname: string) {
   return menu.href === pathname || menu.subMenus?.some((subMenu) => subMenu.href === pathname);
 }
 
-export function getSelectedGoalId(pathname: string, goals: { id?: number }[]) {
+export function getSelectedGoalId(pathname: string, goals: { id?: number; source?: string }[], mode?: string) {
   const pathnameGoalId = pathname.startsWith('/goal/') ? Number(pathname.split('/')[2]) : undefined;
-  return goals.find((goal) => goal.id === pathnameGoalId)?.id ?? goals[0]?.id;
+  if (pathnameGoalId) {
+    return goals.find((goal) => goal.id === pathnameGoalId)?.id;
+  }
+  // 특정 goal 페이지가 아닐 때는 현재 mode에 맞는 첫 번째 goal을 우선 선택
+  const modeSource = mode === 'GITHUB' ? 'GITHUB' : 'MANUAL';
+  return goals.find((g) => g.source === modeSource)?.id ?? goals[0]?.id;
 }
 
 export function SidebarMenuEntry({

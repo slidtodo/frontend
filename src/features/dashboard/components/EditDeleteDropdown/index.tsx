@@ -24,9 +24,7 @@ export default function EditDeleteDropdown({
   handleDelete,
   onClose,
   anchorRef,
-  editLabel = '수정',
   editDisabled = false,
-  deleteLabel = '삭제',
 }: EditDeleteDropdownProps) {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const { t } = useLanguage();

@@ -50,8 +50,8 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
   };
 
   return (
-    <section className="flex h-full flex-col gap-8 lg:flex-row">
-      <div className="flex flex-1 flex-col gap-[10px]">
+    <section className="flex flex-col gap-8 lg:flex-row">
+      <div className="flex min-w-0 flex-1 flex-col gap-[10px]">
         <PageSubTitle
           subTitle="TO DO"
           textClassName="font-semibold"
@@ -78,26 +78,26 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
             </div>
           }
         />
-        <section className="h-full rounded-2xl bg-white px-[28px] py-[32px]">
-          <div className="flex h-full flex-col gap-4 overflow-y-auto">
+        <section className="rounded-2xl bg-white px-[28px] py-[32px]">
+          <div className="flex max-h-[512px] flex-col gap-4 overflow-y-auto">
             {goalDetail?.todoList && goalDetail?.todoList.length > 0 ? (
               goalDetail.todoList.map((todo) => <TaskCardWrapper key={todo.id} item={todo} mode="todo" />)
             ) : (
-              <div className="flex h-full items-center justify-center">
+              <div className="flex min-h-[120px] items-center justify-center">
                 <Empty>{t.goal.emptyTodo}</Empty>
               </div>
             )}
           </div>
         </section>
       </div>
-      <div className="flex flex-1 flex-col gap-[10px]">
+      <div className="flex min-w-0 flex-1 flex-col gap-[10px]">
         <PageSubTitle subTitle="DONE" textClassName="font-semibold" className="py-[6px]" />
-        <section className="h-full rounded-2xl bg-white px-[28px] py-[32px]">
-          <div className="flex h-full flex-col gap-4 overflow-y-auto">
+        <section className="rounded-2xl bg-white px-[28px] py-[32px]">
+          <div className="flex max-h-[512px] flex-col gap-4 overflow-y-auto">
             {goalDetail?.doneList && goalDetail?.doneList.length > 0 ? (
               goalDetail.doneList.map((todo) => <TaskCardWrapper key={todo.id} item={todo} mode="done" />)
             ) : (
-              <div className="flex h-full items-center justify-center">
+              <div className="flex min-h-[120px] items-center justify-center">
                 <Empty>{t.goal.emptyTodo}</Empty>
               </div>
             )}

@@ -13,10 +13,14 @@ import SidebarMobileCase from '../SidebarMobileCase';
 
 import { usePostGoal, usePostLogout } from '@/shared/lib/query/mutations';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
+import { useGithubTodoCreateModal } from '@/features/todo/hooks/useGithubTodoCreateModal';
 import { useSidebarContext } from '@/shared/contexts/SidebarContext';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { getSelectedGoalId, isMenuActive, SidebarMenuEntry } from '..';
 import { CurrentUserResponse } from '@/shared/lib/api';
+import { useTodoModeStore } from '@/shared/stores/useTodoModeStore';
+import { useToastStore } from '@/shared/stores/useToastStore';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 const CLOSETIME = 300;
 
@@ -31,10 +35,14 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
   const { mutate } = usePostGoal();
   const { mutate: logout } = usePostLogout();
   const { openTodoCreateModal } = useTodoCreateModal();
+  const { openGithubTodoCreateModal } = useGithubTodoCreateModal();
   const pathname = usePathname();
   const { menus, goals } = useSidebarContext();
   const { openModal } = useModalStore();
   const selectedGoalId = getSelectedGoalId(pathname, goals);
+  const mode = useTodoModeStore((state) => state.mode);
+  const { showToast } = useToastStore();
+  const { t } = useLanguage();
 
   const openMobileMenu = () => {
     if (closeTimeoutRef.current) {
@@ -129,7 +137,7 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
                     className="flex w-full items-center justify-start gap-3 rounded-lg px-3 py-3 transition-all hover:bg-gray-50"
                   >
                     <SettingsIcon color="#BBBBBB" size={20} />
-                    <span className="text-lg font-semibold text-gray-500">설정</span>
+                    <span className="text-lg font-semibold text-gray-500">{t.sidebar.settings}</span>
                   </button>
                   <button
                     onClick={() => {
@@ -139,7 +147,7 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
                     className="flex w-full items-center justify-start gap-3 rounded-lg px-3 py-3 transition-all hover:bg-gray-50"
                   >
                     <LogOutIcon color="#BBBBBB" size={20} />
-                    <span className="text-lg font-semibold text-gray-500">로그아웃</span>
+                    <span className="text-lg font-semibold text-gray-500">{t.sidebar.logout}</span>
                   </button>
                 </div>
               </div>
@@ -149,14 +157,18 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
                 <div className="flex gap-3">
                   <button
                     onClick={() => {
-                      openModal(
-                        <SinglePostModal
-                          title="목표 생성"
-                          placeholder="목표 제목을 입력하세요"
-                          onConfirm={(title) => mutate({ title })}
-                        />,
-                      );
-                      closeMobileMenu();
+                      if (mode === 'MANUAL') {
+                        openModal(
+                          <SinglePostModal
+                            title={t.sidebar.newGoalTitle}
+                            placeholder={t.sidebar.newGoalPlaceholder}
+                            onConfirm={(title) => mutate({ title })}
+                          />,
+                        );
+                        closeMobileMenu();
+                      } else {
+                        showToast(t.sidebar.developerModeAlert, 'fail');
+                      }
                     }}
                     className="group bg-bearlog-500 flex flex-1 items-center justify-center gap-1 rounded-full py-3 transition-all hover:shadow-lg"
                   >
@@ -166,17 +178,26 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
                   <button
                     onClick={() => {
                       if (!selectedGoalId) return;
-                      openTodoCreateModal({
-                        goalDetailId: selectedGoalId,
-                        todo: {
-                          title: '',
+                      const selectedGoal = goals.find((goal) => goal.id === selectedGoalId);
+                      if (!selectedGoal) return;
+                      if (selectedGoal.source === 'GITHUB') {
+                        openGithubTodoCreateModal({
                           goalId: selectedGoalId,
-                          dueDate: undefined,
-                          linkUrl: undefined,
-                          imageUrl: undefined,
-                          tags: [],
-                        },
-                      });
+                          goalTitle: selectedGoal.title ?? '',
+                        });
+                      } else {
+                        openTodoCreateModal({
+                          goalDetailId: selectedGoalId,
+                          todo: {
+                            title: '',
+                            goalId: selectedGoalId,
+                            dueDate: undefined,
+                            linkUrl: undefined,
+                            imageUrl: undefined,
+                            tags: [],
+                          },
+                        });
+                      }
                       closeMobileMenu();
                     }}
                     disabled={!selectedGoalId}

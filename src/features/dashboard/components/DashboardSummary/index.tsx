@@ -21,6 +21,8 @@ import { useTodoModeStore, TodoMode } from '@/shared/stores/useTodoModeStore';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 export default function DashBoardSummary() {
+  const { t } = useLanguage();
+
   const { data: user } = useQuery(userQueries.current());
   const { data: goals, isFetched: isGoalsFetched } = useQuery(goalQueries.list());
   const breakpoint = useBreakpoint();
@@ -39,14 +41,6 @@ export default function DashBoardSummary() {
     setMode(nextMode);
   };
 
-  /**
-   * GITHUB 모드로 전환 시 연결된 레포가 없으면 레포 연결 모달 오픈.
-   * - handleModeChange에서 처리하지 않고 useEffect로 처리하는 이유:
-   *   goals 쿼리가 아직 로딩 중일 때 모드를 전환하면 githubGoals가 빈 배열로 평가되어
-   *   오판이 발생할 수 있기 때문에 isGoalsFetched 이후 판단.
-   * - MANUAL 전환 시 ref 초기화 → GITHUB 재진입 시 조건 재평가
-   * - 레포가 있다가 해제된 경우(length > 0 → 0) ref 초기화 → 바로 모달 오픈
-   */
   useEffect(() => {
     const prevLength = prevGithubGoalsLengthRef.current;
     prevGithubGoalsLengthRef.current = githubGoals.length;
@@ -66,8 +60,6 @@ export default function DashBoardSummary() {
       openModal(<GithubRepoConnectModal />, undefined, 'bottom');
     }
   }, [mode, isGoalsFetched, githubGoals.length, openModal]);
-
-  const { t } = useLanguage();
 
   return (
     <>
@@ -92,28 +84,29 @@ export default function DashBoardSummary() {
               </Link>
             }
           />
-          <RecentPostCard />
+          <RecentPostCard t={t} />
         </div>
         <div className="flex w-full flex-col justify-between gap-[10px]">
           <PageSubTitle
             subTitle={t.dashboard.myProgress}
             icons={<Image src={'/image/progress-green.png'} alt="Progress Icon" width={40} height={40} />}
           />
-          <CurrentProgressCard />
+          <CurrentProgressCard t={t} />
         </div>
       </section>
     </>
   );
 }
 
-function RecentPostCard() {
+interface RecentPostCardProps {
+  t: ReturnType<typeof useLanguage>['t'];
+}
+function RecentPostCard({ t }: RecentPostCardProps) {
   const { data: todos } = useQuery(
     todoQueries.list({
       sort: 'LATEST',
     }),
   );
-  const { t } = useLanguage();
-
   const recentTodos = todos?.todos?.slice(0, 4) ?? [];
 
   return (
@@ -129,9 +122,11 @@ function RecentPostCard() {
   );
 }
 
-function CurrentProgressCard() {
+interface CurrentProgressCardProps {
+  t: ReturnType<typeof useLanguage>['t'];
+}
+function CurrentProgressCard({ t }: CurrentProgressCardProps) {
   const { data: percents } = useQuery(userQueries.progress());
-  const { t } = useLanguage();
 
   return (
     <article className="bg-bearlog-500 relative h-[187px] rounded-[40px] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)] md:h-[229px] lg:h-[256px]">

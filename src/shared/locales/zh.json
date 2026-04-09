@@ -52,7 +52,8 @@
     "newGoal": "新目标",
     "newTodo": "新待办",
     "newGoalTitle": "创建目标",
-    "newGoalPlaceholder": "请输入目标标题"
+    "newGoalPlaceholder": "请输入目标标题",
+    "developerModeAlert": "在开发者模式下无法创建目标。"
   },
   "dashboard": {
     "title": "的仪表盘",

@@ -156,7 +156,7 @@ export function PopupModal({ onConfirm, variant }: PopupModalProps) {
           ))}
         </p>
         {warning && (
-          <div className="mt-[17.5px] flex items-start justify-center gap-1">
+          <div className="mt-[17.5px] flex items-center justify-center gap-1">
             <OctagonAlert className="text-bearlog-500" size={15} />
             <span className="text-bearlog-600 text-xs leading-6 font-medium whitespace-pre-line md:text-base">
               {warning}

@@ -13,13 +13,9 @@ import clsx from 'clsx';
 interface NoteListClientProps {
   goalId: number;
   search?: string;
-<<<<<<< feature/calendar
   sort: 'LATEST' | 'OLDEST';
-=======
-  sort?: 'LATEST' | 'OLDEST';
   page: number;
   onPageChange: (page: number) => void;
->>>>>>> develop
 }
 
 export default function NoteListClient({ goalId, search, sort, page, onPageChange }: NoteListClientProps) {

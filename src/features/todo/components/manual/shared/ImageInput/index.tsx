@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import { ImageUpIcon, LoaderIcon, XIcon } from 'lucide-react';
 
 import { fetchImages } from '@/shared/lib/api';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 interface ImageInput {
   image: string | null;
@@ -14,6 +15,7 @@ interface ImageInput {
 export default function ImageInput({ image, onChange }: ImageInput) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const { t } = useLanguage();
 
   const handleSelectImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -67,13 +69,13 @@ export default function ImageInput({ image, onChange }: ImageInput) {
           ) : (
             <>
               <ImageUpIcon size={24} className="stroke-[#A4A4A4]" />
-              <p className="text-base font-medium text-[#A4A4A4]">이미지 첨부</p>
+              <p className="text-base font-medium text-[#A4A4A4]">{t.todo.imageAttach}</p>
             </>
           )}
         </button>
       )}
       <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleSelectImage} />
-      <p className="px-1 text-xs font-medium text-[#A4A4A4] md:text-sm">이미지는 최대 1개만 첨부할 수 있습니다.</p>
+      <p className="px-1 text-xs font-medium text-[#A4A4A4] md:text-sm">{t.todo.imageLimit}</p>
     </>
   );
 }

@@ -6,6 +6,7 @@ import EditorTitle from '@/features/note/components/NoteEditor/EditorTitle';
 import EditorMeta from '@/features/note/components/NoteEditor/EditorMeta';
 import EditorContent from '@/features/note/components/NoteEditor/EditorContent';
 import { mapNoteTagsFromSource } from '@/features/note/utils/utils';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 interface NoteDetailClientProps {
   noteId: number;
@@ -13,6 +14,7 @@ interface NoteDetailClientProps {
 }
 
 export default function NoteDetailClient({ noteId, goalId }: NoteDetailClientProps) {
+  const { t } = useLanguage();
   const { data: note, isLoading: isNoteLoading, isError: isNoteError } = useQuery(noteQueries.detail(noteId));
   const { data: goal } = useQuery(goalQueries.detail(goalId));
   const { data: todo } = useQuery({
@@ -21,11 +23,11 @@ export default function NoteDetailClient({ noteId, goalId }: NoteDetailClientPro
   });
 
   if (isNoteLoading) {
-    return <p className="p-10 text-center text-sm text-gray-500">노트를 불러오는 중...</p>;
+    return <p className="p-10 text-center text-sm text-gray-500">{t.note.loading}</p>;
   }
 
   if (isNoteError || !note) {
-    return <p className="p-10 text-center text-sm text-gray-500">노트를 불러오는 데 실패했습니다.</p>;
+    return <p className="p-10 text-center text-sm text-gray-500">{t.note.loadFail}</p>;
   }
 
   const tags = mapNoteTagsFromSource({

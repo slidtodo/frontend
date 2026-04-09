@@ -10,11 +10,13 @@ import TaskCardWrapper from '@/features/dashboard/components/TaskCardWrapper';
 
 import { goalQueries } from '@/shared/lib/query/queryKeys';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 interface GoalDetailProps {
   goalId: number;
 }
 export default function GoalDetail({ goalId }: GoalDetailProps) {
+  const { t } = useLanguage();
   const { openTodoCreateModal } = useTodoCreateModal();
 
   const { data: goalDetail } = useQuery({
@@ -36,7 +38,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
               >
                 <CalendarIcon size={20} color="#737373" />
                 <Link href={`/calendar`} className="hidden w-full w-max text-sm font-semibold text-gray-500 md:block">
-                  캘린더 보기
+                  {t.goal.calendarView}
                 </Link>
               </Button>
               <Button
@@ -56,7 +58,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
                 }}
               >
                 <PlusIcon size={20} />
-                <span className="hidden w-full w-max text-sm font-semibold md:block">할 일 추가</span>
+                <span className="hidden w-full w-max text-sm font-semibold md:block">{t.goal.addTodo}</span>
               </Button>
             </div>
           }
@@ -66,7 +68,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
             {goalDetail?.todoList && goalDetail?.todoList.length > 0 ? (
               goalDetail.todoList.map((todo) => <TaskCardWrapper key={todo.id} item={todo} mode="todo" />)
             ) : (
-              <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>
+              <Empty>{t.goal.emptyTodo}</Empty>
             )}
           </div>
         </section>
@@ -78,7 +80,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
             {goalDetail?.doneList && goalDetail?.doneList.length > 0 ? (
               goalDetail.doneList.map((todo) => <TaskCardWrapper key={todo.id} item={todo} mode="done" />)
             ) : (
-              <Empty>할 일이 없습니다. 새로운 할 일을 추가해보세요!</Empty>
+              <Empty>{t.goal.emptyTodo}</Empty>
             )}
           </div>
         </section>

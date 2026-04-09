@@ -1,6 +1,7 @@
 'use client';
 import { useRef, KeyboardEvent } from 'react';
 import Tag from '@/shared/components/Tag';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 interface TagInputProps {
   tags: string[];
@@ -10,6 +11,7 @@ interface TagInputProps {
 
 export default function TagInput({ tags, onAddTag, onRemoveTag }: TagInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const { t } = useLanguage();
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -42,7 +44,7 @@ export default function TagInput({ tags, onAddTag, onRemoveTag }: TagInputProps)
         type="text"
         ref={inputRef}
         onKeyDown={handleKeyDown}
-        placeholder={tags.length === 0 ? '입력 후 Enter' : ''}
+        placeholder={tags.length === 0 ? t.todo.tagPlaceholder : ''}
         className="min-w-[80px] flex-1 border-none bg-transparent p-0 text-sm text-[#333] placeholder:text-[#737373] focus:outline-none md:text-base"
       />
     </div>

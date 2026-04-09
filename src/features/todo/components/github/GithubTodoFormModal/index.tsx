@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { XIcon } from 'lucide-react';
+import { CheckIcon, XIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 
@@ -15,7 +15,7 @@ import { usePostTodo } from '@/shared/lib/query/mutations';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { formatDateForAPI } from '@/shared/utils/utils';
 
-type GithubTodoSource = 'GITHUB_ISSUE' | 'GITHUB_PR';
+type GithubTodoSource = 'GITHUB_ISSUES' | 'GITHUB_PR';
 
 interface GithubTodoFormModalProps {
   goalId: number;
@@ -30,20 +30,18 @@ type GithubTodoFormValues = {
   baseBranch?: string;
 };
 
-const SOURCE_OPTIONS: { label: string; value: GithubTodoSource; description: string }[] = [
+const SOURCE_OPTIONS: { label: string; value: GithubTodoSource }[] = [
   {
-    label: 'GitHub Issue',
-    value: 'GITHUB_ISSUE',
-    description: '할 일과 연결된 GitHub Issue를 생성합니다',
+    label: 'Issues',
+    value: 'GITHUB_ISSUES',
   },
   {
-    label: 'GitHub PR',
+    label: 'PR',
     value: 'GITHUB_PR',
-    description: '브랜치 생성 후 Pull Request를 생성합니다',
   },
 ];
 
-export default function GithubTodoFormModal({ goalId, goalTitle }: GithubTodoFormModalProps) {
+export default function GithubTodoFormModal({ goalId }: GithubTodoFormModalProps) {
   const { closeModal } = useModalStore();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -58,7 +56,7 @@ export default function GithubTodoFormModal({ goalId, goalTitle }: GithubTodoFor
     defaultValues: {
       title: '',
       dueDate: undefined,
-      source: 'GITHUB_ISSUE',
+      source: 'GITHUB_ISSUES',
       headBranch: '',
       baseBranch: '',
     },
@@ -107,16 +105,13 @@ export default function GithubTodoFormModal({ goalId, goalTitle }: GithubTodoFor
     <form
       onSubmit={handleSubmit(onSubmit)}
       className={clsx(
-        'no-scrollbar flex w-full flex-col bg-white shadow-[0px_0px_60px_0px_rgba(0,0,0,0.05)]',
-        'gap-3 rounded-t-[32px] p-6',
-        'max-h-[90vh] overflow-y-auto',
+        'no-scrollbar flex max-h-[90vh] w-full flex-col gap-3 overflow-y-auto rounded-t-[32px] bg-white p-6 shadow-[0px_0px_60px_0px_rgba(0,0,0,0.05)]',
         'md:w-[488px] md:gap-4 md:rounded-[40px] md:p-8',
       )}
     >
       <div className="mb-1 flex items-center justify-between md:mb-4">
         <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold text-gray-800">GitHub 할 일 생성</h1>
-          {goalTitle && <p className="text-sm text-gray-500">{goalTitle}</p>}
+          <h1 className="text-xl font-semibold text-gray-800">할 일 생성</h1>
         </div>
         <button
           type="button"
@@ -130,27 +125,41 @@ export default function GithubTodoFormModal({ goalId, goalTitle }: GithubTodoFor
 
       {submitError && <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-500">{submitError}</p>}
 
-      {/* 타입 선택 */}
-      <FormField label="타입" required>
-        <div className="flex gap-2">
+      {/* 작업유형 선택 */}
+      <FormField label="작업유형" required>
+        <div className="flex flex-wrap gap-3">
           {SOURCE_OPTIONS.map((option) => {
             const isSelected = source === option.value;
+
             return (
               <button
                 key={option.value}
                 type="button"
+                role="checkbox"
+                aria-checked={isSelected}
                 onClick={() => setValue('source', option.value, { shouldDirty: true })}
-                className={clsx(
-                  'flex flex-1 flex-col gap-1 rounded-2xl border p-3 text-left transition-all duration-150',
-                  isSelected
-                    ? 'border-bearlog-500 bg-bearlog-500/5'
-                    : 'border-gray-200 bg-gray-50 hover:border-gray-300',
-                )}
+                className={
+                  'flex min-h-11 items-center gap-[6px] rounded-2xl px-1 py-1 text-left transition-all duration-150'
+                }
               >
-                <span className={clsx('text-sm font-semibold', isSelected ? 'text-bearlog-600' : 'text-gray-700')}>
+                <span
+                  className={clsx(
+                    'flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-md border transition-all duration-150',
+                    isSelected
+                      ? 'border-bearlog-500 bg-bearlog-500 text-white'
+                      : 'border-gray-300 bg-white text-transparent',
+                  )}
+                >
+                  <CheckIcon size={18} strokeWidth={3} />
+                </span>
+
+                <span
+                  className={
+                    'text-xl leading-none font-extrabold tracking-[-0.03em] text-gray-400 transition-colors duration-150'
+                  }
+                >
                   {option.label}
                 </span>
-                <span className="text-xs text-gray-500">{option.description}</span>
               </button>
             );
           })}
@@ -238,7 +247,7 @@ export default function GithubTodoFormModal({ goalId, goalTitle }: GithubTodoFor
           취소
         </Button>
         <Button type="submit" variant="primary" className="h-12 w-full md:h-14" disabled={isSubmitting}>
-          {isSubmitting ? '생성 중...' : isPR ? 'PR 생성' : 'Issue 생성'}
+          {isSubmitting ? '생성 중...' : '확인'}
         </Button>
       </div>
     </form>

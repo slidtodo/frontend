@@ -36,7 +36,7 @@ export default function CalendarCell({ day, todos, isLastRow, isSelected, onDayC
             alt="스탬프 이미지"
             width={80}
             height={80}
-            className="absolute top-1/2 left-1/2 aspect-auto w-full -translate-x-1/2 -translate-y-1/2 opacity-80"
+            className="pointer-events-none absolute top-1/2 left-1/2 aspect-auto w-full -translate-x-1/2 -translate-y-1/2 opacity-80"
           />
         </>
       )}

@@ -14,6 +14,8 @@
     "emailPlaceholder": "Enter your email",
     "password": "Password",
     "passwordPlaceholder": "Enter your password",
+    "passwordConfirm": "Confirm Password",
+    "passwordConfirmPlaceholder": "Re-enter your password",
     "name": "Name",
     "namePlaceholder": "Enter your name",
     "login": "Login",

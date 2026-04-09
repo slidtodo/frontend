@@ -14,6 +14,8 @@
     "emailPlaceholder": "이메일을 입력해주세요",
     "password": "비밀번호",
     "passwordPlaceholder": "비밀번호를 입력해주세요",
+    "passwordConfirm": "비밀번호 확인",
+    "passwordConfirmPlaceholder": "비밀번호를 다시 입력해주세요",
     "name": "이름",
     "namePlaceholder": "이름을 입력해주세요",
     "login": "로그인",

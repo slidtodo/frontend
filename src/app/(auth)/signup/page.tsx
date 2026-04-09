@@ -110,10 +110,10 @@ export default function SignupPage() {
               }}
             />
           </FormField>
-          <FormField label={t.auth.password} error={passwordConfirmError}>
+          <FormField label={t.auth.passwordConfirm} error={passwordConfirmError}>
             <Input
               type="password"
-              placeholder={t.auth.passwordPlaceholder}
+              placeholder={t.auth.passwordConfirmPlaceholder}
               value={passwordConfirm}
               onChange={(e) => {
                 setPasswordConfirm(e.target.value);

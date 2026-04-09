@@ -14,6 +14,8 @@
     "emailPlaceholder": "请输入邮箱",
     "password": "密码",
     "passwordPlaceholder": "请输入密码",
+    "passwordConfirm": "确认密码",
+    "passwordConfirmPlaceholder": "请再次输入密码",
     "name": "姓名",
     "namePlaceholder": "请输入姓名",
     "login": "登录",

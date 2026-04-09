@@ -85,8 +85,10 @@ function Dropdown({ items, selectedValue, onSelectItem, isDisabled, className, d
         )}
         disabled={isDisabled}
       >
-        {icon}
-        <span className="line-clamp-1 text-sm font-normal md:text-base">{selectedItem?.label} </span>
+        <div className="flex items-center justify-center gap-2">
+          {icon}
+          <span className="line-clamp-1 text-sm font-normal md:text-base">{selectedItem?.label} </span>
+        </div>
         {/* //TODO 선택된 아이템 표시 */}
         <ChevronDown size={16} className="text-gray-400 dark:text-white" />
       </button>

@@ -9,6 +9,7 @@ import PageHeader from '@/shared/components/PageHeader';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import Dropdown from '@/shared/components/Dropdown';
 import CalendarEventItem from '../CalendarEventItem';
+import Image from 'next/image';
 
 export default function CalendarClient() {
   const today = new Date();
@@ -36,8 +37,7 @@ export default function CalendarClient() {
     ...(goalList?.goals ?? []).filter((g) => g.id != null).map((g) => ({ label: g.title ?? '', value: String(g.id) })),
   ];
 
-  const isCurrentMonth = (y: number, m: number) =>
-    y === today.getFullYear() && m === today.getMonth() + 1;
+  const isCurrentMonth = (y: number, m: number) => y === today.getFullYear() && m === today.getMonth() + 1;
 
   const prevMonth = () => {
     const newYear = month === 1 ? year - 1 : year;
@@ -74,6 +74,7 @@ export default function CalendarClient() {
 
           <div className="w-full lg:max-w-[350px]">
             <Dropdown
+              icon={<Image src={'/image/goal-todo.png'} width={32} height={32} alt="목표 이미지 아이콘" />}
               className="h-12 border-gray-100 bg-gray-50"
               items={goalFilterItems}
               selectedValue={goalId !== undefined ? String(goalId) : ''}
@@ -86,7 +87,7 @@ export default function CalendarClient() {
 
         {!isDesktop && (
           <div className="border-border-secondary flex flex-col border-t px-4 py-5">
-            <h3 className="text-sm font-semibold pb-4">{selectedDate}</h3>
+            <h3 className="pb-4 text-sm font-semibold">{selectedDate}</h3>
             <div className="flex w-full flex-col gap-[6px] last:pb-[34px]">
               {todayTodos.map((todo) => (
                 <CalendarEventItem key={todo.id} todo={todo} />

@@ -2,12 +2,13 @@ import { queryOptions } from '@tanstack/react-query';
 
 import { fetchAuth } from '../api/fetchAuth';
 import { fetchGoals, type GetGoalsParams } from '../api/fetchGoals';
+import { fetchGithubIntegrations } from '../api/fetchGithubIntegrations';
 import { fetchNotes, type GetNotesParams } from '../api/fetchNotes';
 import { fetchNotifications } from '../api/fetchNotifications';
 import { fetchTags } from '../api/fetchTags';
 import { fetchTodos, type GetTodosParams, type GetTodoCalendarParams } from '../api/fetchTodos';
 import { fetchUsers } from '../api/fetchUsers';
-import { authKeys, goalKeys, noteKeys, notificationKeys, tagKeys, todoKeys, userKeys } from './keyFactory';
+import { authKeys, githubKeys, goalKeys, noteKeys, notificationKeys, tagKeys, todoKeys, userKeys } from './keyFactory';
 
 // goal queries
 export const goalQueries = {
@@ -75,6 +76,14 @@ export const authQueries = {
     queryOptions({
       queryKey: authKeys.githubAuthorizeUrl(),
       queryFn: fetchAuth.getGithubAuthorizeUrl,
+    }),
+};
+
+export const githubQueries = {
+  repositories: () =>
+    queryOptions({
+      queryKey: githubKeys.repositories(),
+      queryFn: fetchGithubIntegrations.getRepositories,
     }),
 };
 

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRef, useEffect } from 'react';
 import { ChevronRightIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 
@@ -10,14 +11,62 @@ import PageSubTitle from '@/shared/components/PageSubTitle';
 import ProgressCircle from '@/shared/components/ProgressCircle';
 import TabChangeMode from '@/shared/components/TabChangeMode';
 import TaskCardWrapper from '../TaskCardWrapper';
+import GithubRepoConnectModal from '@/shared/components/Modal/GithubRepoConnectModal';
 
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
-import { todoQueries, userQueries } from '@/shared/lib/query/queryKeys';
+
+import { todoQueries, userQueries, goalQueries } from '@/shared/lib/query/queryKeys';
+import { useModalStore } from '@/shared/stores/useModalStore';
+import { useTodoModeStore, TodoMode } from '@/shared/stores/useTodoModeStore';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 export default function DashBoardSummary() {
   const { data: user } = useQuery(userQueries.current());
+  const { data: goals, isFetched: isGoalsFetched } = useQuery(goalQueries.list());
   const breakpoint = useBreakpoint();
+
+  const mode = useTodoModeStore((state) => state.mode);
+  const setMode = useTodoModeStore((state) => state.setMode);
+  const { openModal } = useModalStore();
+
+  const githubGoals = goals?.goals?.filter((goal) => goal.source === 'GITHUB') ?? [];
+
+  // GITHUB 모드 세션 내에서 레포 연결 모달 중복 오픈 방지
+  const githubModalOpenedRef = useRef(false);
+  const prevGithubGoalsLengthRef = useRef(githubGoals.length);
+
+  const handleModeChange = (nextMode: TodoMode) => {
+    setMode(nextMode);
+  };
+
+  /**
+   * GITHUB 모드로 전환 시 연결된 레포가 없으면 레포 연결 모달 오픈.
+   * - handleModeChange에서 처리하지 않고 useEffect로 처리하는 이유:
+   *   goals 쿼리가 아직 로딩 중일 때 모드를 전환하면 githubGoals가 빈 배열로 평가되어
+   *   오판이 발생할 수 있기 때문에 isGoalsFetched 이후 판단.
+   * - MANUAL 전환 시 ref 초기화 → GITHUB 재진입 시 조건 재평가
+   * - 레포가 있다가 해제된 경우(length > 0 → 0) ref 초기화 → 바로 모달 오픈
+   */
+  useEffect(() => {
+    const prevLength = prevGithubGoalsLengthRef.current;
+    prevGithubGoalsLengthRef.current = githubGoals.length;
+
+    if (mode !== 'GITHUB') {
+      githubModalOpenedRef.current = false;
+      return;
+    }
+
+    // 레포가 있다가 모두 해제된 경우 → 모달 다시 열 수 있도록 ref 초기화
+    if (prevLength > 0 && githubGoals.length === 0) {
+      githubModalOpenedRef.current = false;
+    }
+
+    if (isGoalsFetched && githubGoals.length === 0 && !githubModalOpenedRef.current) {
+      githubModalOpenedRef.current = true;
+      openModal(<GithubRepoConnectModal />, undefined, 'bottom');
+    }
+  }, [mode, isGoalsFetched, githubGoals.length, openModal]);
+
   const { t } = useLanguage();
 
   return (
@@ -26,7 +75,7 @@ export default function DashBoardSummary() {
         {breakpoint !== 'mobile' && <PageHeader title={`${user?.nickname}${t.dashboard.title}`} />}
 
         <div className="flex shrink-0 justify-end md:w-fit">
-          <TabChangeMode mode="MANUAL" />
+          <TabChangeMode mode={mode} onModeChange={handleModeChange} />
         </div>
       </div>
       <section className="flex w-full flex-col gap-[40px] pb-[40px] md:flex-row md:gap-[12px] lg:gap-[32px] lg:pb-[34px]">

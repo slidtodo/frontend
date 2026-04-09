@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { useModalStore } from '@/shared/stores/useModalStore';
-import { useLanguage } from '@/shared/contexts/LanguageContext';
 import { OctagonAlert } from 'lucide-react';
 import Button from '../../Button';
 import Input from '../../Input';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 /**
  * PopupModal
@@ -136,6 +136,7 @@ export function PopupModal({ onConfirm, variant }: PopupModalProps) {
 
   const { titleLines, warning, confirmLabel, labelledBy } = getConfig(variant);
   const [password, setPassword] = useState('');
+
   const isLocalAccountDelete = variant.type === 'accountDelete' && variant.isLocalUser;
 
   return (

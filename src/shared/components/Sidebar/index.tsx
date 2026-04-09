@@ -226,7 +226,7 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
                   <span className="w-15 truncate text-sm font-medium lg:w-full">{user?.nickname}</span>
                   <ChevronRightIcon size={16} color="#A0A0A0" className="hidden lg:block" />
                 </div>
-                <span className="hidden truncate text-sm font-medium text-[#A0A0A0] lg:block">{user?.email}</span>
+                <span className="hidden w-35 truncate text-sm font-medium text-[#A0A0A0] lg:block">{user?.email}</span>
               </div>
             </Link>
 

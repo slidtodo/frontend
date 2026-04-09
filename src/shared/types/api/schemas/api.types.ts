@@ -823,7 +823,7 @@ export interface components {
              * @description 외부 소스 항목 ID (GitHub issue/PR 번호)
              */
             sourceItemId?: number | null;
-            /** @description 상태 */
+            /** @description 상태 (OPEN, CLOSED, MERGED) */
             status?: string | null;
             /** @description 즐겨찾기 여부 */
             favorite: boolean;

@@ -3,20 +3,16 @@
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { memo, useCallback, useEffect, useState } from 'react';
-<<<<<<< HEAD
-=======
-// TODO: 개발자 모드가 추가되면 mode 상태를 상위 컴포넌트로 올리고, onModeChange 콜백을 통해 모드 변경을 알릴 수 있도록 수정 필요
-import { useLanguage } from '@/shared/contexts/LanguageContext';
->>>>>>> 72dbe3225dd6895d0457f44ad317ed53de18c148
 
 import { TodoMode } from '@/shared/stores/useTodoModeStore';
+
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 interface TabChangeModeProps {
   mode: TodoMode;
   onModeChange?: (mode: TodoMode) => void;
 }
 
-<<<<<<< HEAD
 const MODE_OPTIONS: { label: string; value: TodoMode }[] = [
   { label: '일반 모드', value: 'MANUAL' },
   { label: '개발자 모드', value: 'GITHUB' },
@@ -24,16 +20,8 @@ const MODE_OPTIONS: { label: string; value: TodoMode }[] = [
 
 function TabChangeMode({ mode, onModeChange }: TabChangeModeProps) {
   const [selectedMode, setSelectedMode] = useState<TodoMode>(mode);
-=======
-function TabChangeMode({ mode }: TabChangeModeProps) {
-  const [selectedMode, setSelectedMode] = useState<TabMode>(mode);
-  const { t } = useLanguage();
 
-  const MODE_OPTIONS: { label: string; value: TabMode }[] = [
-    { label: t.settings.modeManual, value: 'MANUAL' },
-    { label: t.settings.modeDeveloper, value: 'GITHUB' },
-  ];
->>>>>>> 72dbe3225dd6895d0457f44ad317ed53de18c148
+  const { t } = useLanguage();
 
   useEffect(() => {
     setSelectedMode(mode);

@@ -8,6 +8,7 @@ import CalendarGrid from '@/features/calendar/components/CalendarGrid';
 import PageHeader from '@/shared/components/PageHeader';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import Dropdown from '@/shared/components/Dropdown';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 export default function CalendarClient() {
   const today = new Date();
@@ -23,9 +24,13 @@ export default function CalendarClient() {
 
   const breakpoint = useBreakpoint();
   const isMobile = breakpoint === 'mobile';
+  const { t, language } = useLanguage();
+
+  const localeMap: Record<string, string> = { ko: 'ko-KR', en: 'en-US', ja: 'ja-JP', zh: 'zh-CN' };
+  const formattedYearMonth = new Intl.DateTimeFormat(localeMap[language], { year: 'numeric', month: 'long' }).format(new Date(year, month - 1));
 
   const goalFilterItems = [
-    { label: '전체 목표', value: '' },
+    { label: t.calendar.allGoal, value: '' },
     ...(goalList?.goals ?? []).filter((g) => g.id != null).map((g) => ({ label: g.title ?? '', value: String(g.id) })),
   ];
 
@@ -45,7 +50,7 @@ export default function CalendarClient() {
 
   return (
     <>
-      {!isMobile && <PageHeader title={`${user?.nickname ?? ''}님의 캘린더`} className="md:mb-[32px] lg:mb-5" />}
+      {!isMobile && <PageHeader title={`${user?.nickname ?? ''}${t.calendar.title}`} className="md:mb-[32px] lg:mb-5" />}
       <div className="flex w-full flex-col bg-white md:rounded-t-4xl md:rounded-b-4xl md:border border-border-secondary">
         <div className="flex flex-col items-center gap-5 px-4 py-5 lg:flex-row lg:justify-between lg:px-8">
           <div className="flex items-center gap-4">
@@ -53,7 +58,7 @@ export default function CalendarClient() {
               <ChevronsLeftIcon size={20} className="text-gray-500" />
             </button>
             <span className="text-lg font-semibold text-gray-800">
-              {year}년 {month}월
+              {formattedYearMonth}
             </span>
             <button onClick={nextMonth} className="cursor-pointer rounded-full p-1 hover:bg-gray-100">
               <ChevronsRightIcon size={20} className="text-gray-500" />

@@ -216,5 +216,11 @@
     "confirm": "확인",
     "modeManual": "일반 모드",
     "modeDeveloper": "개발자 모드"
+  },
+  "calendar": {
+    "title": "님의 캘린더",
+    "allGoal": "전체 목표",
+    "yearSuffix": "년",
+    "monthSuffix": "월"
   }
 }

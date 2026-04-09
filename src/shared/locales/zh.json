@@ -216,5 +216,11 @@
     "confirm": "确认",
     "modeManual": "普通",
     "modeDeveloper": "开发者"
+  },
+  "calendar": {
+    "title": "的日历",
+    "allGoal": "全部目标",
+    "yearSuffix": "年",
+    "monthSuffix": "月"
   }
 }

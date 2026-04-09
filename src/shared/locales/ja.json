@@ -216,5 +216,11 @@
     "confirm": "確認",
     "modeManual": "一般",
     "modeDeveloper": "開発者"
+  },
+  "calendar": {
+    "title": "さんのカレンダー",
+    "allGoal": "すべての目標",
+    "yearSuffix": "年",
+    "monthSuffix": "月"
   }
 }

@@ -216,5 +216,11 @@
     "confirm": "Confirm",
     "modeManual": "General",
     "modeDeveloper": "Developer"
+  },
+  "calendar": {
+    "title": "'s Calendar",
+    "allGoal": "All Goals",
+    "yearSuffix": "",
+    "monthSuffix": ""
   }
 }

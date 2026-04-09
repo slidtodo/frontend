@@ -19,7 +19,7 @@ export default async function Page({ params }: { params: Promise<{ goalId: strin
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <div className="mx-auto flex h-full min-h-screen w-full max-w-[1312px] flex-col">
+      <div className="mx-auto flex h-full w-full max-w-[1312px] flex-col">
         <DataBoundary>
           <NoteListContainer goalId={Number(goalId)} />
         </DataBoundary>

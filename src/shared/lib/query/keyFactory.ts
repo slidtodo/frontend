@@ -2,6 +2,7 @@ import type {
   GetGoalsParams,
   GetNotesParams,
   GetTodosParams,
+  GetTodoCalendarParams,
 } from '@/shared/lib/api';
 
 export const goalKeys = {
@@ -18,6 +19,7 @@ export const todoKeys = {
   list: (params?: GetTodosParams) => [...todoKeys.lists(), params ?? {}] as const,
   details: () => [...todoKeys.all, 'detail'] as const,
   detail: (todoId: number) => [...todoKeys.details(), todoId] as const,
+  calendar: (params: GetTodoCalendarParams) => [...todoKeys.all, 'calendar', params] as const,
 };
 
 export const noteKeys = {
@@ -32,6 +34,11 @@ export const authKeys = {
   all: ['auth'] as const,
   googleAuthorizeUrl: () => [...authKeys.all, 'googleAuthorizeUrl'] as const,
   githubAuthorizeUrl: () => [...authKeys.all, 'githubAuthorizeUrl'] as const,
+};
+
+export const githubKeys = {
+  all: ['github'] as const,
+  repositories: () => [...githubKeys.all, 'repositories'] as const,
 };
 
 export const userKeys = {

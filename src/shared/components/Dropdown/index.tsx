@@ -56,9 +56,10 @@ interface DropdownProps extends React.HTMLAttributes<HTMLButtonElement> {
   isDisabled?: boolean;
   className?: string;
   defaultValue?: string;
+  icon?: React.ReactNode;
 }
 
-function Dropdown({ items, selectedValue, onSelectItem, isDisabled, className, defaultValue }: DropdownProps) {
+function Dropdown({ items, selectedValue, onSelectItem, isDisabled, className, defaultValue, icon }: DropdownProps) {
   const [isToggleOpen, setIsToggleOpen] = useState(false);
   const selectedItem =
     items.find((item) => item.value === selectedValue) || items.find((item) => item.value === defaultValue);
@@ -84,7 +85,10 @@ function Dropdown({ items, selectedValue, onSelectItem, isDisabled, className, d
         )}
         disabled={isDisabled}
       >
-        <span className="line-clamp-1 text-sm font-normal md:text-base">{selectedItem?.label} </span>
+        <div className="flex items-center justify-center gap-2">
+          {icon}
+          <span className="line-clamp-1 text-sm font-normal md:text-base">{selectedItem?.label} </span>
+        </div>
         {/* //TODO 선택된 아이템 표시 */}
         <ChevronDown size={16} className="text-gray-400 dark:text-white" />
       </button>
@@ -136,10 +140,8 @@ export function DropdownItem({ item, onSelectItem }: DropdownItemProps) {
         }}
         className={twMerge(clsx('flex w-full cursor-pointer'))}
       >
-        <div
-          className={twMerge(clsx('hover:bg-bearlog-100 w-full rounded-xl p-2 text-left transition-all duration-200'))}
-        >
-          <span className="text-sm leading-6 font-medium tracking-[-0.48px] text-gray-700 md:text-base">
+        <div className={twMerge(clsx('hover:bg-bearlog-500/20 w-full rounded-xl p-2 text-left'))}>
+          <span className="text-sm leading-6 font-medium tracking-[-0.48px] text-[#333] md:text-base">
             {item.label}
           </span>
         </div>

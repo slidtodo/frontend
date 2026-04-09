@@ -2,6 +2,7 @@
 
 import { Link2, XIcon } from 'lucide-react';
 import { useRef } from 'react';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 interface LinkInputPros {
   value: string;
@@ -10,6 +11,7 @@ interface LinkInputPros {
 
 export default function LinkInput({ value, onChange }: LinkInputPros) {
   const urlInputRef = useRef<HTMLInputElement>(null);
+  const { t } = useLanguage();
 
   return (
     <div className="flex h-11 w-full items-center justify-between rounded-xl border border-dashed border-[#CCC] bg-[#FAFAFA] p-3 md:h-14 md:rounded-2xl md:p-4">
@@ -19,7 +21,7 @@ export default function LinkInput({ value, onChange }: LinkInputPros) {
           ref={urlInputRef}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="링크를 업로드해주세요"
+          placeholder={t.todo.linkPlaceholder}
           className="w-full flex-1 border-none bg-transparent p-0 text-sm text-[#333] placeholder:text-[#737373] focus:outline-none md:text-base"
         />
       </div>

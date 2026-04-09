@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { Editor, EditorContent as TiptapEditorContent } from '@tiptap/react';
 import { useEffect } from 'react';
 import LinkEmbed from '../LinkEmbed';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 type EditorContentProps = {
   editor?: Editor | null;
@@ -28,6 +29,7 @@ export default function EditorContent({
     }
   }, [editor, readOnly]);
 
+  const { t } = useLanguage();
   const text = editor?.getText() ?? '';
   const withSpace = text.length;
   const withoutSpace = text.replace(/\s/g, '').length;
@@ -67,7 +69,7 @@ export default function EditorContent({
       )}
       {!readOnly && (
         <p className="text-right text-xs font-normal text-[#A4A4A4]">
-          공백포함 {withSpace}자 | 공백제외 {withoutSpace}자
+          {t.note.charCountWithSpace} {withSpace}{t.note.charUnit} | {t.note.charCountWithoutSpace} {withoutSpace}{t.note.charUnit}
         </p>
       )}
     </section>

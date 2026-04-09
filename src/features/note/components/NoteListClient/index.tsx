@@ -13,7 +13,7 @@ import clsx from 'clsx';
 interface NoteListClientProps {
   goalId: number;
   search?: string;
-  sort?: 'LATEST' | 'OLDEST';
+  sort: 'LATEST' | 'OLDEST';
   page: number;
   onPageChange: (page: number) => void;
 }
@@ -49,7 +49,7 @@ export default function NoteListClient({ goalId, search, sort, page, onPageChang
       {notes.length === 0 ? (
         <Empty>아직 등록된 노트가 없어요</Empty>
       ) : (
-        <section className={clsx('flex flex-col gap-3', 'md:gap-4', 'lg:grid lg:grid-cols-2 lg:gap-[20px]')}>
+        <section className={clsx('flex flex-col gap-3', 'md:gap-4', 'lg:grid lg:grid-cols-2 lg:gap-5')}>
           {notes.map((note) => (
             <NoteItem
               key={note.id}

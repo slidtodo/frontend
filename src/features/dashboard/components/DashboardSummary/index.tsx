@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRef, useEffect } from 'react';
 import { ChevronRightIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 
@@ -10,15 +11,55 @@ import PageSubTitle from '@/shared/components/PageSubTitle';
 import ProgressCircle from '@/shared/components/ProgressCircle';
 import TabChangeMode from '@/shared/components/TabChangeMode';
 import TaskCardWrapper from '../TaskCardWrapper';
+import GithubRepoConnectModal from '@/shared/components/Modal/GithubRepoConnectModal';
 
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
-import { todoQueries, userQueries } from '@/shared/lib/query/queryKeys';
+
+import { todoQueries, userQueries, goalQueries } from '@/shared/lib/query/queryKeys';
+import { useModalStore } from '@/shared/stores/useModalStore';
+import { useTodoModeStore, TodoMode } from '@/shared/stores/useTodoModeStore';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 export default function DashBoardSummary() {
-  const { data: user } = useQuery(userQueries.current());
-  const breakpoint = useBreakpoint();
   const { t } = useLanguage();
+
+  const { data: user } = useQuery(userQueries.current());
+  const { data: goals, isFetched: isGoalsFetched } = useQuery(goalQueries.list());
+  const breakpoint = useBreakpoint();
+
+  const mode = useTodoModeStore((state) => state.mode);
+  const setMode = useTodoModeStore((state) => state.setMode);
+  const { openModal } = useModalStore();
+
+  const githubGoals = goals?.goals?.filter((goal) => goal.source === 'GITHUB') ?? [];
+
+  // GITHUB 모드 세션 내에서 레포 연결 모달 중복 오픈 방지
+  const githubModalOpenedRef = useRef(false);
+  const prevGithubGoalsLengthRef = useRef(githubGoals.length);
+
+  const handleModeChange = (nextMode: TodoMode) => {
+    setMode(nextMode);
+  };
+
+  useEffect(() => {
+    const prevLength = prevGithubGoalsLengthRef.current;
+    prevGithubGoalsLengthRef.current = githubGoals.length;
+
+    if (mode !== 'GITHUB') {
+      githubModalOpenedRef.current = false;
+      return;
+    }
+
+    // 레포가 있다가 모두 해제된 경우 → 모달 다시 열 수 있도록 ref 초기화
+    if (prevLength > 0 && githubGoals.length === 0) {
+      githubModalOpenedRef.current = false;
+    }
+
+    if (isGoalsFetched && githubGoals.length === 0 && !githubModalOpenedRef.current) {
+      githubModalOpenedRef.current = true;
+      openModal(<GithubRepoConnectModal />, undefined, 'bottom');
+    }
+  }, [mode, isGoalsFetched, githubGoals.length, openModal]);
 
   return (
     <>
@@ -26,7 +67,7 @@ export default function DashBoardSummary() {
         {breakpoint !== 'mobile' && <PageHeader title={`${user?.nickname}${t.dashboard.title}`} />}
 
         <div className="flex shrink-0 justify-end md:w-fit">
-          <TabChangeMode mode="MANUAL" />
+          <TabChangeMode mode={mode} onModeChange={handleModeChange} />
         </div>
       </div>
       <section className="flex w-full flex-col gap-[40px] pb-[40px] md:flex-row md:gap-[12px] lg:gap-[32px] lg:pb-[34px]">
@@ -43,32 +84,33 @@ export default function DashBoardSummary() {
               </Link>
             }
           />
-          <RecentPostCard />
+          <RecentPostCard t={t} />
         </div>
         <div className="flex w-full flex-col justify-between gap-[10px]">
           <PageSubTitle
             subTitle={t.dashboard.myProgress}
             icons={<Image src={'/image/progress-green.png'} alt="Progress Icon" width={40} height={40} />}
           />
-          <CurrentProgressCard />
+          <CurrentProgressCard t={t} />
         </div>
       </section>
     </>
   );
 }
 
-function RecentPostCard() {
+interface RecentPostCardProps {
+  t: ReturnType<typeof useLanguage>['t'];
+}
+function RecentPostCard({ t }: RecentPostCardProps) {
   const { data: todos } = useQuery(
     todoQueries.list({
       sort: 'LATEST',
     }),
   );
-  const { t } = useLanguage();
-
   const recentTodos = todos?.todos?.slice(0, 4) ?? [];
 
   return (
-    <article className="flex h-[187px] h-fit flex-col gap-[6px] rounded-[40px] bg-white px-4 py-[18px] md:h-[229px] md:p-4 lg:h-[256px] lg:p-8">
+    <article className="flex h-[187px] h-fit w-full min-w-0 flex-col gap-[6px] rounded-[40px] bg-white px-4 py-[18px] md:h-[229px] md:p-4 lg:h-[256px] lg:p-8">
       {recentTodos.length > 0 ? (
         recentTodos.map((item) => <TaskCardWrapper key={item.id} item={item} mode="todo" />)
       ) : (
@@ -80,9 +122,11 @@ function RecentPostCard() {
   );
 }
 
-function CurrentProgressCard() {
+interface CurrentProgressCardProps {
+  t: ReturnType<typeof useLanguage>['t'];
+}
+function CurrentProgressCard({ t }: CurrentProgressCardProps) {
   const { data: percents } = useQuery(userQueries.progress());
-  const { t } = useLanguage();
 
   return (
     <article className="bg-bearlog-500 relative h-[187px] rounded-[40px] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)] md:h-[229px] lg:h-[256px]">

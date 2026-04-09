@@ -9,6 +9,9 @@ interface EditDeleteDropdownProps {
   handleDelete: () => void;
   onClose?: () => void;
   anchorRef: RefObject<HTMLElement | null>;
+  editLabel?: string;
+  editDisabled?: boolean;
+  deleteLabel?: string;
 }
 
 interface DropdownPosition {
@@ -16,7 +19,13 @@ interface DropdownPosition {
   left: number;
 }
 
-export default function EditDeleteDropdown({ handleEdit, handleDelete, onClose, anchorRef }: EditDeleteDropdownProps) {
+export default function EditDeleteDropdown({
+  handleEdit,
+  handleDelete,
+  onClose,
+  anchorRef,
+  editDisabled = false,
+}: EditDeleteDropdownProps) {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const { t } = useLanguage();
 
@@ -76,8 +85,9 @@ export default function EditDeleteDropdown({ handleEdit, handleDelete, onClose, 
     >
       <button
         type="button"
-        className="block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-orange-50"
+        className="block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-orange-50 disabled:cursor-not-allowed disabled:text-gray-400 disabled:hover:bg-white"
         onClick={handleEdit}
+        disabled={editDisabled}
       >
         {t.common.edit}
       </button>

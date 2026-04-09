@@ -2,7 +2,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { fetchAuth } from '../api';
+import { ApiError } from '../api/utils';
 import { fetchGoals, GoalListResponse, PatchGoalResponse, PostGoalRequest } from '../api/fetchGoals';
+import { ConnectGithubRepositoryRequest, fetchGithubIntegrations } from '../api/fetchGithubIntegrations';
 import { fetchNotes, PatchNoteRequest } from '../api/fetchNotes';
 import {
   fetchTodos,
@@ -13,7 +15,7 @@ import {
   TodoListResponse,
 } from '../api/fetchTodos';
 import { fetchUsers, PatchCurrentUserPasswordRequest, PatchCurrentUserRequest } from '../api/fetchUsers';
-import { goalKeys, noteKeys, todoKeys, userKeys } from './keyFactory';
+import { githubKeys, goalKeys, noteKeys, todoKeys, userKeys } from './keyFactory';
 import { noteQueries } from './queryKeys';
 import { useToastStore } from '@/shared/stores/useToastStore';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
@@ -134,6 +136,69 @@ export const usePatchGoal = (goalId?: number) => {
   });
 };
 
+export const useConnectGithubRepository = () => {
+  const { showToast } = useToastStore();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: ConnectGithubRepositoryRequest) => fetchGithubIntegrations.postConnectRepository(data),
+    onSuccess: () => {
+      showToast('GitHub 저장소가 목표로 연결되었습니다.');
+      queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: githubKeys.repositories() });
+      queryClient.invalidateQueries({ queryKey: userKeys.progress() });
+    },
+    onError: () => {
+      showToast('GitHub 저장소 연결에 실패했습니다.', 'fail');
+    },
+  });
+};
+
+export const useDisconnectGithubGoal = (goalId?: number) => {
+  const router = useRouter();
+  const { showToast } = useToastStore();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      if (goalId === undefined) {
+        throw new Error('Goal id is required');
+      }
+
+      return fetchGithubIntegrations.deleteConnectedGoal(goalId);
+    },
+    onMutate: async () => {
+      if (goalId === undefined) throw new Error('Goal id is required');
+
+      await queryClient.cancelQueries({ queryKey: goalKeys.lists() });
+      const previousGoals = queryClient.getQueryData(goalKeys.list());
+
+      // 즉시 UI 갱신: 해당 goal을 list에서 제거 (source가 MANUAL로 변경되어 GITHUB 모드에서 사라짐)
+      queryClient.setQueryData(goalKeys.list(), (old: GoalListResponse | undefined) => ({
+        ...old,
+        goals: (old?.goals ?? []).filter((goal) => goal.id !== goalId),
+      }));
+
+      return { previousGoals };
+    },
+    onSuccess: () => {
+      showToast('GitHub 저장소 연결이 해제되었습니다.');
+      queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: goalKeys.details() });
+      queryClient.invalidateQueries({ queryKey: githubKeys.repositories() });
+      queryClient.invalidateQueries({ queryKey: userKeys.progress() });
+      router.push('/dashboard');
+    },
+    onError: (_error, _variables, context) => {
+      // optimistic update 롤백
+      if (context?.previousGoals !== undefined) {
+        queryClient.setQueryData(goalKeys.list(), context.previousGoals);
+      }
+      showToast('GitHub 저장소 연결 해제에 실패했습니다.', 'fail');
+    },
+  });
+};
+
 // todo
 export const usePostTodo = () => {
   const { showToast } = useToastStore();
@@ -162,6 +227,7 @@ export const usePostTodo = () => {
             linkUrl: data.linkUrl ?? null,
             imageUrl: data.imageUrl ?? null,
             goalId: data.goalId,
+            source: data.source ?? 'MANUAL',
           },
           ...(old?.todos ?? []),
         ],
@@ -175,7 +241,8 @@ export const usePostTodo = () => {
       queryClient.invalidateQueries({ queryKey: goalKeys.details() });
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
     },
-    onError: () => {
+    onError: (error) => {
+      const message = error instanceof ApiError ? error.message : '할 일 생성에 실패했습니다.';
       showToast(t.mutations.todoCreateFail, 'fail');
     },
   });
@@ -219,6 +286,7 @@ export const useDeleteTodo = (todoId?: number) => {
 export const usePatchTodo = (todoId?: number) => {
   const { showToast } = useToastStore();
   const { t } = useLanguage();
+
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -257,7 +325,12 @@ export const usePatchTodo = (todoId?: number) => {
       queryClient.invalidateQueries({ queryKey: goalKeys.details() });
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
     },
-    onError: () => {
+
+    onError: (_error, _variables, context) => {
+      // optimistic update 롤백 — 에러 시 이전 상태로 즉시 복원
+      if (todoId !== undefined && context?.previousTodo !== undefined) {
+        queryClient.setQueryData(todoKeys.detail(todoId), context.previousTodo);
+      }
       showToast(t.mutations.todoUpdateFail, 'fail');
     },
   });

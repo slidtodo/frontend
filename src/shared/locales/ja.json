@@ -127,6 +127,7 @@
     "titlePlaceholder": "ノートのタイトルを入力してください",
     "goalLabel": "目標",
     "todoLabel": "タスク",
+    "empty": "まだノートが登録されていません",
     "todoSelectLabel": "タスクを選択",
     "todoSelectPlaceholder": "タスクを選択してください。",
     "createdAtLabel": "作成日",

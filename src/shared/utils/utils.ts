@@ -21,6 +21,9 @@ export function formatDate(date: Date | string) {
  * @returns 2026-03-06T00:00:00.000Z
  */
 export const formatDateForAPI = (date: Date): string => {
-  return date.toISOString();
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}T00:00:00.000Z`;
 };
 

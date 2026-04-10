@@ -1,9 +1,9 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import DashBoardSummary from '@/features/dashboard/components/DashboardSummary';
-import DashboardDetail from '@/features/dashboard/components/DashBoardDetail';
+import DashboardDetail from '@/features/dashboard/components/DashboardDetail';
 
-import { todoQueries, userQueries, goalQueries } from '@/shared/lib/queryKeys';
+import { todoQueries, userQueries, goalQueries } from '@/shared/lib/query/queryKeys';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,7 +16,6 @@ export default async function DashboardPage() {
   const queryClient = new QueryClient();
 
   await Promise.all([
-    queryClient.prefetchQuery(todoQueries.list({ sort: 'LATEST' })),
     queryClient.prefetchQuery(userQueries.current()),
     queryClient.prefetchQuery(userQueries.progress()),
   ]);
@@ -26,7 +25,11 @@ export default async function DashboardPage() {
   await Promise.all(
     (goals.goals ?? [])
       .filter((goal) => goal.id != null)
-      .map((goal) => queryClient.prefetchQuery(goalQueries.detail(goal.id!))),
+      .flatMap((goal) => [
+        queryClient.prefetchQuery(goalQueries.detail(goal.id!)),
+        queryClient.prefetchInfiniteQuery({ ...todoQueries.infiniteList({ goalId: goal.id!, done: false, limit: 10 }), pages: 1 }),
+        queryClient.prefetchInfiniteQuery({ ...todoQueries.infiniteList({ goalId: goal.id!, done: true, limit: 10 }), pages: 1 }),
+      ]),
   );
 
   const dehydratedState = dehydrate(queryClient);

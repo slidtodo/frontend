@@ -1,8 +1,8 @@
-type NoteSource = 'MANUAL' | 'GITHUB_ISSUE' | 'GITHUB_PR';
+export type NoteSource = 'MANUAL' | 'GITHUB_ISSUE' | 'GITHUB_PR';
 type TagItem = { id?: number | null; name?: string | null };
 
 interface MapNoteTagsOptions {
-  source?: NoteSource;
+  source?: string;
   tags?: TagItem[];
   sourceItemId?: number | null;
   status?: string | null;

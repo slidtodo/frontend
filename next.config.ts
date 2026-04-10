@@ -1,6 +1,10 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // @ts-expect-error: reactCompiler is not yet in ExperimentalConfig types
+    reactCompiler: true,
+  },
   images: {
     remotePatterns: [
       {
@@ -11,6 +15,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
       },
       {
         protocol: 'https',

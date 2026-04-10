@@ -5,21 +5,19 @@ import NoteEditor from '@/features/note/components/NoteEditor';
 import Button from '@/shared/components/Button';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { noteQueries, goalQueries, todoQueries } from '@/shared/lib/queryKeys';
-import { usePatchNote } from '@/features/note/hooks/usePatchNote';
+import { noteQueries, goalQueries, todoQueries } from '@/shared/lib/query/queryKeys';
 import { useDraftNote } from '@/features/note/hooks/useDraftNote';
 import { useDraftNoteRestore } from '@/features/note/hooks/useDraftNoteRestore';
 import DraftNoteToast from '@/features/note/components/DraftNoteToast';
 import { useToastStore } from '@/shared/stores/useToastStore';
 import { useMobileHeaderStore } from '@/shared/stores/useMobileHeaderStore';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
-import { useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
-import TextAlign from '@tiptap/extension-text-align';
-import Placeholder from '@tiptap/extension-placeholder';
+import { useNoteEditor } from '@/features/note/hooks/useNoteEditor';
 import EditorToolbar from '@/features/note/components/NoteEditor/EditorToolbar';
 import { createPortal } from 'react-dom';
+import { usePatchNote } from '@/shared/lib/query/mutations';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
+import Empty from '@/shared/components/Empty';
 
 interface NoteEditClientProps {
   noteId: number;
@@ -41,6 +39,7 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
   const { showToast } = useToastStore();
   const { saveDraft } = useDraftNote(`note_draft_edit_${noteId}`);
   const setSlot = useMobileHeaderStore((s) => s.setSlot);
+  const { t } = useLanguage();
 
   const { showDraftToast, handleCloseToast, handleToastLoad } = useDraftNoteRestore({
     key: `note_draft_edit_${noteId}`,
@@ -51,35 +50,21 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
     },
   });
 
-  const { mutate: patchNote, isPending } = usePatchNote(noteId, goalId, {
-    onError: () => showToast('노트 수정에 실패했습니다', 'fail'),
-  });
+  const { mutate: patchNote, isPending } = usePatchNote(noteId, goalId);
 
   const breakpoint = useBreakpoint();
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      TextAlign.configure({ types: ['heading', 'paragraph'] }),
-      Placeholder.configure({ placeholder: '이 곳을 통해 노트 작성을 시작해주세요' }),
-    ],
-    content,
-    immediatelyRender: false,
-    onUpdate: ({ editor }) => {
-      setContent(editor.getHTML());
-    },
-  });
+  const editor = useNoteEditor({ content, onContentChange: setContent });
 
   const handleSaveDraft = useCallback(() => {
     try {
       saveDraft({ title, content, ...(linkUrl ? { linkUrl } : {}) });
-      showToast('임시 저장이 완료되었습니다 ・ 1초전', 'success');
+      showToast(t.note.tempSaveSuccess, 'success');
     } catch (error) {
-      showToast('임시 저장이 실패했습니다', 'fail');
+      showToast(t.note.tempSaveFail, 'fail');
       console.error('임시 저장 실패:', error);
     }
-  }, [title, content, linkUrl, saveDraft, showToast]);
+  }, [title, content, linkUrl, saveDraft, showToast, t]);
 
   const handleSubmit = useCallback(() => {
     patchNote({
@@ -99,7 +84,7 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
             className="px-1.5 text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
             onClick={handleSaveDraft}
           >
-            임시저장
+            {t.note.tempSave}
           </button>
           {showDraftToast && <DraftNoteToast onLoad={handleToastLoad} onClose={handleCloseToast} />}
         </div>
@@ -108,15 +93,14 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
           className="px-1.5 text-[#737373] transition-all duration-200 hover:text-[#FF8442]"
           onClick={handleSubmit}
         >
-          수정
+          {t.note.edit}
         </button>
       </div>,
     );
     return () => setSlot(null);
-  }, [breakpoint, handleSaveDraft, handleSubmit, showDraftToast, handleToastLoad, handleCloseToast, setSlot]);
+  }, [breakpoint, handleSaveDraft, handleSubmit, showDraftToast, handleToastLoad, handleCloseToast, setSlot, t]);
 
-  if (isNoteReadError)
-    return <p className="p-10 text-center text-sm text-gray-500">노트를 불러오는 데 실패했습니다.</p>;
+  if (isNoteReadError) return <Empty>노트를 불러오는 데 실패했습니다.</Empty>;
 
   return (
     <div className="mx-auto flex h-full w-full max-w-[768px] flex-col">
@@ -127,7 +111,7 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
         )}
       {breakpoint !== 'mobile' && (
         <section className="mb-0 flex shrink-0 items-center justify-between md:mb-3 md:gap-4 lg:mb-[22px]">
-          <PageHeader title="노트 수정하기" />
+          <PageHeader title={t.note.createTitle} />
           <div className="flex gap-2">
             <div className="relative">
               <Button
@@ -135,7 +119,7 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
                 variant="secondary"
                 className="cursor-pointer text-sm md:h-10 md:px-[27px]"
               >
-                임시저장
+                {t.note.tempSave}
               </Button>
               {showDraftToast && <DraftNoteToast onLoad={handleToastLoad} onClose={handleCloseToast} />}
             </div>
@@ -145,7 +129,7 @@ export default function NoteEditClient({ noteId, goalId }: NoteEditClientProps) 
               variant="primary"
               className="cursor-pointer text-sm md:h-10 md:px-[27px]"
             >
-              {isPending ? '수정 중...' : '수정하기'}
+              {isPending ? `${t.note.edit}...` : t.note.edit}
             </Button>
           </div>
         </section>

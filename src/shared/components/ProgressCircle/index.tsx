@@ -3,7 +3,7 @@ import { cn } from '@/shared/lib/utils';
 interface ProgressCircleProps {
   className?: string;
   color?: string;
-  percent: number | undefined;
+  percent: number;
 }
 export default function ProgressCircle({ className, color = '#008354', percent }: ProgressCircleProps) {
   const clampedPercent = Math.max(0, Math.min(100, percent ?? 0));
@@ -50,6 +50,7 @@ export default function ProgressCircle({ className, color = '#008354', percent }
           transform: 'rotate(90deg) scaleX(-1)',
           transformOrigin: '50% 50%',
         }}
+        className="duration-300 ease-in-out"
       />
     </svg>
   );

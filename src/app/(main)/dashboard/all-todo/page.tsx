@@ -2,7 +2,7 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 
 import AllTodoContent from '@/features/dashboard/allTodo/components/AllTodoContent';
 
-import { todoQueries } from '@/shared/lib/queryKeys';
+import { todoQueries } from '@/shared/lib/query/queryKeys';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,7 +12,10 @@ export const dynamic = 'force-dynamic';
  */
 export default async function AllTodoPage() {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(todoQueries.list({ done: undefined }));
+  await queryClient.prefetchInfiniteQuery({
+    ...todoQueries.infiniteList(),
+    pages: 1,
+  });
   const dehydratedState = dehydrate(queryClient);
 
   return (

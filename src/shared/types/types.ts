@@ -3,13 +3,6 @@ export type DropdownItemType = {
   label: string;
 };
 
-export type Todo = {
-  id: string;
-  title: string;
-  done: boolean;
-  star: boolean;
-};
-
 export interface Note {
   id: number;
   title: string;

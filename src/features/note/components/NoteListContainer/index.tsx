@@ -1,7 +1,7 @@
 'use client';
 
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import NoteListHeader from '@/features/note/components/NoteListHeader';
 import NoteListClient from '@/features/note/components/NoteListClient';
 
@@ -10,25 +10,42 @@ interface NoteListContainerProps {
 }
 
 export default function NoteListContainer({ goalId }: NoteListContainerProps) {
-  const [searchInput, setSearchInput] = useState('');
-  const [submittedSearch, setSubmittedSearch] = useState('');
-  const [sort, setSort] = useState<'LATEST' | 'OLDEST'>('LATEST');
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const [searchInput, setSearchInput] = useState('');
+
+  const submittedSearch = searchParams.get('search') ?? '';
+  const sort = (searchParams.get('sort') as 'LATEST' | 'OLDEST') ?? 'LATEST';
+  const page = Number(searchParams.get('page') ?? '1') || 1;
+
+  const updateParams = (params: Record<string, string>) => {
+    const next = new URLSearchParams(searchParams.toString());
+    Object.entries(params).forEach(([key, value]) => next.set(key, value));
+    router.replace(`?${next.toString()}`);
+  };
+
   return (
     <>
       <NoteListHeader
         search={searchInput}
         onSearchChange={setSearchInput}
-        onSearch={() => setSubmittedSearch(searchInput)}
+        onSearch={() => updateParams({ search: searchInput, page: '1' })}
         sort={sort}
         onSortChange={(v) => {
           if (v === 'LATEST' || v === 'OLDEST') {
-            setSort(v);
+            updateParams({ sort: v, page: '1' });
           }
         }}
         onCreateNote={() => router.push(`/goal/${goalId}/note/create`)}
       />
-      <NoteListClient goalId={goalId} search={submittedSearch} sort={sort} />
+      <NoteListClient
+        goalId={goalId}
+        search={submittedSearch}
+        sort={sort}
+        page={page}
+        onPageChange={(p) => updateParams({ page: String(p) })}
+      />
     </>
   );
 }

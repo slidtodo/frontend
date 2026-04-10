@@ -7,9 +7,7 @@ import { DropdownList } from '@/shared/components/Dropdown';
 import { DropdownItemType } from '@/shared/types/types';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { PopupModal } from '@/shared/components/Modal/PopupModal';
-import { useDeleteNote } from '@/features/note/hooks/useDeleteNote';
-import { useToastStore } from '@/shared/stores/useToastStore';
-import { useRouter } from 'next/navigation';
+import { useDeleteNote } from '@/shared/lib/query/mutations';
 
 interface EllipsisButtonProps {
   items: DropdownItemType[];
@@ -21,18 +19,14 @@ export default function EllipsisButton({ items, noteId, goalId }: EllipsisButton
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const { openModal } = useModalStore();
-  const { showToast } = useToastStore();
-  const router = useRouter();
 
-  const { mutate: handleDelete } = useDeleteNote(noteId, goalId, {
-    onError: () => showToast('노트 삭제에 실패했습니다', 'fail'),
-  });
+  const { mutate: handleDelete } = useDeleteNote(noteId, goalId);
 
   useOnClickOutside(ref, () => setIsOpen(false));
 
   const handleSelectItem = (value: string) => {
     if (value === 'edit') {
-      router.push(`/goal/${goalId}/note/${noteId}/edit`);
+      window.location.href = `/goal/${goalId}/note/${noteId}/edit`;
     }
     if (value === 'delete') {
       openModal(<PopupModal variant={{ type: 'noteDelete' }} onConfirm={() => handleDelete()} />);

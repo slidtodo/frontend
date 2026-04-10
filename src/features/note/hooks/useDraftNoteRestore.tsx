@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { DraftNote, useDraftNote } from './useDraftNote';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { PopupModal } from '@/shared/components/Modal/PopupModal';
@@ -17,12 +17,7 @@ export function useDraftNoteRestore({ key, onRestore }: UseDraftNoteRestoreOptio
   const [draftState, setDraftState] = useState<{
     draft: DraftNote | null;
     showDraftToast: boolean;
-  }>({
-    draft: null,
-    showDraftToast: false,
-  });
-
-  const { draft, showDraftToast } = draftState;
+  }>({ draft: null, showDraftToast: false });
 
   useEffect(() => {
     const saved = getDraft();
@@ -32,22 +27,24 @@ export function useDraftNoteRestore({ key, onRestore }: UseDraftNoteRestoreOptio
     }
   }, [getDraft]);
 
-  const handleCloseToast = useCallback(() => {
-    setDraftState((prev) => ({ ...prev, showDraftToast: false }));
-  }, []);
+  const { draft, showDraftToast } = draftState;
 
-  const handleConfirm = useCallback(() => {
+  const handleCloseToast = () => {
+    setDraftState((prev) => ({ ...prev, showDraftToast: false }));
+  };
+
+  const handleConfirm = () => {
     if (!draft) return;
     onRestore(draft);
     clearDraft();
     closeModal();
-  }, [draft, onRestore, clearDraft, closeModal]);
+  };
 
-  const handleToastLoad = useCallback(() => {
+  const handleToastLoad = () => {
     if (!draft) return;
     setDraftState((prev) => ({ ...prev, showDraftToast: false }));
     openModal(<PopupModal variant={{ type: 'noteLoad', noteTitle: draft.title }} onConfirm={handleConfirm} />);
-  }, [draft, openModal, handleConfirm]);
+  };
 
   return {
     draft,

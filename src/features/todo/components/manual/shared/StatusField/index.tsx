@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { CheckIcon } from 'lucide-react';
 
 import FormField from '@/shared/components/FormField';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 interface StatusFieldProps {
   done: boolean;
@@ -12,8 +13,9 @@ interface StatusFieldProps {
 }
 
 export default function StatusField({ done, onChange, errorMessage }: StatusFieldProps) {
+  const { t } = useLanguage();
   return (
-    <FormField label="상태" required>
+    <FormField label={t.todo.statusLabel} required>
       <div className="flex gap-2">
         <StatusFieldItem label="TO DO" selected={!done} onChange={() => onChange(false)} />
         <StatusFieldItem label="DONE" selected={done} onChange={() => onChange(true)} />

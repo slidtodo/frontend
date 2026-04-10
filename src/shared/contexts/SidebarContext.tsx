@@ -3,9 +3,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { usePathname } from 'next/navigation';
 import { createContext, useContext, useState, ReactNode, useMemo } from 'react';
-import { LayoutGridIcon, FlagIcon, CalendarDaysIcon, ListCheckIcon } from 'lucide-react';
+import { LayoutGridIcon, FlagIcon, ListCheckIcon, StarIcon } from 'lucide-react';
 
-import { goalQueries } from '@/shared/lib/queryKeys';
+import { goalQueries } from '@/shared/lib/query/queryKeys';
+import type { GoalListResponse } from '@/shared/lib/api/fetchGoals';
+import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
+import Image from 'next/image';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 const sidebarMenuIconClassName = 'h-6 w-6 transition-all [&_*]:fill-current [&_*]:stroke-current';
 interface MenuBase {
@@ -22,9 +26,8 @@ export interface MenuItem extends MenuBase {
 
 interface SidebarContextType {
   toggle: () => void;
-  getMenus: () => MenuItem[];
-  // TODO: 혹시 권한이 필요없다면 해당 아래 코드는 삭제
-  getAccessibleMenus: () => MenuItem[];
+  menus: MenuItem[];
+  goals: GoalListResponse['goals'];
 }
 
 const SidebarOpenContext = createContext<boolean | undefined>(undefined);
@@ -32,22 +35,25 @@ const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 const SidebarMenuContext = createContext<MenuItem | null>(null);
 
 export function SidebarProvider({ children }: { children: ReactNode }) {
-  const [isOpen, setIsOpen] = useState(true);
+  const breakpoint = useBreakpoint();
+  const [manualIsOpen, setManualIsOpen] = useState<boolean | null>(null);
+  const isOpen = manualIsOpen ?? breakpoint === 'desktop';
   const pathname = usePathname();
+  const { t } = useLanguage();
 
-  const { data: goal } = useQuery(goalQueries.list());
-  const goalData = useMemo(() => goal?.goals ?? [], [goal]);
+  const { data: goals } = useQuery(goalQueries.list());
+  const goalData = useMemo(() => goals?.goals ?? [], [goals]);
 
   const allMenus = useMemo<MenuItem[]>(() => {
     return [
       {
         icon: <LayoutGridIcon className={sidebarMenuIconClassName} />,
-        name: '대시보드',
+        name: t.sidebar.dashboard,
         href: '/dashboard',
       },
       {
         icon: <FlagIcon className={sidebarMenuIconClassName} />,
-        name: '목표',
+        name: t.sidebar.goal,
         href: '/goal',
         subMenus: goalData.map((goal) => ({
           name: goal.title ?? '',
@@ -56,34 +62,37 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
       },
       {
         icon: <ListCheckIcon className={sidebarMenuIconClassName} />,
-        name: '할 일',
+        name: t.sidebar.todo,
         href: '/dashboard/all-todo',
       },
-      // {
-      //   icon: <CalendarDaysIcon className={sidebarMenuIconClassName} />,
-      //   name: '캘린더',
-      //   href: '/calendar',
-      // },
-      // TODO: 소통게시판, 찜한 할일은 중간 이후에 활성화
-      // {
-      //   icon: <MessageSquareIcon />,
-      //   name: '소통게시판',
-      //   href: '/community',
-      // },
-      // {
-      //   icon: <StarIcon />,
-      //   name: '찜한 할일',
-      //   href: '/favorite-todo',
-      // },
+      {
+        icon: (
+          <Image
+            src={'/image/calendar.png'}
+            alt="Calendar Icon"
+            width={18}
+            height={18}
+            className={sidebarMenuIconClassName}
+          />
+        ),
+        name: t.sidebar.calendar,
+        href: '/calendar',
+      },
+      {
+        icon: <StarIcon className={sidebarMenuIconClassName} />,
+        name: t.sidebar.favoriteTodo,
+        href: '/dashboard/favorite-todo',
+      },
     ];
-  }, [goalData]);
+  }, [goalData, t]);
 
   const sidebar = useMemo<SidebarContextType>(() => {
-    const toggle = () => setIsOpen((prev) => !prev);
-    const getMenus = () => allMenus;
-    const getAccessibleMenus = () => allMenus;
-    return { toggle, getMenus, getAccessibleMenus };
-  }, [allMenus]);
+    return {
+      toggle: () => setManualIsOpen((prev) => !(prev ?? breakpoint === 'desktop')),
+      menus: allMenus,
+      goals: goalData,
+    };
+  }, [allMenus, breakpoint, goalData]);
 
   const currentMenu = useMemo(() => {
     return (

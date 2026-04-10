@@ -1,49 +1,101 @@
 'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRef, useEffect } from 'react';
 import { ChevronRightIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 
 import PageHeader from '@/shared/components/PageHeader';
 import PageSubTitle from '@/shared/components/PageSubTitle';
 import ProgressCircle from '@/shared/components/ProgressCircle';
-import TaskCard from '@/shared/components/TaskCard';
 import TabChangeMode from '@/shared/components/TabChangeMode';
+import TaskCardWrapper from '../TaskCardWrapper';
+import GithubRepoConnectModal from '@/shared/components/Modal/GithubRepoConnectModal';
 
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
-import { todoQueries, userQueries } from '@/shared/lib/queryKeys';
+
+import { todoQueries, userQueries, goalQueries } from '@/shared/lib/query/queryKeys';
+import { useModalStore } from '@/shared/stores/useModalStore';
+import { useTodoModeStore, TodoMode } from '@/shared/stores/useTodoModeStore';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 export default function DashBoardSummary() {
+  const { t } = useLanguage();
+
   const { data: user } = useQuery(userQueries.current());
+  const { data: goals, isFetched: isGoalsFetched } = useQuery(goalQueries.list());
   const breakpoint = useBreakpoint();
+
+  const mode = useTodoModeStore((state) => state.mode);
+  const setMode = useTodoModeStore((state) => state.setMode);
+  const { openModal } = useModalStore();
+
+  const githubGoals = goals?.goals?.filter((goal) => goal.source === 'GITHUB') ?? [];
+
+  // GITHUB 모드 세션 내에서 레포 연결 모달 중복 오픈 방지
+  const githubModalOpenedRef = useRef(false);
+  const prevGithubGoalsLengthRef = useRef(githubGoals.length);
+
+  const handleModeChange = (nextMode: TodoMode) => {
+    setMode(nextMode);
+  };
+
+  useEffect(() => {
+    const prevLength = prevGithubGoalsLengthRef.current;
+    prevGithubGoalsLengthRef.current = githubGoals.length;
+
+    if (mode !== 'GITHUB') {
+      githubModalOpenedRef.current = false;
+      return;
+    }
+
+    // 레포가 있다가 모두 해제된 경우 → 모달 다시 열 수 있도록 ref 초기화
+    if (prevLength > 0 && githubGoals.length === 0) {
+      githubModalOpenedRef.current = false;
+    }
+
+    if (isGoalsFetched && githubGoals.length === 0 && !githubModalOpenedRef.current) {
+      githubModalOpenedRef.current = true;
+      openModal(<GithubRepoConnectModal />, undefined, 'bottom');
+    }
+  }, [mode, isGoalsFetched, githubGoals.length, openModal]);
+
   return (
     <>
-      <div className="flex justify-between pb-[30px] lg:pb-[34px]">
-        {breakpoint !== 'mobile' && <PageHeader title={`${user?.nickname}님의 대시보드`} className="text-black" />}
+      <div className="flex items-center justify-end pb-[30px] md:justify-between lg:pb-[34px]">
+        {breakpoint !== 'mobile' && (
+          <div className="flex flex-col gap-2">
+            <PageHeader title={`${user?.nickname}${t.dashboard.title}`} />
+            {mode === 'GITHUB' && (
+              <span className="text-xl text-gray-400 transition-all duration-200">{t.dashboard.githubModeDesc}</span>
+            )}
+          </div>
+        )}
 
-        <div className="flex w-full justify-end md:w-fit">
-          <TabChangeMode mode="MANUAL" />
+        <div className="flex shrink-0 justify-end md:w-fit">
+          <TabChangeMode mode={mode} onModeChange={handleModeChange} />
         </div>
       </div>
       <section className="flex w-full flex-col gap-[40px] pb-[40px] md:flex-row md:gap-[12px] lg:gap-[32px] lg:pb-[34px]">
-        <div className="flex w-full flex-col justify-between gap-[10px]">
+        <div className="flex min-w-0 flex-1 flex-col justify-between gap-[10px]">
           <PageSubTitle
-            subTitle="최근 등록한 할 일"
+            subTitle={t.dashboard.recentTodo}
             icons={<Image src={'/image/task-green.png'} alt="Task Icon" width={40} height={40} />}
             actions={
               <Link
                 href="/dashboard/all-todo"
                 className="text-bearlog-500 w-full cursor-pointer text-sm font-semibold md:text-base"
               >
-                모두 보기 <ChevronRightIcon className="inline-block cursor-pointer" />
+                {t.dashboard.viewAll} <ChevronRightIcon className="inline-block cursor-pointer" />
               </Link>
             }
           />
           <RecentPostCard />
         </div>
-        <div className="flex w-full flex-col justify-between gap-[10px]">
+        <div className="flex min-w-0 flex-1 flex-col justify-between gap-[10px]">
           <PageSubTitle
-            subTitle="내 진행 상황"
+            subTitle={t.dashboard.myProgress}
             icons={<Image src={'/image/progress-green.png'} alt="Progress Icon" width={40} height={40} />}
           />
           <CurrentProgressCard />
@@ -54,21 +106,21 @@ export default function DashBoardSummary() {
 }
 
 function RecentPostCard() {
+  const { t } = useLanguage();
   const { data: todos } = useQuery(
     todoQueries.list({
       sort: 'LATEST',
     }),
   );
-
   const recentTodos = todos?.todos?.slice(0, 4) ?? [];
 
   return (
-    <article className="flex h-[256px] flex-col gap-[6px] rounded-[40px] bg-white p-4 lg:p-8">
+    <article className="flex h-[187px] h-fit w-full min-w-0 flex-col gap-[6px] rounded-[40px] bg-white px-4 py-[18px] md:h-[229px] md:p-4 lg:h-[256px] lg:p-8">
       {recentTodos.length > 0 ? (
-        recentTodos.map((task) => <TaskCard key={task.id} todo={task} />)
+        recentTodos.map((item) => <TaskCardWrapper key={item.id} item={item} mode="todo" />)
       ) : (
         <div className="flex h-full items-center justify-center">
-          <span className="text-gray-500">최근 등록한 할 일이 없습니다.</span>
+          <span className="text-gray-500">{t.dashboard.noRecentTodo}</span>
         </div>
       )}
     </article>
@@ -76,10 +128,13 @@ function RecentPostCard() {
 }
 
 function CurrentProgressCard() {
+  const { t } = useLanguage();
+  const mode = useTodoModeStore((state) => state.mode);
+
   const { data: percents } = useQuery(userQueries.progress());
 
   return (
-    <article className="bg-bearlog-500 relative h-[256px] rounded-[40px] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)]">
+    <article className="bg-bearlog-500 relative h-[187px] w-full rounded-[40px] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)] md:h-[229px] lg:h-[256px]">
       <div className="absolute right-0 bottom-0">
         <Image
           src={'/image/teaching-bear-lg.png'}
@@ -101,7 +156,14 @@ function CurrentProgressCard() {
           <ProgressCircle percent={percents?.totalProgress ?? 0} className="h-auto w-full" color="#008354" />
         </div>
         <div className="flex flex-col items-start gap-2">
-          <span className="text-[clamp(12px,2vw,20px)] font-semibold text-white">TO DO 진행률</span>
+          <div className="flex flex-col items-start">
+            <span className="text-[clamp(12px,2vw,20px)] font-semibold text-white">{t.dashboard.todoProgress}</span>
+            {mode === 'GITHUB' && (
+              <span className="text-[clamp(12px,2vw,15px)] font-semibold whitespace-pre-line text-white/70">
+                {t.dashboard.githubModeProgressDesc}
+              </span>
+            )}
+          </div>
           <div className="flex items-baseline gap-1">
             <span className="text-[clamp(20px,5vw,60px)] leading-[1] font-bold text-white">
               {percents?.totalProgress}

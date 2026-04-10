@@ -1,11 +1,12 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { noteQueries, goalQueries, todoQueries } from '@/shared/lib/queryKeys';
+import { noteQueries, goalQueries, todoQueries } from '@/shared/lib/query/queryKeys';
 import EditorTitle from '@/features/note/components/NoteEditor/EditorTitle';
 import EditorMeta from '@/features/note/components/NoteEditor/EditorMeta';
 import EditorContent from '@/features/note/components/NoteEditor/EditorContent';
 import { mapNoteTagsFromSource } from '@/features/note/utils/utils';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 interface NoteDetailClientProps {
   noteId: number;
@@ -13,14 +14,21 @@ interface NoteDetailClientProps {
 }
 
 export default function NoteDetailClient({ noteId, goalId }: NoteDetailClientProps) {
-  const { data: note } = useQuery(noteQueries.detail(noteId));
+  const { t } = useLanguage();
+  const { data: note, isLoading: isNoteLoading, isError: isNoteError } = useQuery(noteQueries.detail(noteId));
   const { data: goal } = useQuery(goalQueries.detail(goalId));
   const { data: todo } = useQuery({
     ...todoQueries.detail(note?.todoId ?? 0),
     enabled: note?.todoId != null,
   });
 
-  if (!note) return null;
+  if (isNoteLoading) {
+    return <p className="p-10 text-center text-sm text-gray-500">{t.note.loading}</p>;
+  }
+
+  if (isNoteError || !note) {
+    return <p className="p-10 text-center text-sm text-gray-500">{t.note.loadFail}</p>;
+  }
 
   const tags = mapNoteTagsFromSource({
     source: note.source,

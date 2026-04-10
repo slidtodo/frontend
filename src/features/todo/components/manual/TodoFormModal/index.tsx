@@ -2,28 +2,28 @@
 
 import clsx from 'clsx';
 import { XIcon } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 
-import { PatchTodoRequest, PostTodoRequest } from '@/shared/lib/api';
-import { usePatchTodo, usePostTodo } from '@/shared/lib/mutations';
-import { goalQueries, todoQueries } from '@/shared/lib/queryKeys';
 import Button from '@/shared/components/Button';
 import Dropdown from '@/shared/components/Dropdown';
 import FormField from '@/shared/components/FormField';
 import Input from '@/shared/components/Input';
-import { useModalStore } from '@/shared/stores/useModalStore';
-import { formatDateForAPI } from '@/shared/utils/utils';
-
 import DateInput from '../shared/DateInput';
 import ImageInput from '../shared/ImageInput';
 import LinkInput from '../shared/LinkInput';
 import StatusField from '../shared/StatusField';
-import { TagInput } from '../shared/TagInput';
+import TagInput from '../shared/TagInput';
 
+import { ApiError, PatchTodoRequest, PostTodoRequest } from '@/shared/lib/api';
+import { usePatchTodo, usePostTodo } from '@/shared/lib/query/mutations';
+import { goalQueries, todoQueries } from '@/shared/lib/query/queryKeys';
+import { useModalStore } from '@/shared/stores/useModalStore';
+import { formatDateForAPI } from '@/shared/utils/utils';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 interface BaseProps {
-  goalDetailId?: number;
+  goalDetailId: number;
 }
 
 interface CreateMode extends BaseProps {
@@ -37,11 +37,13 @@ interface EditMode extends BaseProps {
 }
 
 type TodoFormModalProps = CreateMode | EditMode;
-type FormValues = Omit<PostTodoRequest & PatchTodoRequest, 'imageUrl'> & { imageUrl?: string | null };
+type TodoFormValues = PostTodoRequest & PatchTodoRequest;
 
 export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModalProps) {
   const { closeModal } = useModalStore();
+  const { t } = useLanguage();
   const isEditMode = mode === 'edit';
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     register,
@@ -50,7 +52,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
     setValue,
     control,
     formState: { errors },
-  } = useForm<FormValues>({
+  } = useForm<TodoFormValues>({
     mode: 'onSubmit',
     defaultValues: isEditMode
       ? {
@@ -58,11 +60,11 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
           dueDate: todo.dueDate ?? undefined,
           linkUrl: todo.linkUrl ?? undefined,
           imageUrl: todo.imageUrl ?? undefined,
-          tags: todo.tags ?? [],
+          tags: todo.tags?.filter((tag): tag is string => tag !== null) ?? [],
           done: todo.done ?? false,
         }
       : {
-          goalId: goalDetailId ?? todo.goalId ?? undefined,
+          goalId: goalDetailId ?? todo.goalId,
           title: '',
           dueDate: undefined,
           linkUrl: undefined,
@@ -72,9 +74,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         },
   });
 
-  register('dueDate', { required: '마감기한은 필수입니다.' });
-
-  const tags = useWatch({ control, name: 'tags' }) ?? [];
+  const tags = (useWatch({ control, name: 'tags' }) ?? []).filter((tag): tag is string => tag !== null);
   const goalId = useWatch({ control, name: 'goalId' });
   const linkUrl = useWatch({ control, name: 'linkUrl' });
   const imageUrl = useWatch({ control, name: 'imageUrl' }) ?? null;
@@ -93,6 +93,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
 
   const postTodoMutation = usePostTodo();
   const patchTodoMutation = usePatchTodo(todoId);
+  const isSubmitting = postTodoMutation.isPending || patchTodoMutation.isPending;
 
   useEffect(() => {
     if (!isEditMode || !todoDetail) return;
@@ -103,7 +104,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       dueDate: todoDetail.dueDate ?? undefined,
       linkUrl: todoDetail.linkUrl ?? undefined,
       imageUrl: todoDetail.imageUrl ?? undefined,
-      tags: todoDetail.tags ? todoDetail.tags.map((tag) => tag.name) : [],
+      tags: todoDetail.tags ? todoDetail.tags.map((tag) => tag.name).filter((tag): tag is string => tag !== null) : [],
       done: todoDetail.done ?? false,
     });
   }, [isEditMode, reset, todoDetail]);
@@ -132,29 +133,35 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       ? String(todo.goalId)
       : goalOptions[0]?.value;
 
-  const onSubmit = async (data: FormValues) => {
-    if (isEditMode && 'id' in todo) {
-      await patchTodoMutation.mutateAsync({
-        title: data.title,
-        dueDate: data.dueDate,
-        linkUrl: data.linkUrl,
-        imageUrl: data.imageUrl ?? undefined,
-        tags: data.tags,
-        done: data.done,
-      });
-    } else {
-      await postTodoMutation.mutateAsync({
-        source: 'MANUAL',
-        title: data.title,
-        goalId: data.goalId,
-        dueDate: data.dueDate,
-        linkUrl: data.linkUrl,
-        imageUrl: data.imageUrl ?? undefined,
-        tags: data.tags,
-      });
-    }
+  const onSubmit = async (data: TodoFormValues) => {
+    setSubmitError(null);
 
-    closeModal();
+    try {
+      if (isEditMode && 'id' in todo) {
+        await patchTodoMutation.mutateAsync({
+          title: data.title,
+          dueDate: data.dueDate,
+          linkUrl: data.linkUrl ?? null,
+          imageUrl: data.imageUrl ?? null,
+          tags: data.tags,
+          done: data.done,
+        });
+      } else {
+        await postTodoMutation.mutateAsync({
+          source: 'MANUAL',
+          title: data.title,
+          goalId: data.goalId,
+          dueDate: data.dueDate,
+          linkUrl: data.linkUrl ?? undefined,
+          imageUrl: data.imageUrl ?? undefined,
+          tags: data.tags,
+        });
+      }
+
+      closeModal();
+    } catch (error) {
+      setSubmitError(error instanceof ApiError ? error.message : t.todo.submitError);
+    }
   };
 
   return (
@@ -168,11 +175,18 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
       )}
     >
       <div className="mb-1 flex items-center justify-between md:mb-4">
-        <h1 className="text-xl font-semibold text-gray-800">{isEditMode ? '할 일 수정' : '할 일 생성'}</h1>
-        <button type="button" className="cursor-pointer" onClick={closeModal}>
-          <XIcon size={24} className="stroke-[#A4A4A4]" />
+        <h1 className="text-xl font-semibold text-gray-800">{isEditMode ? t.todo.editTitle : t.todo.createTitle}</h1>
+        <button
+          type="button"
+          className="cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={closeModal}
+          disabled={isSubmitting}
+        >
+          <XIcon size={24} className="stroke-gray-400" />
         </button>
       </div>
+
+      {submitError && <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-500">{submitError}</p>}
 
       {isEditMode && (
         <StatusField
@@ -183,20 +197,20 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         />
       )}
 
-      <FormField label="제목" required>
+      <FormField label={t.todo.titleLabel} required>
         <Input
           autoFocus
-          {...register('title', { required: '제목은 필수입니다.' })}
-          placeholder="할 일의 제목을 적어주세요"
+          {...register('title', { required: t.todo.titleRequired })}
+          placeholder={t.todo.titlePlaceholder}
           className="h-11 rounded-xl border-gray-300 p-3 text-sm font-normal text-[#333] placeholder:text-gray-500 md:h-14 md:rounded-2xl md:p-4 md:text-base"
         />
         {errors.title && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.title.message}</p>}
       </FormField>
 
-      <FormField label="목표" required>
+      <FormField label={t.todo.goalLabel} required>
         <Dropdown
           defaultValue={defaultGoalId}
-          {...register('goalId', { required: '목표는 필수입니다.' })}
+          {...register('goalId', { required: t.todo.goalRequired })}
           items={goalOptions}
           selectedValue={goalId ? String(goalId) : ''}
           onSelectItem={(item) => setValue('goalId', Number(item.value), { shouldDirty: true })}
@@ -206,8 +220,9 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         {errors.goalId && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.goalId.message}</p>}
       </FormField>
 
-      <FormField label="마감기한" required>
+      <FormField label={t.todo.dueDateLabel} required>
         <DateInput
+          {...register('dueDate', { required: t.todo.dueDateRequired })}
           date={selectedDate}
           onSelect={(nextDate) => {
             setValue('dueDate', nextDate ? formatDateForAPI(nextDate) : undefined, { shouldValidate: true });
@@ -219,7 +234,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         {errors.dueDate && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.dueDate.message}</p>}
       </FormField>
 
-      <FormField label="태그">
+      <FormField label={t.todo.tagLabel}>
         <TagInput
           tags={tags}
           onAddTag={(tag) => setValue('tags', [...tags, tag], { shouldDirty: true })}
@@ -233,18 +248,18 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
         />
       </FormField>
 
-      <FormField label="링크">
+      <FormField label={t.todo.linkLabel}>
         <LinkInput
           value={linkUrl ?? ''}
           onChange={(value) => setValue('linkUrl', value || undefined, { shouldDirty: true })}
         />
       </FormField>
 
-      <FormField label="이미지">
+      <FormField label={t.todo.imageLabel}>
         <ImageInput
           image={imageUrl}
           onChange={(nextImage) => {
-            setValue('imageUrl', nextImage ?? null, { shouldDirty: true });
+            setValue('imageUrl', nextImage ?? undefined, { shouldDirty: true });
           }}
         />
       </FormField>
@@ -255,11 +270,12 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
           variant="tertiary"
           className="h-12 w-full border border-gray-300 text-gray-500 md:h-14"
           onClick={closeModal}
+          disabled={isSubmitting}
         >
-          취소
+          {t.modal.cancel}
         </Button>
-        <Button type="submit" variant="primary" className="h-12 w-full md:h-14">
-          확인
+        <Button type="submit" variant="primary" className="h-12 w-full md:h-14" disabled={isSubmitting}>
+          {t.modal.confirm}
         </Button>
       </div>
     </form>

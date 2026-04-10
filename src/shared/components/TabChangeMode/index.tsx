@@ -3,34 +3,42 @@
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { memo, useCallback, useEffect, useState } from 'react';
-// TODO: 개발자 모드가 추가되면 mode 상태를 상위 컴포넌트로 올리고, onModeChange 콜백을 통해 모드 변경을 알릴 수 있도록 수정 필요
 
-type TabMode = 'MANUAL' | 'GITHUB';
+import { TodoMode } from '@/shared/stores/useTodoModeStore';
+
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 interface TabChangeModeProps {
-  mode: TabMode;
+  mode: TodoMode;
+  onModeChange?: (mode: TodoMode) => void;
 }
 
-const MODE_OPTIONS: { label: string; value: TabMode }[] = [
+const MODE_OPTIONS: { label: string; value: TodoMode }[] = [
   { label: '일반 모드', value: 'MANUAL' },
   { label: '개발자 모드', value: 'GITHUB' },
 ];
 
-function TabChangeMode({ mode }: TabChangeModeProps) {
-  const [selectedMode, setSelectedMode] = useState<TabMode>(mode);
+function TabChangeMode({ mode, onModeChange }: TabChangeModeProps) {
+  const [selectedMode, setSelectedMode] = useState<TodoMode>(mode);
+
+  const { t } = useLanguage();
 
   useEffect(() => {
     setSelectedMode(mode);
   }, [mode]);
 
-  const handleSelectMode = useCallback((nextMode: TabMode) => {
-    setSelectedMode(nextMode);
-  }, []);
+  const handleSelectMode = useCallback(
+    (nextMode: TodoMode) => {
+      setSelectedMode(nextMode);
+      onModeChange?.(nextMode);
+    },
+    [onModeChange],
+  );
 
   return (
     <div
       role="tablist"
-      aria-label="\uBAA8\uB4DC \uC120\uD0DD"
+      aria-label="모드 선택"
       className="inline-flex h-fit items-center rounded-full bg-[#D9D9D9] px-2 py-[7px]"
     >
       {MODE_OPTIONS.map((option) => {
@@ -44,7 +52,7 @@ function TabChangeMode({ mode }: TabChangeModeProps) {
             aria-selected={isActive}
             onClick={() => handleSelectMode(option.value)}
             className={clsx(
-              'relative rounded-full leading-7 font-medium transition-colors duration-200 md:text-[12px] lg:px-[14.5px] lg:py-[3px] lg:text-[20px]',
+              'relative rounded-full px-[10.95px] py-[1.93px] leading-7 font-medium transition-colors duration-200 md:px-[9.76px] md:py-[1.97px] md:text-[12px] lg:px-[14.5px] lg:py-[3px] lg:text-[20px]',
               isActive ? 'text-gray-100' : 'text-[#8A8A8A] hover:bg-white/40',
               option.value === 'GITHUB' && 'px-5 text-[18px]',
             )}
@@ -75,11 +83,13 @@ function TabChangeMode({ mode }: TabChangeModeProps) {
     </div>
   );
 }
+
 export default memo(TabChangeMode);
 
 interface ModeGithubProps {
   isActive: boolean;
 }
+
 function ModeGithub({ isActive }: ModeGithubProps) {
   return (
     <div

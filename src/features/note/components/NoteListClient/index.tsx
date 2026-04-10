@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
-import { noteQueries, goalQueries } from '@/shared/lib/queryKeys';
+import { noteQueries, goalQueries } from '@/shared/lib/query/queryKeys';
 import NoteItem from '@/features/note/components/NoteItem';
 import GoalItem from '@/features/note/components/GoalItem';
 import Pagination from '@/features/note/components/Pagination';
@@ -12,19 +13,14 @@ import clsx from 'clsx';
 interface NoteListClientProps {
   goalId: number;
   search?: string;
-  sort?: 'LATEST' | 'OLDEST';
+  sort: 'LATEST' | 'OLDEST';
+  page: number;
+  onPageChange: (page: number) => void;
 }
 
-export default function NoteListClient({ goalId, search, sort }: NoteListClientProps) {
-  const [page, setPage] = useState(1);
-  const [prevSearch, setPrevSearch] = useState(search);
-  const [prevSort, setPrevSort] = useState(sort);
-
-  if (search !== prevSearch || sort !== prevSort) {
-    setPrevSearch(search);
-    setPrevSort(sort);
-    setPage(1);
-  }
+export default function NoteListClient({ goalId, search, sort, page, onPageChange }: NoteListClientProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const { data: goal } = useQuery(goalQueries.detail(goalId));
   const { data: noteList } = useQuery({
@@ -36,6 +32,14 @@ export default function NoteListClient({ goalId, search, sort }: NoteListClientP
   const currentPage = (noteList?.pageInfo?.page ?? 0) + 1;
   const totalPages = noteList?.pageInfo?.totalPages ?? 1;
 
+  useEffect(() => {
+    if (notes.length === 0 && page > 1 && noteList !== undefined) {
+      const next = new URLSearchParams(searchParams.toString());
+      next.set('page', String(page - 1));
+      router.replace(`?${next.toString()}`);
+    }
+  }, [notes.length, page, noteList, router, searchParams]);
+
   return (
     <>
       <section className="mb-3 md:mb-4 lg:mb-5">
@@ -45,7 +49,7 @@ export default function NoteListClient({ goalId, search, sort }: NoteListClientP
       {notes.length === 0 ? (
         <Empty>아직 등록된 노트가 없어요</Empty>
       ) : (
-        <section className={clsx('flex flex-col gap-3', 'md:gap-4', 'lg:grid lg:grid-cols-2 lg:gap-[20px]')}>
+        <section className={clsx('flex flex-col gap-3', 'md:gap-4', 'lg:grid lg:grid-cols-2 lg:gap-5')}>
           {notes.map((note) => (
             <NoteItem
               key={note.id}
@@ -63,7 +67,7 @@ export default function NoteListClient({ goalId, search, sort }: NoteListClientP
 
       {notes.length > 0 && (
         <div className="mt-6 flex justify-center">
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage} />
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
         </div>
       )}
     </>

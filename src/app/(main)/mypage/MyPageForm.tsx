@@ -20,6 +20,7 @@ import { fetchUsers } from '@/shared/lib/api/fetchUsers';
 import { fetchAuth } from '@/shared/lib/api/fetchAuth';
 import { fetchImages } from '@/shared/lib/api/fetchImages';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
+import LoadingSpinner from '@/shared/components/LoadingSpinner';
 
 // TODO: 리액트 훅 폼 적용 필요
 export default function MyPageForm() {
@@ -250,7 +251,7 @@ export default function MyPageForm() {
             onClick={handleSave}
             disabled={isPatchingUser || isPatchingPassword}
           >
-            {t.mypage.save}
+            {isPatchingUser || isPatchingPassword ? <LoadingSpinner /> : t.mypage.save}
           </Button>
 
           <button

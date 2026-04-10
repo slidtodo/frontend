@@ -223,8 +223,6 @@
   },
   "calendar": {
     "title": "'s Calendar",
-    "allGoal": "All Goals",
-    "yearSuffix": "",
-    "monthSuffix": ""
+    "allGoal": "All Goals"
   }
 }

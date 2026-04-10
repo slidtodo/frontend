@@ -27,8 +27,14 @@ export default async function DashboardPage() {
       .filter((goal) => goal.id != null)
       .flatMap((goal) => [
         queryClient.prefetchQuery(goalQueries.detail(goal.id!)),
-        queryClient.prefetchInfiniteQuery({ ...todoQueries.infiniteList({ goalId: goal.id!, done: false, limit: 10 }), pages: 1 }),
-        queryClient.prefetchInfiniteQuery({ ...todoQueries.infiniteList({ goalId: goal.id!, done: true, limit: 10 }), pages: 1 }),
+        queryClient.prefetchInfiniteQuery({
+          ...todoQueries.infiniteList({ goalId: goal.id!, done: false, limit: 10 }),
+          pages: 1,
+        }),
+        queryClient.prefetchInfiniteQuery({
+          ...todoQueries.infiniteList({ goalId: goal.id!, done: true, limit: 10 }),
+          pages: 1,
+        }),
       ]),
   );
 

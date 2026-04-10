@@ -11,8 +11,17 @@ import { githubQueries, goalQueries, userQueries } from '@/shared/lib/query/quer
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { useMemo } from 'react';
 
-export default function GithubRepoConnectModal() {
+interface GithubRepoConnectModalProps {
+  onCancel?: () => void;
+}
+
+export default function GithubRepoConnectModal({ onCancel }: GithubRepoConnectModalProps) {
   const { closeModal } = useModalStore();
+
+  const handleCancel = () => {
+    onCancel?.();
+    closeModal();
+  };
   const { data: user } = useQuery(userQueries.current());
   const { data: goals } = useQuery(goalQueries.list());
   const { data: repositories } = useQuery({
@@ -36,7 +45,7 @@ export default function GithubRepoConnectModal() {
         <div className="flex items-center justify-between">
           <span className="text-2xl font-bold text-black">개발자 모드 설정하기</span>
 
-          <button type="button" className="cursor-pointer" onClick={closeModal}>
+          <button type="button" className="cursor-pointer" onClick={handleCancel}>
             <XIcon size={24} className="stroke-gray-400" />
           </button>
         </div>
@@ -46,7 +55,7 @@ export default function GithubRepoConnectModal() {
       </div>
 
       {!user?.githubConnected ? (
-        <GithubRepoDescription onClose={closeModal} />
+        <GithubRepoDescription onClose={handleCancel} />
       ) : hasConnectedRepo ? (
         <div className="rounded-[24px] bg-[#F6F8FA] p-5 text-sm leading-6 text-gray-600">
           이미 연결된 GitHub 레포가 있습니다. 새 레포를 연결하려면 기존 연결을 먼저 해제해주세요.

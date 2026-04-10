@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import { ChevronRightIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 
@@ -17,7 +17,7 @@ import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 
 import { todoQueries, userQueries, goalQueries } from '@/shared/lib/query/queryKeys';
 import { useModalStore } from '@/shared/stores/useModalStore';
-import { useTodoModeStore, TodoMode } from '@/shared/stores/useTodoModeStore';
+import { useTodoModeStore } from '@/shared/stores/useTodoModeStore';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 export default function DashBoardSummary() {
@@ -31,15 +31,11 @@ export default function DashBoardSummary() {
   const setMode = useTodoModeStore((state) => state.setMode);
   const { openModal } = useModalStore();
 
-  const githubGoals = goals?.goals?.filter((goal) => goal.source === 'GITHUB') ?? [];
+  const githubGoals = useMemo(() => goals?.goals?.filter((goal) => goal.source === 'GITHUB') ?? [], [goals]);
 
   // GITHUB 모드 세션 내에서 레포 연결 모달 중복 오픈 방지
   const githubModalOpenedRef = useRef(false);
   const prevGithubGoalsLengthRef = useRef(githubGoals.length);
-
-  const handleModeChange = (nextMode: TodoMode) => {
-    setMode(nextMode);
-  };
 
   useEffect(() => {
     const prevLength = prevGithubGoalsLengthRef.current;
@@ -57,9 +53,9 @@ export default function DashBoardSummary() {
 
     if (isGoalsFetched && githubGoals.length === 0 && !githubModalOpenedRef.current) {
       githubModalOpenedRef.current = true;
-      openModal(<GithubRepoConnectModal />, undefined, 'bottom');
+      openModal(<GithubRepoConnectModal onCancel={() => setMode('MANUAL')} />, undefined, 'bottom');
     }
-  }, [mode, isGoalsFetched, githubGoals.length, openModal]);
+  }, [mode, isGoalsFetched, githubGoals.length, openModal, setMode]);
 
   return (
     <>
@@ -74,50 +70,69 @@ export default function DashBoardSummary() {
         )}
 
         <div className="flex shrink-0 justify-end md:w-fit">
-          <TabChangeMode mode={mode} onModeChange={handleModeChange} />
+          <TabChangeMode mode={mode} onModeChange={(nextMode) => setMode(nextMode)} />
         </div>
       </div>
-      <section className="flex w-full flex-col gap-[40px] pb-[40px] md:flex-row md:gap-[12px] lg:gap-[32px] lg:pb-[34px]">
-        <div className="flex min-w-0 flex-1 flex-col justify-between gap-[10px]">
-          <PageSubTitle
-            subTitle={t.dashboard.recentTodo}
-            icons={<Image src={'/image/task-green.png'} alt="Task Icon" width={40} height={40} />}
-            actions={
-              <Link
-                href="/dashboard/all-todo"
-                className="text-bearlog-500 w-full cursor-pointer text-sm font-semibold md:text-base"
-              >
-                {t.dashboard.viewAll} <ChevronRightIcon className="inline-block cursor-pointer" />
-              </Link>
-            }
-          />
-          <RecentPostCard />
-        </div>
-        <div className="flex min-w-0 flex-1 flex-col justify-between gap-[10px]">
-          <PageSubTitle
-            subTitle={t.dashboard.myProgress}
-            icons={<Image src={'/image/progress-green.png'} alt="Progress Icon" width={40} height={40} />}
-          />
-          <CurrentProgressCard />
-        </div>
-      </section>
+      <RecentProgressSection />
     </>
+  );
+}
+
+function RecentProgressSection() {
+  const { t } = useLanguage();
+
+  return (
+    <section className="flex w-full flex-col gap-[40px] pb-[40px] md:flex-row md:gap-[12px] lg:gap-[32px] lg:pb-[34px]">
+      <div className="flex min-w-0 flex-1 flex-col justify-between gap-[10px]">
+        <PageSubTitle
+          subTitle={t.dashboard.recentTodo}
+          icons={<Image src={'/image/task-green.png'} alt="Task Icon" width={40} height={40} />}
+          actions={
+            <Link
+              href="/dashboard/all-todo"
+              className="text-bearlog-500 w-full cursor-pointer text-sm font-semibold md:text-base"
+            >
+              {t.dashboard.viewAll} <ChevronRightIcon className="inline-block cursor-pointer" />
+            </Link>
+          }
+        />
+        <RecentPostCard />
+      </div>
+      <div className="flex min-w-0 flex-1 flex-col justify-between gap-[10px]">
+        <PageSubTitle
+          subTitle={t.dashboard.myProgress}
+          icons={<Image src={'/image/progress-green.png'} alt="Progress Icon" width={40} height={40} />}
+        />
+        <CurrentProgressCard />
+      </div>
+    </section>
   );
 }
 
 function RecentPostCard() {
   const { t } = useLanguage();
+  const mode = useTodoModeStore((state) => state.mode);
+
   const { data: todos } = useQuery(
     todoQueries.list({
       sort: 'LATEST',
     }),
   );
+
   const recentTodos = todos?.todos?.slice(0, 4) ?? [];
 
+  const filterModeTodo = (todo: (typeof recentTodos)[number]) => {
+    switch (mode) {
+      case 'GITHUB':
+        return todo.source === 'github';
+      case 'MANUAL':
+        return todo.source === 'manual';
+    }
+  };
   return (
     <article className="flex h-[187px] h-fit w-full min-w-0 flex-col gap-[6px] rounded-[40px] bg-white px-4 py-[18px] md:h-[229px] md:p-4 lg:h-[256px] lg:p-8">
       {recentTodos.length > 0 ? (
-        recentTodos.map((item) => <TaskCardWrapper key={item.id} item={item} mode="todo" />)
+        recentTodos.filter(filterModeTodo).map((item) => <TaskCardWrapper key={item.id} item={item} mode="todo" />)
       ) : (
         <div className="flex h-full items-center justify-center">
           <span className="text-gray-500">{t.dashboard.noRecentTodo}</span>

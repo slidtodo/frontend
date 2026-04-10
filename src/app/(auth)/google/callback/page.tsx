@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { fetchAuth } from '@/shared/lib/api/fetchAuth';
+import LoadingSpinner from '@/shared/components/LoadingSpinner';
 
 export default function GoogleCallbackPage() {
   const router = useRouter();
@@ -28,5 +29,9 @@ export default function GoogleCallbackPage() {
     login();
   }, [searchParams, router]);
 
-  return <div>로그인 중...</div>;
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <LoadingSpinner className="bg-bearlog-500" />
+    </div>
+  );
 }

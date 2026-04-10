@@ -1,6 +1,6 @@
 'use client';
-import { useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useRef, useEffect } from 'react';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { PlusIcon } from 'lucide-react';
 
 import Button from '@/shared/components/Button';
@@ -17,6 +17,8 @@ import { TodoOptions } from '@/shared/types/types';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
 
+type TodoItem = NonNullable<TodoListResponse['todos']>[number];
+
 export default function FavoriteTodoContent() {
   const breakpoint = useBreakpoint();
   const { t } = useLanguage();
@@ -25,64 +27,60 @@ export default function FavoriteTodoContent() {
   const done = selectedFilter === 'ALL' ? undefined : selectedFilter === 'DONE';
 
   const [selectedGoal, setSelectedGoal] = useState<string>('');
+  const goalId = selectedGoal ? Number(selectedGoal) : undefined;
 
-  const { data: todoList } = useQuery({
-    ...todoQueries.list({ done }),
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
+    ...todoQueries.infiniteList({ done, favorite: true, goalId }),
     placeholderData: (prev) => prev,
   });
 
-  const favoriteTodos = useMemo(() => todoList?.todos?.filter((todo) => todo.favorite) ?? [], [todoList]);
-  const goalFilteredTodos = useMemo(() => {
-    if (selectedGoal === '') {
-      return favoriteTodos;
-    }
-    return selectedGoal ? favoriteTodos.filter((todo) => String(todo.goal?.id) === selectedGoal) : favoriteTodos;
-  }, [selectedGoal, favoriteTodos]);
+  const allTodos: TodoItem[] = data?.pages.flatMap((page) => page.todos ?? []) ?? [];
+  const totalCount = data?.pages[0]?.totalCount ?? 0;
 
-  const favoriteTodoList: TodoListResponse = {
-    todos: goalFilteredTodos,
-    nextCursor: todoList?.nextCursor ?? null,
-    hasMore: todoList?.hasMore ?? false,
-    totalCount: favoriteTodos.length,
-  };
-
-  if (!todoList) return null;
+  if (!data) return null;
 
   return (
     <div className="mx-auto mb-[76px] flex max-w-[720px] flex-col gap-6">
       {breakpoint !== 'mobile' && (
-        <PageHeader
-          title={t.sidebar.favoriteTodo}
-          count={favoriteTodoList?.totalCount ?? favoriteTodoList?.todos?.length ?? 0}
-          className="pl-2"
-        />
+        <PageHeader title={t.sidebar.favoriteTodo} count={totalCount} className="pl-2" />
       )}
       <section className="flex flex-col gap-3">
-        <AllTodoFilter todos={favoriteTodoList} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
-
+        <FavoriteTodoFilter
+          todos={allTodos}
+          selectedFilter={selectedFilter}
+          setSelectedFilter={setSelectedFilter}
+        />
         <DataBoundary>
-          <AllTodoFetcher todos={favoriteTodoList} selectedGoal={selectedGoal} setSelectedGoal={setSelectedGoal} />
+          <FavoriteTodoFetcher
+            todos={allTodos}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={!!hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+            selectedGoal={selectedGoal}
+            setSelectedGoal={setSelectedGoal}
+          />
         </DataBoundary>
       </section>
     </div>
   );
 }
 
-interface AllTodoFilterProps {
-  todos: TodoListResponse;
+interface FavoriteTodoFilterProps {
+  todos: TodoItem[];
   selectedFilter: TodoOptions;
   setSelectedFilter: React.Dispatch<React.SetStateAction<TodoOptions>>;
 }
-function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilterProps) {
+function FavoriteTodoFilter({ todos, selectedFilter, setSelectedFilter }: FavoriteTodoFilterProps) {
   const { t } = useLanguage();
-  const todoButtons: { id: number; label: TodoOptions }[] = [
-    { id: 1, label: 'ALL' },
-    { id: 2, label: 'TO DO' },
-    { id: 3, label: 'DONE' },
-  ];
-  const { data: goalList } = useQuery(goalQueries.list());
   const { openTodoCreateModal } = useTodoCreateModal();
-  const defaultGoalId = todos.todos?.[0]?.goal?.id ?? goalList?.goals?.[0]?.id;
+  const { data: goalList } = useQuery(goalQueries.list());
+  const defaultGoalId = todos[0]?.goal?.id ?? goalList?.goals?.[0]?.id;
+
+  const todoButtons: { id: number; label: TodoOptions; translationKey: 'all' | 'todo' | 'done' }[] = [
+    { id: 1, label: 'ALL', translationKey: 'all' },
+    { id: 2, label: 'TO DO', translationKey: 'todo' },
+    { id: 3, label: 'DONE', translationKey: 'done' },
+  ];
 
   return (
     <div className="flex justify-between px-2">
@@ -97,7 +95,7 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
             }`}
             onClick={() => setSelectedFilter(button.label)}
           >
-            {button.label}
+            {t.allTodo[button.translationKey]}
           </button>
         ))}
       </div>
@@ -130,24 +128,46 @@ function AllTodoFilter({ todos, selectedFilter, setSelectedFilter }: AllTodoFilt
   );
 }
 
-interface AllTodoFetcherProps {
-  todos: TodoListResponse;
+interface FavoriteTodoFetcherProps {
+  todos: TodoItem[];
+  fetchNextPage: () => void;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
   selectedGoal: string;
   setSelectedGoal: React.Dispatch<React.SetStateAction<string>>;
 }
-
-function AllTodoFetcher({ todos, selectedGoal, setSelectedGoal }: AllTodoFetcherProps) {
+function FavoriteTodoFetcher({
+  todos,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+  selectedGoal,
+  setSelectedGoal,
+}: FavoriteTodoFetcherProps) {
   const { t } = useLanguage();
   const { data: goalList } = useQuery(goalQueries.list());
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const goalItems = [
     { label: t.allTodo.allGoal, value: '' },
-    ...(goalList?.goals
-      ? goalList.goals.map((goal) => ({
-          label: goal.title ?? '',
-          value: String(goal.id),
-        }))
-      : []),
+    ...(goalList?.goals?.map((goal) => ({ label: goal.title ?? '', value: String(goal.id) })) ?? []),
   ];
 
   return (
@@ -157,17 +177,20 @@ function AllTodoFetcher({ todos, selectedGoal, setSelectedGoal }: AllTodoFetcher
         onSelectItem={(item) => setSelectedGoal(item.value)}
         items={goalItems}
       />
-
-      <div className="flex flex-col gap-4">
-        {(todos.todos?.length ?? 0) === 0 ? (
-          <Empty>{t.allTodo.empty}</Empty>
-        ) : (
-          <div className="space-y-4">
-            {todos.todos?.map((todo) => (
-              <TaskCardWrapper key={todo.id} item={todo} mode="todo" />
-            ))}
-          </div>
-        )}
+      <div className="max-h-[620px] overflow-y-auto">
+        <div className="flex flex-col gap-4">
+          {todos.length === 0 ? (
+            <Empty>{t.allTodo.empty}</Empty>
+          ) : (
+            todos.map((todo) => <TaskCardWrapper key={todo.id} item={todo} mode="todo" />)
+          )}
+          <div ref={sentinelRef} className="h-1" />
+          {isFetchingNextPage && (
+            <div className="flex justify-center py-2">
+              <span className="text-sm text-gray-400">불러오는 중...</span>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

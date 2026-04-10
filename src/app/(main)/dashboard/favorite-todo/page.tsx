@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function FavoriteTodoPage() {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(todoQueries.list());
+  await queryClient.prefetchInfiniteQuery({ ...todoQueries.infiniteList({ favorite: true }), pages: 1 });
   const dehydratedState = dehydrate(queryClient);
 
   return (

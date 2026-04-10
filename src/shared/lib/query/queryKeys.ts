@@ -1,4 +1,4 @@
-import { queryOptions } from '@tanstack/react-query';
+import { queryOptions, infiniteQueryOptions } from '@tanstack/react-query';
 
 import { fetchAuth } from '../api/fetchAuth';
 import { fetchGoals, type GetGoalsParams } from '../api/fetchGoals';
@@ -31,6 +31,14 @@ export const todoQueries = {
     queryOptions({
       queryKey: todoKeys.list(params),
       queryFn: () => fetchTodos.getTodos(params),
+    }),
+
+  infiniteList: (params?: Omit<GetTodosParams, 'cursor'>) =>
+    infiniteQueryOptions({
+      queryKey: todoKeys.infiniteList(params),
+      queryFn: ({ pageParam }) => fetchTodos.getTodos({ ...params, cursor: pageParam }),
+      initialPageParam: undefined as number | undefined,
+      getNextPageParam: (lastPage) => (lastPage.hasMore ? (lastPage.nextCursor ?? undefined) : undefined),
     }),
 
   detail: (todoId: number) =>

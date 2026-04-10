@@ -49,7 +49,7 @@ export default function FavoriteTodoContent() {
   if (!todoList) return null;
 
   return (
-    <div className="mx-auto mb-[76px] flex h-full max-w-[720px] flex-col gap-6">
+    <div className="mx-auto mb-[76px] flex max-w-[720px] flex-col gap-6">
       {breakpoint !== 'mobile' && (
         <PageHeader
           title={t.sidebar.favoriteTodo}
@@ -57,7 +57,7 @@ export default function FavoriteTodoContent() {
           className="pl-2"
         />
       )}
-      <section className="flex h-full flex-col gap-3">
+      <section className="flex flex-col gap-3">
         <AllTodoFilter todos={favoriteTodoList} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
 
         <DataBoundary>
@@ -151,16 +151,14 @@ function AllTodoFetcher({ todos, selectedGoal, setSelectedGoal }: AllTodoFetcher
   ];
 
   return (
-    <section
-      className={`flex flex-col gap-5 rounded-4xl bg-white p-4 md:p-8 ${todos.todos?.length === 0 ? 'h-full' : 'h-fit'}`}
-    >
+    <section className="flex flex-col gap-5 rounded-4xl bg-white p-4 md:p-8">
       <FavoriteTodoDropdownGoal
         selectedValue={selectedGoal}
         onSelectItem={(item) => setSelectedGoal(item.value)}
         items={goalItems}
       />
 
-      <div className="flex h-full flex-col gap-4 overflow-y-auto">
+      <div className="flex flex-col gap-4">
         {(todos.todos?.length ?? 0) === 0 ? (
           <Empty>{t.allTodo.empty}</Empty>
         ) : (

@@ -31,7 +31,7 @@ export default function NoteItem({ note, goalId }: { note: Note; goalId: string 
         <div className="flex items-center justify-between">
           <TodoTitle todoId={note.todoId} />
           <div>
-            <p className="line-clamp-1 text-xs font-normal text-[#A4A4A4]">{createDate}</p>
+            <p className="whitespace-nowrap text-xs font-normal text-[#A4A4A4]">{createDate}</p>
           </div>
         </div>
       </article>

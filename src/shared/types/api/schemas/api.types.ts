@@ -180,6 +180,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/dev/auth/oauth/github/connect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["githubConnect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/dev/auth/logout": {
         parameters: {
             query?: never;
@@ -282,6 +298,26 @@ export interface paths {
          * @description GitHub OAuth 인증 코드로 로그인/회원가입
          */
         post: operations["githubLogin_1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/oauth/github/connect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * GitHub 연동
+         * @description GitHub OAuth 인증 코드로 현재 로그인된 사용자 계정에 GitHub를 연동합니다
+         */
+        post: operations["githubConnect_1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -556,6 +592,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/users/me/github": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 내 GitHub 연동 상태 조회
+         * @description 로그인한 사용자의 GitHub 연동 여부를 조회합니다
+         */
+        get: operations["getGithubConnection"];
+        put?: never;
+        post?: never;
+        /**
+         * 내 GitHub 연동 해제
+         * @description 연결된 GitHub webhook 및 목표를 정리하고 GitHub 연동을 해제합니다
+         */
+        delete: operations["disconnectGithub"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/todos/calendar": {
         parameters: {
             query?: never;
@@ -668,6 +728,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/dev/auth/oauth/github/connect/url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getGithubConnectAuthorizeUrl"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/oauth/google/url": {
         parameters: {
             query?: never;
@@ -700,6 +776,26 @@ export interface paths {
          * @description 프론트에서 redirect할 GitHub OAuth 로그인 URL을 발급합니다
          */
         get: operations["getGithubAuthorizeUrl_1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/oauth/github/connect/url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * GitHub 연동 URL 조회
+         * @description 로그인된 사용자가 GitHub 연동에 사용할 OAuth URL을 발급합니다
+         */
+        get: operations["getGithubConnectAuthorizeUrl_1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1057,6 +1153,29 @@ export interface components {
         OAuthLoginRequest: {
             /** @description OAuth 인증 코드 */
             code: string;
+            /** @description OAuth state 값 */
+            state?: string | null;
+        };
+        /** @description 인증 사용자 정보 응답 */
+        AuthResponse: {
+            /**
+             * Format: int64
+             * @description 사용자 ID
+             */
+            id: number;
+            /** @description 이메일 */
+            email: string;
+            /** @description 닉네임 */
+            nickname: string;
+            /** @description 프로필 이미지 URL */
+            profileImageUrl?: string | null;
+            /**
+             * @description 로그인 제공자 (LOCAL, GOOGLE, GITHUB)
+             * @enum {string}
+             */
+            loginProvider: "LOCAL" | "GITHUB" | "GOOGLE";
+            /** @description GitHub 연동 여부 */
+            githubConnected: boolean;
         };
         /** @description 로그인 요청 */
         LoginRequest: {
@@ -1190,6 +1309,11 @@ export interface components {
             totalProgress: number;
             /** @description 목표별 진행률 목록 */
             goals: components["schemas"]["GoalProgress"][];
+        };
+        /** @description GitHub 연동 상태 응답 */
+        GitHubConnectionResponse: {
+            /** @description GitHub 연동 여부 */
+            connected: boolean;
         };
         /** @description 할일 목록 응답 */
         TodoListResponse: {
@@ -1754,6 +1878,30 @@ export interface operations {
             };
         };
     };
+    githubConnect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OAuthLoginRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthResponse"];
+                };
+            };
+        };
+    };
     logout: {
         parameters: {
             query?: never;
@@ -1910,6 +2058,48 @@ export interface operations {
             };
             /** @description 유효하지 않은 인증 코드 */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    githubConnect_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OAuthLoginRequest"];
+            };
+        };
+        responses: {
+            /** @description 연동 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthResponse"];
+                };
+            };
+            /** @description 유효하지 않은 인증 코드 또는 state */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 인증 실패 */
+            401: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2532,6 +2722,62 @@ export interface operations {
             };
         };
     };
+    getGithubConnection: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GitHubConnectionResponse"];
+                };
+            };
+            /** @description 인증 실패 */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    disconnectGithub: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 연동 해제 성공 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 인증 실패 */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     getCalendar: {
         parameters: {
             query: {
@@ -2668,6 +2914,26 @@ export interface operations {
             };
         };
     };
+    getGithubConnectAuthorizeUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OAuthAuthorizeUrlResponse"];
+                };
+            };
+        };
+    };
     getGoogleAuthorizeUrl_1: {
         parameters: {
             query?: never;
@@ -2704,6 +2970,35 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OAuthAuthorizeUrlResponse"];
+                };
+            };
+        };
+    };
+    getGithubConnectAuthorizeUrl_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 연동 URL 발급 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OAuthAuthorizeUrlResponse"];
+                };
+            };
+            /** @description 인증 실패 */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
         };

@@ -66,6 +66,7 @@ export default function MyPageForm() {
       if (loginUrl) window.location.href = loginUrl;
     } catch (error) {
       console.error('GitHub 연결 URL 요청 실패:', error);
+      showToast(t.auth.socialLoginFail, 'fail');
     }
   };
 

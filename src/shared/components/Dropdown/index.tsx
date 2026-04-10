@@ -90,7 +90,7 @@ function Dropdown({
         className={twMerge(
           dropdownVariants({ disabled: isDisabled }),
           'flex w-full items-center gap-2',
-          isToggleOpen && 'border-bearlog-500 rounded-2xl border',
+          isToggleOpen ? 'border-bearlog-500 rounded-2xl border' : "border-gray-100",
           className,
         )}
         disabled={isDisabled}

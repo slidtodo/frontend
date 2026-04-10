@@ -64,14 +64,21 @@ export default function DashBoardSummary() {
   return (
     <>
       <div className="flex items-center justify-end pb-[30px] md:justify-between lg:pb-[34px]">
-        {breakpoint !== 'mobile' && <PageHeader title={`${user?.nickname}${t.dashboard.title}`} />}
+        {breakpoint !== 'mobile' && (
+          <div className="flex flex-col gap-2">
+            <PageHeader title={`${user?.nickname}${t.dashboard.title}`} />
+            {mode === 'GITHUB' && (
+              <span className="text-xl text-gray-400 transition-all duration-200">{t.dashboard.githubModeDesc}</span>
+            )}
+          </div>
+        )}
 
         <div className="flex shrink-0 justify-end md:w-fit">
           <TabChangeMode mode={mode} onModeChange={handleModeChange} />
         </div>
       </div>
       <section className="flex w-full flex-col gap-[40px] pb-[40px] md:flex-row md:gap-[12px] lg:gap-[32px] lg:pb-[34px]">
-        <div className="flex w-full flex-col justify-between gap-[10px]">
+        <div className="flex min-w-0 flex-1 flex-col justify-between gap-[10px]">
           <PageSubTitle
             subTitle={t.dashboard.recentTodo}
             icons={<Image src={'/image/task-green.png'} alt="Task Icon" width={40} height={40} />}
@@ -86,7 +93,7 @@ export default function DashBoardSummary() {
           />
           <RecentPostCard />
         </div>
-        <div className="flex w-full flex-col justify-between gap-[10px]">
+        <div className="flex min-w-0 flex-1 flex-col justify-between gap-[10px]">
           <PageSubTitle
             subTitle={t.dashboard.myProgress}
             icons={<Image src={'/image/progress-green.png'} alt="Progress Icon" width={40} height={40} />}
@@ -125,7 +132,7 @@ function CurrentProgressCard() {
   const { data: percents } = useQuery(userQueries.progress());
 
   return (
-    <article className="bg-bearlog-500 relative h-[187px] rounded-[40px] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)] md:h-[229px] lg:h-[256px]">
+    <article className="bg-bearlog-500 relative h-[187px] w-full rounded-[40px] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)] md:h-[229px] lg:h-[256px]">
       <div className="absolute right-0 bottom-0">
         <Image
           src={'/image/teaching-bear-lg.png'}
@@ -147,7 +154,12 @@ function CurrentProgressCard() {
           <ProgressCircle percent={percents?.totalProgress ?? 0} className="h-auto w-full" color="#008354" />
         </div>
         <div className="flex flex-col items-start gap-2">
-          <span className="text-[clamp(12px,2vw,20px)] font-semibold text-white">{t.dashboard.todoProgress}</span>
+          <div className="flex flex-col items-start">
+            <span className="text-[clamp(12px,2vw,20px)] font-semibold text-white">{t.dashboard.todoProgress}</span>
+            <span className="text-[clamp(12px,2vw,15px)] font-semibold whitespace-pre-line text-white/70">
+              {t.dashboard.githubModeProgressDesc}
+            </span>
+          </div>
           <div className="flex items-baseline gap-1">
             <span className="text-[clamp(20px,5vw,60px)] leading-[1] font-bold text-white">
               {percents?.totalProgress}

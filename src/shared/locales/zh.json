@@ -59,13 +59,18 @@
   },
   "dashboard": {
     "title": "的仪表盘",
+    "githubModeDesc": "一目了然地查看与GitHub Issue/PR同步的待办事项。",
     "recentTodo": "最近待办事项",
     "viewAll": "查看全部",
     "myProgress": "我的进度",
     "noRecentTodo": "暂无最近待办事项。",
     "todoProgress": "待办进度",
+    "githubModeProgressDesc": "自动从Issue和PR中收集并同步待办事项。",
     "goalByTodo": "按目标分类待办",
-    "noGoal": "暂无已注册的目标"
+    "noGoal": "暂无已注册的目标",
+    "noFirstGoal": "暂无可注册的目标。",
+    "noGithubGoal": "没有已连接的 GitHub 仓库目标。",
+    "githubGoalTitle": "已连接的 GitHub 目标"
   },
   "allTodo": {
     "title": "全部待办",
@@ -74,7 +79,10 @@
     "allGoal": "全部目标",
     "all": "全部",
     "todo": "待办",
-    "done": "完成"
+    "done": "完成",
+    "loading": "加载中...",
+    "issueReopenNotice1": "取消勾选已完成的 Issue 将在 GitHub 上重新打开该 Issue。",
+    "issueReopenNotice2": "但若 PR 是在 GitHub 上关闭的，在 TODO 取消勾选也不会重新打开。"
   },
   "goal": {
     "title": "的目标",

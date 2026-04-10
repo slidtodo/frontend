@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import TaskCard from '@/shared/components/TaskCard';
 
-import { ApiError, GoalDetailResponse } from '@/shared/lib/api';
+import { ApiError } from '@/shared/lib/api';
 import { usePatchTodo, usePatchTodoFavorite } from '@/shared/lib/query/mutations';
 import { todoQueries } from '@/shared/lib/query/queryKeys';
 import { useToastStore } from '@/shared/stores/useToastStore';
@@ -14,7 +14,7 @@ export default function TaskCardWrapper({
   item,
   mode,
 }: {
-  item: GoalDetailResponse['todoList'][number];
+  item: { id: number; favorite?: boolean };
   mode: 'todo' | 'done';
 }) {
   const { showToast } = useToastStore();

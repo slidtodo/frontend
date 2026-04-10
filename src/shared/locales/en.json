@@ -80,7 +80,7 @@
     "done": "DONE",
     "loading": "Loading...",
     "issueReopenNotice1": "Unchecking a completed Issue will reopen it on GitHub.",
-    "issueReopenNotice2": "However, if the issue was closed on GitHub, unchecking it here will NOT reopen it."
+    "issueReopenNotice2": "However, if the PR was closed on GitHub, unchecking it in TODO will not reopen it."
   },
   "goal": {
     "title": "'s Goals",

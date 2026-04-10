@@ -80,7 +80,7 @@
     "done": "完成",
     "loading": "加载中...",
     "issueReopenNotice1": "取消勾选已完成的 Issue 将在 GitHub 上重新打开该 Issue。",
-    "issueReopenNotice2": "但若 Issue 是在 GitHub 上关闭的，在 TODO 取消勾选不会重新打开。"
+    "issueReopenNotice2": "但若 PR 是在 GitHub 上关闭的，在 TODO 取消勾选也不会重新打开。"
   },
   "goal": {
     "title": "的目标",

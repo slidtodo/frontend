@@ -19,8 +19,11 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
+    if (isLoading) return;
+    setIsLoading(true);
     try {
       const response = await fetch('/api/login', {
         method: 'POST',
@@ -28,13 +31,18 @@ export default function LoginPage() {
         headers: { 'Content-Type': 'application/json' },
       });
 
-      if (!response.ok) throw new Error('Login failed');
+      if (!response.ok) {
+        showToast(t.auth.loginFail, 'fail');
+        return;
+      }
 
       showToast(t.auth.loginSuccess, 'success');
       router.push('/dashboard');
     } catch (error) {
-      console.error(error);
+      console.error('로그인 요청 실패:', error);
       showToast(t.auth.loginFail, 'fail');
+    } finally {
+      setIsLoading(false);
     }
   };
   const handleGithubLogin = async () => {
@@ -88,10 +96,18 @@ export default function LoginPage() {
           </FormField>
           <Button
             type="submit"
-            className="mt-8 h-14 w-full bg-[#00C87F] hover:bg-[#00C87F]/90"
-            disabled={!email || !password}
+            className="mt-8 h-14 w-full bg-[#00C87F] hover:bg-[#00C87F]/90 disabled:opacity-100 disabled:bg-[#00C87F]"
+            disabled={!email || !password || isLoading}
           >
-            {t.auth.loginButton}
+            {isLoading ? (
+              <div className="flex items-center justify-center gap-1">
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-white [animation-delay:-0.3s]" />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-white [animation-delay:-0.15s]" />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-white" />
+              </div>
+            ) : (
+              t.auth.loginButton
+            )}
           </Button>
         </form>
 

@@ -11,6 +11,7 @@ import Image from 'next/image';
 import { fetchAuth } from '@/shared/lib/api/fetchAuth';
 import { useToastStore } from '@/shared/stores/useToastStore';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
+import LoadingSpinner from '@/shared/components/LoadingSpinner';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -31,10 +32,7 @@ export default function LoginPage() {
         headers: { 'Content-Type': 'application/json' },
       });
 
-      if (!response.ok) {
-        showToast(t.auth.loginFail, 'fail');
-        return;
-      }
+      if (!response.ok) throw new Error(t.auth.loginFail);
 
       showToast(t.auth.loginSuccess, 'success');
       router.push('/dashboard');
@@ -96,18 +94,10 @@ export default function LoginPage() {
           </FormField>
           <Button
             type="submit"
-            className="mt-8 h-14 w-full bg-[#00C87F] hover:bg-[#00C87F]/90 disabled:opacity-100 disabled:bg-[#00C87F]"
+            className={`mt-8 h-14 w-full bg-bearlog-500 hover:bg-bearlog-600 ${isLoading ? 'disabled:opacity-100 disabled:bg-bearlog-500' : ''}`}
             disabled={!email || !password || isLoading}
           >
-            {isLoading ? (
-              <div className="flex items-center justify-center gap-1">
-                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-white [animation-delay:-0.3s]" />
-                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-white [animation-delay:-0.15s]" />
-                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-white" />
-              </div>
-            ) : (
-              t.auth.loginButton
-            )}
+            {isLoading ? <LoadingSpinner /> : t.auth.loginButton}
           </Button>
         </form>
 

@@ -52,7 +52,8 @@
     "newGoal": "新しい目標",
     "newTodo": "新しいタスク",
     "newGoalTitle": "目標を作成",
-    "newGoalPlaceholder": "目標のタイトルを入力してください"
+    "newGoalPlaceholder": "目標のタイトルを入力してください",
+    "developerModeAlert": "開発者モードではゴールを作成できません。"
   },
   "dashboard": {
     "title": "のダッシュボード",
@@ -86,6 +87,7 @@
   "todo": {
     "searchPlaceholder": "タスクを検索してください",
     "addTodo": "タスクを追加",
+    "addGithubTodo": "Issues / PR を追加",
     "noSearchResult": "検索結果がありません。",
     "emptyTodo": "登録されたタスクがありません。",
     "dueDateRequired": "期限は必須です。",

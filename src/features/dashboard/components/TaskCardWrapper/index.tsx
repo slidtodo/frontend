@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import TaskCard from '@/shared/components/TaskCard';
 
-import { GoalDetailResponse } from '@/shared/lib/api';
+import { ApiError, GoalDetailResponse } from '@/shared/lib/api';
 import { usePatchTodo, usePatchTodoFavorite } from '@/shared/lib/query/mutations';
 import { todoQueries } from '@/shared/lib/query/queryKeys';
 import { useToastStore } from '@/shared/stores/useToastStore';
@@ -31,13 +31,39 @@ export default function TaskCardWrapper({
   const handleCheckboxClick = async () => {
     if (todoDetail?.id === undefined) return;
 
+    // GitHub 연동 todo는 완료 후 되돌리기 불가 — 백엔드는 source를 "github"(소문자)로 반환
+    const isGithubTodo = todoDetail.source === 'github';
+    if (isGithubTodo && todoDetail.done) return;
+
     try {
       await patchTodo.mutateAsync({
         done: !todoDetail.done,
       });
-
-      showToast(!todoDetail.done ? t.mutations.todoCompleted : t.mutations.todoUncompleted);
+      if (!todoDetail.done) {
+        if (isGithubTodo) {
+          const githubMessage =
+            todoDetail.type === 'ISSUE'
+              ? '할 일을 완료했습니다. GitHub Issue가 close됩니다.'
+              : '할 일을 완료했습니다. GitHub PR이 merge됩니다.';
+          showToast(githubMessage);
+        } else {
+          showToast(t.mutations.todoCompleted);
+        }
+      } else {
+        showToast(t.mutations.todoUncompleted);
+      }
     } catch (error) {
+      if (isGithubTodo && !todoDetail.done) {
+        const message =
+          error instanceof ApiError
+            ? error.message
+            : todoDetail.type === 'ISSUE'
+              ? 'GitHub Issue close에 실패했습니다. 잠시 후 다시 시도해주세요.'
+              : 'GitHub PR merge에 실패했습니다. 잠시 후 다시 시도해주세요.';
+        showToast(message, 'fail');
+      } else {
+        showToast('할 일 상태 업데이트에 실패했습니다.', 'fail');
+      }
       console.error('할 일 상태 업데이트 실패:', error);
     }
   };

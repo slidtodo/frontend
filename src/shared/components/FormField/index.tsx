@@ -12,7 +12,7 @@ interface FormFieldProps {
 export default function FormField({ label, required, error, children, className }: FormFieldProps) {
   return (
     <div className={twMerge(clsx('flex w-full flex-col gap-2', className))}>
-      <label className="text-sm font-medium text-gray-700">
+      <label className="text-base font-semibold text-gray-700">
         {label}
         {required && <span className="text-bearlog-500 ml-0.5">*</span>}
       </label>

@@ -1,0 +1,50 @@
+import { ChevronsLeftIcon, ChevronsRightIcon } from 'lucide-react';
+import Dropdown from '@/shared/components/Dropdown';
+import Image from 'next/image';
+import { DropdownItemType } from '@/shared/types/types';
+
+interface CalendarHeaderProps {
+  year: number;
+  month: number;
+  goalId: number | undefined;
+  goalFilterItems: DropdownItemType[];
+  onPrev: () => void;
+  onNext: () => void;
+  onGoalChange: (item: DropdownItemType) => void;
+}
+
+export default function CalendarHeader({
+  year,
+  month,
+  goalId,
+  goalFilterItems,
+  onPrev,
+  onNext,
+  onGoalChange,
+}: CalendarHeaderProps) {
+  return (
+    <div className="flex flex-col items-center gap-5 px-4 py-5 lg:flex-row lg:justify-between lg:px-8">
+      <div className="flex items-center gap-4">
+        <button onClick={onPrev} className="cursor-pointer rounded-full p-1 hover:bg-gray-100">
+          <ChevronsLeftIcon size={20} className="text-gray-500" />
+        </button>
+        <span className="text-lg font-semibold text-gray-800">
+          {year}년 {month}월
+        </span>
+        <button onClick={onNext} className="cursor-pointer rounded-full p-1 hover:bg-gray-100">
+          <ChevronsRightIcon size={20} className="text-gray-500" />
+        </button>
+      </div>
+
+      <div className="w-full lg:max-w-[350px]">
+        <Dropdown
+          icon={<Image src="/image/goal-todo.png" width={32} height={32} alt="목표 이미지 아이콘" />}
+          className="h-12 border-gray-100 bg-gray-50"
+          items={goalFilterItems}
+          selectedValue={goalId !== undefined ? String(goalId) : ''}
+          onSelectItem={onGoalChange}
+        />
+      </div>
+    </div>
+  );
+}

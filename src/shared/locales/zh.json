@@ -52,7 +52,8 @@
     "newGoal": "新目标",
     "newTodo": "新待办",
     "newGoalTitle": "创建目标",
-    "newGoalPlaceholder": "请输入目标标题"
+    "newGoalPlaceholder": "请输入目标标题",
+    "developerModeAlert": "在开发者模式下无法创建目标。"
   },
   "dashboard": {
     "title": "的仪表盘",
@@ -86,6 +87,7 @@
   "todo": {
     "searchPlaceholder": "搜索待办事项",
     "addTodo": "添加待办",
+    "addGithubTodo": "添加 Issues / PR",
     "noSearchResult": "无搜索结果。",
     "emptyTodo": "暂无待办事项。",
     "dueDateRequired": "截止日期为必填项。",

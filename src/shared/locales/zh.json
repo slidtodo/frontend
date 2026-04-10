@@ -127,6 +127,8 @@
     "titlePlaceholder": "请输入笔记标题",
     "goalLabel": "目标",
     "todoLabel": "待办",
+    "todoSelectLabel": "选择待办",
+    "todoSelectPlaceholder": "请选择待办事项。",
     "createdAtLabel": "创建日期",
     "tagLabel": "标签",
     "createTitle": "写笔记",

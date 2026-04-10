@@ -127,6 +127,8 @@
     "titlePlaceholder": "노트의 제목을 입력해주세요",
     "goalLabel": "목표",
     "todoLabel": "할 일",
+    "todoSelectLabel": "할 일 선택",
+    "todoSelectPlaceholder": "할 일을 선택해 주세요.",
     "createdAtLabel": "작성일",
     "tagLabel": "태그",
     "createTitle": "노트 작성하기",

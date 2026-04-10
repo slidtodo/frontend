@@ -37,9 +37,9 @@ export default function NoteCreateModal({ title, onConfirm }: NoteCreateModalPro
           <XIcon className="cursor-pointer text-slate-400" size={24} onClick={closeModal} />
         </div>
 
-        <FormField label="할 일 선택" required className="mb-8 md:mb-10">
+        <FormField label={t.note.todoSelectLabel} required className="mb-8 md:mb-10">
           <Dropdown
-            placeholder="할 일을 선택해 주세요."
+            placeholder={t.note.todoSelectPlaceholder}
             items={todoItems}
             selectedValue={selectedTodoId}
             onSelectItem={(item) => setSelectedTodoId(item.value)}

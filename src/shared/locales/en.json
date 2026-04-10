@@ -127,6 +127,8 @@
     "titlePlaceholder": "Enter a note title",
     "goalLabel": "Goal",
     "todoLabel": "To Do",
+    "todoSelectLabel": "Select To Do",
+    "todoSelectPlaceholder": "Please select a to do.",
     "createdAtLabel": "Date",
     "tagLabel": "Tag",
     "createTitle": "Write Note",

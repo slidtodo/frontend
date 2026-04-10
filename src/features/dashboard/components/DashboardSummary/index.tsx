@@ -78,7 +78,7 @@ export default function DashBoardSummary() {
         </div>
       </div>
       <section className="flex w-full flex-col gap-[40px] pb-[40px] md:flex-row md:gap-[12px] lg:gap-[32px] lg:pb-[34px]">
-        <div className="flex w-full flex-col justify-between gap-[10px]">
+        <div className="flex min-w-0 flex-1 flex-col justify-between gap-[10px]">
           <PageSubTitle
             subTitle={t.dashboard.recentTodo}
             icons={<Image src={'/image/task-green.png'} alt="Task Icon" width={40} height={40} />}
@@ -93,7 +93,7 @@ export default function DashBoardSummary() {
           />
           <RecentPostCard />
         </div>
-        <div className="flex w-full flex-col justify-between gap-[10px]">
+        <div className="flex min-w-0 flex-1 flex-col justify-between gap-[10px]">
           <PageSubTitle
             subTitle={t.dashboard.myProgress}
             icons={<Image src={'/image/progress-green.png'} alt="Progress Icon" width={40} height={40} />}
@@ -132,7 +132,7 @@ function CurrentProgressCard() {
   const { data: percents } = useQuery(userQueries.progress());
 
   return (
-    <article className="bg-bearlog-500 relative h-[187px] rounded-[40px] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)] md:h-[229px] lg:h-[256px]">
+    <article className="bg-bearlog-500 relative h-[187px] w-full rounded-[40px] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)] md:h-[229px] lg:h-[256px]">
       <div className="absolute right-0 bottom-0">
         <Image
           src={'/image/teaching-bear-lg.png'}

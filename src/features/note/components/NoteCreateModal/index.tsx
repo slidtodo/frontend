@@ -46,17 +46,26 @@ export default function NoteCreateModal({ title, onConfirm }: NoteCreateModalPro
           />
         </FormField>
 
-        <Button
-          variant="primary"
-          className="px-4.5 py-2.5 text-sm font-semibold md:py-3.5 md:text-[18px]"
-          onClick={() => {
-            if (!selectedTodoId) return;
-            onConfirm(Number(selectedTodoId));
-            closeModal();
-          }}
-        >
-          {t.modal.confirm}
-        </Button>
+        <div className="flex gap-3">
+          <Button
+            variant="cancel"
+            className="flex-1 px-[18px] py-[10px] text-sm text-gray-500 md:py-[14px] md:text-[18px]"
+            onClick={closeModal}
+          >
+            {t.modal.cancel}
+          </Button>
+          <Button
+            variant="primary"
+            className="flex-1 px-[18px] py-[10px] text-sm md:py-[14px] md:text-[18px]"
+            onClick={() => {
+              if (!selectedTodoId) return;
+              onConfirm(Number(selectedTodoId));
+              closeModal();
+            }}
+          >
+            {t.modal.confirm}
+          </Button>
+        </div>
       </div>
     </div>
   );

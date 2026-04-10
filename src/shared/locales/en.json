@@ -161,6 +161,8 @@
     "withdraw": "Delete Account",
     "githubConnect": "GitHub Connection",
     "connected": "Connected",
+    "notConnected": "Not connected",
+    "connect": "Connect",
     "disconnect": "Disconnect",
     "imageUploadFail": "Failed to upload image. Please try again.",
     "withdrawFail": "Failed to delete account. Please try again."

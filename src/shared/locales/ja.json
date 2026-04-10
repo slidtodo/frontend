@@ -161,6 +161,8 @@
     "withdraw": "アカウント削除",
     "githubConnect": "GitHub連携",
     "connected": "連携済み",
+    "notConnected": "未連携",
+    "connect": "連携する",
     "disconnect": "連携解除",
     "imageUploadFail": "画像のアップロードに失敗しました。もう一度お試しください。",
     "withdrawFail": "アカウント削除に失敗しました。もう一度お試しください。"

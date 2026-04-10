@@ -161,6 +161,8 @@
     "withdraw": "注销账号",
     "githubConnect": "GitHub 连接",
     "connected": "已连接",
+    "notConnected": "未连接",
+    "connect": "连接",
     "disconnect": "断开连接",
     "imageUploadFail": "图片上传失败，请重试。",
     "withdrawFail": "账号注销失败，请重试。"

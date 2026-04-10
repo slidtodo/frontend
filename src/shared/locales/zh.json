@@ -57,11 +57,13 @@
   },
   "dashboard": {
     "title": "的仪表盘",
+    "githubModeDesc": "一目了然地查看与GitHub Issue/PR同步的待办事项。",
     "recentTodo": "最近待办事项",
     "viewAll": "查看全部",
     "myProgress": "我的进度",
     "noRecentTodo": "暂无最近待办事项。",
     "todoProgress": "待办进度",
+    "githubModeProgressDesc": "自动从Issue和PR中收集并同步待办事项。",
     "goalByTodo": "按目标分类待办",
     "noGoal": "暂无已注册的目标"
   },

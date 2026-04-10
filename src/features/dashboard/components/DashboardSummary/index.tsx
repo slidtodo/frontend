@@ -64,7 +64,14 @@ export default function DashBoardSummary() {
   return (
     <>
       <div className="flex items-center justify-end pb-[30px] md:justify-between lg:pb-[34px]">
-        {breakpoint !== 'mobile' && <PageHeader title={`${user?.nickname}${t.dashboard.title}`} />}
+        {breakpoint !== 'mobile' && (
+          <div className="flex flex-col gap-2">
+            <PageHeader title={`${user?.nickname}${t.dashboard.title}`} />
+            {mode === 'GITHUB' && (
+              <span className="text-xl text-gray-400 transition-all duration-200">{t.dashboard.githubModeDesc}</span>
+            )}
+          </div>
+        )}
 
         <div className="flex shrink-0 justify-end md:w-fit">
           <TabChangeMode mode={mode} onModeChange={handleModeChange} />
@@ -147,7 +154,12 @@ function CurrentProgressCard() {
           <ProgressCircle percent={percents?.totalProgress ?? 0} className="h-auto w-full" color="#008354" />
         </div>
         <div className="flex flex-col items-start gap-2">
-          <span className="text-[clamp(12px,2vw,20px)] font-semibold text-white">{t.dashboard.todoProgress}</span>
+          <div className="flex flex-col items-start">
+            <span className="text-[clamp(12px,2vw,20px)] font-semibold text-white">{t.dashboard.todoProgress}</span>
+            <span className="text-[clamp(12px,2vw,15px)] font-semibold whitespace-pre-line text-white/70">
+              {t.dashboard.githubModeProgressDesc}
+            </span>
+          </div>
           <div className="flex items-baseline gap-1">
             <span className="text-[clamp(20px,5vw,60px)] leading-[1] font-bold text-white">
               {percents?.totalProgress}

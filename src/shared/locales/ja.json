@@ -57,11 +57,13 @@
   },
   "dashboard": {
     "title": "のダッシュボード",
+    "githubModeDesc": "GitHubのIssue/PRと同期されたTODOを一目で確認できます。",
     "recentTodo": "最近のタスク",
     "viewAll": "すべて見る",
     "myProgress": "進捗状況",
     "noRecentTodo": "最近のタスクはありません。",
     "todoProgress": "タスク進捗",
+    "githubModeProgressDesc": "IssueやPRからTODOを自動で収集し、同期します。",
     "goalByTodo": "目標別タスク",
     "noGoal": "登録された目標がありません"
   },

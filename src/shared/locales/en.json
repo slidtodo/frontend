@@ -57,11 +57,13 @@
   },
   "dashboard": {
     "title": "'s Dashboard",
+    "githubModeDesc": "View your TODOs synced from GitHub issues/PRs at a glance.",
     "recentTodo": "Recent To Dos",
     "viewAll": "View All",
     "myProgress": "My Progress",
     "noRecentTodo": "No recent to dos.",
     "todoProgress": "TO DO Progress",
+    "githubModeProgressDesc": "Automatically collects and syncs TODOs from issues and pull requests.",
     "goalByTodo": "To Dos by Goal",
     "noGoal": "No goals registered yet"
   },

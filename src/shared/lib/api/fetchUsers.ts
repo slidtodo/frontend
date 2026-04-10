@@ -37,7 +37,7 @@ class FetchUsers {
 
   getGithubConnection = () => apiRequest<GithubConnectionResponse>('/api/v1/users/me/github');
 
-  disconnectGithub = () =>
+  deleteGithubConnection = () =>
     apiRequest<void>('/api/v1/users/me/github', {
       method: 'DELETE',
     });

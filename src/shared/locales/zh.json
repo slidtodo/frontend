@@ -221,8 +221,6 @@
   },
   "calendar": {
     "title": "的日历",
-    "allGoal": "全部目标",
-    "yearSuffix": "年",
-    "monthSuffix": "月"
+    "allGoal": "全部目标"
   }
 }

@@ -8,6 +8,7 @@ interface CalendarHeaderProps {
   month: number;
   goalId: number | undefined;
   goalFilterItems: DropdownItemType[];
+  formattedYearMonth: string;
   onPrev: () => void;
   onNext: () => void;
   onGoalChange: (item: DropdownItemType) => void;
@@ -18,6 +19,7 @@ export default function CalendarHeader({
   month,
   goalId,
   goalFilterItems,
+  formattedYearMonth,
   onPrev,
   onNext,
   onGoalChange,
@@ -29,7 +31,7 @@ export default function CalendarHeader({
           <ChevronsLeftIcon size={20} className="text-gray-500" />
         </button>
         <span className="text-lg font-semibold text-gray-800">
-          {year}년 {month}월
+          {formattedYearMonth}
         </span>
         <button onClick={onNext} className="cursor-pointer rounded-full p-1 hover:bg-gray-100">
           <ChevronsRightIcon size={20} className="text-gray-500" />

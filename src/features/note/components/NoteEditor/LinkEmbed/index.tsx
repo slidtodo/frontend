@@ -8,6 +8,7 @@ import LinkEmbedPreview from './LinkEmbedPreview';
 interface LinkEmbedProps {
   url: string;
   onRemove: () => void;
+  readOnly?: boolean;
 }
 
 // URL에서 사이트 이름 추출
@@ -30,7 +31,7 @@ function getFaviconUrl(url: string): string {
   }
 }
 
-export default function LinkEmbed({ url, onRemove }: LinkEmbedProps) {
+export default function LinkEmbed({ url, onRemove, readOnly = false }: LinkEmbedProps) {
   const [showPreview, setShowPreview] = useState(false);
 
   return (
@@ -61,13 +62,15 @@ export default function LinkEmbed({ url, onRemove }: LinkEmbedProps) {
           <p className="text-sm font-medium tracking-[-0.42px] text-[#333]">{getSiteName(url)}</p>
         </div>
         {/* 삭제 버튼 */}
-        <button
-          type="button"
-          onClick={(e) => { e.stopPropagation(); onRemove(); }}
-          className="cursor-pointer text-[#A4A4A4] transition-colors hover:text-[#333]"
-        >
-          <XIcon size={20} />
-        </button>
+        {!readOnly && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onRemove(); }}
+            className="cursor-pointer text-[#A4A4A4] transition-colors hover:text-[#333]"
+          >
+            <XIcon size={20} />
+          </button>
+        )}
       </div>
 
       {/* 하단 — URL */}

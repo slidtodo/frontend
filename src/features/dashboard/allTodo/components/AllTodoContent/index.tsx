@@ -1,6 +1,6 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'; // useQuery needed for goalQueries
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { PlusIcon } from 'lucide-react';
 
 import Button from '@/shared/components/Button';

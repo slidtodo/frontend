@@ -13,7 +13,9 @@ interface NoteDetailPageProps {
 export default async function NoteDetailPage({ params }: NoteDetailPageProps) {
   const { goalId, noteId } = await params;
 
-  if (noteId === 'create') notFound();
+  if (noteId === 'create') {
+    return null;
+  }
 
   const queryClient = new QueryClient();
 

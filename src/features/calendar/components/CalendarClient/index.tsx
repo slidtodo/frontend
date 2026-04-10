@@ -5,6 +5,8 @@ import CalendarHeader from '@/features/calendar/components/CalendarHeader';
 import CalendarDayTodoList from '@/features/calendar/components/CalendarDayTodoList';
 import PageHeader from '@/shared/components/PageHeader';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
+import Dropdown from '@/shared/components/Dropdown';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 import { useCalendar } from '@/features/calendar/hooks/useCalendar';
 
 export default function CalendarClient() {

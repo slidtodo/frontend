@@ -4,8 +4,6 @@ import Image from 'next/image';
 import { DropdownItemType } from '@/shared/types/types';
 
 interface CalendarHeaderProps {
-  year: number;
-  month: number;
   goalId: number | undefined;
   goalFilterItems: DropdownItemType[];
   formattedYearMonth: string;
@@ -15,8 +13,6 @@ interface CalendarHeaderProps {
 }
 
 export default function CalendarHeader({
-  year,
-  month,
   goalId,
   goalFilterItems,
   formattedYearMonth,

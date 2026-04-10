@@ -44,8 +44,6 @@ export default function CalendarClient() {
       {!isMobile && <PageHeader title={user?.nickname ? `${user.nickname}${t.calendar.title}` : t.sidebar.calendar} className="md:mb-[32px] lg:mb-5" />}
       <div className="border-border-secondary flex w-full flex-col bg-white md:rounded-t-4xl md:rounded-b-4xl md:border">
         <CalendarHeader
-          year={year}
-          month={month}
           goalId={goalId}
           goalFilterItems={translatedGoalFilterItems}
           formattedYearMonth={formattedYearMonth}

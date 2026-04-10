@@ -129,6 +129,8 @@ function RecentPostCard() {
 
 function CurrentProgressCard() {
   const { t } = useLanguage();
+  const mode = useTodoModeStore((state) => state.mode);
+
   const { data: percents } = useQuery(userQueries.progress());
 
   return (
@@ -156,9 +158,11 @@ function CurrentProgressCard() {
         <div className="flex flex-col items-start gap-2">
           <div className="flex flex-col items-start">
             <span className="text-[clamp(12px,2vw,20px)] font-semibold text-white">{t.dashboard.todoProgress}</span>
-            <span className="text-[clamp(12px,2vw,15px)] font-semibold whitespace-pre-line text-white/70">
-              {t.dashboard.githubModeProgressDesc}
-            </span>
+            {mode === 'GITHUB' && (
+              <span className="text-[clamp(12px,2vw,15px)] font-semibold whitespace-pre-line text-white/70">
+                {t.dashboard.githubModeProgressDesc}
+              </span>
+            )}
           </div>
           <div className="flex items-baseline gap-1">
             <span className="text-[clamp(20px,5vw,60px)] leading-[1] font-bold text-white">

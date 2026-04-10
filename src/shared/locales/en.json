@@ -28,6 +28,8 @@
     "snsSignup": "Sign up with SNS",
     "googleLogin": "Google Login",
     "githubLogin": "GitHub Login",
+    "loginSuccess": "You have been logged in successfully.",
+    "loginFail": "Invalid email or password.",
     "loggingIn": "Logging in...",
     "socialLoginFail": "Social login failed. Please try again.",
     "signupSuccess": "Sign up completed.",

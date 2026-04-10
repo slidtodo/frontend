@@ -65,7 +65,10 @@
     "todoProgress": "待办进度",
     "githubModeProgressDesc": "自动从Issue和PR中收集并同步待办事项。",
     "goalByTodo": "按目标分类待办",
-    "noGoal": "暂无已注册的目标"
+    "noGoal": "暂无已注册的目标",
+    "noFirstGoal": "暂无可注册的目标。",
+    "noGithubGoal": "没有已连接的 GitHub 仓库目标。",
+    "githubGoalTitle": "已连接的 GitHub 目标"
   },
   "allTodo": {
     "title": "全部待办",

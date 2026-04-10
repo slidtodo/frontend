@@ -65,7 +65,10 @@
     "todoProgress": "TO DO Progress",
     "githubModeProgressDesc": "Automatically collects and syncs TODOs from issues and pull requests.",
     "goalByTodo": "To Dos by Goal",
-    "noGoal": "No goals registered yet"
+    "noGoal": "No goals registered yet",
+    "noFirstGoal": "No goals to register yet.",
+    "noGithubGoal": "No connected GitHub repository goals.",
+    "githubGoalTitle": "Connected GitHub Goals"
   },
   "allTodo": {
     "title": "All To Dos",

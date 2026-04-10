@@ -65,7 +65,10 @@
     "todoProgress": "TO DO 진행률",
     "githubModeProgressDesc": "Issue와 PR에서 TODO를 \n자동으로 수집하고 동기화해요",
     "goalByTodo": "목표 별 할일",
-    "noGoal": "최근에 등록한 목표가 없어요"
+    "noGoal": "최근에 등록한 목표가 없어요",
+    "noFirstGoal": "최초로 등록할 목표가 없어요.",
+    "noGithubGoal": "연결된 GitHub 저장소 목표가 없습니다.",
+    "githubGoalTitle": "연결된 GitHub 목표"
   },
   "allTodo": {
     "title": "모든 할 일",

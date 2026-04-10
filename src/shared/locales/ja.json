@@ -65,7 +65,10 @@
     "todoProgress": "タスク進捗",
     "githubModeProgressDesc": "IssueやPRからTODOを自動で収集し、同期します。",
     "goalByTodo": "目標別タスク",
-    "noGoal": "登録された目標がありません"
+    "noGoal": "登録された目標がありません",
+    "noFirstGoal": "登録する目標がまだありません。",
+    "noGithubGoal": "連携されたGitHubリポジトリの目標がありません。",
+    "githubGoalTitle": "連携されたGitHub目標"
   },
   "allTodo": {
     "title": "すべてのタスク",

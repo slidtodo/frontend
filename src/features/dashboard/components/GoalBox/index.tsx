@@ -1,9 +1,10 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { PlusIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useInfiniteQuery, useQuery, keepPreviousData } from '@tanstack/react-query';
 
 import Button from '@/shared/components/Button';
 import Empty from '@/shared/components/Empty';
@@ -15,6 +16,8 @@ import type { GoalDetailResponse } from '@/shared/lib/api';
 import { useTodoCreateModal } from '@/features/todo/hooks/useTodoCreateModal';
 import { useGithubTodoCreateModal } from '@/features/todo/hooks/useGithubTodoCreateModal';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
+import { todoQueries } from '@/shared/lib/query/queryKeys';
+import { useDebounce } from '@/shared/hooks/useDebounce';
 
 interface GoalBoxProps {
   data: GoalDetailResponse;
@@ -25,19 +28,18 @@ export default function GoalBox({ data }: GoalBoxProps) {
   const { t } = useLanguage();
 
   const [search, setSearch] = useState('');
-  const normalizedSearch = search.trim().toLowerCase();
-  const isSearching = normalizedSearch.length > 0;
+  const debouncedSearch = useDebounce(search.trim(), 300);
+  const isSearching = debouncedSearch.length > 0;
 
-  const filterTodos = useCallback(
-    (todos: GoalDetailResponse['todoList']) => {
-      if (!isSearching) return todos;
-      return todos.filter((todo) => todo.title.toLowerCase().includes(normalizedSearch));
-    },
-    [isSearching, normalizedSearch],
-  );
+  const { data: searchResult } = useQuery({
+    ...todoQueries.list({ sort: 'LATEST', search: debouncedSearch, goalId: data.id }),
+    placeholderData: keepPreviousData,
+    enabled: isSearching,
+  });
 
-  const visibleTodoList = filterTodos(data.todoList);
-  const visibleDoneList = filterTodos(data.doneList);
+  const searchTodoItems = isSearching ? (searchResult?.todos.filter((todo) => !todo.done) ?? null) : null;
+  const searchDoneItems = isSearching ? (searchResult?.todos.filter((todo) => todo.done) ?? null) : null;
+
   const isGithubGoal = data.source === 'GITHUB';
 
   const handleAddTodo = () => {
@@ -62,6 +64,8 @@ export default function GoalBox({ data }: GoalBoxProps) {
       });
     }
   };
+
+  const noSearchResults = isSearching && searchTodoItems?.length === 0 && searchDoneItems?.length === 0;
 
   return (
     <article className="flex flex-col gap-4 rounded-[40px] bg-white p-6 lg:px-8 lg:py-6">
@@ -90,14 +94,24 @@ export default function GoalBox({ data }: GoalBoxProps) {
       </div>
 
       <div className="flex w-full flex-col justify-around gap-2 md:flex-row lg:gap-8">
-        {visibleTodoList.length === 0 && visibleDoneList.length === 0 ? (
+        {noSearchResults ? (
           <div className="h-40 md:h-80">
-            <Empty>{isSearching ? t.todo.noSearchResult : t.todo.emptyTodo}</Empty>
+            <Empty>{t.todo.noSearchResult}</Empty>
           </div>
         ) : (
           <>
-            <ListBox title={t.allTodo.todo} mode="todo" items={visibleTodoList} />
-            <ListBox title={t.allTodo.done} mode="done" items={visibleDoneList} />
+            <ListBox
+              title={t.allTodo.todo}
+              mode="todo"
+              goalId={data.id!}
+              searchItems={searchTodoItems}
+            />
+            <ListBox
+              title={t.allTodo.done}
+              mode="done"
+              goalId={data.id!}
+              searchItems={searchDoneItems}
+            />
           </>
         )}
       </div>
@@ -130,14 +144,42 @@ function GoalName({ data }: GoalNameProps) {
     </div>
   );
 }
+
 interface ListBoxProps {
   title: string;
   mode: 'todo' | 'done';
-  items: GoalDetailResponse['todoList'];
+  goalId: number;
+  searchItems: { id: number; favorite?: boolean }[] | null;
 }
-function ListBox({ title, mode, items }: ListBoxProps) {
+function ListBox({ title, mode, goalId, searchItems }: ListBoxProps) {
   const bgColor = mode === 'todo' ? 'bg-[#E5F9F2]' : 'bg-white';
   const textColor = mode === 'todo' ? 'text-[#00D185]' : 'text-gray-400';
+  const isDone = mode === 'done';
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
+    ...todoQueries.infiniteList({ goalId, done: isDone, limit: 10 }),
+    enabled: searchItems === null,
+  });
+
+  const infiniteItems = data?.pages.flatMap((p) => p.todos ?? []) ?? [];
+  const items = searchItems ?? infiniteItems;
+
+  useEffect(() => {
+    if (searchItems !== null) return;
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 },
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [searchItems, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <div
@@ -151,6 +193,10 @@ function ListBox({ title, mode, items }: ListBoxProps) {
               <TaskCardWrapper key={item.id} item={item} mode={mode} />
             ))}
           </AnimatePresence>
+          {searchItems === null && <div ref={sentinelRef} className="h-1" />}
+          {isFetchingNextPage && (
+            <div className="py-2 text-center text-xs text-gray-400">...</div>
+          )}
         </div>
       </div>
     </div>

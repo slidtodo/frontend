@@ -16,7 +16,6 @@ export default async function DashboardPage() {
   const queryClient = new QueryClient();
 
   await Promise.all([
-    queryClient.prefetchQuery(todoQueries.list({ sort: 'LATEST' })),
     queryClient.prefetchQuery(userQueries.current()),
     queryClient.prefetchQuery(userQueries.progress()),
   ]);
@@ -26,7 +25,11 @@ export default async function DashboardPage() {
   await Promise.all(
     (goals.goals ?? [])
       .filter((goal) => goal.id != null)
-      .map((goal) => queryClient.prefetchQuery(goalQueries.detail(goal.id!))),
+      .flatMap((goal) => [
+        queryClient.prefetchQuery(goalQueries.detail(goal.id!)),
+        queryClient.prefetchInfiniteQuery({ ...todoQueries.infiniteList({ goalId: goal.id!, done: false, limit: 10 }), pages: 1 }),
+        queryClient.prefetchInfiniteQuery({ ...todoQueries.infiniteList({ goalId: goal.id!, done: true, limit: 10 }), pages: 1 }),
+      ]),
   );
 
   const dehydratedState = dehydrate(queryClient);

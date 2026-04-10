@@ -74,7 +74,10 @@
     "allGoal": "All Goals",
     "all": "All",
     "todo": "TO DO",
-    "done": "DONE"
+    "done": "DONE",
+    "loading": "Loading...",
+    "issueReopenNotice1": "Unchecking a completed Issue will reopen it on GitHub.",
+    "issueReopenNotice2": "However, if the issue was closed on GitHub, unchecking it here will NOT reopen it."
   },
   "goal": {
     "title": "'s Goals",

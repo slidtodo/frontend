@@ -74,7 +74,10 @@
     "allGoal": "すべての目標",
     "all": "すべて",
     "todo": "タスク",
-    "done": "完了"
+    "done": "完了",
+    "loading": "読み込み中...",
+    "issueReopenNotice1": "Issuesの完了チェックを外すと、GitHubでreopenされます。",
+    "issueReopenNotice2": "ただし、GitHub側でIssueを閉じた場合は、TODOでチェックを外してもreopenされません。"
   },
   "goal": {
     "title": "の目標",

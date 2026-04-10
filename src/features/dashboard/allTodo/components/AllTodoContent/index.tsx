@@ -126,6 +126,7 @@ interface AllTodoFetcherProps {
   isFetchingNextPage: boolean;
 }
 function AllTodoFetcher({ todos, fetchNextPage, hasNextPage, isFetchingNextPage }: AllTodoFetcherProps) {
+  const { t } = useLanguage();
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -148,10 +149,8 @@ function AllTodoFetcher({ todos, fetchNextPage, hasNextPage, isFetchingNextPage 
   return (
     <section className="rounded-4xl bg-white p-4 md:p-8">
       <div className="mb-6 flex flex-col items-center rounded-2xl bg-[#C6D7D14D] py-[10px]">
-        <span className="text-sm text-[#94ABA499]">Issues 완료 체크 해제 시 GitHub에서 reopen돼요. </span>
-        <span className="text-sm text-[#94ABA499]">
-          단, GitHub에서 이슈를 닫은 경우에는 TODO에서 체크 해제해도 reopen되지 않아요.
-        </span>
+        <span className="text-sm text-[#94ABA499]">{t.allTodo.issueReopenNotice1}</span>
+        <span className="text-sm text-[#94ABA499]">{t.allTodo.issueReopenNotice2}</span>
       </div>
       <div className="max-h-[816px] overflow-y-auto">
         <div className="flex flex-col gap-4">
@@ -161,7 +160,7 @@ function AllTodoFetcher({ todos, fetchNextPage, hasNextPage, isFetchingNextPage 
           <div ref={sentinelRef} className="h-1" />
           {isFetchingNextPage && (
             <div className="flex justify-center py-2">
-              <span className="text-sm text-gray-400">불러오는 중...</span>
+              <span className="text-sm text-gray-400">{t.allTodo.loading}</span>
             </div>
           )}
         </div>

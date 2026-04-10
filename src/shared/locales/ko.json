@@ -74,7 +74,10 @@
     "allGoal": "전체 목표",
     "all": "전체",
     "todo": "TO DO",
-    "done": "DONE"
+    "done": "DONE",
+    "loading": "불러오는 중...",
+    "issueReopenNotice1": "Issues 완료 체크 해제 시 GitHub에서 reopen돼요.",
+    "issueReopenNotice2": "단, GitHub에서 이슈를 닫은 경우에는 TODO에서 체크 해제해도 reopen되지 않아요."
   },
   "goal": {
     "title": "님의 목표",

@@ -187,7 +187,7 @@ function FavoriteTodoFetcher({
           <div ref={sentinelRef} className="h-1" />
           {isFetchingNextPage && (
             <div className="flex justify-center py-2">
-              <span className="text-sm text-gray-400">불러오는 중...</span>
+              <span className="text-sm text-gray-400">{t.allTodo.loading}</span>
             </div>
           )}
         </div>

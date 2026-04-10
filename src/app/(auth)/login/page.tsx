@@ -32,10 +32,7 @@ export default function LoginPage() {
         headers: { 'Content-Type': 'application/json' },
       });
 
-      if (!response.ok) {
-        showToast(t.auth.loginFail, 'fail');
-        return;
-      }
+      if (!response.ok) throw new Error(t.auth.loginFail);
 
       showToast(t.auth.loginSuccess, 'success');
       router.push('/dashboard');
@@ -97,7 +94,7 @@ export default function LoginPage() {
           </FormField>
           <Button
             type="submit"
-            className="mt-8 h-14 w-full bg-bearlog-500 hover:bg-bearlog-600 disabled:opacity-100 disabled:bg-bearlog-500"
+            className={`mt-8 h-14 w-full bg-bearlog-500 hover:bg-bearlog-600 ${isLoading ? 'disabled:opacity-100 disabled:bg-bearlog-500' : ''}`}
             disabled={!email || !password || isLoading}
           >
             {isLoading ? <LoadingSpinner /> : t.auth.loginButton}

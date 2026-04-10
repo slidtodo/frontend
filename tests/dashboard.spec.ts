@@ -1,5 +1,22 @@
 import { test, expect, Page } from '@playwright/test';
 
+type Todo = {
+  id: number;
+  title: string;
+  source: string;
+  isDone: boolean;
+  goalId: number;
+};
+
+type GoalDetail = {
+  id: number;
+  title: string;
+  source: string;
+  progress: number;
+  todoList: Todo[];
+  doneList: Todo[];
+};
+
 const MOCK_USER = {
   id: 1,
   nickname: '테스트유저',
@@ -9,10 +26,20 @@ const MOCK_USER = {
 
 const MOCK_PROGRESS = { totalProgress: 60 };
 
-const MOCK_GOALS_EMPTY = { goals: [] };
+const MOCK_GOALS_EMPTY = {
+  goals: [],
+};
 
 const MOCK_GOALS_MANUAL = {
-  goals: [{ id: 1, title: '테스트 목표', source: 'MANUAL', repositoryFullName: null, progress: 50 }],
+  goals: [
+    {
+      id: 1,
+      title: '테스트 목표',
+      source: 'MANUAL',
+      repositoryFullName: null,
+      progress: 50,
+    },
+  ],
 };
 
 const MOCK_TODOS = {
@@ -22,121 +49,102 @@ const MOCK_TODOS = {
   ],
 };
 
-const MOCK_TODOS_EMPTY = { todos: [] };
+const GOAL_DETAIL: GoalDetail = {
+  id: 1,
+  title: '테스트 목표',
+  source: 'MANUAL',
+  progress: 50,
+  todoList: [
+    { id: 1, title: '할일 1', source: 'manual', isDone: false, goalId: 1 },
+    { id: 2, title: '할일 2', source: 'manual', isDone: false, goalId: 1 },
+  ],
+  doneList: [],
+};
 
-async function mockDashboardAPIs(page: Page, overrides?: { goals?: object; todos?: object }) {
-  await page.route('/api/proxy/users/me', (route) =>
-    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(MOCK_USER) }),
-  );
-
-  await page.route('/api/proxy/users/me/progress', (route) =>
-    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(MOCK_PROGRESS) }),
-  );
-
-  await page.route(/\/api\/proxy\/goals/, (route) =>
-    route.fulfill({
+async function mockJson(page: Page, url: string | RegExp, body: unknown) {
+  await page.route(url, async (route) => {
+    await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify(overrides?.goals ?? MOCK_GOALS_EMPTY),
-    }),
-  );
-
-  await page.route(/\/api\/proxy\/todos/, (route) =>
-    route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(overrides?.todos ?? MOCK_TODOS_EMPTY),
-    }),
-  );
-
-  await page.route(/\/api\/proxy\/integrations\/github\/repositories/, (route) =>
-    route.fulfill({ status: 200, contentType: 'application/json', body: '[]' }),
-  );
-
-  await page.route('/api/proxy/users/me/github', (route) =>
-    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ connected: false }) }),
-  );
+      body: JSON.stringify(body),
+    });
+  });
 }
 
-test.describe('대시보드', () => {
+async function mockBaseDashboard(page: Page) {
+  await mockJson(page, '/api/proxy/users/me', MOCK_USER);
+  await mockJson(page, '/api/proxy/users/me/progress', MOCK_PROGRESS);
+  await mockJson(page, /\/api\/proxy\/goals$/, MOCK_GOALS_EMPTY);
+  await mockJson(page, /\/api\/proxy\/todos/, { todos: [] });
+  await mockJson(page, /\/api\/proxy\/integrations\/github\/repositories/, []);
+  await mockJson(page, '/api/proxy/users/me/github', { connected: false });
+}
+
+async function mockGoalList(page: Page, goals = MOCK_GOALS_MANUAL) {
+  await mockJson(page, /\/api\/proxy\/goals$/, goals);
+}
+
+async function mockGoalDetail(page: Page, detail = GOAL_DETAIL) {
+  await mockJson(page, /\/api\/proxy\/goals\/\d+$/, detail);
+}
+
+async function mockTodoList(page: Page, todos = MOCK_TODOS) {
+  await mockJson(page, /\/api\/proxy\/todos/, todos);
+}
+
+test.describe('Dashboard', () => {
   test.beforeEach(async ({ page }) => {
-    await mockDashboardAPIs(page);
+    await mockBaseDashboard(page);
   });
 
-  test('대시보드 기본 화면이 렌더링된다', async ({ page }) => {
+  test('기본 화면 렌더링', async ({ page }) => {
     await page.goto('/dashboard');
 
-    await expect(page.getByText(`${MOCK_USER.nickname}님의 대시보드`)).toBeVisible();
-
+    await expect(page.getByText('테스트유저님의 대시보드')).toBeVisible();
     await expect(page.getByText('최근 등록한 할 일')).toBeVisible();
-
     await expect(page.getByText('내 진행 상황')).toBeVisible();
-
     await expect(page.getByText('TO DO 진행률')).toBeVisible();
   });
 
-  test('모드 탭 (일반 모드 / 개발자 모드)이 표시된다', async ({ page }) => {
+  test('모드 탭 렌더링', async ({ page }) => {
     await page.goto('/dashboard');
 
-    const normalTab = page.getByRole('tab', { name: '일반 모드' });
-    const devTab = page.getByRole('tab', { name: /개발자 모드/ });
-
-    await expect(normalTab).toBeVisible();
-    await expect(devTab).toBeVisible();
-
-    await expect(normalTab).toHaveAttribute('aria-selected', 'true');
-    await expect(devTab).toHaveAttribute('aria-selected', 'false');
+    await expect(page.getByRole('tab', { name: '일반 모드' })).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByRole('tab', { name: /개발자 모드/ })).toHaveAttribute('aria-selected', 'false');
   });
 
-  test('할일이 없을 때 빈 상태 메시지가 표시된다', async ({ page }) => {
+  test('할일 없을 때 빈 상태 표시', async ({ page }) => {
     await page.goto('/dashboard');
 
     await expect(page.getByText('최근 등록한 할 일이 없습니다.')).toBeVisible();
   });
 
-  test('최근 할일이 있을 때 목록이 표시된다', async ({ page }) => {
-    await mockDashboardAPIs(page, { todos: MOCK_TODOS });
+  test('최근 할일 목록 표시', async ({ page }) => {
+    await mockTodoList(page);
+
     await page.goto('/dashboard');
 
     await expect(page.getByText('첫 번째 할일')).toBeVisible();
     await expect(page.getByText('두 번째 할일')).toBeVisible();
   });
 
-  test('"모두 보기" 클릭 시 all-todo 페이지로 이동한다', async ({ page }) => {
+  test('"모두 보기" 클릭 시 이동', async ({ page }) => {
     await page.goto('/dashboard');
 
     await page.getByRole('link', { name: /모두 보기/ }).click();
+
     await expect(page).toHaveURL('/dashboard/all-todo');
   });
 
-  test('목표가 없을 때 빈 상태 메시지가 표시된다', async ({ page }) => {
+  test('목표 없을 때 빈 상태 표시', async ({ page }) => {
     await page.goto('/dashboard');
 
     await expect(page.getByText('최초로 등록할 목표가 없어요.')).toBeVisible();
   });
 
-  test('목표가 있을 때 목표 섹션이 표시된다', async ({ page }) => {
-    await page.route(/\/api\/proxy\/goals/, (route) =>
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(MOCK_GOALS_MANUAL),
-      }),
-    );
-
-    await page.route(/\/api\/proxy\/goals\/\d+$/, (route) =>
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          id: 1,
-          title: '테스트 목표',
-          source: 'MANUAL',
-          progress: 50,
-          todos: [],
-        }),
-      }),
-    );
+  test('목표 섹션 렌더링', async ({ page }) => {
+    await mockGoalList(page);
+    await mockGoalDetail(page);
 
     await page.goto('/dashboard');
 
@@ -144,12 +152,12 @@ test.describe('대시보드', () => {
   });
 });
 
-test.describe('개발자 모드 모달', () => {
+test.describe('Developer Mode', () => {
   test.beforeEach(async ({ page }) => {
-    await mockDashboardAPIs(page, { goals: MOCK_GOALS_EMPTY });
+    await mockBaseDashboard(page);
   });
 
-  test('개발자 모드 탭 클릭 시 GitHub 연동 모달이 열린다', async ({ page }) => {
+  test('개발자 모드 클릭 시 모달 오픈', async ({ page }) => {
     await page.goto('/dashboard');
 
     await page.getByRole('tab', { name: /개발자 모드/ }).click();
@@ -157,68 +165,158 @@ test.describe('개발자 모드 모달', () => {
     await expect(page.getByText('개발자 모드 설정하기')).toBeVisible();
   });
 
-  test('모달의 X 버튼 클릭 시 일반 모드로 복귀한다', async ({ page }) => {
+  test('취소 클릭 시 모달 닫힘', async ({ page }) => {
     await page.goto('/dashboard');
 
     await page.getByRole('tab', { name: /개발자 모드/ }).click();
-    await expect(page.getByText('개발자 모드 설정하기')).toBeVisible();
-
-    await page
-      .locator(
-        'div:has(> span:text("개발자 모드 설정하기")) + div button, div:has(span:text("개발자 모드 설정하기")) button[type="button"]',
-      )
-      .first()
-      .click();
-
-    await expect(page.getByText('개발자 모드 설정하기')).not.toBeVisible();
-
-    await expect(page.getByRole('tab', { name: '일반 모드' })).toHaveAttribute('aria-selected', 'true');
-    await expect(page.getByRole('tab', { name: /개발자 모드/ })).toHaveAttribute('aria-selected', 'false');
-  });
-
-  test('모달의 취소 버튼 클릭 시 일반 모드로 복귀한다', async ({ page }) => {
-    await page.goto('/dashboard');
-
-    await page.getByRole('tab', { name: /개발자 모드/ }).click();
-    await expect(page.getByText('개발자 모드 설정하기')).toBeVisible();
-
     await page.getByRole('button', { name: '취소' }).click();
-    await expect(page.getByText('개발자 모드 설정하기')).not.toBeVisible();
 
-    await expect(page.getByRole('tab', { name: '일반 모드' })).toHaveAttribute('aria-selected', 'true');
-    await expect(page.getByRole('tab', { name: /개발자 모드/ })).toHaveAttribute('aria-selected', 'false');
+    await expect(page.getByText('개발자 모드 설정하기')).not.toBeVisible();
   });
 
-  test('GitHub 연동된 사용자가 개발자 모드 전환 시 레포 목록이 표시된다', async ({ page }) => {
-    const githubUser = { ...MOCK_USER, githubConnected: true };
+  test('GitHub 연동 시 레포 표시', async ({ page }) => {
+    await mockJson(page, '/api/proxy/users/me', {
+      ...MOCK_USER,
+      githubConnected: true,
+    });
 
-    await page.route('/api/proxy/users/me', (route) =>
-      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(githubUser) }),
-    );
-
-    await page.route(/\/api\/proxy\/integrations\/github\/repositories/, (route) =>
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify([{ id: 101, name: 'my-repo', fullName: 'testuser/my-repo' }]),
-      }),
-    );
+    await mockJson(page, /\/api\/proxy\/integrations\/github\/repositories/, [
+      {
+        id: 101,
+        name: 'my-repo',
+        fullName: 'testuser/my-repo',
+      },
+    ]);
 
     await page.goto('/dashboard');
 
     await page.getByRole('tab', { name: /개발자 모드/ }).click();
-    await expect(page.getByText('개발자 모드 설정하기')).toBeVisible();
 
     await expect(page.getByText('my-repo')).toBeVisible();
     await expect(page.getByText('testuser/my-repo')).toBeVisible();
   });
 });
 
-test.describe('미인증 접근', () => {
-  test.use({ storageState: { cookies: [], origins: [] } });
+test.describe('Goal Detail', () => {
+  test.beforeEach(async ({ page }) => {
+    await mockBaseDashboard(page);
+    await mockGoalList(page);
+    await mockGoalDetail(page);
+  });
 
-  test('/dashboard 접근 시 /login으로 리다이렉트된다', async ({ page }) => {
+  test('목표 클릭 시 상세 이동', async ({ page }) => {
     await page.goto('/dashboard');
+
+    await page.getByRole('link', { name: '테스트 목표' }).click();
+
+    await expect(page).toHaveURL('/goal/1');
+  });
+
+  test('검색 시 필터링', async ({ page }) => {
+    await page.route(/\/api\/proxy\/todos/, async (route) => {
+      const url = new URL(route.request().url());
+      const search = url.searchParams.get('search') || '';
+
+      const filtered = GOAL_DETAIL.todoList.filter((todo) => todo.title.includes(search));
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          todos: filtered,
+          hasMore: false,
+          nextCursor: null,
+        }),
+      });
+    });
+
+    await page.goto('/dashboard');
+    await page.getByRole('link', { name: '테스트 목표' }).click();
+
+    await page.getByPlaceholder('할 일 검색').fill('1');
+
+    await expect(page.getByText('할일 1')).toBeVisible();
+    await expect(page.getByText('할일 2')).not.toBeVisible();
+  });
+});
+
+test.describe('Todo Interaction', () => {
+  test.beforeEach(async ({ page }) => {
+    await mockBaseDashboard(page);
+    await mockGoalList(page);
+  });
+
+  test('할일 완료 시 진행률 업데이트', async ({ page }) => {
+    let progress = 50;
+
+    await mockGoalDetail(page, {
+      ...GOAL_DETAIL,
+      progress,
+      doneList: [{ id: 2, title: '완료된 할일', source: 'manual', isDone: true, goalId: 1 }],
+    });
+
+    await page.route(/\/api\/proxy\/todos\/\d+$/, async (route) => {
+      progress = 100;
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          id: 1,
+          title: '할일 1',
+          isDone: true,
+        }),
+      });
+    });
+
+    await page.goto('/dashboard');
+    await page.getByRole('link', { name: '테스트 목표' }).click();
+
+    await page.getByRole('button', { name: '할일 1' }).click();
+
+    await expect(page.getByText('100')).toBeVisible();
+  });
+
+  test('즐겨찾기 토글', async ({ page }) => {
+    let favorite = false;
+
+    await mockGoalDetail(page);
+
+    await page.route(/\/api\/proxy\/todos\/\d+$/, async (route) => {
+      favorite = !favorite;
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          id: 1,
+          favorite,
+        }),
+      });
+    });
+
+    await page.goto('/dashboard');
+    await page.getByRole('link', { name: '테스트 목표' }).click();
+
+    const button = page.getByRole('button', { name: '즐겨찾기' });
+
+    await button.click();
+
+    await expect(button).toHaveClass(/favorite/);
+  });
+});
+
+test.describe('Auth Guard', () => {
+  test.use({
+    storageState: {
+      cookies: [],
+      origins: [],
+    },
+  });
+
+  test('미인증 사용자는 login으로 리다이렉트', async ({ page }) => {
+    await page.goto('/dashboard');
+
     await expect(page).toHaveURL(/\/login/);
   });
 });

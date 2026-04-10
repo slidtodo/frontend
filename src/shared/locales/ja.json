@@ -28,6 +28,8 @@
     "snsSignup": "SNSアカウントで会員登録",
     "googleLogin": "Googleログイン",
     "githubLogin": "GitHubログイン",
+    "loginSuccess": "ログインしました。",
+    "loginFail": "メールアドレスまたはパスワードが正しくありません。",
     "loggingIn": "ログイン中...",
     "socialLoginFail": "ソーシャルログインに失敗しました。もう一度お試しください。",
     "signupSuccess": "会員登録が完了しました。",
@@ -167,6 +169,8 @@
     "withdraw": "アカウント削除",
     "githubConnect": "GitHub連携",
     "connected": "連携済み",
+    "notConnected": "未連携",
+    "connect": "連携する",
     "disconnect": "連携解除",
     "imageUploadFail": "画像のアップロードに失敗しました。もう一度お試しください。",
     "withdrawFail": "アカウント削除に失敗しました。もう一度お試しください。"
@@ -226,5 +230,9 @@
     "confirm": "確認",
     "modeManual": "一般",
     "modeDeveloper": "開発者"
+  },
+  "calendar": {
+    "title": "さんのカレンダー",
+    "allGoal": "すべての目標"
   }
 }

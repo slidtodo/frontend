@@ -30,9 +30,11 @@ export default function LoginPage() {
 
       if (!response.ok) throw new Error('Login failed');
 
+      showToast(t.auth.loginSuccess, 'success');
       router.push('/dashboard');
     } catch (error) {
       console.error(error);
+      showToast(t.auth.loginFail, 'fail');
     }
   };
   const handleGithubLogin = async () => {

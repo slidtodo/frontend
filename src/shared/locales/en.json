@@ -28,6 +28,8 @@
     "snsSignup": "Sign up with SNS",
     "googleLogin": "Google Login",
     "githubLogin": "GitHub Login",
+    "loginSuccess": "You have been logged in successfully.",
+    "loginFail": "Invalid email or password.",
     "loggingIn": "Logging in...",
     "socialLoginFail": "Social login failed. Please try again.",
     "signupSuccess": "Sign up completed.",
@@ -167,6 +169,8 @@
     "withdraw": "Delete Account",
     "githubConnect": "GitHub Connection",
     "connected": "Connected",
+    "notConnected": "Not connected",
+    "connect": "Connect",
     "disconnect": "Disconnect",
     "imageUploadFail": "Failed to upload image. Please try again.",
     "withdrawFail": "Failed to delete account. Please try again."
@@ -226,5 +230,9 @@
     "confirm": "Confirm",
     "modeManual": "General",
     "modeDeveloper": "Developer"
+  },
+  "calendar": {
+    "title": "'s Calendar",
+    "allGoal": "All Goals"
   }
 }

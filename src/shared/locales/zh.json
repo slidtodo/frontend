@@ -28,6 +28,8 @@
     "snsSignup": "使用 SNS 注册",
     "googleLogin": "Google 登录",
     "githubLogin": "GitHub 登录",
+    "loginSuccess": "登录成功。",
+    "loginFail": "邮箱或密码不正确。",
     "loggingIn": "登录中...",
     "socialLoginFail": "社交登录失败，请重试。",
     "signupSuccess": "注册成功。",
@@ -167,6 +169,8 @@
     "withdraw": "注销账号",
     "githubConnect": "GitHub 连接",
     "connected": "已连接",
+    "notConnected": "未连接",
+    "connect": "连接",
     "disconnect": "断开连接",
     "imageUploadFail": "图片上传失败，请重试。",
     "withdrawFail": "账号注销失败，请重试。"
@@ -226,5 +230,9 @@
     "confirm": "确认",
     "modeManual": "普通",
     "modeDeveloper": "开发者"
+  },
+  "calendar": {
+    "title": "的日历",
+    "allGoal": "全部目标"
   }
 }

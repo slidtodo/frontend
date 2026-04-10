@@ -28,6 +28,8 @@
     "snsSignup": "SNS 계정으로 회원가입",
     "googleLogin": "구글 로그인",
     "githubLogin": "깃허브 로그인",
+    "loginSuccess": "로그인이 완료되었습니다.",
+    "loginFail": "이메일 또는 비밀번호가 올바르지 않습니다.",
     "loggingIn": "로그인 중...",
     "socialLoginFail": "소셜 로그인에 실패했습니다. 다시 시도해주세요.",
     "signupSuccess": "회원가입이 완료되었습니다.",
@@ -167,6 +169,8 @@
     "withdraw": "회원 탈퇴하기",
     "githubConnect": "Github 연동",
     "connected": "연결됨",
+    "notConnected": "연결 안 됨",
+    "connect": "연결하기",
     "disconnect": "연결 삭제",
     "imageUploadFail": "이미지 업로드에 실패했습니다. 다시 시도해주세요.",
     "withdrawFail": "회원 탈퇴에 실패했습니다. 다시 시도해주세요."
@@ -226,5 +230,9 @@
     "confirm": "확인",
     "modeManual": "일반 모드",
     "modeDeveloper": "개발자 모드"
+  },
+  "calendar": {
+    "title": "님의 캘린더",
+    "allGoal": "전체 목표"
   }
 }

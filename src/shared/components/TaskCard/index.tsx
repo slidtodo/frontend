@@ -112,7 +112,9 @@ function TaskTitleButton({ todo, isGreen }: TaskTitleButtonProps) {
         'group/title flex min-w-0 flex-1 overflow-hidden text-left text-sm leading-5 tracking-[-0.02em] transition-all duration-150 ease-in-out',
         'sm:text-[15px] sm:leading-6 md:text-base',
         todo.done && 'group-hover:text-bearlog-600 font-medium group-hover:font-semibold',
-        isGreen ? 'text-gray-800' : 'group-hover:text-bearlog-600 text-gray-500 group-hover:font-semibold',
+        isGreen
+          ? 'group-hover:text-bearlog-600 text-gray-800 group-hover:font-semibold'
+          : 'group-hover:text-bearlog-600 text-gray-500 group-hover:font-semibold',
       )}
     >
       <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:gap-2">

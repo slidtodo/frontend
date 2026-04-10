@@ -4,6 +4,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import NoteListHeader from '@/features/note/components/NoteListHeader';
 import NoteListClient from '@/features/note/components/NoteListClient';
+import { useModalStore } from '@/shared/stores/useModalStore';
+import NoteCreateModal from '../NoteCreateModal';
 
 interface NoteListContainerProps {
   goalId: number;
@@ -12,6 +14,7 @@ interface NoteListContainerProps {
 export default function NoteListContainer({ goalId }: NoteListContainerProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { openModal } = useModalStore();
 
   const [searchInput, setSearchInput] = useState('');
 
@@ -23,6 +26,15 @@ export default function NoteListContainer({ goalId }: NoteListContainerProps) {
     const next = new URLSearchParams(searchParams.toString());
     Object.entries(params).forEach(([key, value]) => next.set(key, value));
     router.replace(`?${next.toString()}`);
+  };
+
+  const handleCreateButtonClick = () => {
+    openModal(
+      <NoteCreateModal
+        title="추가할 할 일을 선택해 주세요"
+        onConfirm={(todoId) => router.push(`/goal/${goalId}/note/create?todoId=${todoId}`)}
+      />,
+    );
   };
 
   return (
@@ -37,7 +49,7 @@ export default function NoteListContainer({ goalId }: NoteListContainerProps) {
             updateParams({ sort: v, page: '1' });
           }
         }}
-        onCreateNote={() => router.push(`/goal/${goalId}/note/create`)}
+        onCreateNote={handleCreateButtonClick}
       />
       <NoteListClient
         goalId={goalId}

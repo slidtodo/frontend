@@ -9,6 +9,8 @@ export type DeleteCurrentUserRequest = NonNullable<
 export type PatchCurrentUserPasswordRequest =
   operations['changePassword']['requestBody']['content']['application/json'];
 export type UserProgressResponse = operations['getProgress']['responses'][200]['content']['application/json'];
+export type GithubConnectionResponse =
+  operations['getGithubConnection']['responses'][200]['content']['application/json'];
 
 class FetchUsers {
   getCurrentUser = () => apiRequest<CurrentUserResponse>('/api/v1/users/me');
@@ -32,6 +34,13 @@ class FetchUsers {
     });
 
   getUserProgress = () => apiRequest<UserProgressResponse>('/api/v1/users/me/progress');
+
+  getGithubConnection = () => apiRequest<GithubConnectionResponse>('/api/v1/users/me/github');
+
+  disconnectGithub = () =>
+    apiRequest<void>('/api/v1/users/me/github', {
+      method: 'DELETE',
+    });
 }
 
 const fetchUsers = new FetchUsers();

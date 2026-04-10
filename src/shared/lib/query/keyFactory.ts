@@ -35,6 +35,7 @@ export const authKeys = {
   all: ['auth'] as const,
   googleAuthorizeUrl: () => [...authKeys.all, 'googleAuthorizeUrl'] as const,
   githubAuthorizeUrl: () => [...authKeys.all, 'githubAuthorizeUrl'] as const,
+  githubConnectAuthorizeUrl: () => [...authKeys.all, 'githubConnectAuthorizeUrl'] as const,
 };
 
 export const githubKeys = {
@@ -46,6 +47,7 @@ export const userKeys = {
   all: ['users'] as const,
   me: () => [...userKeys.all, 'me'] as const,
   progress: () => [...userKeys.me(), 'progress'] as const,
+  githubConnection: () => [...userKeys.me(), 'githubConnection'] as const,
 };
 
 export const notificationKeys = {

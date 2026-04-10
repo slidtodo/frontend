@@ -31,7 +31,7 @@ export default function NoteListContainer({ goalId }: NoteListContainerProps) {
   const handleCreateButtonClick = () => {
     openModal(
       <NoteCreateModal
-        title="추가할 할 일을 선택해 주세요"
+        title="추가할 할 일을 선택해 주세요."
         onConfirm={(todoId) => router.push(`/goal/${goalId}/note/create?todoId=${todoId}`)}
       />,
     );

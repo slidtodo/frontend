@@ -128,7 +128,7 @@ export function DropdownList({ items, onSelectItem, className }: DropdownListPro
   return (
     <div
       className={twMerge(
-        clsx('w-full overflow-hidden rounded-2xl shadow-[0px_4px_16px_-2px_rgba(0,0,0,0.1)]', className),
+        clsx('w-full max-h-50 overflow-y-auto rounded-2xl shadow-[0px_4px_16px_-2px_rgba(0,0,0,0.1)]', className),
       )}
     >
       {items.map((item) => (

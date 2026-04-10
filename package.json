@@ -9,7 +9,9 @@
     "start": "next start",
     "lint": "eslint .",
     "prepare": "husky",
-    "test": "jest --passWithNoTests",
+    "test": "jest --config jest.config.js --passWithNoTests",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "typecheck": "pnpm run lint && tsc --noEmit",
     "api:gen": "openapi-typescript https://slidtodo.store/v3/api-docs -o src/shared/types/api/schemas/api.types.ts"
   },
@@ -42,6 +44,7 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4",
     "@types/jest": "^30.0.0",
     "@types/node": "^20",

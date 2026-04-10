@@ -250,6 +250,7 @@ export default function MyPageForm() {
             className="h-14 w-full"
             onClick={handleSave}
             disabled={isPatchingUser || isPatchingPassword}
+            aria-label={t.mypage.save}
           >
             {isPatchingUser || isPatchingPassword ? <LoadingSpinner /> : t.mypage.save}
           </Button>

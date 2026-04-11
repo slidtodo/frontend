@@ -24,6 +24,8 @@ const features = [
   },
 ];
 
+export const dynamic = 'force-static';
+
 export default async function LandingPage() {
   const cookieStore = await cookies();
   const isLoggedIn = !!cookieStore.get('accessToken');
@@ -47,14 +49,14 @@ export default async function LandingPage() {
         </div>
 
         <div className="mt-10 flex justify-center md:mt-16">
-          <div className="w-full max-w-[900px] px-6 md:px-[50px]">
+          <div className="relative h-[300px] w-full max-w-[1317px] md:h-[641px]">
             <Image
-              src="/image/dashboard.png"
+              src="/image/dashboard.webp"
               alt="dashboard"
-              width={1317}
-              height={1059}
-              className="-mb-[10px] h-auto w-full rounded-2xl shadow-xl"
+              fill
               priority
+              sizes="(max-width: 768px) 100vw, 1200px"
+              className="rounded-2xl object-contain shadow-xl"
             />
           </div>
         </div>

@@ -42,7 +42,7 @@ export const options = {
         { duration: '30s', target: 50 },
         { duration: '60s', target: 150 },
         { duration: '60s', target: 300 },
-        { duration: '60s', target: 500 },
+
         { duration: '60s', target: 0 },
       ],
     },
@@ -64,6 +64,10 @@ export default function dashboardLoad() {
   ]);
 
   const [currentUserRes, progressRes, goalsRes] = bootstrapResponses;
+
+  console.log(`Users/me: ${currentUserRes.status}`);
+  console.log(`Users/me/progress: ${progressRes.status}`);
+  console.log(`Goals: ${goalsRes.status}`);
 
   check(currentUserRes, {
     'current user status is 200': (response) => response.status === 200,

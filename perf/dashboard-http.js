@@ -136,6 +136,17 @@ function buildHeaders() {
     headers.Authorization = `Bearer ${ACCESS_TOKEN}`;
   }
 
+  if (TARGET_MODE === 'proxy') {
+    const cookies = [];
+    if (ACCESS_TOKEN) cookies.push(`accessToken=${ACCESS_TOKEN}`);
+    if (REFRESH_TOKEN) cookies.push(`refreshToken=${REFRESH_TOKEN}`);
+    if (AUTH_COOKIE) cookies.push(AUTH_COOKIE);
+
+    if (cookies.length > 0) {
+      headers.Cookie = cookies.join('; ');
+    }
+  }
+
   return headers;
 }
 

@@ -28,6 +28,8 @@
     "snsSignup": "SNS 계정으로 회원가입",
     "googleLogin": "구글 로그인",
     "githubLogin": "깃허브 로그인",
+    "loginSuccess": "로그인이 완료되었습니다.",
+    "loginFail": "이메일 또는 비밀번호가 올바르지 않습니다.",
     "loggingIn": "로그인 중...",
     "socialLoginFail": "소셜 로그인에 실패했습니다. 다시 시도해주세요.",
     "signupSuccess": "회원가입이 완료되었습니다.",
@@ -57,13 +59,18 @@
   },
   "dashboard": {
     "title": "님의 대시보드",
+    "githubModeDesc": "Github issue/PR을 동기화한 TODO를 한 눈에 살펴 보세요.",
     "recentTodo": "최근 등록한 할 일",
     "viewAll": "모두 보기",
     "myProgress": "내 진행 상황",
     "noRecentTodo": "최근 등록한 할 일이 없습니다.",
     "todoProgress": "TO DO 진행률",
+    "githubModeProgressDesc": "Issue와 PR에서 TODO를 \n자동으로 수집하고 동기화해요",
     "goalByTodo": "목표 별 할일",
-    "noGoal": "최근에 등록한 목표가 없어요"
+    "noGoal": "최근에 등록한 목표가 없어요",
+    "noFirstGoal": "최초로 등록할 목표가 없어요.",
+    "noGithubGoal": "연결된 GitHub 저장소 목표가 없습니다.",
+    "githubGoalTitle": "연결된 GitHub 목표"
   },
   "allTodo": {
     "title": "모든 할 일",
@@ -72,7 +79,10 @@
     "allGoal": "전체 목표",
     "all": "전체",
     "todo": "TO DO",
-    "done": "DONE"
+    "done": "DONE",
+    "loading": "불러오는 중...",
+    "issueReopenNotice1": "Issues 완료 체크 해제 시 GitHub에서 reopen돼요.",
+    "issueReopenNotice2": "단, GitHub에서 PR을 닫은 경우에는 TODO에서 체크 해제해도 reopen되지 않아요."
   },
   "goal": {
     "title": "님의 목표",
@@ -159,6 +169,8 @@
     "withdraw": "회원 탈퇴하기",
     "githubConnect": "Github 연동",
     "connected": "연결됨",
+    "notConnected": "연결 안 됨",
+    "connect": "연결하기",
     "disconnect": "연결 삭제",
     "imageUploadFail": "이미지 업로드에 실패했습니다. 다시 시도해주세요.",
     "withdrawFail": "회원 탈퇴에 실패했습니다. 다시 시도해주세요."
@@ -218,5 +230,9 @@
     "confirm": "확인",
     "modeManual": "일반 모드",
     "modeDeveloper": "개발자 모드"
+  },
+  "calendar": {
+    "title": "님의 캘린더",
+    "allGoal": "전체 목표"
   }
 }

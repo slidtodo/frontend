@@ -28,6 +28,8 @@
     "snsSignup": "SNSアカウントで会員登録",
     "googleLogin": "Googleログイン",
     "githubLogin": "GitHubログイン",
+    "loginSuccess": "ログインしました。",
+    "loginFail": "メールアドレスまたはパスワードが正しくありません。",
     "loggingIn": "ログイン中...",
     "socialLoginFail": "ソーシャルログインに失敗しました。もう一度お試しください。",
     "signupSuccess": "会員登録が完了しました。",
@@ -57,13 +59,18 @@
   },
   "dashboard": {
     "title": "のダッシュボード",
+    "githubModeDesc": "GitHubのIssue/PRと同期されたTODOを一目で確認できます。",
     "recentTodo": "最近のタスク",
     "viewAll": "すべて見る",
     "myProgress": "進捗状況",
     "noRecentTodo": "最近のタスクはありません。",
     "todoProgress": "タスク進捗",
+    "githubModeProgressDesc": "IssueやPRからTODOを自動で収集し、同期します。",
     "goalByTodo": "目標別タスク",
-    "noGoal": "登録された目標がありません"
+    "noGoal": "登録された目標がありません",
+    "noFirstGoal": "登録する目標がまだありません。",
+    "noGithubGoal": "連携されたGitHubリポジトリの目標がありません。",
+    "githubGoalTitle": "連携されたGitHub目標"
   },
   "allTodo": {
     "title": "すべてのタスク",
@@ -72,7 +79,10 @@
     "allGoal": "すべての目標",
     "all": "すべて",
     "todo": "タスク",
-    "done": "完了"
+    "done": "完了",
+    "loading": "読み込み中...",
+    "issueReopenNotice1": "Issuesの完了チェックを外すと、GitHubでreopenされます。",
+    "issueReopenNotice2": "ただし、GitHubでPRをクローズした場合は、TODOでチェックを外してもreopenされません。"
   },
   "goal": {
     "title": "の目標",
@@ -159,6 +169,8 @@
     "withdraw": "アカウント削除",
     "githubConnect": "GitHub連携",
     "connected": "連携済み",
+    "notConnected": "未連携",
+    "connect": "連携する",
     "disconnect": "連携解除",
     "imageUploadFail": "画像のアップロードに失敗しました。もう一度お試しください。",
     "withdrawFail": "アカウント削除に失敗しました。もう一度お試しください。"
@@ -218,5 +230,9 @@
     "confirm": "確認",
     "modeManual": "一般",
     "modeDeveloper": "開発者"
+  },
+  "calendar": {
+    "title": "さんのカレンダー",
+    "allGoal": "すべての目標"
   }
 }

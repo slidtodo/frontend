@@ -28,6 +28,8 @@
     "snsSignup": "Sign up with SNS",
     "googleLogin": "Google Login",
     "githubLogin": "GitHub Login",
+    "loginSuccess": "You have been logged in successfully.",
+    "loginFail": "Invalid email or password.",
     "loggingIn": "Logging in...",
     "socialLoginFail": "Social login failed. Please try again.",
     "signupSuccess": "Sign up completed.",
@@ -57,13 +59,18 @@
   },
   "dashboard": {
     "title": "'s Dashboard",
+    "githubModeDesc": "View your TODOs synced from GitHub issues/PRs at a glance.",
     "recentTodo": "Recent To Dos",
     "viewAll": "View All",
     "myProgress": "My Progress",
     "noRecentTodo": "No recent to dos.",
     "todoProgress": "TO DO Progress",
+    "githubModeProgressDesc": "Automatically collects and syncs TODOs from issues and pull requests.",
     "goalByTodo": "To Dos by Goal",
-    "noGoal": "No goals registered yet"
+    "noGoal": "No goals registered yet",
+    "noFirstGoal": "No goals to register yet.",
+    "noGithubGoal": "No connected GitHub repository goals.",
+    "githubGoalTitle": "Connected GitHub Goals"
   },
   "allTodo": {
     "title": "All To Dos",
@@ -72,7 +79,10 @@
     "allGoal": "All Goals",
     "all": "All",
     "todo": "TO DO",
-    "done": "DONE"
+    "done": "DONE",
+    "loading": "Loading...",
+    "issueReopenNotice1": "Unchecking a completed Issue will reopen it on GitHub.",
+    "issueReopenNotice2": "However, if the PR was closed on GitHub, unchecking it in TODO will not reopen it."
   },
   "goal": {
     "title": "'s Goals",
@@ -159,6 +169,8 @@
     "withdraw": "Delete Account",
     "githubConnect": "GitHub Connection",
     "connected": "Connected",
+    "notConnected": "Not connected",
+    "connect": "Connect",
     "disconnect": "Disconnect",
     "imageUploadFail": "Failed to upload image. Please try again.",
     "withdrawFail": "Failed to delete account. Please try again."
@@ -218,5 +230,9 @@
     "confirm": "Confirm",
     "modeManual": "General",
     "modeDeveloper": "Developer"
+  },
+  "calendar": {
+    "title": "'s Calendar",
+    "allGoal": "All Goals"
   }
 }

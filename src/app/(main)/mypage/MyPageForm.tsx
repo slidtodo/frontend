@@ -17,8 +17,10 @@ import { useModalStore } from '@/shared/stores/useModalStore';
 import { useToastStore } from '@/shared/stores/useToastStore';
 import { PopupModal } from '@/shared/components/Modal/PopupModal';
 import { fetchUsers } from '@/shared/lib/api/fetchUsers';
+import { fetchAuth } from '@/shared/lib/api/fetchAuth';
 import { fetchImages } from '@/shared/lib/api/fetchImages';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
+import LoadingSpinner from '@/shared/components/LoadingSpinner';
 
 // TODO: 리액트 훅 폼 적용 필요
 export default function MyPageForm() {
@@ -56,6 +58,16 @@ export default function MyPageForm() {
     } catch (error) {
       console.error('Failed to upload profile image:', error);
       showToast(t.mypage.imageUploadFail, 'fail');
+    }
+  };
+
+  const handleGithubConnect = async () => {
+    try {
+      const { loginUrl } = await fetchAuth.getGithubAuthorizeUrlByEnv();
+      if (loginUrl) window.location.href = loginUrl;
+    } catch (error) {
+      console.error('GitHub 연결 URL 요청 실패:', error);
+      showToast(t.auth.socialLoginFail, 'fail');
     }
   };
 
@@ -238,8 +250,9 @@ export default function MyPageForm() {
             className="h-14 w-full"
             onClick={handleSave}
             disabled={isPatchingUser || isPatchingPassword}
+            aria-label={t.mypage.save}
           >
-            {t.mypage.save}
+            {isPatchingUser || isPatchingPassword ? <LoadingSpinner /> : t.mypage.save}
           </Button>
 
           <button
@@ -252,22 +265,31 @@ export default function MyPageForm() {
         </div>
 
         {/* GitHub 연동 */}
-        {isGithubConnected && (
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-gray-700">{t.mypage.githubConnect}</span>
-              <span className="h-2 w-2 rounded-full bg-[#00C87F]" />
-              <span className="text-sm text-gray-500">{t.mypage.connected}</span>
-            </div>
+        <div className="flex items-center justify-center gap-2">
+          <span className="text-sm font-medium text-gray-700">{t.mypage.githubConnect}</span>
+          <span className={`h-2 w-2 rounded-full ${isGithubConnected ? 'bg-[#00C87F]' : 'bg-gray-400'}`} />
+          <span className="text-sm text-gray-500">
+            {isGithubConnected ? t.mypage.connected : t.mypage.notConnected}
+          </span>
+          {isGithubConnected ? (
             <button
               type="button"
               onClick={handleGithubDisconnect}
-              className="rounded-full border border-gray-200 px-4 py-1.5 text-sm text-gray-500 hover:bg-gray-50"
+              className="rounded-full border border-gray-200 px-4 py-1.5 text-sm hover:bg-gray-50"
+              style={{ color: '#6A6A6A' }}
             >
               {t.mypage.disconnect}
             </button>
-          </div>
-        )}
+          ) : (
+            <button
+              type="button"
+              onClick={handleGithubConnect}
+              className="rounded-full border border-gray-200 px-4 py-1.5 text-sm text-gray-500 hover:bg-gray-50"
+            >
+              {t.mypage.connect}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type TodoMode = 'MANUAL' | 'GITHUB';
 
@@ -16,6 +16,7 @@ export const useTodoModeStore = create<TodoModeStore>()(
     }),
     {
       name: 'todo-mode',
+      storage: createJSONStorage(() => sessionStorage),
     },
   ),
 );

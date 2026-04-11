@@ -62,9 +62,7 @@ interface TaskCheckboxProps {
   onCheckboxClick: () => void;
   isGreen: boolean;
 }
-
 function TaskCheckbox({ todo, isGreen, onCheckboxClick }: TaskCheckboxProps) {
-  // GitHub 연동 todo는 완료 후 되돌리기 불가
   const isGithub = isGithubTodo(todo.source);
   const isDoneAndLocked = isGithub && todo.done && todo.type !== 'ISSUE';
 
@@ -112,12 +110,21 @@ function TaskTitleButton({ todo, isGreen }: TaskTitleButtonProps) {
         'group/title flex min-w-0 flex-1 overflow-hidden text-left text-sm leading-5 tracking-[-0.02em] transition-all duration-150 ease-in-out',
         'sm:text-[15px] sm:leading-6 md:text-base',
         todo.done && 'group-hover:text-bearlog-600 font-medium group-hover:font-semibold',
-        isGreen ? 'text-gray-800' : 'group-hover:text-bearlog-600 text-gray-500 group-hover:font-semibold',
+        isGreen
+          ? 'group-hover:text-bearlog-600 text-gray-800 group-hover:font-semibold'
+          : 'group-hover:text-bearlog-600 text-gray-500 group-hover:font-semibold',
       )}
     >
       <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:gap-2">
         <TaskGithubBadge todo={todo} />
-        <span className="min-w-0 flex-1 truncate">{todo.title}</span>
+        <div className="flex items-center justify-center gap-1">
+          <span className="min-w-0 flex-1 truncate">{todo.title}</span>
+          {(todo.status === 'MERGED' || todo.status === 'CLOSED' || todo.status === 'OPEN') && (
+            <span className="bg-bearlog-500 ml-1 h-[17px] rounded-full px-2 text-[11px] leading-[17px] text-white opacity-0 transition-opacity duration-150 group-hover/title:opacity-100">
+              {todo.status}
+            </span>
+          )}
+        </div>
       </div>
     </button>
   );
@@ -155,11 +162,9 @@ function TaskLinkNoteCreate({ todo }: TaskLinkNoteCreateProps) {
   );
 }
 
-/** GitHub URL 링크 — GitHub 연동 todo에서만 표시, linkUrl이 있을 때 이동 */
 interface TaskLinkGithubProps {
   todo: TodoResponse;
 }
-
 function TaskLinkGithub({ todo }: TaskLinkGithubProps) {
   if (!isGithubTodo(todo.source)) return null;
 
@@ -192,7 +197,6 @@ function TaskLinkGithub({ todo }: TaskLinkGithubProps) {
 interface TaskLinkDetailProps {
   todo: TodoResponse;
 }
-
 function TaskEditTodo({ todo }: TaskLinkDetailProps) {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -241,7 +245,6 @@ interface TaskFavoriteProps {
   todo: TodoResponse;
   onStareClick: () => void;
 }
-
 function TaskFavorite({ todo, onStareClick }: TaskFavoriteProps) {
   return (
     <button

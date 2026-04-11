@@ -21,17 +21,17 @@ export default function DashboardDetail() {
   const visibleGoals = goals?.goals?.filter((goal) => goal.source === mode) ?? [];
 
   if (mode === 'MANUAL' && visibleGoals.length === 0) {
-    return <Empty>최초로 등록할 목표가 없어요.</Empty>;
+    return <Empty>{t.dashboard.noFirstGoal}</Empty>;
   }
 
   return (
     <section className="flex flex-col gap-6">
       {visibleGoals.length === 0 ? (
-        <Empty>{mode === 'GITHUB' ? '연결된 GitHub 저장소 목표가 없습니다.' : '등록된 목표가 없습니다.'}</Empty>
+        <Empty>{mode === 'GITHUB' ? t.dashboard.noGithubGoal : t.dashboard.noGoal}</Empty>
       ) : (
         <>
           <PageSubTitle
-            subTitle={mode === 'GITHUB' ? '연결된 GitHub 목표' : '목표 별 할 일'}
+            subTitle={mode === 'GITHUB' ? t.dashboard.githubGoalTitle : t.dashboard.goalByTodo}
             icons={<Image src={'/image/goal-todo.png'} alt="Goal Icon" width={40} height={40} />}
           />
           <div className="flex flex-col gap-[32px] pt-[10px]">

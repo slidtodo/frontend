@@ -48,7 +48,7 @@ export default function SidebarMobileCase({ user }: SidebarMobileCaseProps) {
     title = t.note.createTitle;
   } else if (/^\/goal\/[^/]+\/note\/[^/]+\/edit$/.test(pathname)) {
     title = t.note.editTitle;
-  } else if (pathname === '/favorite-todo') {
+  } else if (pathname === '/dashboard/favorite-todo') {
     title = t.sidebar.favoriteTodo;
     count = favoriteCount;
   } else if (pathname === '/calendar') {
@@ -77,4 +77,3 @@ export default function SidebarMobileCase({ user }: SidebarMobileCaseProps) {
     </div>
   );
 }
-

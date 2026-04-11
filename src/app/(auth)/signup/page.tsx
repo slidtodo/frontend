@@ -11,6 +11,7 @@ import { validateEmail, validatePassword, validatePasswordConfirm } from '@/shar
 import { fetchAuth } from '@/shared/lib/api/fetchAuth';
 import { useToastStore } from '@/shared/stores/useToastStore';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
+import LoadingSpinner from '@/shared/components/LoadingSpinner';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -23,6 +24,7 @@ export default function SignupPage() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [passwordConfirmError, setPasswordConfirmError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   // TODO: 리액트쿼리로 변경 필요, 리액트 훅 폼 적용 필요
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,6 +38,8 @@ export default function SignupPage() {
     setPasswordConfirmError(passwordConfirmErr);
     if (emailErr || passwordErr || passwordConfirmErr) return;
 
+    if (isLoading) return;
+    setIsLoading(true);
     try {
       await fetchAuth.postSignup({ nickname: name, email, password });
 
@@ -44,6 +48,8 @@ export default function SignupPage() {
     } catch (error) {
       console.error(error);
       showToast(t.auth.signupFail, 'fail');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -124,10 +130,10 @@ export default function SignupPage() {
 
           <Button
             type="submit"
-            className="mt-8 h-14 w-full bg-[#00C87F] hover:bg-[#00C87F]/90"
-            disabled={!name || !email || !password || !passwordConfirm}
+            className={`mt-8 h-14 w-full bg-bearlog-500 hover:bg-bearlog-600 ${isLoading ? 'disabled:opacity-100 disabled:bg-bearlog-500' : ''}`}
+            disabled={!name || !email || !password || !passwordConfirm || isLoading}
           >
-            {t.auth.signupButton}
+            {isLoading ? <LoadingSpinner /> : t.auth.signupButton}
           </Button>
         </form>
 

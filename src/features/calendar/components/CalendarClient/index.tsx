@@ -5,7 +5,10 @@ import CalendarHeader from '@/features/calendar/components/CalendarHeader';
 import CalendarDayTodoList from '@/features/calendar/components/CalendarDayTodoList';
 import PageHeader from '@/shared/components/PageHeader';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 import { useCalendar } from '@/features/calendar/hooks/useCalendar';
+
+const localeMap: Record<string, string> = { ko: 'ko-KR', en: 'en-US', ja: 'ja-JP', zh: 'zh-CN' };
 
 export default function CalendarClient() {
   const {
@@ -27,16 +30,23 @@ export default function CalendarClient() {
   const breakpoint = useBreakpoint();
   const isMobile = breakpoint === 'mobile';
   const isDesktop = breakpoint === 'desktop';
+  const { t, language } = useLanguage();
+
+  const formattedYearMonth = new Intl.DateTimeFormat(localeMap[language], { year: 'numeric', month: 'long' }).format(new Date(year, month - 1));
+
+  const translatedGoalFilterItems = [
+    { label: t.calendar.allGoal, value: '' },
+    ...goalFilterItems.filter((item) => item.value !== ''),
+  ];
 
   return (
     <>
-      {!isMobile && <PageHeader title={`${user?.nickname ?? ''}님의 캘린더`} className="md:mb-[32px] lg:mb-5" />}
+      {!isMobile && <PageHeader title={user?.nickname ? `${user.nickname}${t.calendar.title}` : t.sidebar.calendar} className="md:mb-[32px] lg:mb-5" />}
       <div className="border-border-secondary flex w-full flex-col bg-white md:rounded-t-4xl md:rounded-b-4xl md:border">
         <CalendarHeader
-          year={year}
-          month={month}
           goalId={goalId}
-          goalFilterItems={goalFilterItems}
+          goalFilterItems={translatedGoalFilterItems}
+          formattedYearMonth={formattedYearMonth}
           onPrev={prevMonth}
           onNext={nextMonth}
           onGoalChange={(item) => setGoalId(item.value === '' ? undefined : Number(item.value))}

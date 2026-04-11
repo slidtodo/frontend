@@ -81,7 +81,7 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
       {
         icon: <StarIcon className={sidebarMenuIconClassName} />,
         name: t.sidebar.favoriteTodo,
-        href: '/favorite-todo',
+        href: '/dashboard/favorite-todo',
       },
     ];
   }, [goalData, t]);

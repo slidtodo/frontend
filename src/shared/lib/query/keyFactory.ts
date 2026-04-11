@@ -17,6 +17,7 @@ export const todoKeys = {
   all: ['todos'] as const,
   lists: () => [...todoKeys.all, 'list'] as const,
   list: (params?: GetTodosParams) => [...todoKeys.lists(), params ?? {}] as const,
+  infiniteList: (params?: GetTodosParams) => [...todoKeys.lists(), 'infinite', params ?? {}] as const,
   details: () => [...todoKeys.all, 'detail'] as const,
   detail: (todoId: number) => [...todoKeys.details(), todoId] as const,
   calendar: (params: GetTodoCalendarParams) => [...todoKeys.all, 'calendar', params] as const,

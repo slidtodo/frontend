@@ -56,7 +56,8 @@ function isValidToken(tokens: { accessToken?: string; refreshToken?: string }) {
       return true;
     }
     try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
+      const base64Payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      const payload = JSON.parse(atob(base64Payload));
       return Date.now() >= payload.exp * 1000;
     } catch {
       return true;

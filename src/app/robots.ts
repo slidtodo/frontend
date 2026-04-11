@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 
-const BASE_URL = process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'https://bearlog.com';
+const BASE_URL = process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'https://bearlog.vercel.app';
 
 export default function robots(): MetadataRoute.Robots {
   return {

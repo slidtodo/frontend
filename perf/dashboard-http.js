@@ -3,13 +3,14 @@ import { check, sleep } from 'k6';
 
 const BASE_URL = (__ENV.BASE_URL || 'http://localhost:3000').replace(/\/+$/, '');
 const TARGET_MODE = (__ENV.TARGET_MODE || 'proxy').toLowerCase();
-const DASHBOARD_MODE = (__ENV.DASHBOARD_MODE || 'MANUAL').toUpperCase();
+const DASHBOARD_MODE = (__ENV.DASHBOARD_MODE || 'ALL').toUpperCase();
 const AUTH_COOKIE = __ENV.AUTH_COOKIE || '';
 const ACCESS_TOKEN = __ENV.ACCESS_TOKEN || '';
 const REFRESH_TOKEN = __ENV.REFRESH_TOKEN || '';
 
-const MAX_GOALS = toPositiveInt(__ENV.MAX_GOALS, 20);
-const TODO_LIMIT = toPositiveInt(__ENV.TODO_LIMIT, 100);
+const GOAL_LIST_LIMIT = toPositiveInt(__ENV.GOAL_LIST_LIMIT, 10);
+const MAX_GOALS = toPositiveInt(__ENV.MAX_GOALS, GOAL_LIST_LIMIT);
+const TODO_LIMIT = toPositiveInt(__ENV.TODO_LIMIT, 10);
 const SLEEP_SECONDS = toFloat(__ENV.SLEEP_SECONDS, 1);
 
 const goalIdFilter = (__ENV.GOAL_IDS || '')
@@ -24,13 +25,16 @@ const goalIdFilter = (__ENV.GOAL_IDS || '')
  * 1) /users/me
  * 2) /users/me/progress
  * 3) /goals
- * 4) goal 수만큼 /goals/{id}, /todos?goalId={id}&done=false, /todos?goalId={id}&done=true
+ * 4) /todos?sort=LATEST
+ * 5) goal 수만큼 /goals/{id}, /todos?goalId={id}&done=false, /todos?goalId={id}&done=true
  *
- * goal 이 많고 goal 별 todo 가 많을 때 API 가 버티는지 보기 위한 용도
+ * 기본값은 현재 대시보드 코드와 비슷하게 맞추고,
+ * env 를 올리면 goal 이 많고 goal 별 todo 가 많을 때 API 가 버티는지 보는 용도로 쓸 수 있습니다.
  *
  * 예시:
  * k6 run perf/dashboard-http.js
- * k6 run -e BASE_URL=http://localhost:3000 -e AUTH_COOKIE="accessToken=...; refreshToken=..." -e MAX_GOALS=50 -e TODO_LIMIT=200 perf/dashboard-http.js
+ * k6 run -e BASE_URL=http://localhost:3000 -e AUTH_COOKIE="accessToken=...; refreshToken=..." perf/dashboard-http.js
+ * k6 run -e GOAL_LIST_LIMIT=50 -e MAX_GOALS=50 -e TODO_LIMIT=200 -e DASHBOARD_MODE=ALL perf/dashboard-http.js
  * k6 run -e TARGET_MODE=api -e BASE_URL=https://api.example.com -e ACCESS_TOKEN=... perf/dashboard-http.js
  */
 export const options = {
@@ -60,14 +64,11 @@ export default function dashboardLoad() {
   const bootstrapResponses = http.batch([
     ['GET', buildUrl('/api/v1/users/me'), null, requestParams(headers, 'dashboard-current-user')],
     ['GET', buildUrl('/api/v1/users/me/progress'), null, requestParams(headers, 'dashboard-progress')],
-    ['GET', buildUrl('/api/v1/goals'), null, requestParams(headers, 'dashboard-goals')],
+    ['GET', buildUrl('/api/v1/goals', { limit: GOAL_LIST_LIMIT }), null, requestParams(headers, 'dashboard-goals')],
+    ['GET', buildUrl('/api/v1/todos', { sort: 'LATEST' }), null, requestParams(headers, 'dashboard-recent-todos')],
   ]);
 
-  const [currentUserRes, progressRes, goalsRes] = bootstrapResponses;
-
-  console.log(`Users/me: ${currentUserRes.status}`);
-  console.log(`Users/me/progress: ${progressRes.status}`);
-  console.log(`Goals: ${goalsRes.status}`);
+  const [currentUserRes, progressRes, goalsRes, recentTodosRes] = bootstrapResponses;
 
   check(currentUserRes, {
     'current user status is 200': (response) => response.status === 200,
@@ -77,6 +78,9 @@ export default function dashboardLoad() {
   });
   check(goalsRes, {
     'goals status is 200': (response) => response.status === 200,
+  });
+  check(recentTodosRes, {
+    'recent todos status is 200': (response) => response.status === 200,
   });
 
   if (goalsRes.status !== 200) {
@@ -173,7 +177,11 @@ function requestParams(headers, name) {
 }
 
 function selectGoalIds(goals) {
-  const modeFilteredGoals = goals.filter((goal) => goal?.id && goal?.source === DASHBOARD_MODE);
+  const goalsWithId = goals.filter((goal) => goal?.id);
+  const modeFilteredGoals =
+    DASHBOARD_MODE === 'MANUAL' || DASHBOARD_MODE === 'GITHUB'
+      ? goalsWithId.filter((goal) => goal.source === DASHBOARD_MODE)
+      : goalsWithId;
   const filteredGoals =
     goalIdFilter.length > 0 ? modeFilteredGoals.filter((goal) => goalIdFilter.includes(goal.id)) : modeFilteredGoals;
   const limitedGoals = MAX_GOALS > 0 ? filteredGoals.slice(0, MAX_GOALS) : filteredGoals;
@@ -194,17 +202,17 @@ function toQueryString(params) {
     return '';
   }
 
-  const searchParams = new URLSearchParams();
+  const queryParts = [];
 
   for (const [key, value] of Object.entries(params)) {
     if (value === undefined || value === null) {
       continue;
     }
 
-    searchParams.set(key, String(value));
+    queryParts.push(`${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`);
   }
 
-  return searchParams.toString();
+  return queryParts.join('&');
 }
 
 function toPositiveInt(value, fallback) {

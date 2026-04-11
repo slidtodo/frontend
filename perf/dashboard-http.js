@@ -70,6 +70,11 @@ export default function dashboardLoad() {
 
   const [currentUserRes, progressRes, goalsRes, recentTodosRes] = bootstrapResponses;
 
+  console.log(`Users/me: ${currentUserRes.status}`);
+  console.log(`Users/me/progress: ${progressRes.status}`);
+  console.log(`Goals: ${goalsRes.status}`);
+  console.log(`Recent todos: ${recentTodosRes.status}`);
+
   check(currentUserRes, {
     'current user status is 200': (response) => response.status === 200,
   });

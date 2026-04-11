@@ -12,7 +12,6 @@ const GOAL_LIST_LIMIT = toPositiveInt(__ENV.GOAL_LIST_LIMIT, 10);
 const MAX_GOALS = toPositiveInt(__ENV.MAX_GOALS, GOAL_LIST_LIMIT);
 const TODO_LIMIT = toPositiveInt(__ENV.TODO_LIMIT, 10);
 const SLEEP_SECONDS = toFloat(__ENV.SLEEP_SECONDS, 1);
-let authCookiesInitialized = false;
 
 const goalIdFilter = (__ENV.GOAL_IDS || '')
   .split(',')
@@ -44,7 +43,11 @@ export const options = {
       executor: 'ramping-vus',
       startVUs: 1,
       stages: [
-        { duration: '30s', target: 50 },
+        { duration: '30s', target: 100 },
+        { duration: '30s', target: 200 },
+        { duration: '30s', target: 300 },
+        { duration: '30s', target: 400 },
+        { duration: '30s', target: 500 },
         { duration: '60s', target: 0 },
       ],
     },
@@ -57,7 +60,6 @@ export const options = {
 };
 
 export default function dashboardLoad() {
-  initializeAuthCookies();
   const headers = buildHeaders();
 
   const bootstrapResponses = http.batch([
@@ -148,47 +150,6 @@ function buildHeaders() {
   }
 
   return headers;
-}
-
-function initializeAuthCookies() {
-  if (TARGET_MODE !== 'proxy' || authCookiesInitialized) {
-    return;
-  }
-
-  const cookieJar = http.cookieJar();
-  const initialCookies = parseInitialCookies();
-
-  for (const [name, value] of Object.entries(initialCookies)) {
-    cookieJar.set(BASE_URL, name, value);
-  }
-
-  authCookiesInitialized = true;
-}
-
-function parseInitialCookies() {
-  const cookies = {};
-
-  for (const cookiePart of AUTH_COOKIE.split(';')) {
-    const [rawName, ...rawValueParts] = cookiePart.split('=');
-    const name = rawName?.trim();
-    const value = rawValueParts.join('=').trim();
-
-    if (!name || !value) {
-      continue;
-    }
-
-    cookies[name] = value;
-  }
-
-  if (ACCESS_TOKEN) {
-    cookies.accessToken = ACCESS_TOKEN;
-  }
-
-  if (REFRESH_TOKEN) {
-    cookies.refreshToken = REFRESH_TOKEN;
-  }
-
-  return cookies;
 }
 
 function buildUrl(pathname, params) {

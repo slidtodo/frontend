@@ -29,6 +29,14 @@ export type DevGoogleAuthorizeUrlResponse =
   operations['getGoogleAuthorizeUrl']['responses'][200]['content']['application/json'];
 export type DevGithubAuthorizeUrlResponse =
   operations['getGithubAuthorizeUrl']['responses'][200]['content']['application/json'];
+export type GithubConnectRequest = operations['githubConnect_1']['requestBody']['content']['application/json'];
+export type GithubConnectResponse = operations['githubConnect_1']['responses'][200]['content']['application/json'];
+export type DevGithubConnectRequest = operations['githubConnect']['requestBody']['content']['application/json'];
+export type DevGithubConnectResponse = operations['githubConnect']['responses'][200]['content']['application/json'];
+export type GithubConnectAuthorizeUrlResponse =
+  operations['getGithubConnectAuthorizeUrl_1']['responses'][200]['content']['application/json'];
+export type DevGithubConnectAuthorizeUrlResponse =
+  operations['getGithubConnectAuthorizeUrl']['responses'][200]['content']['application/json'];
 
 class FetchAuth {
   postSignup = (body: SignupRequest) =>
@@ -97,11 +105,35 @@ class FetchAuth {
 
   getDevGithubAuthorizeUrl = () => apiRequest<DevGithubAuthorizeUrlResponse>('/api/v1/dev/auth/oauth/github/url');
 
+  postGithubConnect = (body: GithubConnectRequest) =>
+    apiRequest<GithubConnectResponse, GithubConnectRequest>('/api/v1/auth/oauth/github/connect', {
+      method: 'POST',
+      body,
+    });
+
+  postDevGithubConnect = (body: DevGithubConnectRequest) =>
+    apiRequest<DevGithubConnectResponse, DevGithubConnectRequest>('/api/v1/dev/auth/oauth/github/connect', {
+      method: 'POST',
+      body,
+    });
+
+  getGithubConnectAuthorizeUrl = () =>
+    apiRequest<GithubConnectAuthorizeUrlResponse>('/api/v1/auth/oauth/github/connect/url');
+
+  getDevGithubConnectAuthorizeUrl = () =>
+    apiRequest<DevGithubConnectAuthorizeUrlResponse>('/api/v1/dev/auth/oauth/github/connect/url');
+
   private isDev = process.env.NEXT_PUBLIC_USE_DEV_API === 'true';
 
   getGithubAuthorizeUrlByEnv = () => (this.isDev ? this.getDevGithubAuthorizeUrl() : this.getGithubAuthorizeUrl());
 
   getGoogleAuthorizeUrlByEnv = () => (this.isDev ? this.getDevGoogleAuthorizeUrl() : this.getGoogleAuthorizeUrl());
+
+  postGithubConnectByEnv = (body: GithubConnectRequest) =>
+    this.isDev ? this.postDevGithubConnect(body) : this.postGithubConnect(body);
+
+  getGithubConnectAuthorizeUrlByEnv = () =>
+    this.isDev ? this.getDevGithubConnectAuthorizeUrl() : this.getGithubConnectAuthorizeUrl();
 
   postGithubLoginByEnv = (body: GithubLoginRequest) =>
     this.isDev ? this.postDevGithubLogin(body) : this.postGithubLogin(body);

@@ -85,6 +85,12 @@ export const authQueries = {
       queryKey: authKeys.githubAuthorizeUrl(),
       queryFn: fetchAuth.getGithubAuthorizeUrl,
     }),
+
+  githubConnectAuthorizeUrl: () =>
+    queryOptions({
+      queryKey: authKeys.githubConnectAuthorizeUrl(),
+      queryFn: fetchAuth.getGithubConnectAuthorizeUrlByEnv,
+    }),
 };
 
 export const githubQueries = {
@@ -107,6 +113,12 @@ export const userQueries = {
     queryOptions({
       queryKey: userKeys.progress(),
       queryFn: fetchUsers.getUserProgress,
+    }),
+
+  githubConnection: () =>
+    queryOptions({
+      queryKey: userKeys.githubConnection(),
+      queryFn: fetchUsers.getGithubConnection,
     }),
 };
 

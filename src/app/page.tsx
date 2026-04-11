@@ -46,7 +46,7 @@ export default async function LandingPage() {
         <div className="mt-10 flex justify-center md:mt-16">
           <div className="relative h-[300px] w-full max-w-[1317px] md:h-[641px]">
             <Image
-              src="/image/dashboard.webp"
+              src="/image/dashboard.png"
               alt="dashboard"
               fill
               priority

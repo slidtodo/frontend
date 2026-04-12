@@ -12,16 +12,17 @@ import FormField from '@/shared/components/FormField';
 import Dropdown from '@/shared/components/Dropdown';
 
 interface NoteCreateModalProps {
+  goalId: number;
   onConfirm: (todoId: number) => void;
 }
 
-export default function NoteCreateModal({ onConfirm }: NoteCreateModalProps) {
+export default function NoteCreateModal({ goalId, onConfirm }: NoteCreateModalProps) {
   const { closeModal } = useModalStore();
   const { t } = useLanguage();
 
   const [selectedTodoId, setSelectedTodoId] = useState<string>('');
 
-  const { data: todoList } = useQuery(todoQueries.list());
+  const { data: todoList } = useQuery(todoQueries.list({ goalId }));
   const todoItems = (todoList?.todos ?? []).map((todo) => ({
     label: todo.title,
     value: String(todo.id),

@@ -32,6 +32,7 @@ export default function NoteListContainer({ goalId }: NoteListContainerProps) {
   const handleCreateButtonClick = () => {
     openModal(
       <NoteCreateModal
+        goalId={goalId}
         onConfirm={(todoId) => router.push(`/goal/${goalId}/note/create?todoId=${todoId}`)}
       />,
     );

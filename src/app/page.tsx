@@ -50,7 +50,7 @@ export default async function LandingPage() {
               alt="dashboard"
               width={1317}
               height={641}
-              className="h-auto w-full rounded-2xl shadow-xl"
+              className="h-auto w-full rounded-2xl object-cover shadow-xl"
               priority
             />
           </div>

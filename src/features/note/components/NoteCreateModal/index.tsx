@@ -12,14 +12,12 @@ import FormField from '@/shared/components/FormField';
 import Dropdown from '@/shared/components/Dropdown';
 
 interface NoteCreateModalProps {
-  title: string;
   onConfirm: (todoId: number) => void;
 }
 
-export default function NoteCreateModal({ title, onConfirm }: NoteCreateModalProps) {
+export default function NoteCreateModal({ onConfirm }: NoteCreateModalProps) {
   const { closeModal } = useModalStore();
   const { t } = useLanguage();
-  const resolvedTitle = title ?? t.modal.linkTitle;
 
   const [selectedTodoId, setSelectedTodoId] = useState<string>('');
 
@@ -33,7 +31,7 @@ export default function NoteCreateModal({ title, onConfirm }: NoteCreateModalPro
     <div className="w-85.75 rounded-3xl bg-white p-4 shadow-[0px_0px_60px_0px_rgba(0,0,0,0.05)] md:w-114 md:rounded-[40px] md:p-8">
       <div className="flex flex-col">
         <div className="mb-6 flex w-full items-center justify-between self-stretch md:mb-8">
-          <h2 className="text-base font-semibold text-slate-800 md:text-xl">{resolvedTitle}</h2>
+          <h2 className="text-base font-semibold text-slate-800 md:text-xl">{t.note.todoSelectTitle}</h2>
           <XIcon className="cursor-pointer text-slate-400" size={24} onClick={closeModal} />
         </div>
 

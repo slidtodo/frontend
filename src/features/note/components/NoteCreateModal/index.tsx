@@ -56,8 +56,8 @@ export default function NoteCreateModal({ goalId, onConfirm }: NoteCreateModalPr
           <Button
             variant="primary"
             className="flex-1 px-[18px] py-[10px] text-sm md:py-[14px] md:text-[18px]"
+            disabled={!selectedTodoId}
             onClick={() => {
-              if (!selectedTodoId) return;
               onConfirm(Number(selectedTodoId));
               closeModal();
             }}

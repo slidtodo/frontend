@@ -5,6 +5,7 @@ import { useState } from 'react';
 import NoteListHeader from '@/features/note/components/NoteListHeader';
 import NoteListClient from '@/features/note/components/NoteListClient';
 import { useModalStore } from '@/shared/stores/useModalStore';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 import NoteCreateModal from '../NoteCreateModal';
 
 interface NoteListContainerProps {
@@ -15,6 +16,7 @@ export default function NoteListContainer({ goalId }: NoteListContainerProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { openModal } = useModalStore();
+  const { t } = useLanguage();
 
   const [searchInput, setSearchInput] = useState('');
 
@@ -31,7 +33,7 @@ export default function NoteListContainer({ goalId }: NoteListContainerProps) {
   const handleCreateButtonClick = () => {
     openModal(
       <NoteCreateModal
-        title="추가할 할 일을 선택해 주세요."
+        title={t.note.todoSelectTitle}
         onConfirm={(todoId) => router.push(`/goal/${goalId}/note/create?todoId=${todoId}`)}
       />,
     );

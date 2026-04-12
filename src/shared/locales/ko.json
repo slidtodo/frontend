@@ -128,6 +128,7 @@
     "goalLabel": "목표",
     "todoLabel": "할 일",
     "empty": "아직 등록된 노트가 없어요",
+    "todoSelectTitle": "추가할 할 일을 선택해 주세요.",
     "todoSelectLabel": "할 일 선택",
     "todoSelectPlaceholder": "할 일을 선택해 주세요.",
     "createdAtLabel": "작성일",

@@ -1,10 +1,12 @@
-type QueryValue =
-  | string
-  | number
-  | boolean
-  | null
-  | undefined
-  | Array<string | number | boolean | null | undefined>;
+type ApiRequestOptions<TBody> = {
+  method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
+  params?: Record<string, unknown>;
+  body?: TBody;
+  headers?: HeadersInit;
+  signal?: AbortSignal;
+  cache?: RequestCache;
+  next?: { revalidate?: number | false; tags?: string[] };
+};
 
 export class ApiError extends Error {
   constructor(
@@ -16,153 +18,71 @@ export class ApiError extends Error {
     this.name = 'ApiError';
   }
 }
+const isClient = typeof window !== 'undefined';
+const ACCESS_TOKEN_COOKIE = 'accessToken';
 
-export const toQueryString = (params?: Record<string, QueryValue>): string => {
-  if (!params) return '';
+// 서버에서 쿠키를 읽어오는 함수
+const getServerAccessToken = async () => {
+  if (isClient) return undefined;
 
-  const searchParams = new URLSearchParams();
-
-  for (const [key, value] of Object.entries(params)) {
-    if (value === undefined || value === null) continue;
-
-    if (Array.isArray(value)) {
-      for (const item of value) {
-        if (item === undefined || item === null) continue;
-        searchParams.append(key, String(item));
-      }
-      continue;
-    }
-
-    searchParams.set(key, String(value));
-  }
-
-  return searchParams.toString();
-};
-
-const apiProxyPrefix = '/api/proxy';
-
-const normalizeOrigin = (value?: string): string | null => {
-  if (!value) {
-    return null;
-  }
-
-  return value.startsWith('http://') || value.startsWith('https://') ? value : `https://${value}`;
-};
-
-const getServerOrigin = (): string => {
-  const configuredOrigin = normalizeOrigin(
-    process.env.NEXT_PUBLIC_APP_URL ?? process.env.APP_URL ?? process.env.VERCEL_URL,
-  );
-
-  if (configuredOrigin) {
-    return configuredOrigin;
-  }
-
-  if (process.env.NODE_ENV !== 'production') {
-    return 'http://localhost:3000';
-  }
-
-  throw new Error('APP_URL or VERCEL_URL is not defined in environment variables');
-};
-
-const getServerRequestContext = async (): Promise<{ origin: string; cookieHeader: string }> => {
   try {
-    const [{ headers: nextHeaders, cookies: nextCookies }] = await Promise.all([import('next/headers')]);
-    const requestHeaders = await nextHeaders();
-    const host = requestHeaders.get('x-forwarded-host') ?? requestHeaders.get('host');
-    const protocol =
-      requestHeaders.get('x-forwarded-proto') ?? (process.env.NODE_ENV === 'development' ? 'http' : 'https');
-    const cookieStore = await nextCookies();
-    const cookieHeader = cookieStore
-      .getAll()
-      .map(({ name, value }) => `${name}=${value}`)
-      .join('; ');
-
-    if (host) {
-      return {
-        origin: `${protocol}://${host}`,
-        cookieHeader,
-      };
-    }
-  } catch (error) {
-    console.warn('Could not get server request context, falling back to configured origin. Error:', error);
+    const { cookies } = await import('next/headers');
+    const cookieStore = await cookies();
+    return cookieStore.get(ACCESS_TOKEN_COOKIE)?.value;
+  } catch {
+    return undefined;
   }
-
-  return {
-    origin: getServerOrigin(),
-    cookieHeader: '',
-  };
 };
 
-export const toProxyPath = (url: string): string => {
-  if (!url.startsWith('/api/')) {
-    return url;
-  }
-
-  const normalizedUrl = url.replace(/^\/api\/v1\/?/, '');
-  return `${apiProxyPrefix}/${normalizedUrl}`;
-};
-
-type ApiRequestOptions<TBody> = {
-  method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
-  params?: Record<string, QueryValue>;
-  body?: TBody;
-  headers?: HeadersInit;
-  signal?: AbortSignal;
-  cache?: RequestCache;
-  next?: { revalidate?: number | false; tags?: string[] };
-};
-
-export const apiRequest = async <TResponse, TBody = never>(
+export const apiRequest = async <TResponse, TBody = unknown>(
   url: string,
-  options: ApiRequestOptions<TBody> = {},
+  { method = 'GET', params, body, headers, signal, cache = 'no-store', next }: ApiRequestOptions<TBody> = {},
 ): Promise<TResponse> => {
-  const { method = 'GET', params, body, headers, signal, cache, next } = options;
-  const queryString = toQueryString(params);
-  const proxyPath = toProxyPath(url);
-  const serverRequestContext =
-    typeof window === 'undefined' && proxyPath.startsWith('/') ? await getServerRequestContext() : null;
-  const resolvedUrl = serverRequestContext ? `${serverRequestContext.origin}${proxyPath}` : proxyPath;
-  const requestUrl = queryString ? `${resolvedUrl}?${queryString}` : resolvedUrl;
+  const cleanParams = params
+    ? Object.fromEntries(Object.entries(params).filter(([_, v]) => v !== undefined && v !== null))
+    : undefined;
+  const queryString = cleanParams ? `?${new URLSearchParams(cleanParams as Record<string, string>)}` : '';
 
-  const response = await fetch(requestUrl, {
-    method,
-    credentials: 'include',
-    signal,
-    headers: {
-      ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
-      ...(serverRequestContext?.cookieHeader ? { Cookie: serverRequestContext.cookieHeader } : {}),
-      ...headers,
-    },
-    body: body === undefined ? undefined : JSON.stringify(body),
-    cache,
-    next,
+  const cleanUrl = isClient ? url.replace(/^\/api\/v1\//, '/') : url;
+
+  // 클라이언트 요청이면 프록시 경로를 사용하고, 서버 요청이면 API_BASE_URL을 사용
+  const fullUrl = isClient
+    ? `/api/proxy${cleanUrl}${queryString}`
+    : `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}${queryString}`;
+
+  // 서버 요청이면 쿠키에서 액세스 토큰을 가져와서 Authorization 헤더에 추가
+  const requestHeaders = new Headers({
+    'Content-Type': 'application/json',
+    ...headers,
   });
 
-  if (!response.ok) {
-    const fallbackMessage = `Request failed with status ${response.status}`;
-    let message = fallbackMessage;
-    let code: string | undefined;
-
-    try {
-      const errorBody = (await response.json()) as { message?: string; code?: string };
-      message = errorBody.message ?? fallbackMessage;
-      code = errorBody.code;
-    } catch (error) {
-      console.warn('Failed to parse error response as JSON. Using fallback message. Error:', error);
+  if (!isClient && !requestHeaders.has('Authorization')) {
+    const accessToken = await getServerAccessToken();
+    if (accessToken) {
+      requestHeaders.set('Authorization', `Bearer ${accessToken}`);
     }
-
-    throw new ApiError(response.status, message, code);
   }
 
-  if (response.status === 204) {
-    return undefined as TResponse;
-  }
-
-  const contentType = response.headers.get('content-type');
-  if (contentType?.includes('application/json')) {
-    return (await response.json()) as TResponse;
-  }
-
-  return (await response.text()) as TResponse;
+  // 최종 fetch 요청
+  return fetch(fullUrl, {
+    ...(isClient ? { credentials: 'include' } : {}),
+    method,
+    headers: requestHeaders,
+    body: body ? JSON.stringify(body) : undefined,
+    signal,
+    cache,
+    next,
+  }).then(async (response) => {
+    if (!response.ok) {
+      let errorMessage = response.statusText || `HTTP ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorMessage;
+      } catch {
+        // JSON 파싱 실패 시 무시
+      }
+      throw new ApiError(response.status, errorMessage);
+    }
+    return response.json() as Promise<TResponse>;
+  });
 };

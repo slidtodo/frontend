@@ -223,8 +223,7 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
               className="group border-bearlog-500 flex w-full flex-col items-center justify-center gap-2 rounded-[32px] border bg-[#ffffff] dark:bg-[#333333] px-2 py-4 transition-all duration-200 hover:shadow-lg lg:px-[22.5px] lg:py-8"
             >
               <CopyCheckIcon
-                color="#00C87F"
-                className="h-8 w-8 transition-transform group-hover:scale-110 lg:h-10 lg:w-10"
+                className="h-8 w-8 text-bearlog-500 transition-transform group-hover:scale-110 lg:h-10 lg:w-10"
                 size={40}
               />
               <span className="text-md text-bearlog-600 dark:text-[#00C87F] cursor-pointer font-semibold transition-all group-hover:font-bold lg:text-lg">

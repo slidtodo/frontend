@@ -29,10 +29,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           onChange={onChange}
           disabled={disabled}
           className={twMerge(
-            'h-[56px] w-full rounded-2xl border border-gray-200 dark:border-[#737373]',
-            'px-6 text-base text-[#333333] dark:text-gray-100',
-            'placeholder:text-[#737373] dark:placeholder:text-gray-500',
-            'bg-white dark:bg-[#2F2F2F] outline-none',
+            'h-[56px] w-full rounded-2xl border border-border-input',
+            'px-6 text-base text-text-input',
+            'placeholder:text-text-muted',
+            'bg-bg-input outline-none',
             disabled ? 'cursor-not-allowed opacity-50' : '',
             className,
           )}

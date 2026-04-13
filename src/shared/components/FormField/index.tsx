@@ -13,12 +13,14 @@ interface FormFieldProps {
 export default function FormField({ label, required, error, children, className, hideLabel }: FormFieldProps) {
   return (
     <div className={twMerge(clsx('flex w-full flex-col gap-2', className))}>
-      {!hideLabel && (
-        <label className="text-base font-semibold text-gray-700 dark:text-[#737373]">
-          {label}
-          {required && <span className="text-bearlog-500 ml-0.5">*</span>}
-        </label>
-      )}
+      <label
+        className={twMerge(
+          clsx('text-base font-semibold text-text-label', hideLabel && 'sr-only'),
+        )}
+      >
+        {label}
+        {required && <span className="text-bearlog-500 ml-0.5">*</span>}
+      </label>
       {children}
       {error && <p className="px-1 text-sm text-red-500">{error}</p>}
     </div>

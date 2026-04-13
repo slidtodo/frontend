@@ -6,20 +6,24 @@ import Button from '@/shared/components/Button';
 import Dropdown from '@/shared/components/Dropdown';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { useLanguage, type Language } from '@/shared/contexts/LanguageContext';
+import { useThemeStore } from '@/shared/stores/useThemeStore';
 
 export function SettingsModal() {
   const { closeModal } = useModalStore();
   const { language, setLanguage, t } = useLanguage();
+  const { isDark, setIsDark } = useThemeStore();
   const [tempLanguage, setTempLanguage] = useState<Language>(language);
-  const [isDark, setIsDark] = useState(false);
+  const [tempIsDark, setTempIsDark] = useState(isDark);
 
   const handleConfirm = () => {
     setLanguage(tempLanguage);
+    setIsDark(tempIsDark);
     closeModal();
   };
 
   const handleCancel = () => {
     setTempLanguage(language);
+    setTempIsDark(isDark);
     closeModal();
   };
 
@@ -57,18 +61,18 @@ export function SettingsModal() {
         <div className="flex h-14 w-56 gap-2.5 rounded-full bg-gray-100 p-2">
           <button
             type="button"
-            onClick={() => setIsDark(false)}
+            onClick={() => setTempIsDark(false)}
             className={`flex flex-1 items-center justify-center rounded-full transition-colors ${
-              !isDark ? 'bg-white text-slate-800 shadow-sm' : 'text-gray-400 hover:text-slate-600'
+              !tempIsDark ? 'bg-white text-slate-800 shadow-sm' : 'text-gray-400 hover:text-slate-600'
             }`}
           >
             <SunIcon size={20} />
           </button>
           <button
             type="button"
-            onClick={() => setIsDark(true)}
+            onClick={() => setTempIsDark(true)}
             className={`flex flex-1 items-center justify-center rounded-full transition-colors ${
-              isDark ? 'bg-white text-slate-800 shadow-sm' : 'text-gray-400 hover:text-slate-600'
+              tempIsDark ? 'bg-white text-slate-800 shadow-sm' : 'text-gray-400 hover:text-slate-600'
             }`}
           >
             <MoonIcon size={20} />

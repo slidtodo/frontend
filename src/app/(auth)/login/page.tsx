@@ -76,7 +76,7 @@ export default function LoginPage() {
             handleLogin();
           }}
         >
-          <FormField label={t.auth.email}>
+          <FormField label={t.auth.email} hideLabel>
             <Input
               type="email"
               placeholder={t.auth.emailPlaceholder}
@@ -84,7 +84,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </FormField>
-          <FormField label={t.auth.password}>
+          <FormField label={t.auth.password} hideLabel>
             <Input
               type="password"
               placeholder={t.auth.passwordPlaceholder}
@@ -94,7 +94,7 @@ export default function LoginPage() {
           </FormField>
           <Button
             type="submit"
-            className={`mt-8 h-14 w-full bg-bearlog-500 hover:bg-bearlog-600 ${isLoading ? 'disabled:opacity-100 disabled:bg-bearlog-500' : ''}`}
+            className={`mt-8 h-14 w-full bg-bearlog-500 hover:bg-bearlog-600 text-[#2F2F2F] disabled:opacity-100 disabled:bg-bearlog-500 disabled:text-[#2F2F2F]`}
             disabled={!email || !password || isLoading}
           >
             {isLoading ? <LoadingSpinner /> : t.auth.loginButton}
@@ -102,7 +102,7 @@ export default function LoginPage() {
         </form>
 
         <div className="mt-6 flex h-6 w-full items-center justify-center gap-2 text-sm">
-          <span className="text-base leading-6 font-medium text-[#333333]">{t.auth.noAccount}</span>
+          <span className="text-base leading-6 font-medium text-text-label">{t.auth.noAccount}</span>
           <Link href="/signup" className="text-base leading-6 font-semibold text-[#008354]">
             {t.auth.signup}
           </Link>

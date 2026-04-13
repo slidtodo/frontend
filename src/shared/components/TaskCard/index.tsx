@@ -111,8 +111,8 @@ function TaskTitleButton({ todo, isGreen }: TaskTitleButtonProps) {
         'sm:text-[15px] sm:leading-6 md:text-base',
         todo.done && 'group-hover:text-bearlog-600 font-medium group-hover:font-semibold',
         isGreen
-          ? 'group-hover:text-bearlog-600 text-gray-800 group-hover:font-semibold'
-          : 'group-hover:text-bearlog-600 text-gray-500 group-hover:font-semibold',
+          ? 'group-hover:text-bearlog-600 text-gray-800 dark:text-[#9B9B9B] group-hover:font-semibold'
+          : 'group-hover:text-bearlog-600 text-gray-500 dark:text-[#9B9B9B] group-hover:font-semibold',
       )}
     >
       <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:gap-2">

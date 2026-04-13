@@ -24,7 +24,7 @@ export default function SearchInput({ placeholder, className, onIconClick, ref, 
 
   return (
     <div
-      className={`flex items-center gap-2 rounded-[999px] border-[1px] border-[#A4A4A4] bg-white px-4 py-2 ${className ?? ''}`}
+      className={`flex items-center gap-2 rounded-[999px] border-[1px] border-[#A4A4A4] bg-white dark:bg-[#2F2F2F] dark:border-[#737373] px-4 py-2 ${className ?? ''}`}
     >
       <input
         type="text"

@@ -6,12 +6,13 @@ import Button from '@/shared/components/Button';
 import Dropdown from '@/shared/components/Dropdown';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { useLanguage, type Language } from '@/shared/contexts/LanguageContext';
+import { useThemeStore } from '@/shared/stores/useThemeStore';
 
 export function SettingsModal() {
   const { closeModal } = useModalStore();
   const { language, setLanguage, t } = useLanguage();
   const [tempLanguage, setTempLanguage] = useState<Language>(language);
-  const [isDark, setIsDark] = useState(false);
+  const { isDark, setIsDark } = useThemeStore();
 
   const handleConfirm = () => {
     setLanguage(tempLanguage);

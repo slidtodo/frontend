@@ -68,7 +68,7 @@ export default function GoalBox({ data }: GoalBoxProps) {
   const noSearchResults = isSearching && searchTodoItems?.length === 0 && searchDoneItems?.length === 0;
 
   return (
-    <article className="flex flex-col gap-4 rounded-[40px] bg-white dark:bg-[#2F2F2F] p-6 lg:px-8 lg:py-6">
+    <article className="flex flex-col gap-4 rounded-[40px] bg-white dark:bg-gray-850 p-6 lg:px-8 lg:py-6">
       <div className="flex flex-col items-center gap-2 px-2 md:flex-row md:gap-12 lg:gap-8">
         <GoalName data={data} />
 
@@ -81,7 +81,7 @@ export default function GoalBox({ data }: GoalBoxProps) {
 
           <Button
             variant="primary"
-            className="p-[10px] dark:text-[#2F2F2F] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
+            className="p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
             disabled={data.id === undefined}
             onClick={handleAddTodo}
           >
@@ -152,7 +152,7 @@ interface ListBoxProps {
   searchItems: { id: number; favorite?: boolean }[] | null;
 }
 function ListBox({ title, mode, goalId, searchItems }: ListBoxProps) {
-  const bgColor = mode === 'todo' ? 'bg-[#E5F9F2] dark:bg-[#3a3a3a]' : 'bg-white dark:bg-[#3a3a3a]';
+  const bgColor = mode === 'todo' ? 'bg-[#E5F9F2] dark:bg-gray-750' : 'bg-white dark:bg-gray-750';
   const textColor = mode === 'todo' ? 'text-[#00D185]' : 'text-gray-400';
   const isDone = mode === 'done';
   const sentinelRef = useRef<HTMLDivElement>(null);

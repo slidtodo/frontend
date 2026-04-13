@@ -65,7 +65,7 @@ export default function NotificationDropdown({ isOpen, onOpen, onClose, isSideba
         ref={buttonRef}
         onClick={() => (isOpen ? onClose() : onOpen())}
         className={`group hover:text-bearlog-600 relative text-gray-500 ${
-          isSidebarOpen ? 'rounded-[999px] border border-gray-200 dark:border-[#737373] dark:bg-[#2F2F2F] p-[20px]' : 'p-0'
+          isSidebarOpen ? 'rounded-[999px] border border-gray-200 p-[20px] dark:border-gray-500 dark:bg-gray-850' : 'p-0'
         }`}
       >
         <BellIcon size={24} className="transition-transform group-hover:scale-110" />

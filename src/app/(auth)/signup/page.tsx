@@ -130,7 +130,7 @@ export default function SignupPage() {
 
           <Button
             type="submit"
-            className={`mt-8 h-14 w-full bg-bearlog-500 hover:bg-bearlog-600 ${isLoading ? 'disabled:opacity-100 disabled:bg-bearlog-500' : ''}`}
+            className={`mt-8 h-14 w-full bg-bearlog-500 hover:bg-bearlog-600 text-[#2F2F2F] disabled:opacity-100 disabled:bg-bearlog-500 disabled:text-[#2F2F2F]`}
             disabled={!name || !email || !password || !passwordConfirm || isLoading}
           >
             {isLoading ? <LoadingSpinner /> : t.auth.signupButton}

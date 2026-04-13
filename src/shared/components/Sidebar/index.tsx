@@ -110,7 +110,7 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
       )}
       <div
         className={clsx(
-          'flex flex-col rounded-tr-[32px] rounded-br-[32px] bg-white transition-all duration-300',
+          'flex flex-col rounded-tr-[32px] rounded-br-[32px] bg-white dark:bg-[#262626] transition-all duration-300',
           isOpen ? 'p-4' : 'min-w-[80px] gap-8 px-6 py-8',
           isOpen &&
             (isTablet
@@ -155,7 +155,7 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
               }`}
               aria-hidden={!isOpen}
             >
-              <h2 className="pl-1 text-2xl leading-[42px] font-semibold whitespace-nowrap text-gray-800 lg:text-3xl">
+              <h2 className="pl-1 text-2xl leading-[42px] font-semibold whitespace-nowrap text-gray-800 dark:text-white lg:text-3xl">
                 Bearlog
               </h2>
             </div>
@@ -172,17 +172,17 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
               ))}
             </Accordion.Root>
 
-            <div className="flex w-full flex-col">
+            <div className="flex w-full flex-col gap-3">
               <button
                 onClick={() => openModal(<SettingsModal />)}
-                className="flex items-center justify-start gap-[10px] rounded-[20px] px-[14px] py-[10px] transition-all duration-100 hover:bg-gray-100"
+                className="flex h-14 w-full items-center justify-start gap-[10px] rounded-[20px] px-[14px] transition-all duration-100 hover:bg-gray-100 dark:bg-[#333333] dark:hover:bg-[#3f3f3f]"
               >
                 <SettingsIcon color="#BBBBBB" size={24} />
                 <span className="text-lg font-semibold text-gray-500">{t.sidebar.settings}</span>
               </button>
               <button
                 onClick={() => logout()}
-                className="flex items-center justify-start gap-[10px] rounded-[20px] px-[14px] py-[10px] transition-all duration-100 hover:bg-gray-100"
+                className="flex h-14 w-full items-center justify-start gap-[10px] rounded-[20px] px-[14px] transition-all duration-100 hover:bg-gray-100 dark:bg-[#333333] dark:hover:bg-[#3f3f3f]"
               >
                 <LogOutIcon color="#BBBBBB" size={24} />
                 <span className="text-lg font-semibold text-gray-500">{t.sidebar.logout}</span>
@@ -210,25 +210,23 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
               className="group bg-bearlog-500 flex w-full flex-col items-center justify-center gap-2 rounded-[32px] px-2 py-4 transition-all duration-200 hover:shadow-lg lg:px-[22.5px] lg:py-8"
             >
               <FlagIcon
-                color="#FFFFFF"
-                className="h-8 w-8 transition-transform group-hover:scale-110 lg:h-10 lg:w-10"
+                className="h-8 w-8 text-white dark:text-[#2F2F2F] transition-transform group-hover:scale-110 lg:h-10 lg:w-10"
                 size={40}
               />
-              <span className="text-md cursor-pointer font-semibold text-[#ffffff] transition-all group-hover:font-bold lg:text-lg">
+              <span className="text-md cursor-pointer font-semibold text-[#ffffff] dark:text-[#2F2F2F] transition-all group-hover:font-bold lg:text-lg">
                 {t.sidebar.newGoal}
               </span>
             </button>
             <button
               onClick={handleAddTodo}
               disabled={!selectedGoalId}
-              className="group border-bearlog-500 flex w-full flex-col items-center justify-center gap-2 rounded-[32px] border bg-[#ffffff] px-2 py-4 transition-all duration-200 hover:shadow-lg lg:px-[22.5px] lg:py-8"
+              className="group border-bearlog-500 flex w-full flex-col items-center justify-center gap-2 rounded-[32px] border bg-[#ffffff] dark:bg-[#333333] px-2 py-4 transition-all duration-200 hover:shadow-lg lg:px-[22.5px] lg:py-8"
             >
               <CopyCheckIcon
-                color="#00C87F"
-                className="h-8 w-8 transition-transform group-hover:scale-110 lg:h-10 lg:w-10"
+                className="h-8 w-8 text-bearlog-500 transition-transform group-hover:scale-110 lg:h-10 lg:w-10"
                 size={40}
               />
-              <span className="text-md text-bearlog-600 cursor-pointer font-semibold transition-all group-hover:font-bold lg:text-lg">
+              <span className="text-md text-bearlog-600 dark:text-[#00C87F] cursor-pointer font-semibold transition-all group-hover:font-bold lg:text-lg">
                 {t.sidebar.newTodo}
               </span>
             </button>
@@ -237,7 +235,7 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
           <div className="flex w-full justify-between gap-2">
             <Link
               href="/mypage"
-              className={`w-full items-center justify-start gap-[8px] rounded-[999px] border border-gray-200 px-[20px] py-[12px] lg:pr-[42px] lg:pl-[12px] ${isOpen ? 'flex' : 'hidden'}`}
+              className={`w-full items-center justify-start gap-[8px] rounded-[999px] border border-gray-200 dark:border-[#737373] dark:bg-[#2F2F2F] px-[20px] py-[12px] lg:pr-[42px] lg:pl-[12px] ${isOpen ? 'flex' : 'hidden'}`}
             >
               <Image
                 src={user?.profileImageUrl || '/image/default-profile.png'}
@@ -298,7 +296,7 @@ export function SidebarMenuEntry({
       <Link
         href={menu.href}
         onClick={onClose}
-        className="group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px]"
+        className="group flex h-14 w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] transition-all duration-200 dark:bg-[#333333] lg:px-[16px]"
       >
         <span
           className={`transition-all duration-200 ${
@@ -308,7 +306,7 @@ export function SidebarMenuEntry({
           {menu.icon}
         </span>
         <span
-          className={`text-lg transition-all ${isActive ? 'font-bold text-[#339C76]' : 'font-semibold text-gray-700 group-hover:font-bold group-hover:text-[#339C76]'}`}
+          className={`text-lg transition-all ${isActive ? 'font-bold text-[#339C76]' : 'font-semibold text-gray-700 dark:text-gray-200 group-hover:font-bold group-hover:text-[#339C76]'}`}
         >
           {menu.name}
         </span>
@@ -317,7 +315,7 @@ export function SidebarMenuEntry({
   }
 
   return (
-    <Accordion.Item value={menu.name} className="flex w-full flex-col gap-2">
+    <Accordion.Item value={menu.name} className="flex w-full flex-col data-[state=open]:gap-2">
       <AccordionTrigger menu={menu} isActive={isActive} />
       <Accordion.Content
         forceMount
@@ -340,7 +338,7 @@ export function SidebarMenuEntry({
                     className={`text-sm transition-all ${
                       isSubMenuActive
                         ? 'font-bold text-[#339C76]'
-                        : 'font-semibold text-gray-700 group-hover:text-[#339C76]'
+                        : 'font-semibold text-gray-700 dark:text-[#CCCCCC] group-hover:text-[#339C76]'
                     }`}
                   >
                     {subMenu.name}
@@ -363,16 +361,16 @@ function AccordionTrigger({ children, menu, isActive, ...props }: AccordionTrigg
   return (
     <Accordion.Trigger
       {...props}
-      className={`group flex w-full items-center justify-start gap-[8px] rounded-[20px] px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px]`}
+      className={`group flex h-14 w-full items-center justify-start gap-[8px] rounded-[20px] pl-[12px] pr-[16px] transition-all duration-200 dark:bg-[#333333] lg:pl-[16px] lg:pr-[16px]`}
     >
       <span className={isActive ? 'text-[#339C76]' : 'text-gray-300 group-hover:text-[#339C76]'}>{menu.icon}</span>
       <span
-        className={`text-lg font-semibold transition-all ${isActive ? 'font-bold text-[#339C76]' : 'text-gray-700 group-hover:font-bold group-hover:text-[#339C76]'}`}
+        className={`text-lg font-semibold transition-all ${isActive ? 'font-bold text-[#339C76]' : 'text-gray-700 dark:text-[#CCCCCC] group-hover:font-bold group-hover:text-[#339C76]'}`}
       >
         {menu.name}
       </span>
       {children}
-      <span className="relative ml-auto flex items-center justify-center text-[#A0A0A0]">
+      <span className="relative ml-auto mr-4 flex items-center justify-center text-[#A0A0A0]">
         <ChevronDownIcon
           size={24}
           className="accordion-chevron-down absolute transition-all duration-200 ease-out group-data-[state=open]:-rotate-180 group-data-[state=open]:opacity-0"

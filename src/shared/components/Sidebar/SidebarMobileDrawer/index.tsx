@@ -73,7 +73,7 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
 
   return (
     <>
-      <div className="flex items-center gap-3 border-b-2 border-gray-200 bg-white px-5 py-4">
+      <div className="flex items-center gap-3 border-b-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-[#262626] px-5 py-4">
         <button onClick={openMobileMenu} className="cursor-pointer transition-colors hover:text-gray-600">
           <MenuIcon size={24} className="text-gray-500" />
         </button>
@@ -96,7 +96,7 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
           {/* Modal */}
           <div className="fixed inset-0 z-50 flex w-full items-center justify-center overflow-hidden">
             <div
-              className={`h-full w-full overflow-y-auto bg-white shadow-2xl transition-transform duration-300 ease-out ${
+              className={`h-full w-full overflow-y-auto bg-white dark:bg-[#262626] shadow-2xl transition-transform duration-300 ease-out ${
                 mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
               }`}
             >
@@ -111,7 +111,7 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
                   <div className="relative h-10 w-10 shrink-0 rounded-2xl shadow-[0_3px_20px_rgba(0,200,127,0.35)]">
                     <Image priority src="/image/bearlog-icon.png" alt="Logo" fill className="object-contain" />
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-800">Bearlog</h2>
+                  <h2 className="text-xl font-semibold text-gray-800 dark:text-white">Bearlog</h2>
                 </div>
               </div>
 

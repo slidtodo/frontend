@@ -82,7 +82,7 @@ function TaskCheckbox({ todo, isGreen, onCheckboxClick }: TaskCheckboxProps) {
       className={twMerge(
         clsx(
           'relative flex size-4.5 shrink-0 items-center justify-center rounded-md transition-all duration-150 ease-in-out',
-          todo.done ? 'bg-bearlog-500 border-none' : 'border border-gray-300 bg-white',
+          todo.done ? 'bg-bearlog-500 border-none' : 'border border-gray-300 bg-white dark:bg-transparent dark:border-gray-500',
           isGreen ? '' : 'border-none',
           isDoneAndLocked ? 'cursor-not-allowed opacity-70' : 'cursor-pointer',
         ),
@@ -111,8 +111,8 @@ function TaskTitleButton({ todo, isGreen }: TaskTitleButtonProps) {
         'sm:text-[15px] sm:leading-6 md:text-base',
         todo.done && 'group-hover:text-bearlog-600 font-medium group-hover:font-semibold',
         isGreen
-          ? 'group-hover:text-bearlog-600 text-gray-800 group-hover:font-semibold'
-          : 'group-hover:text-bearlog-600 text-gray-500 group-hover:font-semibold',
+          ? 'group-hover:text-bearlog-600 text-gray-800 dark:text-[#9B9B9B] group-hover:font-semibold'
+          : 'group-hover:text-bearlog-600 text-gray-500 dark:text-[#9B9B9B] group-hover:font-semibold',
       )}
     >
       <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:gap-2">

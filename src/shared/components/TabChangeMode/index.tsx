@@ -39,7 +39,7 @@ function TabChangeMode({ mode, onModeChange }: TabChangeModeProps) {
     <div
       role="tablist"
       aria-label="모드 선택"
-      className="inline-flex h-fit items-center rounded-full bg-[#D9D9D9] px-2 py-[7px]"
+      className="inline-flex h-fit items-center rounded-full bg-[#D9D9D9] dark:bg-gray-700 px-2 py-[7px]"
     >
       {MODE_OPTIONS.map((option) => {
         const isActive = selectedMode === option.value;

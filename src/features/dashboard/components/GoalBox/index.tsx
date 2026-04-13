@@ -68,7 +68,7 @@ export default function GoalBox({ data }: GoalBoxProps) {
   const noSearchResults = isSearching && searchTodoItems?.length === 0 && searchDoneItems?.length === 0;
 
   return (
-    <article className="flex flex-col gap-4 rounded-[40px] bg-white p-6 lg:px-8 lg:py-6">
+    <article className="flex flex-col gap-4 rounded-[40px] bg-white dark:bg-gray-850 p-6 lg:px-8 lg:py-6">
       <div className="flex flex-col items-center gap-2 px-2 md:flex-row md:gap-12 lg:gap-8">
         <GoalName data={data} />
 
@@ -134,7 +134,7 @@ function GoalName({ data }: GoalNameProps) {
               if (data.id === undefined) return;
               router.push(`goal/${data.id}`);
             }}
-            className="font-base overflow-hidden text-left font-semibold text-ellipsis whitespace-nowrap text-gray-700"
+            className="font-base overflow-hidden text-left font-semibold text-ellipsis whitespace-nowrap text-gray-700 dark:text-gray-200"
           >
             {data.title}
           </button>
@@ -152,7 +152,7 @@ interface ListBoxProps {
   searchItems: { id: number; favorite?: boolean }[] | null;
 }
 function ListBox({ title, mode, goalId, searchItems }: ListBoxProps) {
-  const bgColor = mode === 'todo' ? 'bg-[#E5F9F2]' : 'bg-white';
+  const bgColor = mode === 'todo' ? 'bg-[#E5F9F2] dark:bg-gray-750' : 'bg-white dark:bg-gray-750';
   const textColor = mode === 'todo' ? 'text-[#00D185]' : 'text-gray-400';
   const isDone = mode === 'done';
   const sentinelRef = useRef<HTMLDivElement>(null);

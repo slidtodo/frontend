@@ -102,8 +102,8 @@ export default function LoginPage() {
         </form>
 
         <div className="mt-6 flex h-6 w-full items-center justify-center gap-2 text-sm">
-          <span className="text-base leading-6 font-medium text-[#333333] dark:text-[#737373]">{t.auth.noAccount}</span>
-          <Link href="/signup" className="text-base leading-6 font-semibold text-[#008354] dark:text-[#008354]">
+          <span className="text-base leading-6 font-medium text-text-label">{t.auth.noAccount}</span>
+          <Link href="/signup" className="text-base leading-6 font-semibold text-[#008354]">
             {t.auth.signup}
           </Link>
         </div>

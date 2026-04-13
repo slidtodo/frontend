@@ -139,7 +139,7 @@ export default function SignupPage() {
 
         {/* 로그인 링크 */}
         <div className="mt-6 flex h-6 w-full items-center justify-center gap-2 text-sm">
-          <span className="text-base leading-6 font-medium text-[#333333]">{t.auth.hasAccount}</span>
+          <span className="text-base leading-6 font-medium text-text-label">{t.auth.hasAccount}</span>
           <Link href="/login" className="text-bearlog-600 text-base leading-6 font-semibold">
             {t.auth.login}
           </Link>

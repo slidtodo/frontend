@@ -82,7 +82,7 @@ function TaskCheckbox({ todo, isGreen, onCheckboxClick }: TaskCheckboxProps) {
       className={twMerge(
         clsx(
           'relative flex size-4.5 shrink-0 items-center justify-center rounded-md transition-all duration-150 ease-in-out',
-          todo.done ? 'bg-bearlog-500 border-none' : 'border border-gray-300 bg-white',
+          todo.done ? 'bg-bearlog-500 border-none' : 'border border-gray-300 bg-white dark:bg-transparent dark:border-gray-500',
           isGreen ? '' : 'border-none',
           isDoneAndLocked ? 'cursor-not-allowed opacity-70' : 'cursor-pointer',
         ),

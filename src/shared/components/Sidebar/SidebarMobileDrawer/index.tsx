@@ -73,7 +73,7 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
 
   return (
     <>
-      <div className="flex items-center gap-3 border-b-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-5 py-4">
+      <div className="flex items-center gap-3 border-b-2 border-gray-200 bg-white px-5 py-4 dark:border-gray-700 dark:bg-gray-800">
         <button onClick={openMobileMenu} className="cursor-pointer transition-colors hover:text-gray-600">
           <MenuIcon size={24} className="text-gray-500" />
         </button>
@@ -96,7 +96,7 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
           {/* Modal */}
           <div className="fixed inset-0 z-50 flex w-full items-center justify-center overflow-hidden">
             <div
-              className={`h-full w-full overflow-y-auto bg-white dark:bg-gray-800 shadow-2xl transition-transform duration-300 ease-out ${
+              className={`h-full w-full overflow-y-auto bg-white shadow-2xl transition-transform duration-300 ease-out dark:bg-gray-800 ${
                 mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
               }`}
             >
@@ -134,7 +134,7 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
                       openModal(<SettingsModal />);
                       closeMobileMenu();
                     }}
-                    className="flex w-full items-center justify-start gap-3 rounded-lg px-3 py-3 transition-all hover:bg-gray-50 dark:hover:bg-gray-750"
+                    className="dark:hover:bg-gray-750 flex w-full items-center justify-start gap-3 rounded-lg px-3 py-3 transition-all hover:bg-gray-50"
                   >
                     <SettingsIcon color="#BBBBBB" size={20} />
                     <span className="text-lg font-semibold text-gray-500 dark:text-gray-300">{t.sidebar.settings}</span>
@@ -144,7 +144,7 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
                       logout();
                       closeMobileMenu();
                     }}
-                    className="flex w-full items-center justify-start gap-3 rounded-lg px-3 py-3 transition-all hover:bg-gray-50 dark:hover:bg-gray-750"
+                    className="dark:hover:bg-gray-750 flex w-full items-center justify-start gap-3 rounded-lg px-3 py-3 transition-all hover:bg-gray-50"
                   >
                     <LogOutIcon color="#BBBBBB" size={20} />
                     <span className="text-lg font-semibold text-gray-500 dark:text-gray-300">{t.sidebar.logout}</span>
@@ -172,8 +172,8 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
                     }}
                     className="group bg-bearlog-500 flex flex-1 items-center justify-center gap-1 rounded-full py-3 transition-all hover:shadow-lg"
                   >
-                    <FlagIcon className="h-6 w-6 text-white dark:text-gray-850 transition-transform group-hover:scale-110" />
-                    <span className="text-base font-semibold text-white dark:text-gray-850">새 목표</span>
+                    <FlagIcon className="dark:text-gray-850 h-6 w-6 text-white transition-transform group-hover:scale-110" />
+                    <span className="dark:text-gray-850 text-base font-semibold text-white">새 목표</span>
                   </button>
                   <button
                     onClick={() => {
@@ -201,7 +201,7 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
                       closeMobileMenu();
                     }}
                     disabled={!selectedGoalId}
-                    className="group border-bearlog-500 flex flex-1 items-center justify-center gap-1 rounded-full border bg-white dark:bg-gray-700 py-3 transition-all hover:shadow-lg disabled:opacity-50"
+                    className="group border-bearlog-500 flex flex-1 items-center justify-center gap-1 rounded-full border bg-white py-3 transition-all hover:shadow-lg disabled:opacity-50 dark:bg-gray-700"
                   >
                     <CopyCheckIcon color="#00C87F" className="h-6 w-6 transition-transform group-hover:scale-110" />
                     <span className="text-bearlog-600 dark:text-bearlog-500 text-base font-semibold">새 할일</span>
@@ -214,7 +214,7 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
                 <Link
                   href="/mypage"
                   onClick={closeMobileMenu}
-                  className="flex items-center gap-3 rounded-full border border-gray-200 dark:border-gray-500 dark:bg-gray-850 px-4 py-2"
+                  className="dark:bg-gray-850 flex items-center gap-3 rounded-full border border-gray-200 px-4 py-2 dark:border-gray-500"
                 >
                   <Image
                     src={user?.profileImageUrl || '/image/default-profile.png'}

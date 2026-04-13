@@ -15,11 +15,6 @@
   --border-input: #dddddd;
 }
 
-.dark {
-  --background: #1a1a1a;
-  --foreground: #ededed;
-}
-
 @layer base {
   body {
     font-family: var(--font-base);
@@ -38,8 +33,6 @@
   --color-bg-input: var(--bg-input);
   --color-border-input: var(--border-input);
 }
-
-@variant dark (&:where(.dark, .dark *));
 
 .dark {
   --background: #1a1a1a;

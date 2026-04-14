@@ -14,22 +14,24 @@ import TaskCardWrapper from '../TaskCardWrapper';
 import GithubRepoConnectModal from '@/shared/components/Modal/GithubRepoConnectModal';
 
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
-
-import { todoQueries, userQueries, goalQueries } from '@/shared/lib/query/queryKeys';
+import { dashboardQueries, goalQueries } from '@/shared/lib/query/queryKeys';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { useTodoModeStore, TodoMode } from '@/shared/stores/useTodoModeStore';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
 import { GITHUB_DISCONNECTED_SESSION_KEY } from '@/shared/constants/github';
+import { DashboardSummaryResponse } from '@/shared/types/api/schemas/api.process';
 
 export default function DashBoardSummary() {
   const { t } = useLanguage();
-
-  const { data: user, isFetched: isUserFetched } = useQuery(userQueries.current());
-  const { data: goals, isFetched: isGoalsFetched } = useQuery(goalQueries.list());
   const breakpoint = useBreakpoint();
-
   const mode = useTodoModeStore((state) => state.mode);
   const setMode = useTodoModeStore((state) => state.setMode);
+
+  const { data: dashboardSummaryData, isFetched: isDashboardSummaryFetched } = useQuery({
+    ...dashboardQueries.summary(),
+  });
+  const { data: goals, isFetched: isGoalListFetched } = useQuery(goalQueries.list());
+
   const { openModal } = useModalStore();
 
   const githubGoals = goals?.goals?.filter((goal) => goal.source === 'GITHUB') ?? [];
@@ -48,14 +50,17 @@ export default function DashBoardSummary() {
       return;
     }
 
-    if (!isUserFetched) {
+    if (!isDashboardSummaryFetched) {
+      return;
+    }
+    if (dashboardSummaryData?.user?.githubConnected && !isGoalListFetched) {
       return;
     }
 
     const shouldOpenConnectModal =
       isGithubDisconnectedSession ||
-      !user?.githubConnected ||
-      (user.githubConnected && isGoalsFetched && githubGoals.length === 0);
+      !dashboardSummaryData?.user?.githubConnected ||
+      (dashboardSummaryData?.user?.githubConnected && isDashboardSummaryFetched && githubGoals.length === 0);
 
     if (!shouldOpenConnectModal) {
       githubModalOpenedRef.current = false;
@@ -68,11 +73,11 @@ export default function DashBoardSummary() {
     }
   }, [
     mode,
-    isUserFetched,
-    isGoalsFetched,
+    isDashboardSummaryFetched,
+    isGoalListFetched,
     githubGoals.length,
     openModal,
-    user?.githubConnected,
+    dashboardSummaryData?.user?.githubConnected,
     isGithubDisconnectedSession,
   ]);
 
@@ -81,7 +86,7 @@ export default function DashBoardSummary() {
       <div className="flex items-center justify-end pb-[30px] md:justify-between lg:pb-[34px]">
         {breakpoint !== 'mobile' && (
           <div className="flex flex-col gap-2">
-            <PageHeader title={`${user?.nickname}${t.dashboard.title}`} />
+            <PageHeader title={`${dashboardSummaryData?.user?.nickname}${t.dashboard.title}`} />
             {mode === 'GITHUB' && (
               <span className="text-xl text-gray-400 transition-all duration-200">{t.dashboard.githubModeDesc}</span>
             )}
@@ -106,33 +111,31 @@ export default function DashBoardSummary() {
               </Link>
             }
           />
-          <RecentPostCard />
+          <RecentPostCard dashboardSummaryData={dashboardSummaryData} />
         </div>
         <div className="flex min-w-0 flex-1 flex-col justify-between gap-[10px]">
           <PageSubTitle
             subTitle={t.dashboard.myProgress}
             icons={<Image src={'/image/progress-green.png'} alt="Progress Icon" width={40} height={40} />}
           />
-          <CurrentProgressCard />
+          <CurrentProgressCard dashboardSummaryData={dashboardSummaryData} />
         </div>
       </section>
     </>
   );
 }
 
-function RecentPostCard() {
+interface RecentPostCardProps {
+  dashboardSummaryData: DashboardSummaryResponse | undefined;
+}
+function RecentPostCard({ dashboardSummaryData }: RecentPostCardProps) {
   const { t } = useLanguage();
-  const { data: todos } = useQuery(
-    todoQueries.list({
-      sort: 'LATEST',
-    }),
-  );
-  const recentTodos = todos?.todos?.slice(0, 4) ?? [];
 
+  if (!dashboardSummaryData) return null;
   return (
     <article className="dark:bg-gray-850 flex h-[187px] h-fit w-full min-w-0 flex-col gap-[6px] rounded-[40px] bg-white px-4 py-[18px] md:h-[229px] md:p-4 lg:h-[256px] lg:p-8">
-      {recentTodos.length > 0 ? (
-        recentTodos.map((item) => <TaskCardWrapper key={item.id} item={item} mode="todo" />)
+      {dashboardSummaryData?.todos?.length > 0 ? (
+        dashboardSummaryData.todos.map((item) => <TaskCardWrapper key={item.id} item={item} mode="todo" />)
       ) : (
         <div className="flex h-full items-center justify-center">
           <span className="text-gray-500">{t.dashboard.noRecentTodo}</span>
@@ -142,12 +145,14 @@ function RecentPostCard() {
   );
 }
 
-function CurrentProgressCard() {
+interface CurrentProgressCardProps {
+  dashboardSummaryData: DashboardSummaryResponse | undefined;
+}
+function CurrentProgressCard({ dashboardSummaryData }: CurrentProgressCardProps) {
   const { t } = useLanguage();
   const mode = useTodoModeStore((state) => state.mode);
 
-  const { data: percents } = useQuery(userQueries.progress());
-
+  if (!dashboardSummaryData || dashboardSummaryData.progress === null) return null;
   return (
     <article className="bg-bearlog-500 relative h-[187px] w-full rounded-[40px] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)] md:h-[229px] lg:h-[256px]">
       <div className="absolute right-0 bottom-0">
@@ -168,7 +173,11 @@ function CurrentProgressCard() {
       </div>
       <div className="absolute flex h-full w-full items-center justify-start gap-8 p-6 lg:p-12">
         <div className="w-[120px]">
-          <ProgressCircle percent={percents?.totalProgress ?? 0} className="h-auto w-full" color="#008354" />
+          <ProgressCircle
+            percent={dashboardSummaryData?.progress?.totalProgress ?? 0}
+            className="h-auto w-full"
+            color="#008354"
+          />
         </div>
         <div className="flex flex-col items-start gap-2">
           <div className="flex flex-col items-start">
@@ -181,7 +190,7 @@ function CurrentProgressCard() {
           </div>
           <div className="flex items-baseline gap-1">
             <span className="text-[clamp(20px,5vw,60px)] leading-[1] font-bold text-white">
-              {percents?.totalProgress}
+              {dashboardSummaryData?.progress?.totalProgress}
             </span>
             <span className="text-[clamp(14px,2vw,30px)] text-white">%</span>
           </div>

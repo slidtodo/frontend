@@ -78,7 +78,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
             </div>
           }
         />
-        <section className="h-144 w-160 rounded-2xl bg-white dark:bg-gray-750 px-7 py-8">
+        <section className="h-144 w-160 rounded-2xl px-7 py-8">
           <div className="flex h-full flex-col gap-4 overflow-y-auto">
             {goalDetail?.todoList && goalDetail?.todoList.length > 0 ? (
               goalDetail.todoList.map((todo) => <TaskCardWrapper key={todo.id} item={todo} mode="todo" />)
@@ -92,7 +92,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
       </div>
       <div className="flex min-w-0 flex-1 flex-col gap-[10px]">
         <PageSubTitle subTitle="DONE" textClassName="font-semibold" className="py-[6px]" />
-        <section className="h-144 w-160 rounded-2xl bg-white dark:bg-gray-750 px-7 py-8">
+        <section className="h-144 w-160 rounded-2xl px-7 py-8">
           <div className="flex h-full flex-col gap-4 overflow-y-auto">
             {goalDetail?.doneList && goalDetail?.doneList.length > 0 ? (
               goalDetail.doneList.map((todo) => <TaskCardWrapper key={todo.id} item={todo} mode="done" />)

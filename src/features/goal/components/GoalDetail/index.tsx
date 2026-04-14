@@ -59,7 +59,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
             <div className="flex gap-2">
               <Button
                 variant="cancel"
-                className="rounded-full bg-gray-100 dark:bg-gray-700 p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
+                className="rounded-full bg-gray-100 dark:bg-gray-750 dark:text-gray-300 p-2.5 md:px-4.5 md:py-2.5 lg:py-2.5"
               >
                 <CalendarIcon size={20} color="#737373" />
                 <Link href={`/calendar`} className="hidden w-full w-max text-sm font-semibold text-gray-500 md:block">
@@ -67,7 +67,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
                 </Link>
               </Button>
               <Button
-                className="rounded-full p-[10px] md:px-[14.5px] md:px-[18px] md:py-[10px] lg:py-[10px]"
+                className="rounded-full dark:text-gray-850 p-2.5 md:px-4.5 md:py-2.5 lg:py-2.5"
                 onClick={handleAddTodo}
               >
                 <PlusIcon size={20} />

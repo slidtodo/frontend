@@ -94,7 +94,7 @@ export default function LoginPage() {
           </FormField>
           <Button
             type="submit"
-            className={`mt-8 h-14 w-full bg-bearlog-500 hover:bg-bearlog-600 text-[#2F2F2F] disabled:opacity-100 disabled:bg-bearlog-500 disabled:text-[#2F2F2F]`}
+            className={`mt-8 h-14 w-full bg-bearlog-500 hover:bg-bearlog-600 text-white disabled:opacity-100 disabled:bg-bearlog-500 disabled:text-white`}
             disabled={!email || !password || isLoading}
           >
             {isLoading ? <LoadingSpinner /> : t.auth.loginButton}

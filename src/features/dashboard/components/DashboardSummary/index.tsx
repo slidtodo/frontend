@@ -19,11 +19,12 @@ import { todoQueries, userQueries, goalQueries } from '@/shared/lib/query/queryK
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { useTodoModeStore, TodoMode } from '@/shared/stores/useTodoModeStore';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
+import { GITHUB_DISCONNECTED_SESSION_KEY } from '@/shared/constants/github';
 
 export default function DashBoardSummary() {
   const { t } = useLanguage();
 
-  const { data: user } = useQuery(userQueries.current());
+  const { data: user, isFetched: isUserFetched } = useQuery(userQueries.current());
   const { data: goals, isFetched: isGoalsFetched } = useQuery(goalQueries.list());
   const breakpoint = useBreakpoint();
 
@@ -32,34 +33,48 @@ export default function DashBoardSummary() {
   const { openModal } = useModalStore();
 
   const githubGoals = goals?.goals?.filter((goal) => goal.source === 'GITHUB') ?? [];
+  const isGithubDisconnectedSession =
+    typeof window !== 'undefined' && window.sessionStorage.getItem(GITHUB_DISCONNECTED_SESSION_KEY) === 'true';
 
-  // GITHUB 모드 세션 내에서 레포 연결 모달 중복 오픈 방지
   const githubModalOpenedRef = useRef(false);
-  const prevGithubGoalsLengthRef = useRef(githubGoals.length);
 
   const handleModeChange = (nextMode: TodoMode) => {
     setMode(nextMode);
   };
 
   useEffect(() => {
-    const prevLength = prevGithubGoalsLengthRef.current;
-    prevGithubGoalsLengthRef.current = githubGoals.length;
-
     if (mode !== 'GITHUB') {
       githubModalOpenedRef.current = false;
       return;
     }
 
-    // 레포가 있다가 모두 해제된 경우 → 모달 다시 열 수 있도록 ref 초기화
-    if (prevLength > 0 && githubGoals.length === 0) {
-      githubModalOpenedRef.current = false;
+    if (!isUserFetched) {
+      return;
     }
 
-    if (isGoalsFetched && githubGoals.length === 0 && !githubModalOpenedRef.current) {
+    const shouldOpenConnectModal =
+      isGithubDisconnectedSession ||
+      !user?.githubConnected ||
+      (user.githubConnected && isGoalsFetched && githubGoals.length === 0);
+
+    if (!shouldOpenConnectModal) {
+      githubModalOpenedRef.current = false;
+      return;
+    }
+
+    if (!githubModalOpenedRef.current) {
       githubModalOpenedRef.current = true;
       openModal(<GithubRepoConnectModal />, undefined, 'bottom');
     }
-  }, [mode, isGoalsFetched, githubGoals.length, openModal]);
+  }, [
+    mode,
+    isUserFetched,
+    isGoalsFetched,
+    githubGoals.length,
+    openModal,
+    user?.githubConnected,
+    isGithubDisconnectedSession,
+  ]);
 
   return (
     <>
@@ -115,7 +130,7 @@ function RecentPostCard() {
   const recentTodos = todos?.todos?.slice(0, 4) ?? [];
 
   return (
-    <article className="flex h-[187px] h-fit w-full min-w-0 flex-col gap-[6px] rounded-[40px] bg-white dark:bg-gray-850 px-4 py-[18px] md:h-[229px] md:p-4 lg:h-[256px] lg:p-8">
+    <article className="dark:bg-gray-850 flex h-[187px] h-fit w-full min-w-0 flex-col gap-[6px] rounded-[40px] bg-white px-4 py-[18px] md:h-[229px] md:p-4 lg:h-[256px] lg:p-8">
       {recentTodos.length > 0 ? (
         recentTodos.map((item) => <TaskCardWrapper key={item.id} item={item} mode="todo" />)
       ) : (

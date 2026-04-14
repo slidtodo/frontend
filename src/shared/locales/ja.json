@@ -220,7 +220,18 @@
     "userUpdateFail": "情報の更新に失敗しました。",
     "passwordUpdateFail": "パスワードの変更に失敗しました。",
     "logoutSuccess": "ログアウトしました。",
-    "logoutFail": "ログアウトに失敗しました。"
+    "logoutFail": "ログアウトに失敗しました。",
+    "githubRepositoryConnected": "GitHub リポジトリが目標に連携されました。",
+    "githubRepositoryConnectFail": "GitHub リポジトリの連携に失敗しました。",
+    "githubGoalDisconnected": "GitHub リポジトリを目標から解除しました。",
+    "githubGoalDisconnectFail": "GitHub リポジトリの解除に失敗しました。",
+    "githubIntegrationDisconnected": "GitHub 連携を解除しました。",
+    "githubIntegrationDisconnectFail": "GitHub 連携の解除に失敗しました。",
+    "noteCreated": "ノートが作成されました。",
+    "noteCreateFail": "ノートの作成に失敗しました。",
+    "noteUpdateFail": "ノートの更新に失敗しました。",
+    "noteDeleted": "ノートが削除されました。",
+    "noteDeleteFail": "ノートの削除に失敗しました。"
   },
   "notification": {
     "title": "通知",

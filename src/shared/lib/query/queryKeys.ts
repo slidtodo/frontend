@@ -98,6 +98,9 @@ export const githubQueries = {
     queryOptions({
       queryKey: githubKeys.repositories(),
       queryFn: fetchGithubIntegrations.getRepositories,
+      staleTime: 5 * 60 * 1000,
+      retry: false,
+      refetchOnWindowFocus: false,
     }),
 };
 

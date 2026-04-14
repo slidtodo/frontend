@@ -220,7 +220,18 @@
     "userUpdateFail": "정보 수정에 실패했습니다.",
     "passwordUpdateFail": "비밀번호 변경에 실패했습니다.",
     "logoutSuccess": "로그아웃 되었습니다.",
-    "logoutFail": "로그아웃에 실패했습니다."
+    "logoutFail": "로그아웃에 실패했습니다.",
+    "githubRepositoryConnected": "GitHub 저장소가 목표로 연결되었습니다.",
+    "githubRepositoryConnectFail": "GitHub 저장소 연결에 실패했습니다.",
+    "githubGoalDisconnected": "GitHub 저장소가 목표에서 분리되었습니다.",
+    "githubGoalDisconnectFail": "GitHub 저장소 분리에 실패했습니다.",
+    "githubIntegrationDisconnected": "GitHub 연동이 해제되었습니다.",
+    "githubIntegrationDisconnectFail": "GitHub 연동 해제에 실패했습니다.",
+    "noteCreated": "노트가 작성되었습니다.",
+    "noteCreateFail": "노트 작성에 실패했습니다.",
+    "noteUpdateFail": "노트 수정에 실패했습니다.",
+    "noteDeleted": "노트가 삭제되었습니다.",
+    "noteDeleteFail": "노트 삭제에 실패했습니다."
   },
   "notification": {
     "title": "알림",

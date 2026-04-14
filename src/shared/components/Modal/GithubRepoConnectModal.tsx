@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { XIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 
@@ -9,12 +10,16 @@ import { fetchAuth } from '@/shared/lib/api';
 import { useConnectGithubRepository } from '@/shared/lib/query/mutations';
 import { githubQueries, goalQueries, userQueries } from '@/shared/lib/query/queryKeys';
 import { useModalStore } from '@/shared/stores/useModalStore';
-import { useMemo } from 'react';
+import { GITHUB_DISCONNECTED_SESSION_KEY } from '@/shared/constants/github';
+import { GITHUB_AUTH_INTENT_KEY, GITHUB_PROFILE_SNAPSHOT_KEY } from '@/shared/constants/githubAuth';
 
 export default function GithubRepoConnectModal() {
   const { closeModal } = useModalStore();
   const { data: user } = useQuery(userQueries.current());
   const { data: goals } = useQuery(goalQueries.list());
+  const isGithubDisconnectedSession =
+    typeof window !== 'undefined' && window.sessionStorage.getItem(GITHUB_DISCONNECTED_SESSION_KEY) === 'true';
+
   const { data: repositories } = useQuery({
     ...githubQueries.repositories(),
     enabled: user?.githubConnected ?? false,
@@ -22,7 +27,10 @@ export default function GithubRepoConnectModal() {
 
   const connectGithubRepository = useConnectGithubRepository();
 
-  const githubGoals = goals?.goals?.filter((goal) => goal.source === 'GITHUB') ?? [];
+  const githubGoals = isGithubDisconnectedSession
+    ? []
+    : (goals?.goals?.filter((goal) => goal.source === 'GITHUB') ?? []);
+
   // 이미 연결된 레포가 있으면 새 레포 연결 불가 (1개만 허용)
   const hasConnectedRepo = githubGoals.length > 0;
   const connectedRepositories = new Set(githubGoals.map((goal) => goal.repositoryFullName).filter(Boolean));
@@ -46,7 +54,11 @@ export default function GithubRepoConnectModal() {
       </div>
 
       {!user?.githubConnected ? (
-        <GithubRepoDescription onClose={closeModal} />
+        <GithubRepoDescription
+          onClose={closeModal}
+          nickname={user?.nickname}
+          profileImageUrl={user?.profileImageUrl ?? null}
+        />
       ) : hasConnectedRepo ? (
         <div className="rounded-[24px] bg-[#F6F8FA] p-5 text-sm leading-6 text-gray-600">
           이미 연결된 GitHub 레포가 있습니다. 새 레포를 연결하려면 기존 연결을 먼저 해제해주세요.
@@ -86,9 +98,26 @@ export default function GithubRepoConnectModal() {
   );
 }
 
-function GithubRepoDescription({ onClose }: { onClose: () => void }) {
+function GithubRepoDescription({
+  onClose,
+  nickname,
+  profileImageUrl,
+}: {
+  onClose: () => void;
+  nickname?: string;
+  profileImageUrl?: string | null;
+}) {
   const handleGithubLogin = async () => {
-    const response = await fetchAuth.getGithubAuthorizeUrlByEnv();
+    const response = await fetchAuth.getGithubConnectAuthorizeUrlByEnv();
+
+    window.sessionStorage.setItem(
+      GITHUB_PROFILE_SNAPSHOT_KEY,
+      JSON.stringify({
+        nickname,
+        profileImageUrl: profileImageUrl ?? null,
+      }),
+    );
+    window.sessionStorage.setItem(GITHUB_AUTH_INTENT_KEY, 'connect');
     window.location.href = response.loginUrl;
   };
 
@@ -99,7 +128,7 @@ function GithubRepoDescription({ onClose }: { onClose: () => void }) {
       {
         index: 3,
         title: 'Webhook URL 등록',
-        description: '제공된 Webhook URL을 GitHub 레포지토리의 \nSettings > Webhooks에 등록합니다.',
+        description: '제공된 Webhook URL을 GitHub 레포지토리의\nSettings > Webhooks에 등록합니다.',
       },
     ],
     [],

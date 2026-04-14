@@ -159,7 +159,7 @@ export const useConnectGithubRepository = () => {
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
     },
     onError: () => {
-      showToast('GitHub 저장소 연결에 실패했습니다.', 'fail');
+      showToast('GitHub 저장소 연결 해제에 실패했습니다.', 'fail');
     },
   });
 };

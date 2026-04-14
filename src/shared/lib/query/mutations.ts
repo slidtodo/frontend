@@ -425,34 +425,7 @@ export const useDeleteGithubConnection = () => {
   const { showToast } = useToastStore();
 
   return useMutation({
-    mutationFn: async () => {
-      const githubGoalIds: number[] = [];
-      let cursor: number | undefined = undefined;
-
-      while (true) {
-        const page = await fetchGoals.getGoals({ cursor, limit: 100 });
-        githubGoalIds.push(
-          ...(page.goals ?? [])
-            .filter((goal) => goal.source === 'GITHUB' && typeof goal.id === 'number')
-            .map((goal) => goal.id as number),
-        );
-
-        if (!page.hasMore || page.nextCursor == null) break;
-        cursor = page.nextCursor;
-      }
-
-      for (const goalId of githubGoalIds) {
-        try {
-          await fetchGithubIntegrations.deleteConnectedGoal(goalId);
-        } catch (error) {
-          if (!(error instanceof ApiError && error.status === 404)) {
-            throw error;
-          }
-        }
-      }
-
-      return fetchUsers.deleteGithubConnection();
-    },
+    mutationFn: () => fetchUsers.deleteGithubConnection(),
     onSuccess: () => {
       if (typeof window !== 'undefined') {
         window.sessionStorage.setItem(GITHUB_DISCONNECTED_SESSION_KEY, 'true');

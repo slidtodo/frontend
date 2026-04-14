@@ -331,15 +331,15 @@ export function SidebarMenuEntry({
                   key={subMenu.href}
                   href={subMenu.href}
                   onClick={onClose}
-                  className={`group flex w-[calc(100%-1rem)] items-center justify-start gap-2 rounded-[20px] px-4 py-1 transition-all duration-200 hover:bg-[#F2FBF7] lg:px-6 lg:py-2 ${
-                    isSubMenuActive ? 'bg-[#F2FBF7]' : ''
+                  className={`group flex w-[calc(100%-1rem)] items-center justify-start gap-2 rounded-[20px] px-4 py-1 transition-all duration-200 hover:bg-[#F2FBF7] dark:hover:bg-gray-750 lg:px-6 lg:py-2 ${
+                    isSubMenuActive ? 'bg-[#F2FBF7] dark:bg-gray-750' : ''
                   }`}
                 >
                   <span
                     className={`text-sm transition-all ${
                       isSubMenuActive
-                        ? 'font-bold text-[#339C76]'
-                        : 'font-semibold text-gray-700 dark:text-gray-300 group-hover:text-[#339C76]'
+                        ? 'font-bold text-[#339C76] dark:text-bearlog-500'
+                        : 'font-semibold text-gray-700 dark:text-gray-300 group-hover:text-[#339C76] dark:group-hover:text-bearlog-500'
                     }`}
                   >
                     {subMenu.name}

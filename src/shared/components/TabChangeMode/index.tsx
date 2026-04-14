@@ -53,7 +53,7 @@ function TabChangeMode({ mode, onModeChange }: TabChangeModeProps) {
             onClick={() => handleSelectMode(option.value)}
             className={clsx(
               'relative rounded-full px-[10.95px] py-[1.93px] leading-7 font-medium transition-colors duration-200 md:px-[9.76px] md:py-[1.97px] md:text-[12px] lg:px-[14.5px] lg:py-[3px] lg:text-[20px]',
-              isActive ? 'text-gray-100' : 'text-[#8A8A8A] hover:bg-white/40',
+              isActive ? 'text-gray-100' : 'text-[#8A8A8A] dark:text-gray-400 hover:bg-white/40',
               option.value === 'GITHUB' && 'px-5 text-[18px]',
             )}
           >

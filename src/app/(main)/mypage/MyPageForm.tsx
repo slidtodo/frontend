@@ -2,15 +2,20 @@
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 import PageHeader from '@/shared/components/PageHeader';
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
-import { useRouter } from 'next/navigation';
+import LoadingSpinner from '@/shared/components/LoadingSpinner';
 
 import { userQueries } from '@/shared/lib/query/queryKeys';
-import { usePatchCurrentUser, usePatchCurrentUserPassword } from '@/shared/lib/query/mutations';
+import {
+  useDeleteGithubConnection,
+  usePatchCurrentUser,
+  usePatchCurrentUserPassword,
+} from '@/shared/lib/query/mutations';
 import { validatePassword, validatePasswordConfirm } from '@/shared/lib/validation';
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
 import { useModalStore } from '@/shared/stores/useModalStore';
@@ -20,7 +25,9 @@ import { fetchUsers } from '@/shared/lib/api/fetchUsers';
 import { fetchAuth } from '@/shared/lib/api/fetchAuth';
 import { fetchImages } from '@/shared/lib/api/fetchImages';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
-import LoadingSpinner from '@/shared/components/LoadingSpinner';
+
+import { GITHUB_DISCONNECTED_SESSION_KEY } from '@/shared/constants/github';
+import { GITHUB_AUTH_INTENT_KEY, GITHUB_PROFILE_SNAPSHOT_KEY } from '@/shared/constants/githubAuth';
 
 // TODO: 리액트 훅 폼 적용 필요
 export default function MyPageForm() {
@@ -40,11 +47,16 @@ export default function MyPageForm() {
 
   const { mutate: patchUser, isPending: isPatchingUser } = usePatchCurrentUser();
   const { mutate: patchPassword, isPending: isPatchingPassword } = usePatchCurrentUserPassword();
+  const { mutate: disconnectGithub, isPending: isDisconnectingGithub } = useDeleteGithubConnection();
   const { openModal } = useModalStore();
   const { showToast } = useToastStore();
   const router = useRouter();
   const isLocalLogin = user?.loginProvider === 'LOCAL';
-  const isGithubConnected = user?.githubConnected;
+
+  const isGithubDisconnectedSession =
+    typeof window !== 'undefined' && window.sessionStorage.getItem(GITHUB_DISCONNECTED_SESSION_KEY) === 'true';
+
+  const isGithubConnected = !isGithubDisconnectedSession && (user?.githubConnected ?? false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleProfileImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,8 +75,23 @@ export default function MyPageForm() {
 
   const handleGithubConnect = async () => {
     try {
-      const { loginUrl } = await fetchAuth.getGithubAuthorizeUrlByEnv();
-      if (loginUrl) window.location.href = loginUrl;
+      if (typeof window !== 'undefined') {
+        window.sessionStorage.removeItem(GITHUB_DISCONNECTED_SESSION_KEY);
+      }
+      const { loginUrl } = await fetchAuth.getGithubConnectAuthorizeUrlByEnv();
+      if (loginUrl) {
+        if (user) {
+          window.sessionStorage.setItem(
+            GITHUB_PROFILE_SNAPSHOT_KEY,
+            JSON.stringify({
+              nickname: user.nickname,
+              profileImageUrl: user.profileImageUrl ?? null,
+            }),
+          );
+        }
+        window.sessionStorage.setItem(GITHUB_AUTH_INTENT_KEY, 'connect');
+        window.location.href = loginUrl;
+      }
     } catch (error) {
       console.error('GitHub 연결 URL 요청 실패:', error);
       showToast(t.auth.socialLoginFail, 'fail');
@@ -76,7 +103,7 @@ export default function MyPageForm() {
       <PopupModal
         variant={{ type: 'githubDisconnect' }}
         onConfirm={() => {
-          // TODO: GitHub 연결 해제 API 연동 필요
+          disconnectGithub();
         }}
       />,
     );
@@ -275,6 +302,7 @@ export default function MyPageForm() {
             <button
               type="button"
               onClick={handleGithubDisconnect}
+              disabled={isDisconnectingGithub}
               className="rounded-full border border-gray-200 px-4 py-1.5 text-sm hover:bg-gray-50"
               style={{ color: '#6A6A6A' }}
             >

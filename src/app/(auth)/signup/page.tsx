@@ -12,6 +12,7 @@ import { fetchAuth } from '@/shared/lib/api/fetchAuth';
 import { useToastStore } from '@/shared/stores/useToastStore';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
+import { GITHUB_AUTH_INTENT_KEY } from '@/shared/constants/githubAuth';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -56,7 +57,10 @@ export default function SignupPage() {
   const handleGithubLogin = async () => {
     try {
       const { loginUrl } = await fetchAuth.getGithubAuthorizeUrlByEnv();
-      if (loginUrl) window.location.href = loginUrl;
+      if (loginUrl) {
+        window.sessionStorage.setItem(GITHUB_AUTH_INTENT_KEY, 'login');
+        window.location.href = loginUrl;
+      }
     } catch (error) {
       console.error('GitHub 로그인 URL 요청 실패:', error);
       showToast(t.auth.socialLoginFail, 'fail');
@@ -66,7 +70,9 @@ export default function SignupPage() {
   const handleGoogleLogin = async () => {
     try {
       const { loginUrl } = await fetchAuth.getGoogleAuthorizeUrlByEnv();
-      if (loginUrl) window.location.href = loginUrl;
+      if (loginUrl) {
+        window.location.href = loginUrl;
+      }
     } catch (error) {
       console.error('Google 로그인 URL 요청 실패:', error);
       showToast(t.auth.socialLoginFail, 'fail');

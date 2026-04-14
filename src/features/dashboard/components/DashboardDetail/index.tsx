@@ -12,13 +12,20 @@ import { GoalListResponse } from '@/shared/lib/api';
 import { goalQueries } from '@/shared/lib/query/queryKeys';
 import { useTodoModeStore } from '@/shared/stores/useTodoModeStore';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
+import { GITHUB_DISCONNECTED_SESSION_KEY } from '@/shared/constants/github';
 
 export default function DashboardDetail() {
   const mode = useTodoModeStore((state) => state.mode);
   const { data: goals } = useQuery(goalQueries.list());
   const { t } = useLanguage();
 
-  const visibleGoals = goals?.goals?.filter((goal) => goal.source === mode) ?? [];
+  const isGithubDisconnectedSession =
+    typeof window !== 'undefined' && window.sessionStorage.getItem(GITHUB_DISCONNECTED_SESSION_KEY) === 'true';
+
+  const visibleGoals =
+    mode === 'GITHUB' && isGithubDisconnectedSession
+      ? []
+      : (goals?.goals?.filter((goal) => goal.source === mode) ?? []);
 
   if (mode === 'MANUAL' && visibleGoals.length === 0) {
     return <Empty>{t.dashboard.noFirstGoal}</Empty>;

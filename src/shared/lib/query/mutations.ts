@@ -14,11 +14,18 @@ import {
   PostTodoRequest,
   TodoListResponse,
 } from '../api/fetchTodos';
-import { fetchUsers, PatchCurrentUserPasswordRequest, PatchCurrentUserRequest } from '../api/fetchUsers';
+import {
+  fetchUsers,
+  CurrentUserResponse,
+  PatchCurrentUserPasswordRequest,
+  PatchCurrentUserRequest,
+} from '../api/fetchUsers';
 import { githubKeys, goalKeys, noteKeys, todoKeys, userKeys } from './keyFactory';
 import { noteQueries } from './queryKeys';
 import { useToastStore } from '@/shared/stores/useToastStore';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
+import { useTodoModeStore } from '@/shared/stores/useTodoModeStore';
+import { GITHUB_DISCONNECTED_SESSION_KEY } from '@/shared/constants/github';
 
 // goal
 export const usePostGoal = () => {
@@ -143,6 +150,9 @@ export const useConnectGithubRepository = () => {
   return useMutation({
     mutationFn: (data: ConnectGithubRepositoryRequest) => fetchGithubIntegrations.postConnectRepository(data),
     onSuccess: () => {
+      if (typeof window !== 'undefined') {
+        window.sessionStorage.removeItem(GITHUB_DISCONNECTED_SESSION_KEY);
+      }
       showToast('GitHub 저장소가 목표로 연결되었습니다.');
       queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
       queryClient.invalidateQueries({ queryKey: githubKeys.repositories() });
@@ -182,7 +192,7 @@ export const useDisconnectGithubGoal = (goalId?: number) => {
       return { previousGoals };
     },
     onSuccess: () => {
-      showToast('GitHub 저장소 연결이 해제되었습니다.');
+      showToast('GitHub 저장소가 목표에서 분리되었습니다.');
       queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
       queryClient.invalidateQueries({ queryKey: goalKeys.details() });
       queryClient.invalidateQueries({ queryKey: githubKeys.repositories() });
@@ -194,11 +204,10 @@ export const useDisconnectGithubGoal = (goalId?: number) => {
       if (context?.previousGoals !== undefined) {
         queryClient.setQueryData(goalKeys.list(), context.previousGoals);
       }
-      showToast('GitHub 저장소 연결 해제에 실패했습니다.', 'fail');
+      showToast('GitHub 저장소 분리에 실패했습니다.', 'fail');
     },
   });
 };
-
 // todo
 export const usePostTodo = () => {
   const { showToast } = useToastStore();
@@ -409,6 +418,79 @@ export const usePatchCurrentUserPassword = () => {
   });
 };
 
+// TODO: 수정 필요
+export const useDeleteGithubConnection = () => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { showToast } = useToastStore();
+
+  return useMutation({
+    mutationFn: async () => {
+      const githubGoalIds: number[] = [];
+      let cursor: number | undefined = undefined;
+
+      while (true) {
+        const page = await fetchGoals.getGoals({ cursor, limit: 100 });
+        githubGoalIds.push(
+          ...(page.goals ?? [])
+            .filter((goal) => goal.source === 'GITHUB' && typeof goal.id === 'number')
+            .map((goal) => goal.id as number),
+        );
+
+        if (!page.hasMore || page.nextCursor == null) break;
+        cursor = page.nextCursor;
+      }
+
+      for (const goalId of githubGoalIds) {
+        try {
+          await fetchGithubIntegrations.deleteConnectedGoal(goalId);
+        } catch (error) {
+          if (!(error instanceof ApiError && error.status === 404)) {
+            throw error;
+          }
+        }
+      }
+
+      return fetchUsers.deleteGithubConnection();
+    },
+    onSuccess: () => {
+      if (typeof window !== 'undefined') {
+        window.sessionStorage.setItem(GITHUB_DISCONNECTED_SESSION_KEY, 'true');
+      }
+      useTodoModeStore.getState().setMode('MANUAL');
+      queryClient.setQueriesData({ queryKey: goalKeys.lists() }, (old: GoalListResponse | undefined) => {
+        if (!old) return old;
+        return {
+          ...old,
+          goals: (old.goals ?? []).filter((goal) => goal.source !== 'GITHUB'),
+        };
+      });
+      queryClient.setQueryData(userKeys.me(), (old: CurrentUserResponse | undefined) => {
+        if (!old) return old;
+        return {
+          ...old,
+          githubConnected: false,
+        };
+      });
+      queryClient.setQueryData(githubKeys.repositories(), []);
+      showToast('GitHub integration disconnected.');
+      queryClient.invalidateQueries({ queryKey: userKeys.me() });
+      queryClient.invalidateQueries({ queryKey: userKeys.githubConnection() });
+      queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: goalKeys.details() });
+      queryClient.invalidateQueries({ queryKey: todoKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: todoKeys.details() });
+      queryClient.invalidateQueries({ queryKey: todoKeys.all });
+      queryClient.invalidateQueries({ queryKey: githubKeys.repositories() });
+      queryClient.invalidateQueries({ queryKey: userKeys.progress() });
+      router.push('/dashboard');
+    },
+    onError: () => {
+      showToast('Failed to disconnect GitHub integration.', 'fail');
+    },
+  });
+};
+
 // auth
 export const usePostLogout = () => {
   const router = useRouter();
@@ -455,7 +537,6 @@ export const usePostNote = () => {
     },
   });
 };
-
 export const usePatchNote = (noteId: number, goalId: number) => {
   const queryClient = useQueryClient();
   const { showToast } = useToastStore();
@@ -471,7 +552,6 @@ export const usePatchNote = (noteId: number, goalId: number) => {
     onError: () => showToast('노트 수정에 실패했습니다', 'fail'),
   });
 };
-
 export const useDeleteNote = (noteId: number, goalId: number) => {
   const router = useRouter();
   const searchParams = useSearchParams();

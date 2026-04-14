@@ -35,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       {process.env.NODE_ENV === 'development' ? (
         <head>
           {/* eslint-disable-next-line @next/next/no-sync-scripts */}

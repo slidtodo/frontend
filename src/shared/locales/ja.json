@@ -93,8 +93,8 @@
     "calendarView": "カレンダー表示",
     "addTodo": "タスクを追加",
     "emptyTodo": "タスクがありません。新しいタスクを追加してください！",
-    "emptyTodoList": "タスクがまだありません",
-    "emptyDoneList": "完了したタスクがまだありません"
+    "emptyTodoList": "まだやることがありません",
+    "emptyDoneList": "まだ完了したことがありません"
   },
   "todo": {
     "searchPlaceholder": "タスクを検索してください",

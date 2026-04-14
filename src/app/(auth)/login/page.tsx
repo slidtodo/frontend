@@ -98,11 +98,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </FormField>
-          <Button
-            type="submit"
-            className={`bg-bearlog-500 hover:bg-bearlog-600 disabled:bg-bearlog-500 mt-8 h-14 w-full text-[#2F2F2F] disabled:text-[#2F2F2F] disabled:opacity-100`}
-            disabled={!email || !password || isLoading}
-          >
+          <Button type="submit" className="mt-8 h-14 w-full" disabled={!email || !password || isLoading}>
             {isLoading ? <LoadingSpinner /> : t.auth.loginButton}
           </Button>
         </form>

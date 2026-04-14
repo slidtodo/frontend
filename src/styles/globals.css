@@ -1,6 +1,8 @@
 @import 'tailwindcss';
 @import './design-system.css';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #f5f5f5;
   --foreground: #171717;
@@ -31,8 +33,6 @@
   --color-bg-input: var(--bg-input);
   --color-border-input: var(--border-input);
 }
-
-@custom-variant dark (&:where(.dark, .dark *));
 
 .dark {
   --background: #1a1a1a;

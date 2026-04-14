@@ -35,14 +35,21 @@ export function SettingsModal() {
     >
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-xl font-semibold text-slate-800">{t.settings.title}</h2>
-        <button type="button" onClick={handleCancel} className="text-gray-400 hover:text-gray-600" aria-label={t.common.close}>
+        <button
+          type="button"
+          onClick={handleCancel}
+          className="text-gray-400 hover:text-gray-600"
+          aria-label={t.common.close}
+        >
           <XIcon size={20} />
         </button>
       </div>
 
       {/* 언어 */}
       <div className="mb-6 flex flex-col gap-2">
-        <label htmlFor="language-select" className="text-sm font-medium text-slate-700">{t.settings.language}</label>
+        <label htmlFor="language-select" className="text-sm font-medium text-slate-700">
+          {t.settings.language}
+        </label>
         <Dropdown
           items={[
             { label: '한국어', value: 'ko' },
@@ -81,18 +88,10 @@ export function SettingsModal() {
       </div>
 
       <div className="flex gap-3">
-        <Button
-          variant="cancel"
-          className="h-14 w-48 text-sm text-gray-500"
-          onClick={handleCancel}
-        >
+        <Button variant="cancel" className="h-14 w-48 text-sm text-gray-500" onClick={handleCancel}>
           {t.settings.cancel}
         </Button>
-        <Button
-          variant="primary"
-          className="h-14 w-48 text-sm"
-          onClick={handleConfirm}
-        >
+        <Button variant="primary" className="h-14 w-48 text-sm" onClick={handleConfirm}>
           {t.settings.confirm}
         </Button>
       </div>

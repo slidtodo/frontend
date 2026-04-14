@@ -145,6 +145,7 @@ export const usePatchGoal = (goalId?: number) => {
 
 export const useConnectGithubRepository = () => {
   const { showToast } = useToastStore();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -153,13 +154,13 @@ export const useConnectGithubRepository = () => {
       if (typeof window !== 'undefined') {
         window.sessionStorage.removeItem(GITHUB_DISCONNECTED_SESSION_KEY);
       }
-      showToast('GitHub 저장소가 목표로 연결되었습니다.');
+      showToast(t.mutations.githubRepositoryConnected);
       queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
       queryClient.invalidateQueries({ queryKey: githubKeys.repositories() });
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
     },
     onError: () => {
-      showToast('GitHub 저장소 연결 해제에 실패했습니다.', 'fail');
+      showToast(t.mutations.githubRepositoryConnectFail, 'fail');
     },
   });
 };
@@ -167,6 +168,7 @@ export const useConnectGithubRepository = () => {
 export const useDisconnectGithubGoal = (goalId?: number) => {
   const router = useRouter();
   const { showToast } = useToastStore();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -192,7 +194,7 @@ export const useDisconnectGithubGoal = (goalId?: number) => {
       return { previousGoals };
     },
     onSuccess: () => {
-      showToast('GitHub 저장소가 목표에서 분리되었습니다.');
+      showToast(t.mutations.githubGoalDisconnected);
       queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
       queryClient.invalidateQueries({ queryKey: goalKeys.details() });
       queryClient.invalidateQueries({ queryKey: githubKeys.repositories() });
@@ -204,7 +206,7 @@ export const useDisconnectGithubGoal = (goalId?: number) => {
       if (context?.previousGoals !== undefined) {
         queryClient.setQueryData(goalKeys.list(), context.previousGoals);
       }
-      showToast('GitHub 저장소 분리에 실패했습니다.', 'fail');
+      showToast(t.mutations.githubGoalDisconnectFail, 'fail');
     },
   });
 };
@@ -423,6 +425,7 @@ export const useDeleteGithubConnection = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { showToast } = useToastStore();
+  const { t } = useLanguage();
 
   return useMutation({
     mutationFn: () => fetchUsers.deleteGithubConnection(),
@@ -446,7 +449,7 @@ export const useDeleteGithubConnection = () => {
         };
       });
       queryClient.setQueryData(githubKeys.repositories(), []);
-      showToast('GitHub integration disconnected.');
+      showToast(t.mutations.githubIntegrationDisconnected);
       queryClient.invalidateQueries({ queryKey: userKeys.me() });
       queryClient.invalidateQueries({ queryKey: userKeys.githubConnection() });
       queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
@@ -459,7 +462,7 @@ export const useDeleteGithubConnection = () => {
       router.push('/dashboard');
     },
     onError: () => {
-      showToast('Failed to disconnect GitHub integration.', 'fail');
+      showToast(t.mutations.githubIntegrationDisconnectFail, 'fail');
     },
   });
 };
@@ -486,6 +489,7 @@ export const usePostLogout = () => {
 export const usePostNote = () => {
   const queryClient = useQueryClient();
   const { showToast } = useToastStore();
+  const { t } = useLanguage();
   const router = useRouter();
 
   return useMutation({
@@ -493,11 +497,11 @@ export const usePostNote = () => {
     onSuccess: (response) => {
       if (!response.id || !response.goalId) {
         console.error('[usePostNote] Unexpected API response: missing id or goalId', response);
-        showToast('노트 작성에 실패했습니다.', 'fail');
+        showToast(t.mutations.noteCreateFail, 'fail');
         return;
       }
 
-      showToast('노트가 작성되었습니다.');
+      showToast(t.mutations.noteCreated);
       queryClient.setQueryData(noteQueries.detail(response.id).queryKey, response);
       queryClient.invalidateQueries({
         queryKey: noteKeys.lists(),
@@ -506,13 +510,14 @@ export const usePostNote = () => {
       router.push(`/goal/${response.goalId}/note/${response.id}`);
     },
     onError: () => {
-      showToast('노트 작성에 실패했습니다.', 'fail');
+      showToast(t.mutations.noteCreateFail, 'fail');
     },
   });
 };
 export const usePatchNote = (noteId: number, goalId: number) => {
   const queryClient = useQueryClient();
   const { showToast } = useToastStore();
+  const { t } = useLanguage();
   const router = useRouter();
 
   return useMutation({
@@ -522,7 +527,7 @@ export const usePatchNote = (noteId: number, goalId: number) => {
       queryClient.invalidateQueries({ queryKey: noteKeys.lists() });
       router.push(`/goal/${goalId}/note/${noteId}`);
     },
-    onError: () => showToast('노트 수정에 실패했습니다', 'fail'),
+    onError: () => showToast(t.mutations.noteUpdateFail, 'fail'),
   });
 };
 export const useDeleteNote = (noteId: number, goalId: number) => {
@@ -530,11 +535,12 @@ export const useDeleteNote = (noteId: number, goalId: number) => {
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const { showToast } = useToastStore();
+  const { t } = useLanguage();
 
   return useMutation({
     mutationFn: () => fetchNotes.deleteNote(noteId),
     onSuccess: () => {
-      showToast('노트가 삭제되었습니다.', 'success');
+      showToast(t.mutations.noteDeleted, 'success');
       queryClient.removeQueries({
         queryKey: noteQueries.detail(noteId).queryKey,
       });
@@ -547,7 +553,7 @@ export const useDeleteNote = (noteId: number, goalId: number) => {
       router.push(`/goal/${goalId}/note?page=${page}`);
     },
     onError: () => {
-      showToast('노트 삭제에 실패했습니다', 'fail');
+      showToast(t.mutations.noteDeleteFail, 'fail');
     },
   });
 };

@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import Empty from '@/shared/components/Empty';
@@ -19,8 +20,10 @@ export default function DashboardDetail() {
   const { data: goals } = useQuery(goalQueries.list());
   const { t } = useLanguage();
 
-  const isGithubDisconnectedSession =
-    typeof window !== 'undefined' && window.sessionStorage.getItem(GITHUB_DISCONNECTED_SESSION_KEY) === 'true';
+  const [isGithubDisconnectedSession] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.sessionStorage.getItem(GITHUB_DISCONNECTED_SESSION_KEY) === 'true';
+  });
 
   const visibleGoals =
     mode === 'GITHUB' && isGithubDisconnectedSession

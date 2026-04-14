@@ -220,7 +220,18 @@
     "userUpdateFail": "Failed to update profile.",
     "passwordUpdateFail": "Failed to change password.",
     "logoutSuccess": "Logged out.",
-    "logoutFail": "Failed to log out."
+    "logoutFail": "Failed to log out.",
+    "githubRepositoryConnected": "GitHub repository connected to goal.",
+    "githubRepositoryConnectFail": "Failed to connect GitHub repository.",
+    "githubGoalDisconnected": "GitHub repository disconnected from goal.",
+    "githubGoalDisconnectFail": "Failed to disconnect GitHub repository from goal.",
+    "githubIntegrationDisconnected": "GitHub integration disconnected.",
+    "githubIntegrationDisconnectFail": "Failed to disconnect GitHub integration.",
+    "noteCreated": "Note created.",
+    "noteCreateFail": "Failed to create note.",
+    "noteUpdateFail": "Failed to update note.",
+    "noteDeleted": "Note deleted.",
+    "noteDeleteFail": "Failed to delete note."
   },
   "notification": {
     "title": "Notifications",

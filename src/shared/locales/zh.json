@@ -220,7 +220,18 @@
     "userUpdateFail": "更新信息失败。",
     "passwordUpdateFail": "修改密码失败。",
     "logoutSuccess": "已退出登录。",
-    "logoutFail": "退出登录失败。"
+    "logoutFail": "退出登录失败。",
+    "githubRepositoryConnected": "GitHub 仓库已连接到目标。",
+    "githubRepositoryConnectFail": "连接 GitHub 仓库失败。",
+    "githubGoalDisconnected": "GitHub 仓库已从目标中解除。",
+    "githubGoalDisconnectFail": "从目标中解除 GitHub 仓库失败。",
+    "githubIntegrationDisconnected": "GitHub 集成已断开。",
+    "githubIntegrationDisconnectFail": "断开 GitHub 集成失败。",
+    "noteCreated": "笔记已创建。",
+    "noteCreateFail": "创建笔记失败。",
+    "noteUpdateFail": "更新笔记失败。",
+    "noteDeleted": "笔记已删除。",
+    "noteDeleteFail": "删除笔记失败。"
   },
   "notification": {
     "title": "通知",

@@ -20,7 +20,7 @@ import {
   PatchCurrentUserPasswordRequest,
   PatchCurrentUserRequest,
 } from '../api/fetchUsers';
-import { githubKeys, goalKeys, noteKeys, todoKeys, userKeys } from './keyFactory';
+import { dashboardKeys, githubKeys, goalKeys, noteKeys, todoKeys, userKeys } from './keyFactory';
 import { noteQueries } from './queryKeys';
 import { useToastStore } from '@/shared/stores/useToastStore';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
@@ -62,6 +62,7 @@ export const usePostGoal = () => {
     onSuccess: () => {
       showToast(t.mutations.goalCreated);
       queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: dashboardKeys.summary() });
     },
   });
 };
@@ -93,6 +94,7 @@ export const useDeleteGoal = (goalId?: number) => {
     onSuccess: () => {
       showToast(t.mutations.goalDeleted);
       queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: dashboardKeys.summary() });
       router.push('/dashboard');
     },
     onError: () => {
@@ -136,6 +138,7 @@ export const usePatchGoal = (goalId?: number) => {
       }
 
       queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: dashboardKeys.summary() });
     },
     onError: () => {
       showToast(t.mutations.goalUpdateFail, 'fail');
@@ -158,6 +161,7 @@ export const useConnectGithubRepository = () => {
       queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
       queryClient.invalidateQueries({ queryKey: githubKeys.repositories() });
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
+      queryClient.invalidateQueries({ queryKey: dashboardKeys.summary() });
     },
     onError: () => {
       showToast(t.mutations.githubRepositoryConnectFail, 'fail');
@@ -199,6 +203,7 @@ export const useDisconnectGithubGoal = (goalId?: number) => {
       queryClient.invalidateQueries({ queryKey: goalKeys.details() });
       queryClient.invalidateQueries({ queryKey: githubKeys.repositories() });
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
+      queryClient.invalidateQueries({ queryKey: dashboardKeys.summary() });
       router.push('/dashboard');
     },
     onError: (_error, _variables, context) => {
@@ -251,6 +256,7 @@ export const usePostTodo = () => {
       queryClient.invalidateQueries({ queryKey: todoKeys.lists() });
       queryClient.invalidateQueries({ queryKey: goalKeys.details() });
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
+      queryClient.invalidateQueries({ queryKey: dashboardKeys.summary() });
     },
     onError: (error) => {
       console.error(error);
@@ -288,6 +294,7 @@ export const useDeleteTodo = (todoId?: number) => {
       queryClient.invalidateQueries({ queryKey: todoKeys.lists() });
       queryClient.invalidateQueries({ queryKey: goalKeys.details() });
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
+      queryClient.invalidateQueries({ queryKey: dashboardKeys.summary() });
     },
     onError: () => {
       showToast(t.mutations.todoDeleteFail, 'fail');
@@ -336,6 +343,7 @@ export const usePatchTodo = (todoId?: number) => {
       queryClient.invalidateQueries({ queryKey: todoKeys.lists() });
       queryClient.invalidateQueries({ queryKey: goalKeys.details() });
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
+      queryClient.invalidateQueries({ queryKey: dashboardKeys.summary() });
     },
 
     onError: (_error, _variables, context) => {
@@ -384,6 +392,7 @@ export const usePatchTodoFavorite = (todoId?: number) => {
       queryClient.invalidateQueries({ queryKey: todoKeys.lists() });
       queryClient.invalidateQueries({ queryKey: goalKeys.details() });
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
+      queryClient.invalidateQueries({ queryKey: dashboardKeys.summary() });
     },
     onError: () => {
       showToast(t.mutations.favoriteFail, 'fail');
@@ -401,6 +410,7 @@ export const usePatchCurrentUser = () => {
     mutationFn: (data: PatchCurrentUserRequest) => fetchUsers.patchCurrentUser(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: userKeys.me() });
+      queryClient.invalidateQueries({ queryKey: dashboardKeys.summary() });
     },
     onError: () => {
       showToast(t.mutations.userUpdateFail, 'fail');
@@ -459,6 +469,7 @@ export const useDeleteGithubConnection = () => {
       queryClient.invalidateQueries({ queryKey: todoKeys.all });
       queryClient.invalidateQueries({ queryKey: githubKeys.repositories() });
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
+      queryClient.invalidateQueries({ queryKey: dashboardKeys.summary() });
       router.push('/dashboard');
     },
     onError: () => {

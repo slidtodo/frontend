@@ -14,7 +14,7 @@ import TaskCardWrapper from '../TaskCardWrapper';
 import GithubRepoConnectModal from '@/shared/components/Modal/GithubRepoConnectModal';
 
 import { useBreakpoint } from '@/shared/hooks/useBreakPoint';
-import { dashboardQueries } from '@/shared/lib/query/queryKeys';
+import { dashboardQueries, goalQueries } from '@/shared/lib/query/queryKeys';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { useTodoModeStore, TodoMode } from '@/shared/stores/useTodoModeStore';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
@@ -30,10 +30,11 @@ export default function DashBoardSummary() {
   const { data: dashboardSummaryData, isFetched: isDashboardSummaryFetched } = useQuery({
     ...dashboardQueries.summary(),
   });
+  const { data: goals, isFetched: isGoalListFetched } = useQuery(goalQueries.list());
 
   const { openModal } = useModalStore();
 
-  const githubGoals = dashboardSummaryData?.todos?.filter((goal) => goal.source === 'GITHUB') ?? [];
+  const githubGoals = goals?.goals?.filter((goal) => goal.source === 'GITHUB') ?? [];
   const isGithubDisconnectedSession =
     typeof window !== 'undefined' && window.sessionStorage.getItem(GITHUB_DISCONNECTED_SESSION_KEY) === 'true';
 
@@ -50,6 +51,9 @@ export default function DashBoardSummary() {
     }
 
     if (!isDashboardSummaryFetched) {
+      return;
+    }
+    if (dashboardSummaryData?.user?.githubConnected && !isGoalListFetched) {
       return;
     }
 
@@ -70,6 +74,7 @@ export default function DashBoardSummary() {
   }, [
     mode,
     isDashboardSummaryFetched,
+    isGoalListFetched,
     githubGoals.length,
     openModal,
     dashboardSummaryData?.user?.githubConnected,
@@ -126,7 +131,7 @@ interface RecentPostCardProps {
 function RecentPostCard({ dashboardSummaryData }: RecentPostCardProps) {
   const { t } = useLanguage();
 
-  if (!dashboardSummaryData || dashboardSummaryData.todos.length === 0) return null;
+  if (!dashboardSummaryData) return null;
   return (
     <article className="dark:bg-gray-850 flex h-[187px] h-fit w-full min-w-0 flex-col gap-[6px] rounded-[40px] bg-white px-4 py-[18px] md:h-[229px] md:p-4 lg:h-[256px] lg:p-8">
       {dashboardSummaryData?.todos?.length > 0 ? (

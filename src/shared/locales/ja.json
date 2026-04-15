@@ -55,7 +55,8 @@
     "newTodo": "新しいタスク",
     "newGoalTitle": "目標を作成",
     "newGoalPlaceholder": "目標のタイトルを入力してください",
-    "developerModeAlert": "開発者モードではゴールを作成できません。"
+    "developerModeAlert": "開発者モードではゴールを作成できません。",
+    "noGoal": "最近登録された目標はありません"
   },
   "dashboard": {
     "title": "のダッシュボード",

@@ -297,7 +297,7 @@ export function SidebarMenuEntry({
       <Link
         href={menu.href}
         onClick={onClose}
-        className="group flex h-14 w-full items-center justify-start gap-[8px] rounded-[20px] bg-white px-[12px] py-[10px] transition-all duration-200 dark:bg-gray-700 lg:px-[16px] lg:py-[14px]"
+        className="group flex h-14 w-full items-center justify-start gap-2 rounded-[20px] bg-white px-[12px] py-[10px] transition-all duration-200 dark:bg-gray-700 lg:px-[16px] lg:py-[14px]"
       >
         <span
           className={`transition-all duration-200 ${
@@ -362,7 +362,7 @@ function AccordionTrigger({ children, menu, isActive, ...props }: AccordionTrigg
   return (
     <Accordion.Trigger
       {...props}
-      className={`group flex h-14 w-full items-center justify-start gap-[8px] rounded-[20px] bg-white px-[12px] py-[10px] transition-all duration-200 dark:bg-gray-700 lg:px-[16px] lg:py-[14px]`}
+      className={`group flex h-14 w-full items-center justify-start gap-2 rounded-[20px] bg-white px-[12px] py-[10px] transition-all duration-200 dark:bg-gray-700 lg:px-[16px] lg:py-[14px]`}
     >
       <span className={isActive ? 'text-[#339C76]' : 'text-gray-300 group-hover:text-[#339C76]'}>{menu.icon}</span>
       <span

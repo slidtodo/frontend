@@ -177,7 +177,7 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
                   </button>
                   <button
                     onClick={() => {
-                      if (goals.length === 0) {
+                      if (goals.length === 0 || !selectedGoalId) {
                         showToast(t.dashboard.noGoal, 'fail');
                         return;
                       }

@@ -40,7 +40,7 @@ export default function EditorContent({
         <>
           {linkUrl && <LinkEmbed url={linkUrl} onRemove={() => {}} readOnly />}
           <div
-            className="h-full w-full flex-1 cursor-default text-base leading-6 font-normal tracking-[-0.02em] text-gray-700"
+            className="h-full w-full flex-1 cursor-default text-base leading-6 font-normal tracking-[-0.02em] text-gray-700 dark:text-white"
             dangerouslySetInnerHTML={{ __html: content ?? '' }}
           />
         </>

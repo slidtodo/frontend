@@ -59,7 +59,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
             <div className="flex gap-2">
               <Button
                 variant="cancel"
-                className="rounded-full border border-[#CCCCCC] bg-[#202020] dark:bg-[#202020] dark:hover:bg-[#202020] p-2.5 md:px-4.5 md:py-2.5 lg:py-2.5"
+                className="rounded-full border border-gray-300 bg-inherit p-2.5 md:px-4.5 md:py-2.5 lg:py-2.5 dark:bg-gray-900 dark:hover:bg-gray-900"
               >
                 <CalendarIcon size={20} color="#737373" />
                 <Link href={`/calendar`} className="hidden w-full w-max text-sm font-semibold text-gray-500 md:block">
@@ -67,7 +67,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
                 </Link>
               </Button>
               <Button
-                className="rounded-full dark:text-gray-850 p-2.5 md:px-4.5 md:py-2.5 lg:py-2.5"
+                className="dark:text-gray-850 rounded-full p-2.5 md:px-4.5 md:py-2.5 lg:py-2.5"
                 onClick={handleAddTodo}
               >
                 <PlusIcon size={20} />
@@ -78,7 +78,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
             </div>
           }
         />
-        <section className="h-144 w-full rounded-2xl bg-white dark:bg-gray-750 px-7 py-8">
+        <section className="dark:bg-gray-750 h-144 w-full rounded-2xl bg-white px-7 py-8">
           <div className="flex h-full flex-col gap-4 overflow-y-auto">
             {goalDetail?.todoList && goalDetail?.todoList.length > 0 ? (
               goalDetail.todoList.map((todo) => <TaskCardWrapper key={todo.id} item={todo} mode="todo" />)
@@ -92,7 +92,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
       </div>
       <div className="flex min-w-0 flex-1 flex-col gap-[10px]">
         <PageSubTitle subTitle="DONE" textClassName="font-semibold" className="py-[6px]" />
-        <section className="h-144 w-full rounded-2xl bg-white dark:bg-gray-750 px-7 py-8">
+        <section className="dark:bg-gray-750 h-144 w-full rounded-2xl bg-white px-7 py-8">
           <div className="flex h-full flex-col gap-4 overflow-y-auto">
             {goalDetail?.doneList && goalDetail?.doneList.length > 0 ? (
               goalDetail.doneList.map((todo) => <TaskCardWrapper key={todo.id} item={todo} mode="done" />)

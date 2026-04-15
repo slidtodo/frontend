@@ -35,7 +35,7 @@ export default function CalendarHeader({
       <div className="w-full lg:max-w-[350px]">
         <Dropdown
           icon={<Image src="/image/goal-todo.png" width={32} height={32} alt="목표 이미지 아이콘" />}
-          className="h-12 bg-gray-50"
+          className="h-12 bg-gray-50 dark:border-[#585858]"
           items={goalFilterItems}
           selectedValue={goalId !== undefined ? String(goalId) : ''}
           onSelectItem={onGoalChange}

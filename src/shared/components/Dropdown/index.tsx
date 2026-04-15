@@ -150,7 +150,7 @@ interface DropdownItemProps {
 
 export function DropdownItem({ item, onSelectItem }: DropdownItemProps) {
   return (
-    <div className="flex w-full bg-white p-1.5 dark:bg-gray-850">
+    <div className="flex w-full bg-white p-1.5 dark:bg-[#555555]">
       <button
         onClick={(e) => {
           e.stopPropagation();

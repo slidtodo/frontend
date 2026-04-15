@@ -33,7 +33,7 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
         <button
           type="button"
           className={clsx(
-            'flex w-full cursor-pointer items-center gap-2 rounded-xl border border-gray-300 dark:border-[#7E7E7E] dark:bg-[#2F2F2F] p-3',
+            'flex w-full cursor-pointer items-center gap-2 rounded-xl border border-gray-300 dark:border-[#7E7E7E] dark:bg-gray-850 p-3',
             'text-sm font-normal',
             'md:h-14 md:rounded-2xl md:p-4 md:text-base',
             open && 'border-bearlog-500 border',
@@ -48,7 +48,7 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
           )}
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-[328px] w-auto bg-white dark:bg-[#2F2F2F] dark:ring-0 p-0" sideOffset={10} side="bottom" align="start">
+      <PopoverContent className="w-[328px] w-auto bg-white dark:bg-gray-850 dark:ring-0 p-0" sideOffset={10} side="bottom" align="start">
         <Calendar
           mode="single"
           selected={date}
@@ -64,7 +64,7 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
 
             // 요일
             weekdays: 'flex w-full mt-3',
-            weekday: 'w-10 h-10 flex items-center justify-center text-sm font-medium text-gray-700 dark:text-[#A4A4A4] tracking-[-0.42px]',
+            weekday: 'w-10 h-10 flex items-center justify-center text-sm font-medium text-gray-700 dark:text-gray-400 tracking-[-0.42px]',
 
             // 날짜 행
             weeks: 'pb-4',
@@ -100,9 +100,9 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
                 {...props}
                 className={cn(
                   'flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent text-sm font-normal tracking-[-0.42px] transition-colors hover:bg-gray-50 dark:hover:bg-gray-700',
-                  modifiers.outside ? 'text-[#A4A4A4] dark:text-[#A4A4A4]' : 'text-gray-700 dark:text-[#A4A4A4]',
-                  modifiers.disabled && 'cursor-not-allowed text-[#A4A4A4] dark:text-[#A4A4A4]',
-                  modifiers.today && !modifiers.selected && 'bg-gray-50 dark:bg-[#202020] dark:text-white font-medium',
+                  modifiers.outside ? 'text-gray-400' : 'text-gray-700 dark:text-gray-400',
+                  modifiers.disabled && 'cursor-not-allowed text-gray-400',
+                  modifiers.today && !modifiers.selected && 'bg-gray-50 dark:bg-gray-900 dark:text-white font-medium',
                   modifiers.selected && 'bg-bearlog-500 hover:bg-bearlog-500 font-medium text-white!',
                 )}
               />
@@ -119,7 +119,7 @@ export default function DateInput({ date, onSelect, onConfirm, onCancel }: DateI
               if (onCancel) onCancel();
               setOpen(false);
             }}
-            className="flex flex-1 items-center justify-center rounded-full border border-gray-300 dark:border-gray-600 py-[10px] text-sm font-semibold text-gray-500 dark:text-[#737373]"
+            className="flex flex-1 items-center justify-center rounded-full border border-gray-300 dark:border-gray-600 py-[10px] text-sm font-semibold text-gray-500 dark:text-gray-500"
           >
             {t.common.cancel}
           </Button>

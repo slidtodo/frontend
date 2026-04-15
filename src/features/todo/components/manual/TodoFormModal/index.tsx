@@ -171,7 +171,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
     <form
       onSubmit={handleSubmit(onSubmit)}
       className={clsx(
-        'no-scrollbar flex w-full flex-col bg-white dark:bg-[#2F2F2F] shadow-[0px_0px_60px_0px_rgba(0,0,0,0.05)]',
+        'no-scrollbar flex w-full flex-col bg-white dark:bg-gray-850 shadow-[0px_0px_60px_0px_rgba(0,0,0,0.05)]',
         'gap-3 rounded-t-[32px] p-6',
         'max-h-[90vh] overflow-y-auto',
         'md:w-[488px] md:gap-4 md:rounded-[40px] md:p-8',
@@ -205,7 +205,7 @@ export default function TodoFormModal({ mode, todo, goalDetailId }: TodoFormModa
           autoFocus
           {...register('title', { required: t.todo.titleRequired })}
           placeholder={t.todo.titlePlaceholder}
-          className="h-11 rounded-xl border-gray-300 dark:border-[#7E7E7E] dark:bg-[#2F2F2F] dark:text-gray-100 dark:placeholder:text-gray-400 p-3 text-sm font-normal text-[#333] placeholder:text-gray-500 md:h-14 md:rounded-2xl md:p-4 md:text-base"
+          className="h-11 rounded-xl border-gray-300 dark:border-[#7E7E7E] dark:bg-gray-850 dark:text-gray-100 dark:placeholder:text-gray-400 p-3 text-sm font-normal text-[#333] placeholder:text-gray-500 md:h-14 md:rounded-2xl md:p-4 md:text-base"
         />
         {errors.title && <p className="px-1 text-xs text-red-500 md:text-sm">{errors.title.message}</p>}
       </FormField>

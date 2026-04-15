@@ -35,7 +35,7 @@ import { twMerge } from 'tailwind-merge';
  * @param className - 추가 스타일 클래스
  */
 export const dropdownVariants = cva(
-  'rounded-xl border border-[#CCC] dark:border-[#7E7E7E] bg-[#FFF] dark:bg-[#2F2F2F] flex p-4 items-center gap-2 self-stretch text-base font-medium justify-between',
+  'rounded-xl border border-[#CCC] dark:border-[#7E7E7E] bg-[#FFF] dark:bg-gray-850 flex p-4 items-center gap-2 self-stretch text-base font-medium justify-between',
   {
     variants: {
       disabled: {
@@ -97,7 +97,7 @@ function Dropdown({
         )}
         disabled={isDisabled}
       >
-        <div className="flex items-center justify-center gap-[21px]">
+        <div className="flex items-center justify-center gap-2">
           {icon}
           <span
             className={clsx(
@@ -150,7 +150,7 @@ interface DropdownItemProps {
 
 export function DropdownItem({ item, onSelectItem }: DropdownItemProps) {
   return (
-    <div className="flex w-full bg-white p-1.5 dark:bg-[#2F2F2F]">
+    <div className="flex w-full bg-white p-1.5 dark:bg-gray-850">
       <button
         onClick={(e) => {
           e.stopPropagation();

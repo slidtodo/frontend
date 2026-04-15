@@ -35,7 +35,7 @@ export default function TagInput({ tags, onAddTag, onRemoveTag }: TagInputProps)
   };
 
   return (
-    <div className="flex min-h-[44px] w-full flex-wrap items-center gap-2 rounded-xl border border-[#CCC] px-3 py-2 md:min-h-[56px] md:rounded-2xl md:px-4 md:py-3 dark:border-[#7E7E7E] dark:bg-[#2F2F2F]">
+    <div className="flex min-h-[44px] w-full flex-wrap items-center gap-2 rounded-xl border border-[#CCC] px-3 py-2 md:min-h-[56px] md:rounded-2xl md:px-4 md:py-3 dark:border-[#7E7E7E] dark:bg-gray-850">
       {tags.map((tag) => (
         <Tag key={tag} string={tag} onClose={() => onRemoveTag(tag)} className="px-2 py-1 text-xs" />
       ))}

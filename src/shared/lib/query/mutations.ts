@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { fetchAuth } from '../api';
@@ -234,7 +234,7 @@ export const usePostTodo = () => {
 
       queryClient.setQueryData(todoKeys.list(), (old: TodoListResponse | undefined) => ({
         ...old,
-        items: [
+        todos: [
           {
             id: Math.random(),
             title: data.title,
@@ -302,6 +302,7 @@ export const useDeleteTodo = (todoId?: number) => {
   });
 };
 
+// TODO: 정리 필요
 export const usePatchTodo = (todoId?: number) => {
   const { showToast } = useToastStore();
   const { t } = useLanguage();
@@ -321,7 +322,12 @@ export const usePatchTodo = (todoId?: number) => {
       }
 
       await queryClient.cancelQueries({ queryKey: todoKeys.detail(todoId) });
-      const previousTodo = queryClient.getQueryData(todoKeys.detail(todoId));
+      const previousTodo = queryClient.getQueryData<PatchTodoResponse>(todoKeys.detail(todoId));
+      await queryClient.cancelQueries({ queryKey: todoKeys.lists() });
+      const previousTodoLists = queryClient.getQueriesData({ queryKey: todoKeys.lists() });
+      const previousGoalDetails = queryClient.getQueriesData({ queryKey: goalKeys.details() });
+      type OptimisticTodoItem = { id: number; done?: boolean | null } & Record<string, unknown>;
+      const optimisticTodo: OptimisticTodoItem | null = previousTodo ? { ...previousTodo, ...data } : null;
 
       queryClient.setQueryData(todoKeys.detail(todoId), (old: PatchTodoResponse | undefined) => {
         if (!old) return old;
@@ -332,7 +338,90 @@ export const usePatchTodo = (todoId?: number) => {
         };
       });
 
-      return { previousTodo };
+      const targetDone = typeof data.done === 'boolean' ? data.done : undefined;
+      const patchTodos = (todos: OptimisticTodoItem[], filterDone: boolean | undefined) => {
+        const updated = todos.map((todo) => (todo.id === todoId ? { ...todo, ...data } : todo));
+
+        if (targetDone === undefined || filterDone === undefined) {
+          return updated;
+        }
+
+        if (filterDone !== targetDone) {
+          return updated.filter((todo) => todo.id !== todoId);
+        }
+
+        if (!updated.some((todo) => todo.id === todoId) && optimisticTodo) {
+          return [optimisticTodo, ...updated];
+        }
+
+        return updated;
+      };
+
+      previousTodoLists.forEach(([queryKey, cached]) => {
+        const key = Array.isArray(queryKey) ? queryKey : [];
+        const paramsIndex = key[2] === 'infinite' ? 3 : 2;
+        const params =
+          paramsIndex < key.length && typeof key[paramsIndex] === 'object' && key[paramsIndex] !== null
+            ? (key[paramsIndex] as Record<string, unknown>)
+            : {};
+        const filterDone = typeof params.done === 'boolean' ? params.done : undefined;
+
+        queryClient.setQueryData(queryKey, () => {
+          if (!cached) return cached;
+
+          if (typeof cached === 'object' && cached !== null && 'pages' in cached) {
+            const infiniteData = cached as InfiniteData<TodoListResponse>;
+
+            return {
+              ...infiniteData,
+              pages: infiniteData.pages.map((page) => ({
+                ...page,
+                todos: patchTodos((page.todos ?? []) as OptimisticTodoItem[], filterDone),
+              })),
+            };
+          }
+
+          if (typeof cached === 'object' && cached !== null && 'todos' in cached) {
+            const todoList = cached as TodoListResponse;
+            return {
+              ...todoList,
+              todos: patchTodos((todoList.todos ?? []) as OptimisticTodoItem[], filterDone),
+            };
+          }
+
+          return cached;
+        });
+      });
+
+      queryClient.setQueriesData({ queryKey: goalKeys.details() }, (old: unknown) => {
+        if (!old || typeof old !== 'object' || old === null) return old;
+        if (!('todoList' in old) || !('doneList' in old)) return old;
+
+        const target = old as { todoList?: OptimisticTodoItem[]; doneList?: OptimisticTodoItem[] };
+        const targetDone = typeof data.done === 'boolean' ? data.done : undefined;
+        let todoList = (target.todoList ?? []).map((todo) => (todo.id === todoId ? { ...todo, ...data } : todo));
+        let doneList = (target.doneList ?? []).map((todo) => (todo.id === todoId ? { ...todo, ...data } : todo));
+
+        if (targetDone === true) {
+          const movingTodo = todoList.find((todo) => todo.id === todoId) ?? optimisticTodo;
+          todoList = todoList.filter((todo) => todo.id !== todoId);
+          if (movingTodo && !doneList.some((todo) => todo.id === todoId)) {
+            doneList = [movingTodo, ...doneList];
+          }
+        }
+
+        if (targetDone === false) {
+          const movingTodo = doneList.find((todo) => todo.id === todoId) ?? optimisticTodo;
+          doneList = doneList.filter((todo) => todo.id !== todoId);
+          if (movingTodo && !todoList.some((todo) => todo.id === todoId)) {
+            todoList = [movingTodo, ...todoList];
+          }
+        }
+
+        return { ...target, todoList, doneList };
+      });
+
+      return { previousTodo, previousTodoLists, previousGoalDetails };
     },
     onSuccess: () => {
       if (todoId !== undefined) {
@@ -350,6 +439,19 @@ export const usePatchTodo = (todoId?: number) => {
       if (todoId !== undefined && context?.previousTodo !== undefined) {
         queryClient.setQueryData(todoKeys.detail(todoId), context.previousTodo);
       }
+
+      if (context?.previousTodoLists) {
+        context.previousTodoLists.forEach(([queryKey, data]) => {
+          queryClient.setQueryData(queryKey, data);
+        });
+      }
+
+      if (context?.previousGoalDetails) {
+        context.previousGoalDetails.forEach(([queryKey, data]) => {
+          queryClient.setQueryData(queryKey, data);
+        });
+      }
+
       showToast(t.mutations.todoUpdateFail, 'fail');
     },
   });
@@ -394,7 +496,10 @@ export const usePatchTodoFavorite = (todoId?: number) => {
       queryClient.invalidateQueries({ queryKey: userKeys.progress() });
       queryClient.invalidateQueries({ queryKey: dashboardKeys.summary() });
     },
-    onError: () => {
+    onError: (_error, _variables, context) => {
+      if (todoId !== undefined && context?.previousTodo !== undefined) {
+        queryClient.setQueryData(todoKeys.detail(todoId), context.previousTodo);
+      }
       showToast(t.mutations.favoriteFail, 'fail');
     },
   });

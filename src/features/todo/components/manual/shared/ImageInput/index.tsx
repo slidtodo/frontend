@@ -62,7 +62,7 @@ export default function ImageInput({ image, onChange }: ImageInput) {
           type="button"
           disabled={isUploading}
           onClick={() => fileInputRef.current?.click()}
-          className="flex h-[101px] w-full cursor-pointer flex-col items-center justify-center gap-[2px] rounded-2xl border border-dashed border-[#CCC] bg-[#FAFAFA] disabled:cursor-not-allowed"
+          className="flex h-[101px] w-full cursor-pointer flex-col items-center justify-center gap-[2px] rounded-2xl border border-[#CCC] bg-[#FAFAFA] disabled:cursor-not-allowed dark:border-[#7E7E7E] dark:bg-[#2F2F2F]"
         >
           {isUploading ? (
             <LoaderIcon size={24} className="animate-spin stroke-[#A4A4A4]" />
@@ -75,7 +75,7 @@ export default function ImageInput({ image, onChange }: ImageInput) {
         </button>
       )}
       <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleSelectImage} />
-      <p className="px-1 text-xs font-medium text-[#A4A4A4] md:text-sm">{t.todo.imageLimit}</p>
+      <p className="px-1 text-xs font-medium text-[#A4A4A4] md:text-sm dark:text-white">{t.todo.imageLimit}</p>
     </>
   );
 }

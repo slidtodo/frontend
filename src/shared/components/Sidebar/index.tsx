@@ -68,11 +68,7 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
   const selectedGoalId = getSelectedGoalId(pathname, goals, mode);
 
   const handleAddTodo = () => {
-    if (goals.length === 0) {
-      showToast(t.dashboard.noGoal, 'fail');
-      return;
-    }
-    if (!selectedGoalId) {
+    if (goals.length === 0 || !selectedGoalId) {
       showToast(t.dashboard.noGoal, 'fail');
       return;
     }

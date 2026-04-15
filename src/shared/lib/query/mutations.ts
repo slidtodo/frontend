@@ -325,6 +325,7 @@ export const usePatchTodo = (todoId?: number) => {
       const previousTodo = queryClient.getQueryData<PatchTodoResponse>(todoKeys.detail(todoId));
       await queryClient.cancelQueries({ queryKey: todoKeys.lists() });
       const previousTodoLists = queryClient.getQueriesData({ queryKey: todoKeys.lists() });
+      await queryClient.cancelQueries({ queryKey: goalKeys.details() });
       const previousGoalDetails = queryClient.getQueriesData({ queryKey: goalKeys.details() });
       type OptimisticTodoItem = { id: number; done?: boolean | null } & Record<string, unknown>;
       const optimisticTodo: OptimisticTodoItem | null = previousTodo ? { ...previousTodo, ...data } : null;
@@ -359,11 +360,7 @@ export const usePatchTodo = (todoId?: number) => {
 
       previousTodoLists.forEach(([queryKey, cached]) => {
         const key = Array.isArray(queryKey) ? queryKey : [];
-        const paramsIndex = key[2] === 'infinite' ? 3 : 2;
-        const params =
-          paramsIndex < key.length && typeof key[paramsIndex] === 'object' && key[paramsIndex] !== null
-            ? (key[paramsIndex] as Record<string, unknown>)
-            : {};
+        const params = (key.find((k) => typeof k === 'object' && k !== null) as Record<string, unknown>) ?? {};
         const filterDone = typeof params.done === 'boolean' ? params.done : undefined;
 
         queryClient.setQueryData(queryKey, () => {

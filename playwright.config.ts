@@ -1,12 +1,17 @@
 import { defineConfig, devices } from '@playwright/test';
+import fs from 'fs';
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env.local') });
+// .env.local 수동 로드
+if (fs.existsSync('.env.local')) {
+  fs.readFileSync('.env.local', 'utf-8')
+    .split('\n')
+    .forEach((line) => {
+      const [key, ...values] = line.split('=');
+      if (key?.trim() && values.length) {
+        process.env[key.trim()] = values.join('=').trim();
+      }
+    });
+}
 
 /**
  * See https://playwright.dev/docs/test-configuration.

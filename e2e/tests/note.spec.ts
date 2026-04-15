@@ -2,17 +2,20 @@ import { test, expect } from '@playwright/test';
 import fs from 'fs';
 import { TEST_DATA_FILE } from '../constants';
 
+let goalId: string;
+let todoId: string;
 let NOTE_CREATE_URL: string;
 let NOTE_LIST_URL: string;
 
 test.beforeAll(() => {
-  const { goalId, todoId } = JSON.parse(fs.readFileSync(TEST_DATA_FILE, 'utf-8'));
+  ({ goalId, todoId } = JSON.parse(fs.readFileSync(TEST_DATA_FILE, 'utf-8')));
   NOTE_CREATE_URL = `/goal/${goalId}/note/create?todoId=${todoId}`;
   NOTE_LIST_URL = `/goal/${goalId}/note`;
 });
 
 const TEST_TITLE = '[E2E] 테스트 노트';
 const TEST_CONTENT = 'E2E 테스트 내용입니다.';
+const EDITED_TITLE = '[E2E] 수정된 노트';
 
 test.describe('노트 생성 E2E', () => {
   test('제목이 비어있으면 등록 버튼 비활성화', async ({ page }) => {
@@ -68,3 +71,44 @@ test.describe('노트 생성 E2E', () => {
     await expect(page.getByText(/불러오기/)).toBeVisible();
   });
 });
+
+test.describe('노트 시나리오 E2E', () => {
+  test('생성 → 수정 → 삭제', async ({ page }) => {
+    let noteId: string;
+
+    await test.step('노트 생성', async () => {
+      await page.goto(NOTE_CREATE_URL);
+      await page.getByPlaceholder('노트의 제목을 입력해주세요').fill(TEST_TITLE);
+      await page.locator('.ProseMirror').click();
+      await page.keyboard.type(TEST_CONTENT);
+      await page.getByRole('button', { name: /등록/ }).click();
+
+      await expect(page).toHaveURL(/\/goal\/\d+\/note\/\d+/);
+      const match = page.url().match(/\/note\/(\d+)/);
+      expect(match).not.toBeNull();
+      noteId = match![1];
+    });
+
+    await test.step('노트 수정', async () => {
+      await page.goto(`/goal/${goalId}/note/${noteId}/edit`);
+      const titleInput = page.getByPlaceholder('노트의 제목을 입력해주세요');
+      await titleInput.clear();
+      await titleInput.fill(EDITED_TITLE);
+      await page.getByRole('button', { name: '수정' }).click();
+
+      await expect(page).toHaveURL(`/goal/${goalId}/note/${noteId}`);
+      await expect(page.locator('input[readonly]')).toHaveValue(EDITED_TITLE);
+    });
+
+    await test.step('노트 삭제', async () => {
+      await page.goto(NOTE_LIST_URL);
+      const noteItem = page.locator(`a[href*="/note/${noteId}"]`);
+      await noteItem.getByRole('button').click();
+      await page.getByRole('button', { name: '삭제하기' }).click();
+      await page.getByRole('button', { name: '확인' }).click();
+
+      await expect(page.locator(`a[href*="/note/${noteId}"]`)).not.toBeVisible();
+    });
+  });
+});
+

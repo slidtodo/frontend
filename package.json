@@ -10,6 +10,8 @@
     "lint": "eslint .",
     "prepare": "husky",
     "test": "jest --passWithNoTests",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "typecheck": "pnpm run lint && tsc --noEmit",
     "api:gen": "openapi-typescript https://slidtodo.store/v3/api-docs -o src/shared/types/api/schemas/api.types.ts"
   },

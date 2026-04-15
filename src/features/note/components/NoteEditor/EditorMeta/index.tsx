@@ -63,8 +63,8 @@ export default function EditorMeta({ goal, todos, createdAt, tags }: EditorMetaP
               string={todosTagLabel}
               className={clsx(
                 'rounded-md px-[5.5px] py-[3px] text-xs font-semibold',
-                !todos.done && 'text-bearlog-600 bg-[rgba(0,183,117,0.10)] dark:bg-[#00B775]/10 dark:text-bearlog-600',
-                todos.done && 'bg-[#BBB] text-[#FFF]',
+                !todos.done && 'text-bearlog-600 bg-[rgba(0,183,117,0.10)] dark:bg-[#C7F2EB] dark:text-bearlog-600',
+                todos.done && 'bg-[#BBB] text-[#FFF] dark:bg-[#707070]',
               )}
             />
           </div>

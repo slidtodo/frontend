@@ -65,11 +65,17 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
   const { mutate: logout } = usePostLogout();
   const { openTodoCreateModal } = useTodoCreateModal();
   const { openGithubTodoCreateModal } = useGithubTodoCreateModal();
-  console.log(menus);
   const selectedGoalId = getSelectedGoalId(pathname, goals, mode);
 
   const handleAddTodo = () => {
-    if (!selectedGoalId) return;
+    if (goals.length === 0) {
+      showToast(t.dashboard.noGoal, 'fail');
+      return;
+    }
+    if (!selectedGoalId) {
+      showToast(t.dashboard.noGoal, 'fail');
+      return;
+    }
 
     const selectedGoal = goals.find((goal) => goal.id === selectedGoalId);
     if (!selectedGoal) return;
@@ -217,8 +223,10 @@ function SidebarDesktopTablet({ user, isTablet }: SidebarDesktopTabletProps) {
             </button>
             <button
               onClick={handleAddTodo}
-              disabled={!selectedGoalId}
-              className="group border-bearlog-500 flex w-full flex-col items-center justify-center gap-2 rounded-[32px] border bg-[#ffffff] px-2 py-4 transition-all duration-200 hover:shadow-lg lg:px-[22.5px] lg:py-8 dark:bg-gray-700"
+              aria-disabled={!selectedGoalId}
+              className={`group border-bearlog-500 flex w-full flex-col items-center justify-center gap-2 rounded-[32px] border bg-[#ffffff] px-2 py-4 transition-all duration-200 hover:shadow-lg lg:px-[22.5px] lg:py-8 dark:bg-gray-700 ${
+                !selectedGoalId ? 'opacity-50' : ''
+              }`}
             >
               <CopyCheckIcon
                 color="#00C87F"
@@ -301,7 +309,7 @@ export function SidebarMenuEntry({
         <button
           type="button"
           onClick={() => {
-            showToast(t.sidebar.noGoal, 'fail');
+            showToast(t.dashboard.noGoal, 'fail');
           }}
           className="group flex h-14 w-full cursor-pointer items-center justify-start gap-[8px] rounded-[20px] bg-white px-[12px] py-[10px] transition-all duration-200 lg:px-[16px] lg:py-[14px] dark:bg-gray-700"
         >

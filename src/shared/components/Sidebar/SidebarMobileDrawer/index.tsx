@@ -177,6 +177,10 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
                   </button>
                   <button
                     onClick={() => {
+                      if (goals.length === 0 || !selectedGoalId) {
+                        showToast(t.dashboard.noGoal, 'fail');
+                        return;
+                      }
                       if (!selectedGoalId) return;
                       const selectedGoal = goals.find((goal) => goal.id === selectedGoalId);
                       if (!selectedGoal) return;
@@ -200,8 +204,10 @@ export default function SidebarMobile({ user }: SidebarMobileProps) {
                       }
                       closeMobileMenu();
                     }}
-                    disabled={!selectedGoalId}
-                    className="group border-bearlog-500 flex flex-1 items-center justify-center gap-1 rounded-full border bg-white py-3 transition-all hover:shadow-lg disabled:opacity-50 dark:bg-gray-700"
+                    aria-disabled={!selectedGoalId}
+                    className={`group border-bearlog-500 flex flex-1 items-center justify-center gap-1 rounded-full border bg-white py-3 transition-all hover:shadow-lg dark:bg-gray-700 ${
+                      !selectedGoalId ? 'opacity-50' : ''
+                    }`}
                   >
                     <CopyCheckIcon color="#00C87F" className="h-6 w-6 transition-transform group-hover:scale-110" />
                     <span className="text-bearlog-600 dark:text-bearlog-500 text-base font-semibold">새 할일</span>

@@ -55,7 +55,8 @@
     "newTodo": "New To Do",
     "newGoalTitle": "Create Goal",
     "newGoalPlaceholder": "Enter goal title",
-    "developerModeAlert": "You cannot create goals in developer mode."
+    "developerModeAlert": "You cannot create goals in developer mode.",
+    "noGoal": "No recently registered goals"
   },
   "dashboard": {
     "title": "'s Dashboard",

@@ -17,14 +17,13 @@ export const dynamic = 'force-dynamic';
 export default async function DashboardPage() {
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery(dashboardQueries.summary());
-
+  const initialSummaryData = await queryClient.ensureQueryData(dashboardQueries.summary());
   const dehydratedState = dehydrate(queryClient);
 
   return (
     <div className="flex w-full flex-col">
       <HydrationBoundary state={dehydratedState}>
-        <DashBoardSummary />
+        <DashBoardSummary initialSummaryData={initialSummaryData} />
       </HydrationBoundary>
 
       <DataBoundary suspenseFallback={<DashboardDetailSkeleton />}>

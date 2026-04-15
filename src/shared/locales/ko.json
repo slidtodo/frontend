@@ -55,7 +55,8 @@
     "newTodo": "새 할일",
     "newGoalTitle": "목표 생성",
     "newGoalPlaceholder": "목표 제목을 입력하세요",
-    "developerModeAlert": "개발자 모드에서는 목표를 생성할 수 없습니다."
+    "developerModeAlert": "개발자 모드에서는 목표를 생성할 수 없습니다.",
+    "noGoal": "최근에 등록한 목표가 없어요"
   },
   "dashboard": {
     "title": "님의 대시보드",

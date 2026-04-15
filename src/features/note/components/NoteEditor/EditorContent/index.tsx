@@ -58,7 +58,7 @@ export default function EditorContent({
               '[&_.ProseMirror]:font-normal',
               '[&_.ProseMirror]:leading-6',
               '[&_.ProseMirror]:tracking-[-0.02em]',
-              '[&_.ProseMirror]:text-gray-700',
+              '[&_.ProseMirror]:text-gray-700 dark:[&_.ProseMirror]:text-white',
               '[&_.ProseMirror_ul]:list-disc',
               '[&_.ProseMirror_ul]:pl-5',
               '[&_.ProseMirror_p.is-editor-empty:first-child::before]:content-[attr(data-placeholder)]',

@@ -21,7 +21,11 @@ import { useLanguage } from '@/shared/contexts/LanguageContext';
 import { GITHUB_DISCONNECTED_SESSION_KEY } from '@/shared/constants/github';
 import { DashboardSummaryResponse } from '@/shared/types/api/schemas/api.process';
 
-export default function DashBoardSummary() {
+interface DashboardSummaryProps {
+  initialSummaryData?: DashboardSummaryResponse;
+}
+
+export default function DashBoardSummary({ initialSummaryData }: DashboardSummaryProps) {
   const { t } = useLanguage();
   const breakpoint = useBreakpoint();
   const mode = useTodoModeStore((state) => state.mode);
@@ -29,6 +33,7 @@ export default function DashBoardSummary() {
 
   const { data: dashboardSummaryData, isFetched: isDashboardSummaryFetched } = useQuery({
     ...dashboardQueries.summary(),
+    initialData: initialSummaryData,
   });
   const { data: goals, isFetched: isGoalListFetched } = useQuery(goalQueries.list());
 
@@ -86,7 +91,13 @@ export default function DashBoardSummary() {
       <div className="flex items-center justify-end pb-[30px] md:justify-between lg:pb-[34px]">
         {breakpoint !== 'mobile' && (
           <div className="flex flex-col gap-2">
-            <PageHeader title={`${dashboardSummaryData?.user?.nickname}${t.dashboard.title}`} />
+            <PageHeader
+              title={
+                dashboardSummaryData?.user?.nickname
+                  ? `${dashboardSummaryData.user.nickname}${t.dashboard.title}`
+                  : t.sidebar.dashboard
+              }
+            />
             {mode === 'GITHUB' && (
               <span className="text-xl text-gray-400 transition-all duration-200">{t.dashboard.githubModeDesc}</span>
             )}
@@ -152,7 +163,9 @@ function CurrentProgressCard({ dashboardSummaryData }: CurrentProgressCardProps)
   const { t } = useLanguage();
   const mode = useTodoModeStore((state) => state.mode);
 
-  if (!dashboardSummaryData || dashboardSummaryData.progress === null) return null;
+  const totalProgress = dashboardSummaryData?.progress?.totalProgress ?? 0;
+
+  if (!dashboardSummaryData) return null;
   return (
     <article className="bg-bearlog-500 relative h-[187px] w-full rounded-[40px] shadow-[0_10px_40px_0_rgba(2,202,181,0.40)] md:h-[229px] lg:h-[256px]">
       <div className="absolute right-0 bottom-0">
@@ -173,11 +186,7 @@ function CurrentProgressCard({ dashboardSummaryData }: CurrentProgressCardProps)
       </div>
       <div className="absolute flex h-full w-full items-center justify-start gap-8 p-6 lg:p-12">
         <div className="w-[120px]">
-          <ProgressCircle
-            percent={dashboardSummaryData?.progress?.totalProgress ?? 0}
-            className="h-auto w-full"
-            color="#008354"
-          />
+          <ProgressCircle percent={totalProgress} className="h-auto w-full" color="#008354" />
         </div>
         <div className="flex flex-col items-start gap-2">
           <div className="flex flex-col items-start">
@@ -189,9 +198,7 @@ function CurrentProgressCard({ dashboardSummaryData }: CurrentProgressCardProps)
             )}
           </div>
           <div className="flex items-baseline gap-1">
-            <span className="text-[clamp(20px,5vw,60px)] leading-[1] font-bold text-white">
-              {dashboardSummaryData?.progress?.totalProgress}
-            </span>
+            <span className="text-[clamp(20px,5vw,60px)] leading-[1] font-bold text-white">{totalProgress}</span>
             <span className="text-[clamp(14px,2vw,30px)] text-white">%</span>
           </div>
         </div>

@@ -200,7 +200,7 @@
     "cancel": "취소",
     "confirm": "확인",
     "passwordPlaceholder": "비밀번호를 입력해주세요",
-    "linkTitle": "링크 입력",
+    "linkTitle": "링크 업로드",
     "linkPlaceholder": "링크를 입력해주세요"
   },
   "mutations": {

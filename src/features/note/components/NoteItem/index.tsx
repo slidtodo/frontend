@@ -6,9 +6,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Note } from '@/shared/types/types';
 import TodoTitle from '@/features/note/components/TodoTitle';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
 
 export default function NoteItem({ note, goalId }: { note: Note; goalId: string }) {
   const createDate = formatDate(new Date(note.createdAt));
+  const { t } = useLanguage();
 
   return (
     <Link href={`/goal/${goalId}/note/${note.id}`} className="block">
@@ -20,8 +22,8 @@ export default function NoteItem({ note, goalId }: { note: Note; goalId: string 
           </div>
           <EllipsisButton
             items={[
-              { label: '수정하기', value: 'edit' },
-              { label: '삭제하기', value: 'delete' },
+              { label: t.common.edit, value: 'edit' },
+              { label: t.common.delete, value: 'delete' },
             ]}
             noteId={note.id}
             goalId={Number(goalId)}

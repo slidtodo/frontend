@@ -81,6 +81,7 @@ test.describe('노트 시나리오 E2E', () => {
       await page.getByPlaceholder('노트의 제목을 입력해주세요').fill(TEST_TITLE);
       await page.locator('.ProseMirror').click();
       await page.keyboard.type(TEST_CONTENT);
+      await expect(page.getByRole('button', { name: /등록/ })).toBeEnabled();
       await page.getByRole('button', { name: /등록/ }).click();
 
       await expect(page).toHaveURL(/\/goal\/\d+\/note\/\d+/);

@@ -1,17 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
-import fs from 'fs';
+import { config } from 'dotenv';
 
-// .env.local 수동 로드
-if (fs.existsSync('.env.local')) {
-  fs.readFileSync('.env.local', 'utf-8')
-    .split('\n')
-    .forEach((line) => {
-      const [key, ...values] = line.split('=');
-      if (key?.trim() && values.length) {
-        process.env[key.trim()] = values.join('=').trim();
-      }
-    });
-}
+config({ path: '.env.local' });
 
 /**
  * See https://playwright.dev/docs/test-configuration.

@@ -1,4 +1,4 @@
-import { test as setup } from '@playwright/test';
+import { test as setup, expect } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 import { AUTH_FILE, TEST_DATA_FILE } from '../constants';
@@ -16,12 +16,14 @@ setup('로그인 후 인증 상태 저장', async ({ page }) => {
   const goalRes = await page.request.post('/api/proxy/goals', {
     data: { title: '[E2E] 테스트 목표' },
   });
+  expect(goalRes.ok()).toBeTruthy();
   const goal = await goalRes.json();
 
   // todo 생성
   const todoRes = await page.request.post('/api/proxy/todos', {
     data: { title: '[E2E] 테스트 할일', goalId: goal.id },
   });
+  expect(todoRes.ok()).toBeTruthy();
   const todo = await todoRes.json();
 
   // IDs 파일로 저장

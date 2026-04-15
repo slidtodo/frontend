@@ -43,7 +43,7 @@ export default function FavoriteTodoDropdownGoal({
         type="button"
         onClick={() => setIsToggleOpen((prev) => !prev)}
         className={[
-          'flex w-full items-center justify-between gap-2 self-stretch rounded-xl border bg-gray-50 dark:bg-[#3E3E3E] px-4 py-[10px] text-base font-medium md:py-3',
+          'flex w-full items-center justify-between gap-2 self-stretch rounded-xl border bg-gray-50 dark:bg-gray-850 px-4 py-[10px] text-base font-medium md:py-3',
           (isToggleOpen || !!selectedValue)
             ? 'border-bearlog-500 rounded-2xl'
             : 'border-gray-100 dark:border-gray-900',

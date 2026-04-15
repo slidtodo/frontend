@@ -107,7 +107,7 @@ export default function NotificationDropdown({ isOpen, onOpen, onClose, isSideba
                   <li
                     key={notification.id}
                     onClick={() => !notification.isRead && markAsRead(notification.id)}
-                    className="flex cursor-pointer items-start gap-3 px-5 py-4"
+                    className={`flex cursor-pointer items-start gap-3 px-5 py-4 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 ${!notification.isRead ? 'bg-gray-50/50 dark:bg-gray-800/50' : ''}`}
                   >
                     <div className="mt-2 shrink-0">
                       {!notification.isRead && <div className="bg-bearlog-500 h-2 w-2 rounded-full" />}

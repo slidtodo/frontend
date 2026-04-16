@@ -2,7 +2,6 @@
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 
 import PageHeader from '@/shared/components/PageHeader';
 import Input from '@/shared/components/Input';
@@ -50,7 +49,7 @@ export default function MyPageForm() {
   const { mutate: disconnectGithub, isPending: isDisconnectingGithub } = useDeleteGithubConnection();
   const { openModal } = useModalStore();
   const { showToast } = useToastStore();
-  const router = useRouter();
+
   const isLocalLogin = user?.loginProvider === 'LOCAL';
 
   const isGithubDisconnectedSession =
@@ -126,7 +125,7 @@ export default function MyPageForm() {
           } catch (e) {
             console.error('Failed to clear session:', e);
           }
-          router.push('/login');
+          window.location.replace('/login');
         }}
       />,
     );

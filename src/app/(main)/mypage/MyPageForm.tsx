@@ -125,7 +125,7 @@ export default function MyPageForm() {
           } catch (e) {
             console.error('Failed to clear session:', e);
           }
-          window.location.href = '/login';
+          window.location.replace('/login');
         }}
       />,
     );

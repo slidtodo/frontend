@@ -1,56 +1,56 @@
 'use client';
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
 import Input from '@/shared/components/Input';
 import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
-import { validateEmail, validatePassword, validatePasswordConfirm } from '@/shared/lib/validation';
 import { fetchAuth } from '@/shared/lib/api/fetchAuth';
 import { useToastStore } from '@/shared/stores/useToastStore';
 import { useLanguage } from '@/shared/contexts/LanguageContext';
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
 import { GITHUB_AUTH_INTENT_KEY } from '@/shared/constants/githubAuth';
 
+const signupSchema = z
+  .object({
+    name: z.string().min(1, '이름을 입력해주세요.'),
+    email: z.string().min(1, '이메일을 입력해주세요.').email('잘못된 이메일입니다.'),
+    password: z.string().min(1, '비밀번호를 입력해주세요.').min(8, '비밀번호는 8자 이상이어야 합니다.'),
+    passwordConfirm: z.string().min(1, '비밀번호 확인을 입력해주세요.'),
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: '비밀번호가 일치하지 않습니다.',
+    path: ['passwordConfirm'],
+  });
+
+type SignupFormValues = z.infer<typeof signupSchema>;
+
 export default function SignupPage() {
   const router = useRouter();
   const { showToast } = useToastStore();
   const { t } = useLanguage();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [passwordConfirmError, setPasswordConfirmError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
-  // TODO: 리액트쿼리로 변경 필요, 리액트 훅 폼 적용 필요
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting, isValid },
+  } = useForm<SignupFormValues>({
+    resolver: zodResolver(signupSchema),
+    mode: 'onChange',
+  });
 
-    const emailErr = validateEmail(email, t.validation);
-    const passwordErr = validatePassword(password, t.validation);
-    const passwordConfirmErr = validatePasswordConfirm(password, passwordConfirm, t.validation);
-    setEmailError(emailErr);
-    setPasswordError(passwordErr);
-    setPasswordConfirmError(passwordConfirmErr);
-    if (emailErr || passwordErr || passwordConfirmErr) return;
-
-    if (isLoading) return;
-    setIsLoading(true);
+  const onSubmit = async (data: SignupFormValues) => {
     try {
-      await fetchAuth.postSignup({ nickname: name, email, password });
-
+      await fetchAuth.postSignup({ nickname: data.name, email: data.email, password: data.password });
       showToast(t.auth.signupSuccess, 'success');
       router.push('/login');
     } catch (error) {
       console.error(error);
       showToast(t.auth.signupFail, 'fail');
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -87,59 +87,47 @@ export default function SignupPage() {
           <Image src="/image/bearlog-icon.png" alt="logo" width={48} height={48} />
           <span className="text-2xl font-bold">Bearlog</span>
         </div>
-        <form className="flex w-full flex-col gap-4" onSubmit={handleSubmit}>
+        <form className="flex w-full flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
           <FormField label={t.auth.name}>
             <Input
               type="text"
               placeholder={t.auth.namePlaceholder}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              {...register('name')}
             />
           </FormField>
 
           {/* 이메일 */}
-          <FormField label={t.auth.email} error={emailError}>
+          <FormField label={t.auth.email} error={errors.email?.message}>
             <Input
               type="text"
               placeholder={t.auth.emailPlaceholder}
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setEmailError('');
-              }}
+              {...register('email')}
             />
           </FormField>
 
           {/* 비밀번호 */}
-          <FormField label={t.auth.password} error={passwordError}>
+          <FormField label={t.auth.password} error={errors.password?.message}>
             <Input
               type="password"
               placeholder={t.auth.passwordPlaceholder}
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setPasswordError('');
-              }}
+              {...register('password')}
             />
           </FormField>
-          <FormField label={t.auth.passwordConfirm} error={passwordConfirmError}>
+
+          <FormField label={t.auth.passwordConfirm} error={errors.passwordConfirm?.message}>
             <Input
               type="password"
               placeholder={t.auth.passwordConfirmPlaceholder}
-              value={passwordConfirm}
-              onChange={(e) => {
-                setPasswordConfirm(e.target.value);
-                setPasswordConfirmError('');
-              }}
+              {...register('passwordConfirm')}
             />
           </FormField>
 
           <Button
             type="submit"
-            className="mt-8 h-14 w-full"
-            disabled={!name || !email || !password || !passwordConfirm || isLoading}
+            className="mt-8 h-14 w-full text-[#2F2F2F]"
+            disabled={!isValid || isSubmitting}
           >
-            {isLoading ? <LoadingSpinner /> : t.auth.signupButton}
+            {isSubmitting ? <LoadingSpinner /> : t.auth.signupButton}
           </Button>
         </form>
 

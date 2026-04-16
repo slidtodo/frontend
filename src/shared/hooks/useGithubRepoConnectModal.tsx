@@ -19,7 +19,10 @@ export function useGithubRepoConnectModal({ isConnectionFetched, isGithubConnect
   const { openModal } = useModalStore();
   const githubModalOpenedRef = useRef(false);
 
-  const { data: goals, isFetched: isGoalListFetched } = useQuery(goalQueries.list());
+  const { data: goals, isFetched: isGoalListFetched } = useQuery({
+    ...goalQueries.list(),
+    enabled: mode === 'GITHUB',
+  });
   const githubGoals = goals?.goals?.filter((goal) => goal.source === 'GITHUB') ?? [];
 
   const isGithubDisconnectedSession =

@@ -51,7 +51,7 @@ function GoalSummary({ goalId }: GoalSummaryProps) {
       <div className="flex items-center justify-between">
         {breakpoint !== 'mobile' && (
           <div className="flex flex-col gap-2">
-            <PageHeader title={`${user?.nickname}${t.goal.title}`} className="pl-2" />
+            <PageHeader title={user?.nickname ? `${user.nickname}${t.goal.title}` : t.goal.title} className="pl-2" />
             {mode === 'GITHUB' && (
               <span className="text-xl text-gray-400 transition-all duration-200">{t.dashboard.githubModeDesc}</span>
             )}

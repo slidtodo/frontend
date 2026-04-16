@@ -151,10 +151,10 @@ function GithubRepoDescription({
       </div>
       <div className="flex w-full items-center justify-between gap-3">
         <Button variant="cancel" className="px-40 py-[18.5px]" onClick={onClose}>
-          <span className="truncate">취소</span>
+          <span className="truncate text-[18px]">취소</span>
         </Button>
         <Button className="px-40 py-[18.5px]" onClick={handleGithubLogin}>
-          <span className="truncate dark:text-[#2F2F2F]">확인</span>
+          <span className="truncate text-[18px] dark:text-[#2F2F2F]">확인</span>
         </Button>
       </div>
     </>

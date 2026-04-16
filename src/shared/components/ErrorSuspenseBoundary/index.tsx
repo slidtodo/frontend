@@ -3,25 +3,28 @@
 import { Suspense } from 'react';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
+import { WifiOff } from 'lucide-react';
 
-import Empty from '../Empty';
-
-const IS_DEV = process.env.NODE_ENV === 'development';
-
-function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
+function ErrorFallback({ resetErrorBoundary }: FallbackProps) {
   return (
-    <Empty>
-      <p className="mb-4 text-sm text-gray-600">
-        {IS_DEV && error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.'}
-      </p>
+    <div className="flex min-h-[300px] flex-col items-center justify-center gap-4">
+      <WifiOff size={60} className="text-gray-400" />
+      <div className="flex flex-col items-center gap-1 text-center">
+        <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">서비스 이용이 원활하지 않아요.</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          불편을 드려 죄송해요.
+          <br />
+          잠시 후 다시 이용해 주세요.
+        </p>
+      </div>
       <button
         type="button"
         onClick={resetErrorBoundary}
-        className="w-full rounded bg-blue-500 py-2 font-semibold text-white hover:bg-blue-600"
+        className="rounded-lg border border-gray-300 dark:border-gray-600 px-5 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
       >
         다시 시도
       </button>
-    </Empty>
+    </div>
   );
 }
 

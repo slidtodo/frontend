@@ -116,6 +116,7 @@ export default function MyPageForm() {
         onConfirm={async (password) => {
           try {
             await fetchUsers.deleteCurrentUser(password ? { password } : undefined);
+            await fetch('/api/clear-session', { method: 'POST' });
             router.push('/login');
           } catch (error) {
             console.error('Failed to delete account:', error);

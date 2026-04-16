@@ -31,8 +31,8 @@ export default async function LandingPage() {
       {/* ── Section 01 · Hero ── */}
       <section className="w-full bg-gradient-to-bl from-[#FFF9E5] to-[#D4FFFE] pt-16 pb-0 md:pt-20">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center px-6 text-center">
-          <p className="text-bearlog-600 text-[30px] font-semibold">베어로그 하나로 일상부터 개발까지</p>
-          <h1 className="mt-2 text-[48px] font-bold text-gray-900">개발자 할 일, 베어로그로 계획해요</h1>
+          <p className="text-bearlog-600 text-lg font-semibold md:text-[30px]">베어로그 하나로 일상부터 개발까지</p>
+          <h1 className="mt-2 text-3xl font-bold text-gray-900 md:text-[48px]">개발자 할 일, 베어로그로 계획해요</h1>
           <Link href="/start" className="mt-8 h-fit w-fit md:mt-[56px]">
             <Button
               variant="primary"
@@ -87,8 +87,8 @@ export default async function LandingPage() {
       <section className="w-full bg-[#F8F8F8] pt-14 pb-20 md:pt-[120px]">
         <div className="mx-auto flex max-w-[1300px] flex-col items-center gap-10 px-6 md:gap-[88px]">
           <div className="text-center">
-            <p className="text-bearlog-600 text-[22px] font-bold">목표 설정부터 개발까지</p>
-            <h2 className="mt-3 text-[40px] font-bold text-gray-900">쉽고 빠르게 할 일을 시작해요</h2>
+            <p className="text-bearlog-600 text-base font-bold md:text-[22px]">목표 설정부터 개발까지</p>
+            <h2 className="mt-3 text-2xl font-bold text-gray-900 md:text-[40px]">쉽고 빠르게 할 일을 시작해요</h2>
           </div>
 
           <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-3">
@@ -100,14 +100,9 @@ export default async function LandingPage() {
                 <Image src={`/image/${feature.index}.png`} alt={`${feature.index}`} width={64} height={64} />
                 <Image src={`/image/${feature.icon}`} alt={feature.title} width={180} height={180} />
                 <div className="flex flex-col items-center mt-8">
-                  <h3 className="text-[24px] font-bold text-gray-900">{feature.title}</h3>
-                  <p className="mt-2 text-center text-[16px] break-keep text-gray-400">
-                    {feature.description.split('\n').map((line, i, arr) => (
-                      <span key={i}>
-                        {line}
-                        {i < arr.length - 1 && <br />}
-                      </span>
-                    ))}
+                  <h3 className="text-lg font-bold text-gray-900 md:text-[24px]">{feature.title}</h3>
+                  <p className="mt-2 text-center text-sm break-keep whitespace-pre-line text-gray-400 md:text-[16px]">
+                    {feature.description}
                   </p>
                 </div>
               </div>
@@ -121,7 +116,7 @@ export default async function LandingPage() {
         <div className="mx-auto flex max-w-[1300px] flex-col items-center px-6 lg:flex-row-reverse lg:justify-center lg:gap-[228px]">
           {/* 텍스트 */}
           <div className="flex flex-col items-end text-right lg:shrink-0">
-            <span className="text-bearlog-600 text-[30px] font-bold">캘린더에 쌓이는 기록</span>
+            <span className="text-bearlog-600 text-lg font-bold md:text-[30px]">캘린더에 쌓이는 기록</span>
             <h2 className="mt-3 text-[28px] font-bold break-keep text-gray-900 lg:text-[40px] lg:whitespace-nowrap">
               할 일을 끝내면 곰 발바닥 도장을 찍어
               <br />
@@ -173,9 +168,9 @@ export default async function LandingPage() {
               className="absolute right-[10%] bottom-[18%] z-0 h-[28px] w-[28px] md:top-[100px] md:right-[120px] md:bottom-auto md:h-[58px] md:w-[53px] lg:top-[223px] lg:right-[264px] lg:h-[90px] lg:w-[83px]"
             />
 
-            <p className="text-bearlog-600 z-10 text-[30px] font-semibold">베어로그 하나로 일상부터 개발까지</p>
+            <p className="text-bearlog-600 z-10 text-lg font-semibold md:text-[30px]">베어로그 하나로 일상부터 개발까지</p>
 
-            <h2 className="z-10 mt-3 text-[48px] font-bold text-gray-900">개발자 할 일, 베어로그로 계획해요</h2>
+            <h2 className="z-10 mt-3 text-3xl font-bold text-gray-900 md:text-[48px]">개발자 할 일, 베어로그로 계획해요</h2>
 
             <Link href="/start" className="z-10">
               <Button className="mt-[56px] h-[56px] w-[223px] bg-[#00C87F] text-sm font-semibold shadow-[0_0_16px_4px_rgba(0,200,127,0.3)] hover:bg-[#00C87F]/90">

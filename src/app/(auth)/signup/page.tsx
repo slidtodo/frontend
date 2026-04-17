@@ -1,5 +1,6 @@
 'use client';
 import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -11,28 +12,36 @@ import Button from '@/shared/components/Button';
 import FormField from '@/shared/components/FormField';
 import { fetchAuth } from '@/shared/lib/api/fetchAuth';
 import { useToastStore } from '@/shared/stores/useToastStore';
-import { useLanguage } from '@/shared/contexts/LanguageContext';
+import { useLanguage, type TranslationType } from '@/shared/contexts/LanguageContext';
 import LoadingSpinner from '@/shared/components/LoadingSpinner';
 import { GITHUB_AUTH_INTENT_KEY } from '@/shared/constants/githubAuth';
 
-const signupSchema = z
-  .object({
-    name: z.string().min(1, '이름을 입력해주세요.'),
-    email: z.string().min(1, '이메일을 입력해주세요.').email('잘못된 이메일입니다.'),
-    password: z.string().min(1, '비밀번호를 입력해주세요.').min(8, '비밀번호는 8자 이상이어야 합니다.'),
-    passwordConfirm: z.string().min(1, '비밀번호 확인을 입력해주세요.'),
-  })
-  .refine((data) => data.password === data.passwordConfirm, {
-    message: '비밀번호가 일치하지 않습니다.',
-    path: ['passwordConfirm'],
-  });
+const createSignupSchema = (t: TranslationType) =>
+  z
+    .object({
+      name: z.string().min(1, t.validation.nameRequired),
+      email: z.string().min(1, t.validation.emailRequired).email(t.validation.emailInvalid),
+      password: z.string().min(1, t.validation.passwordRequired).min(8, t.validation.passwordMin),
+      passwordConfirm: z.string().min(1, t.validation.passwordConfirmRequired),
+    })
+    .refine((data) => data.password === data.passwordConfirm, {
+      message: t.validation.passwordMismatch,
+      path: ['passwordConfirm'],
+    });
 
-type SignupFormValues = z.infer<typeof signupSchema>;
+type SignupFormValues = {
+  name: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+};
 
 export default function SignupPage() {
   const router = useRouter();
   const { showToast } = useToastStore();
   const { t } = useLanguage();
+
+  const signupSchema = useMemo(() => createSignupSchema(t), [t]);
 
   const {
     register,
@@ -124,7 +133,7 @@ export default function SignupPage() {
 
           <Button
             type="submit"
-            className="mt-8 h-14 w-full text-[#2F2F2F]"
+            className="mt-8 h-14 w-full text-gray-850"
             disabled={!isValid || isSubmitting}
           >
             {isSubmitting ? <LoadingSpinner /> : t.auth.signupButton}

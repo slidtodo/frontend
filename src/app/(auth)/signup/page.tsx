@@ -133,7 +133,7 @@ export default function SignupPage() {
 
           <Button
             type="submit"
-            className="mt-8 h-14 w-full text-white"
+            className="mt-8 h-14 w-full"
             disabled={!isValid || isSubmitting}
           >
             {isSubmitting ? <LoadingSpinner /> : t.auth.signupButton}

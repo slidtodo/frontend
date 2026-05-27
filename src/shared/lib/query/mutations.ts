@@ -620,7 +620,7 @@ export const usePostNote = () => {
         queryKey: noteKeys.lists(),
       });
 
-      router.push(`/goal/${response.goalId}/note/${response.id}`);
+      router.replace(`/goal/${response.goalId}/note/${response.id}`);
     },
     onError: () => {
       showToast(t.mutations.noteCreateFail, 'fail');

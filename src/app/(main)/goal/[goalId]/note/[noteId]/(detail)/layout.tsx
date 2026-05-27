@@ -9,7 +9,7 @@ export default function NoteDetailLayout({ children }: { children: React.ReactNo
   const { goalId } = useParams<{ goalId: string }>();
 
   const handleClose = () => {
-    router.replace('/goal/' + goalId + '/note');
+    router.replace(`/goal/${goalId}/note`);
   };
 
   return (
